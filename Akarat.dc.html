@@ -1143,6 +1143,9 @@
             <div style="flex: 1;"></div>
             <div onClick="{{ addProperty }}" style="padding: 9px 17px; border-radius: 10px; background: #007A3D; color: #FFFFFF; font-size: 12.5px; font-weight: 500; cursor: pointer; min-height: 40px; display: flex; align-items: center;" style-hover="background: #CE1126; color: #FFFFFF;">{{ t.addProperty }}</div>
           </div>
+          <sc-if value="{{ hasRowsError }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 11px 22px; background: rgba(206,17,38,0.06); border-bottom: 1px solid rgba(206,17,38,0.2); font-size: 12.5px; font-weight: 300; color: #B00F20;">{{ rowsError }}</div>
+          </sc-if>
           <sc-if value="{{ hasSaveNote }}" hint-placeholder-val="{{ false }}">
             <div style="padding: 11px 22px; background: rgba(0,122,61,0.06); border-bottom: 1px solid rgba(0,122,61,0.18); font-size: 12.5px; font-weight: 300; color: #00693A; font-family: ui-monospace, monospace;">{{ saveNote }}</div>
           </sc-if>
@@ -2370,6 +2373,7 @@ class Component extends DCLogic {
     this.setState({ rowBusy: id });
     try {
       await this.db.updatePropertyStatus(id, status);
+      this.setState({ propsError: '' });
       await this.loadProperties();
       await this.loadMarket();
     } catch (e) {
@@ -3114,7 +3118,8 @@ class Component extends DCLogic {
     if (!s.ready) {
       return { ...base, featured: empty, areas: empty, examples: empty, chips: empty, stages: empty,
         results: empty, sources: empty, sideNav: empty, rows: empty, tableHead: empty, panels: empty,
-        noRows: false, rowsEmptyLabel: '', dbBadge: '', dbBadgeBg: 'transparent', dbBadgeFg: 'inherit',
+        noRows: false, rowsEmptyLabel: '', hasRowsError: false, rowsError: '',
+        dbBadge: '', dbBadgeBg: 'transparent', dbBadgeFg: 'inherit',
         hasSaveNote: false, saveNote: '', addProperty: () => {}, addBusy: false,
         listOpen: false, form: this.blankListing(), dealOpts: empty, typeOpts: empty,
         cityOpts: empty, hoodOpts: empty, amenityOpts: empty, hasFormError: false,
@@ -3560,22 +3565,40 @@ class Component extends DCLogic {
       // no sample row: an account with nothing listed shows the empty state.
       rows: (s.myProps || []).map(p => {
         const live = p.status === 'active';
+        // Every value the listing_status enum actually defines. Showing a sold
+        // listing as merely "Hidden" told the owner nothing.
+        const STATUS_LABEL = {
+          draft:    ar ? 'مسودة'   : 'Draft',
+          pending:  ar ? 'قيد المراجعة' : 'In review',
+          active:   ar ? 'منشور'   : 'Live',
+          rejected: ar ? 'مرفوض'   : 'Rejected',
+          paused:   ar ? 'مخفي'    : 'Hidden',
+          sold:     ar ? 'مباع'    : 'Sold',
+          rented:   ar ? 'مؤجر'    : 'Rented',
+          archived: ar ? 'مؤرشف'   : 'Archived'
+        };
         return {
           title: (ar && p.title_ar) ? p.title_ar : p.title_en,
           id: p.id.slice(0, 8),
           place: this.placeOfIds(p.city_id, p.neighborhood_id),
           price: this.money(p.price_jod, p.deal === 'rent' ? 'rent' : 'sale'),
-          status: live ? (ar ? 'منشور' : 'Live') : (ar ? 'مخفي' : 'Hidden'),
+          status: STATUS_LABEL[p.status] || p.status,
           statusBg: live ? 'rgba(0,122,61,0.1)' : 'rgba(23,23,15,0.06)',
           statusBorder: live ? 'rgba(0,122,61,0.3)' : 'rgba(23,23,15,0.16)',
           statusFg: live ? '#00693A' : 'rgba(23,23,15,0.5)',
           toggleLabel: live ? (ar ? 'إخفاء' : 'Hide') : (ar ? 'نشر' : 'Publish'),
-          toggle: () => this.setRowStatus(p.id, live ? 'hidden' : 'active'),
+          // 'paused' is the enum's word for this. 'hidden' was never one of
+          // its values, so Postgres rejected every attempt to hide a listing.
+          toggle: () => this.setRowStatus(p.id, live ? 'paused' : 'active'),
           removeLabel: ar ? 'حذف' : 'Delete',
           remove: () => this.removeRow(p.id),
           busy: s.rowBusy === p.id
         };
       }),
+      // propsError only reached the screen through the empty state, so an
+      // owner with listings saw the badge turn red and nothing else.
+      hasRowsError: !!s.propsError,
+      rowsError: s.propsError ? L.dbError + ' ' + s.propsError : '',
       noRows: !(s.myProps && s.myProps.length),
       rowsEmptyLabel: !s.signedIn ? L.dbSignedOut
         : s.propsBusy ? L.loadingProps
