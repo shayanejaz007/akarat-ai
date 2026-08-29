@@ -1,0 +1,24 @@
+{
+  "name": "akarat-ai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/gen-reference.mjs && node scripts/sync-public.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/gen-reference.mjs && node scripts/sync-public.mjs",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.3"
+  }
+}

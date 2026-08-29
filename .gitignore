@@ -1,0 +1,41 @@
+# Secrets — never commit. Copy .env.example instead.
+.env.local
+.env*.local
+.env
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Supabase local
+.branches
+.temp
+supabase/.temp/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Working files from the design tool
+uploads/
+.thumbnail
+
+# Generated: sync-public.mjs rebuilds this from the repo root on dev/build
+public/
+next-env.d.ts
