@@ -39,3 +39,6 @@ uploads/
 # Generated: sync-public.mjs rebuilds this from the repo root on dev/build
 public/
 next-env.d.ts
+
+# TypeScript incremental build cache
+*.tsbuildinfo
