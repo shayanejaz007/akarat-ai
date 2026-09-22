@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html>
+<!-- Arabic is the default language; the runtime overwrites both attributes
+     from the reader's stored choice on boot (applyLangToDocument). They are
+     set here rather than left blank so the first paint is already right-to-
+     left, instead of laying out left-to-right and flipping a frame later. -->
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1604,9 +1608,75 @@ const STAGE_DEFS = [
   { id: 'rank',  en: 'Deterministic ranking',     ar: 'الترتيب المحسوب' }
 ];
 
+/* ──────────────── language ────────────────
+   Arabic is the default. This is a Jordanian marketplace, and most of the
+   people it is for read Arabic first; English is the second choice, not the
+   baseline. Someone who switches to English keeps it, so the default only
+   ever applies to a first visit.
+
+   The document is static and boots entirely in the browser — there is no
+   server render to disagree with — so reading the stored choice while the
+   initial state is being built is safe, and avoids a visible flip from Arabic
+   to English one frame after load for returning English readers. */
+
+const LANG_KEY = 'akarat.lang';
+
+function storedLang() {
+  try {
+    const v = window.localStorage.getItem(LANG_KEY);
+    return v === 'en' || v === 'ar' ? v : null;
+  } catch {
+    // Private windows and blocked site data both throw here. A visitor who
+    // cannot be remembered simply gets the default.
+    return null;
+  }
+}
+
+function rememberLang(lang) {
+  try { window.localStorage.setItem(LANG_KEY, lang); } catch { /* not fatal */ }
+}
+
+/**
+ * The language this load should open in, in order of authority:
+ *
+ *   1. the URL — /en and /ar are served this same document, and app/metadata.ts
+ *      advertises them as the English and Arabic versions of the page. If /en
+ *      rendered Arabic, every hreflang tag pointing at it would be a lie, and
+ *      a link someone shared as English would not open in English.
+ *   2. what this reader chose last time.
+ *   3. Arabic.
+ */
+function initialLang() {
+  try {
+    const path = window.location.pathname.replace(/\/+$/, '');
+    if (path === '/en') return 'en';
+    if (path === '/ar') return 'ar';
+  } catch { /* fall through to the stored choice */ }
+  return storedLang() || 'ar';
+}
+
+/**
+ * Mirrors the chosen language onto <html lang> and <html dir>.
+ *
+ * The app already puts dir on its own root element, so the layout flips
+ * without this. Three things outside that element need it anyway: assistive
+ * technology announces the page in the wrong language without lang, the
+ * browser hyphenates and picks fonts by it, and lib/geo.js reads
+ * document.documentElement.lang to decide whether to ask Google for Arabic
+ * place names — so without this the map and its suggestions stayed English
+ * however the rest of the page was set.
+ */
+function applyLangToDocument(lang) {
+  try {
+    const el = document.documentElement;
+    el.setAttribute('lang', lang);
+    el.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  } catch { /* no document: nothing to mirror */ }
+}
+
 class Component extends DCLogic {
   state = {
-    ready: false, screen: 'home', lang: 'en', scrolled: false,
+    ready: false, screen: 'home', lang: initialLang(), scrolled: false,
     query: '', constraints: null, turns: [], results: [], running: false,
     stageIdx: -1, stageInfo: {}, expanded: {}, saved: {},
     hoverId: null, searched: false, signedIn: false,
@@ -1722,6 +1792,9 @@ class Component extends DCLogic {
       else if (e.key === 'ArrowLeft') { e.preventDefault(); this.stepLightbox(this.state.lang === 'ar' ? 1 : -1); }
     };
     window.addEventListener('keydown', this._keys);
+    // Whatever the initial state settled on — the stored choice or the Arabic
+    // default — <html> has to say the same thing.
+    applyLangToDocument(this.state.lang);
     Promise.all([import('./data/market.js'), import('./lib/aisearch.js')]).then(([m, ai]) => {
       this.M = m; this.AI = ai;
       this.setState({ ready: true }, () => this.animateScreen(true));
@@ -3610,6 +3683,20 @@ class Component extends DCLogic {
     });
   }
 
+  /**
+   * The one place the language changes. Persists the choice and mirrors it
+   * onto <html>, so a reader who picks English is still reading English after
+   * a reload, and everything that reads the document language agrees with
+   * what is on screen.
+   */
+  setLang(lang) {
+    if (lang !== 'en' && lang !== 'ar') return;
+    if (lang === this.state.lang) return;
+    rememberLang(lang);
+    applyLangToDocument(lang);
+    this.setState({ lang });
+  }
+
   L() { return STR[this.state.lang]; }
   loc(o) { return o ? o[this.state.lang] || o.en : ''; }
 
@@ -3840,7 +3927,7 @@ class Component extends DCLogic {
       enFg: ar ? (onHero ? 'rgba(255,255,255,0.55)' : 'rgba(23,23,15,0.45)') : (onHero ? '#FFFFFF' : '#17170F'),
       arFg: ar ? (onHero ? '#FFFFFF' : '#17170F') : (onHero ? 'rgba(255,255,255,0.55)' : 'rgba(23,23,15,0.45)'),
       onHero: onHero ? 'true' : 'false',
-      toggleLang: () => this.setState({ lang: ar ? 'en' : 'ar' }),
+      toggleLang: () => this.setLang(ar ? 'en' : 'ar'),
       goHome: () => { this.setState({ screen: 'home' }); this.scrollTop(); },
       goSearch: () => { this.setState({ screen: 'search' }); this.scrollTop(); },
       goDash: () => {

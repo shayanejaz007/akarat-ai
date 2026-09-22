@@ -33,11 +33,16 @@ export const metadata: Metadata = {
     "Describe the property you want in English or Arabic. Akarat.ai reads your requirements, searches its own verified listings and the wider Jordanian market, and shows how each result was matched.",
   applicationName: "Akarat.ai",
   referrer: "strict-origin-when-cross-origin",
+  // The app opens in Arabic, so Arabic is the canonical version of the home
+  // page. Leaving this at /en told search engines the English page was the
+  // authoritative one while every visitor landed on the Arabic one, which is
+  // the sort of mismatch that gets the wrong page indexed and ranked.
+  // x-default stays English: it is what a reader of neither language gets.
   alternates: {
-    canonical: "/en",
+    canonical: "/ar",
     languages: {
-      "en-JO": "/en",
       "ar-JO": "/ar",
+      "en-JO": "/en",
       "x-default": "/en",
     },
   },
@@ -57,9 +62,9 @@ export const metadata: Metadata = {
     title: "Akarat.ai: Property search across Jordan",
     description:
       "Search the usual way, or say what you are looking for in English or Arabic.",
-    url: "/en",
-    locale: "en_JO",
-    alternateLocale: ["ar_JO"],
+    url: "/ar",
+    locale: "ar_JO",
+    alternateLocale: ["en_JO"],
     images: [{ url: "/assets/og-image.jpg", width: 1200, height: 630, alt: "Akarat.ai" }],
   },
   twitter: { card: "summary_large_image", images: ["/assets/og-image.jpg"] },
