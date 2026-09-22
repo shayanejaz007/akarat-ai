@@ -89,9 +89,31 @@ create policy "owners delete their own exact locations"
   on public.property_locations for delete using (auth.uid() = owner_id);
 
 -- ── 3. Grants ──────────────────────────────────────────────────────────
--- Note what is missing: `anon` gets nothing at all on this table, so a
--- signed-out reader is refused at the grant, before RLS is consulted.
 grant select, insert, update, delete on public.property_locations to authenticated;
+
+-- And now take away what this table was given without being asked.
+--
+-- 0005_grants.sql ends with:
+--
+--   alter default privileges in schema public
+--     grant select on tables to anon, authenticated;
+--
+-- which means every table created after it starts life with SELECT already
+-- granted to `anon` — this one included. `profiles` and `saved_searches`
+-- predate that statement, which is why a signed-out read of those is refused
+-- outright while a read of this table returned an empty list instead.
+--
+-- Nothing was exposed: RLS has no policy that matches a null auth.uid(), so
+-- the answer was correctly no rows. But it left the most sensitive table in
+-- the schema resting on a single control. Two things would turn that into a
+-- disclosure: someone adding a policy here that reads more permissively than
+-- they realised, or RLS being disabled for a minute during debugging. On a
+-- table of exact home addresses, neither is a risk worth carrying for the
+-- sake of a grant nobody wanted.
+--
+-- Revoked from PUBLIC too, so a role added later does not inherit it either.
+revoke all on public.property_locations from anon;
+revoke all on public.property_locations from public;
 
 -- ── 4. Index ───────────────────────────────────────────────────────────
 -- Map-bounds queries ("everything in this viewport") read lat and lng
