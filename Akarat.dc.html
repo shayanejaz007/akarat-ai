@@ -2137,9 +2137,9 @@ class Component extends DCLogic {
       // The ref is what creates and destroys the map; see mountMap.
       mapRef: el => this.mountMap(el),
       hasMapError: !!s.mapError,
-      mapError: s.mapError
-        ? (ar ? 'تعذّر تحميل الخريطة. ' : 'The map could not load. ') + s.mapError
-        : '',
+      // Shown as-is. These messages already name the cause and the fix, and a
+      // generic "the map could not load" prefix in front of them buries it.
+      mapError: s.mapError || '',
       isPinned: pinned,
       notPinned: !pinned,
       pinLabel: pinned
@@ -2343,6 +2343,12 @@ class Component extends DCLogic {
     this._pinEl = el;
     if (!this.GEO || !this.GEO.hasMaps()) return;
 
+    // A rejected key never fails the promise — Google draws a grey box and
+    // calls gm_authFailure instead. This is the only way the owner hears why.
+    if (!this._authHook && this.GEO.onAuthFailure) {
+      this._authHook = this.GEO.onAuthFailure(msg => this.setState({ mapError: msg }));
+    }
+
     this.GEO.loadMaps().then(maps => {
       // The sheet may have closed, or another map mounted, while the script
       // was in flight.
@@ -2399,9 +2405,12 @@ class Component extends DCLogic {
           city && city.lat != null ? { lat: city.lat, lng: city.lng } : null
         );
         // Discard a response that arrived after the owner moved on.
-        if (this.state.addressText === text) this.setState({ suggestions: out });
-      } catch {
-        this.setState({ suggestions: [] });
+        if (this.state.addressText === text) this.setState({ suggestions: out, mapError: '' });
+      } catch (e) {
+        // Shown rather than swallowed: an empty dropdown cannot distinguish
+        // "no such address" from "Places API not enabled", and the second one
+        // is the one that needs fixing.
+        this.setState({ suggestions: [], mapError: e.message || String(e) });
       }
     }, 250);
   }
@@ -3227,6 +3236,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     this.teardownMap();
+    if (this._authHook) { this._authHook(); this._authHook = null; }
     if (this._spot) window.removeEventListener('pointermove', this._spot);
     if (this._pendingReveal) document.removeEventListener('visibilitychange', this._pendingReveal);
     window.removeEventListener('scroll', this._scroll);
@@ -4472,7 +4482,13 @@ class Component extends DCLogic {
       saveNote: s.lastSave
         ? `${L.savedOk} ${L.compression}: ${s.lastSave.raw} B → ${s.lastSave.gz} B (${s.lastSave.pct}%)`
         : '',
-      addProperty: () => this.setState({ listOpen: true, form: s.form || this.blankListing(), formError: '' }),
+      // Always a new listing, never the one an abandoned edit left behind.
+      // Without clearing editingId here, this button saves over that listing.
+      addProperty: () => this.setState({
+        listOpen: true, editingId: null,
+        form: s.editingId ? this.blankListing() : (s.form || this.blankListing()),
+        formError: '', removedPhotos: [], addressText: '', suggestions: []
+      }),
       addBusy: s.propsBusy,
       ...this.listingVals(ar, M),
       panels: [

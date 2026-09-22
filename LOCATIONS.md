@@ -115,16 +115,32 @@ that.
 
 ## Step 6 — configure and run
 
+Paste the key into `.env.local` (the file is already there, and `.gitignore`
+covers it):
+
 ```bash
-# .env.local
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIza...
 ```
 
-Then rebuild, because the key is baked into `public/config.js` at build time
-rather than read per request:
+No quotes, no spaces around the `=`. Then **restart**:
 
 ```bash
 npm run dev     # or npm run build
+```
+
+Restarting is not optional. The key is baked into `public/config.js` by
+`scripts/sync-public.mjs` when the server starts, not read per request, so
+nothing picks up a change to `.env.local` while the server is running.
+
+That script reads `.env.local` itself, because loading it is a Next.js
+feature and the script runs as plain Node from `predev`. A real environment
+variable still wins, so Vercel and CI are unaffected.
+
+The startup line tells you whether it worked:
+
+```
+sync-public: ... google maps: on
+sync-public: no NEXT_PUBLIC_GOOGLE_MAPS_KEY — the listing form will use ...
 ```
 
 On Vercel: Settings → Environment Variables. This one **is** browser-visible,
@@ -165,6 +181,25 @@ put it behind `/api` like the search route.
    point somewhere near but not at the building.
 6. Dashboard → **Edit** on that listing. The pin should return to the exact
    spot you placed, not the blurred one.
+
+## When it does not work
+
+Every one of these reports itself in the form, under the map, rather than
+looking like "no results". If you see nothing at all there, the key never
+arrived — check the `sync-public` line from step 6 first.
+
+| What you see | Cause | Fix |
+|---|---|---|
+| No *Location on the map* section | Key not in `public/config.js` | Check `.env.local`, then restart. `cat public/config.js` should show your key |
+| Grey box, "Google rejected the key" | Billing off, domain not in the referrer list, or Maps JavaScript not in the key's API restrictions | Steps 3–5. The browser console names which one |
+| Map fine, "Places API (New) is not available" | Places API (New) not enabled, or not ticked in the key's API restrictions | Steps 3 and 4 |
+| Suggestions never appear, no error | Fewer than three characters typed | Type more; nothing is sent before the third character |
+| "For development purposes only" watermark | Billing not enabled | Step 2.3 |
+| Area dropdown snaps somewhere unexpected | The pin is more than 6 km from any known area, so only the city is set | Expected. Add the area to `data/market.js` and run `npm run gen:locations` |
+| Saving fails, "location columns are not set up" | `0010_location.sql` has not been run | Step 1 |
+
+Restrictions take a few minutes to propagate after you save them in the Cloud
+console. A key that looks wrong immediately after editing may just be early.
 
 ## Costs, plainly
 

@@ -5,8 +5,40 @@
 // files extracted from a zip are read-only, and a permission-preserving copy
 // fails with EPERM before it ever writes anything.
 import { readdir, readFile, writeFile, mkdir, stat, rm } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+
+// ── Read .env.local ourselves ───────────────────────────────────────────
+// Loading .env.local is a Next.js feature, not a Node one, and this script
+// runs as plain Node from `predev` / `prebuild`. Without this, a key sitting
+// in .env.local never reaches public/config.js, and the app behaves exactly
+// as though it had never been set — which is a very hard thing to debug.
+//
+// A real environment variable always wins, so Vercel and CI are unaffected.
+function loadEnvFile(file) {
+  if (!existsSync(file)) return 0;
+  let n = 0;
+  for (const raw of readFileSync(file, 'utf8').split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const eq = line.indexOf('=');
+    if (eq < 1) continue;
+    const key = line.slice(0, eq).trim();
+    if (process.env[key] !== undefined) continue;
+    let value = line.slice(eq + 1).trim();
+    if ((value.startsWith('"') && value.endsWith('"'))
+      || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    if (value === '') continue;
+    process.env[key] = value;
+    n += 1;
+  }
+  return n;
+}
+
+// Next's own precedence: .env.local overrides .env.
+const envLoaded = loadEnvFile('.env.local') + loadEnvFile('.env');
 
 const items = ['Akarat.dc.html', 'support.js', 'assets', 'lib', 'data'];
 
@@ -92,6 +124,17 @@ await writeFile(
 
 console.log(
   `sync-public: public/ is up to date (react vendored: ${vendored}/${VENDOR.length},`
+  + ` env file vars: ${envLoaded},`
   + ` supabase config from env: ${cfg.supabaseUrl ? 'yes' : 'no, using lib/supabase.js fallback'},`
   + ` google maps: ${cfg.mapsKey ? 'on' : 'off, form uses dropdowns only'})`
 );
+
+// The whole point of the key is that the map appears. If it is set but did not
+// make it through, say so here rather than letting the form look broken.
+if (!cfg.mapsKey) {
+  console.log(
+    'sync-public: no NEXT_PUBLIC_GOOGLE_MAPS_KEY — the listing form will use '
+    + 'its city/area dropdowns. Put the key in .env.local to enable the map '
+    + '(see LOCATIONS.md).'
+  );
+}
