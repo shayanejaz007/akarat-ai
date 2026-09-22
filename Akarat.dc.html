@@ -91,6 +91,25 @@
   ::selection { background: #007A3D; color: #FFFFFF; }
   textarea::placeholder, input::placeholder { color: rgba(23,23,15,0.42); }
   [data-onhero="true"] textarea::placeholder { color: rgba(255,255,255,0.6); }
+  /* Keyboard focus. Every control in this document is a styled <div> with an
+     onClick, which the runtime renders as a plain div — so nothing was
+     focusable and nothing showed focus. enhanceKeyboard() in the logic block
+     makes them reachable; this is what makes the focus visible once it lands.
+     :focus-visible rather than :focus, so a mouse click does not draw a ring. */
+  [data-kbd]:focus { outline: none; }
+  [data-kbd]:focus-visible,
+  a:focus-visible, button:focus-visible,
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 3px solid #007A3D;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  /* On the hero the green ring has too little contrast against the photo. */
+  [data-onhero="true"] [data-kbd]:focus-visible,
+  [data-onhero="true"] textarea:focus-visible {
+    outline-color: #FFFFFF;
+  }
+
   [dir="rtl"] { word-spacing: 0.03em; }
   [dir="rtl"] *:not(code) { letter-spacing: normal !important; text-transform: none !important; }
   [dir="rtl"] h1, [dir="rtl"] h2 { line-height: 1.28 !important; }
@@ -172,6 +191,13 @@
   }
   @media (max-width: 560px)  { [data-footgrid] { grid-template-columns: 1fr !important; } }
   @media (max-width: 560px)  { [data-browsegrid] { grid-template-columns: 1fr !important; } }
+  /* The filter bar is five controls in a row on a desktop. On a phone that
+     wraps into a ragged stack, so the selects share the width two-up and the
+     price pair takes a line of its own. */
+  @media (max-width: 560px) {
+    [data-filterbar] > select { flex: 1 1 calc(50% - 5px); min-width: 0; }
+    [data-filterbar] > input  { flex: 1 1 calc(50% - 5px); width: auto !important; min-width: 0; }
+  }
   /* The listing sheet is three columns on a desktop so the whole form is
      visible without scrolling; it folds down as the viewport narrows. */
   @media (max-width: 1180px) { [data-formcols] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 30px !important; } }
@@ -1049,6 +1075,32 @@
       <p style="margin: 0 0 34px; font-size: 15.5px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.6); max-width: 60ch; text-wrap: pretty;">{{ browseBody }}</p>
 
       <sc-if value="{{ hasBrowse }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-bottom: 26px;">
+        <div data-filterbar="true" style="display: flex; flex-wrap: wrap; gap: 9px; align-items: center;">
+          <select value="{{ fCity }}" onChange="{{ onFCity }}" dir="{{ dir }}" aria-label="{{ lblCity }}" style="padding: 10px 13px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; cursor: pointer;" style-focus="border-color: #007A3D;">
+            <sc-for list="{{ fCityOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+          </select>
+          <select value="{{ fType }}" onChange="{{ onFType }}" dir="{{ dir }}" aria-label="{{ lblType }}" style="padding: 10px 13px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; cursor: pointer;" style-focus="border-color: #007A3D;">
+            <sc-for list="{{ fTypeOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+          </select>
+          <select value="{{ fBeds }}" onChange="{{ onFBeds }}" dir="{{ dir }}" aria-label="{{ lblBeds }}" style="padding: 10px 13px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; cursor: pointer;" style-focus="border-color: #007A3D;">
+            <sc-for list="{{ fBedsOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+          </select>
+          <input value="{{ fMin }}" onChange="{{ onFMin }}" type="text" inputMode="numeric" pattern="[0-9]*" placeholder="{{ fMinPlaceholder }}" dir="ltr" aria-label="{{ fMinPlaceholder }}" style="width: 116px; padding: 10px 13px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; box-sizing: border-box;" style-focus="border-color: #007A3D;" />
+          <input value="{{ fMax }}" onChange="{{ onFMax }}" type="text" inputMode="numeric" pattern="[0-9]*" placeholder="{{ fMaxPlaceholder }}" dir="ltr" aria-label="{{ fMaxPlaceholder }}" style="width: 116px; padding: 10px 13px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; box-sizing: border-box;" style-focus="border-color: #007A3D;" />
+          <sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}">
+            <span onClick="{{ clearFilters }}" style="padding: 10px 16px; border-radius: 100px; border: 1px dashed rgba(23,23,15,0.22); font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.6); cursor: pointer; min-height: 42px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="border-color: #CE1126; color: #B00F20;">{{ clearFiltersLabel }}</span>
+          </sc-if>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px;">
+          <sc-for list="{{ sortOpts }}" as="so" hint-placeholder-count="3">
+            <span onClick="{{ so.pick }}" style="padding: 8px 15px; border-radius: 100px; cursor: pointer; font-size: 12.5px; font-weight: 300; background: {{ so.bg }}; color: {{ so.fg }}; border: 1px solid {{ so.border }}; transition: background 180ms;">{{ so.label }}</span>
+          </sc-for>
+          <span style="margin-inline-start: auto; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.5); font-variant-numeric: tabular-nums;">{{ browseCount }}</span>
+        </div>
+      </div>
+
       <div data-browsegrid="true" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; align-items: stretch;">
         <sc-for list="{{ browseCards }}" as="b" hint-placeholder-count="5">
           <div data-anim="tile" data-glow="true" onClick="{{ b.open }}" style="position: relative; border-radius: 22px; overflow: hidden; cursor: pointer; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); transition: transform 300ms cubic-bezier(.2,.7,.3,1), border-color 300ms;" style-hover="transform: translateY(-4px); border-color: rgba(23,23,15,0.24);">
@@ -1068,6 +1120,20 @@
             </div>
           </div>
         </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ canLoadMore }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; justify-content: center; margin-top: 30px;">
+        <span onClick="{{ loadMore }}" style="display: inline-flex; align-items: center; padding: 13px 28px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.18); font-size: 13.5px; font-weight: 400; color: rgba(23,23,15,0.75); cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D; color: #007A3D;">{{ loadMoreLabel }}</span>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ browseNoMatch }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 54px 32px; border-radius: 22px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); text-align: center;">
+        <div style="font-size: 18px; font-weight: 400; letter-spacing: -0.015em;">{{ noMatchTitle }}</div>
+        <p style="margin: 12px auto 24px; font-size: 14.5px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.58); max-width: 46ch; text-wrap: pretty;">{{ noMatchBody }}</p>
+        <span onClick="{{ clearFilters }}" style="display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 100px; background: #007A3D; color: #FFFFFF; font-size: 13.5px; font-weight: 500; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="background: #CE1126; color: #FFFFFF;">{{ clearFiltersLabel }}</span>
       </div>
       </sc-if>
 
@@ -1693,6 +1759,11 @@ class Component extends DCLogic {
     myProps: null, propsBusy: false, propsError: '', lastSave: null,
     // Listing form: which row is being edited (null means a new listing),
     // Storage paths dropped during this edit, and the location picker.
+    // Buy and Rent: how the list is narrowed, ordered and paged. Until this
+    // existed both pages printed up to 60 listings in one price-ordered run
+    // with no way to narrow them and no sign that a 61st had been left out.
+    browseFilters: { city: '', type: '', beds: '', minPrice: '', maxPrice: '' },
+    browseSort: 'newest', browseShown: 12,
     editingId: null, removedPhotos: [], geoSchema: false,
     addressText: '', suggestions: [], addressBusy: false,
     mapReady: false, mapError: ''
@@ -1795,6 +1866,7 @@ class Component extends DCLogic {
     // Whatever the initial state settled on — the stored choice or the Arabic
     // default — <html> has to say the same thing.
     applyLangToDocument(this.state.lang);
+    this.enhanceKeyboard();
     Promise.all([import('./data/market.js'), import('./lib/aisearch.js')]).then(([m, ai]) => {
       this.M = m; this.AI = ai;
       this.setState({ ready: true }, () => this.animateScreen(true));
@@ -2145,8 +2217,8 @@ class Component extends DCLogic {
       onTitleEn: on('title_en'), onTitleAr: on('title_ar'), onPhone: on('contact_phone'),
       lblPhotos: ar ? 'الصور والفيديو' : 'Photos and video',
       photoHint: ar
-        ? 'حتى ثمانية ملفات: صور بحد أقصى ٦ ميغابايت، وفيديو بحد أقصى ٥٠ ميغابايت (حتى مقطعين). الأول هو الغلاف.'
-        : 'Up to eight files: images to 6 MB, video to 50 MB (two clips maximum). The first one is the cover.',
+        ? 'حتى ثمانية ملفات. الصور تُصغَّر تلقائياً قبل الرفع، فارفع الأصل من الكاميرا مباشرة. الفيديو بحد أقصى ٥٠ ميغابايت (حتى مقطعين). الأول هو الغلاف.'
+        : 'Up to eight files. Photos are resized automatically before upload, so send them straight from the camera. Video to 50 MB (two clips maximum). The first one is the cover.',
       photoPick: ar ? 'اختر صوراً أو فيديو' : 'Choose photos or video',
       onPickPhotos: e => { this.addPhotos(e.target.files); e.target.value = ''; },
       // The URL is assigned through a ref, never as a src="{{ }}" hole: a hole
@@ -2356,7 +2428,13 @@ class Component extends DCLogic {
     }
     // Rejected here as well as in the upload helper: the owner finds out while
     // picking rather than after filling in the whole form.
-    const MAX_IMAGE = 6 * 1024 * 1024;
+    //
+    // Images are allowed in far larger than the 6 MB the bucket accepts,
+    // because uploadListingMedia downscales them to 1600 px first and a photo
+    // straight off a phone lands well under the cap afterwards. Refusing a
+    // 12 MB original here would reject a file that was only ever going to be
+    // sent at about 300 KB.
+    const MAX_IMAGE = 40 * 1024 * 1024;
     const MAX_VIDEO = 50 * 1024 * 1024;
     let videos = form.photos.filter(p => p.kind === 'video').length;
     const next = [];
@@ -2399,6 +2477,15 @@ class Component extends DCLogic {
       : (this.state.removedPhotos || []);
     form.photos = form.photos.filter((_, k) => k !== i);
     this.setState({ form, removedPhotos: removed, formError: '' });
+  }
+
+  // Any filter change resets paging: keeping page 3 after narrowing the list
+  // to eight results would show an empty grid under a "Load more" button.
+  setBrowseFilter(key, value) {
+    this.setState({
+      browseFilters: { ...(this.state.browseFilters || {}), [key]: value },
+      browseShown: 12
+    });
   }
 
   setListingField(key, value) {
@@ -3237,7 +3324,17 @@ class Component extends DCLogic {
       return;
     }
     const screen = id === 'ai' ? 'search' : id === 'buy' ? 'buy' : id === 'rent' ? 'rent' : 'home';
-    this.setState({ ...patch, screen });
+    // Moving between buying and renting clears the filters. A 250,000 JOD
+    // ceiling is a sensible cap on a purchase and hides the entire rental
+    // market, so carrying it across would show an empty page and no reason.
+    const leavingBrowse = (screen === 'buy' || screen === 'rent') && screen !== this.state.screen;
+    this.setState({
+      ...patch, screen,
+      ...(leavingBrowse ? {
+        browseFilters: { city: '', type: '', beds: '', minPrice: '', maxPrice: '' },
+        browseShown: 12
+      } : {})
+    });
     this.scrollTop();
   }
 
@@ -3332,6 +3429,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     this.teardownMap();
     if (this._authHook) { this._authHook(); this._authHook = null; }
+    if (this._onKbd && this.root) { this.root.removeEventListener('keydown', this._onKbd); this._onKbd = null; }
     if (this._spot) window.removeEventListener('pointermove', this._spot);
     if (this._pendingReveal) document.removeEventListener('visibilitychange', this._pendingReveal);
     window.removeEventListener('scroll', this._scroll);
@@ -3376,6 +3474,10 @@ class Component extends DCLogic {
       this._lastLang = s.lang;
       this._lastResults = s.results;
     }
+    // Controls rendered by this update are not focusable until this runs, so
+    // it has to happen on every update, not only on mount. It only ever
+    // touches elements it has not already marked.
+    this.enhanceKeyboard();
   }
 
   /**
@@ -3695,6 +3797,68 @@ class Component extends DCLogic {
     rememberLang(lang);
     applyLangToDocument(lang);
     this.setState({ lang });
+  }
+
+  /* ──────────────── keyboard access ────────────────
+     Every control in this document is a <div> or <span> carrying an onClick.
+     That renders as a plain div: not focusable, not announced as a control,
+     and unreachable by Tab. An audit of the home page found 251 elements
+     styled cursor:pointer and none of them keyboard-reachable, which means
+     nobody could navigate, sign in or open a listing without a mouse.
+
+     The fix belongs here rather than in support.js, which is generated from
+     a source tree this repository does not contain ("do not edit" at the top
+     of the file) — a change there would disappear on the next rebuild.
+
+     How it works:
+
+     - cursor:pointer is the marker for a real control. The template sets it
+       inline on everything clickable, and deliberately not on the overlay
+       backdrops, whose onClick only dismisses them. Making those focusable
+       would add a tab stop announcing the whole sheet as a button.
+     - The attribute selector [style*="cursor: pointer"] is what keeps this
+       cheap: getComputedStyle on every node each render would not be, and
+       :not([data-kbd]) means each element is only ever processed once.
+     - One delegated keydown on the root handles Enter and Space, instead of
+       a listener per control. el.click() dispatches a real click, which is
+       what React's own delegated handler is already listening for. */
+
+  enhanceKeyboard() {
+    if (!this.root) return;
+    const NATIVE = /^(a|button|input|textarea|select|label|summary|details)$/i;
+    let found;
+    try {
+      found = this.root.querySelectorAll('[style*="cursor: pointer"]:not([data-kbd])');
+    } catch { return; }
+
+    for (const el of found) {
+      el.setAttribute('data-kbd', '');
+      // Already a real control, or the author set focus behaviour by hand.
+      if (NATIVE.test(el.tagName) || el.hasAttribute('tabindex')) continue;
+      el.setAttribute('tabindex', '0');
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+      // Announce something. Most of these carry their own label as text; the
+      // icon-only ones would otherwise be an unnamed button.
+      if (!el.hasAttribute('aria-label') && !el.textContent.trim()) {
+        const img = el.querySelector('img[alt]');
+        const alt = img && img.getAttribute('alt');
+        if (alt) el.setAttribute('aria-label', alt);
+      }
+    }
+
+    if (this._kbdBound) return;
+    this._kbdBound = true;
+    this._onKbd = e => {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      const el = e.target;
+      if (!el || !el.getAttribute || el.getAttribute('role') !== 'button') return;
+      if (NATIVE.test(el.tagName)) return;
+      // Space scrolls the page by default, which is the wrong answer when the
+      // focus is on a control.
+      e.preventDefault();
+      el.click();
+    };
+    this.root.addEventListener('keydown', this._onKbd);
   }
 
   L() { return STR[this.state.lang]; }
@@ -4093,6 +4257,16 @@ class Component extends DCLogic {
         browseCards: empty, hasBrowse: false, browseEmpty: false,
         browseKicker: '', browseTitle: '', browseBody: '',
         browseEmptyTitle: '', browseEmptyBody: '', goSell: () => {},
+        // Filter bar, before the data and the market module have landed.
+        lblFilters: '', fCity: '', fType: '', fBeds: '', fMin: '', fMax: '',
+        fCityOpts: empty, fTypeOpts: empty, fBedsOpts: empty,
+        onFCity: () => {}, onFType: () => {}, onFBeds: () => {},
+        onFMin: () => {}, onFMax: () => {},
+        fMinPlaceholder: '', fMaxPlaceholder: '',
+        sortOpts: empty, browseCount: '', hasFilters: false,
+        clearFiltersLabel: '', clearFilters: () => {},
+        canLoadMore: false, loadMoreLabel: '', loadMore: () => {},
+        browseNoMatch: false, noMatchTitle: '', noMatchBody: '',
         railPrev: () => {}, railNext: () => {},
         arrowPrev: '←', arrowNext: '→', stackCount: '',
         marketMode: 'grid', marketDisplay: 'grid',
@@ -4181,9 +4355,48 @@ class Component extends DCLogic {
     const marketKicker = featured.length ? L.featuredSub : L.marketEmptySub;
     const marketHeading = featured.length ? L.featured : L.marketEmpty;
 
-    const dealRows = deal => market.filter(r => r.deal === deal).map(r => this.cardOf(r));
-    const buyCards = dealRows('sale');
-    const rentCards = dealRows('rent');
+    /* ── Buy / Rent: narrow, order, page ──
+       Filtering happens on the stored rows rather than on the cards, because
+       a card is already formatted for display — its price is a string with a
+       currency on it, and its place is one bilingual label. The columns are
+       what can actually be compared. */
+    const bf = s.browseFilters || {};
+    const nOr = v => (v === '' || v == null ? null : Number(String(v).replace(/[^\d]/g, '')) || null);
+
+    const narrowRows = rows => {
+      const minP = nOr(bf.minPrice);
+      const maxP = nOr(bf.maxPrice);
+      const beds = nOr(bf.beds);
+      return rows.filter(r =>
+        (!bf.city || r.city_id === bf.city)
+        && (!bf.type || r.property_type === bf.type)
+        // "3+ bedrooms" is what people mean by choosing 3, not "exactly 3".
+        && (!beds || (r.bedrooms || 0) >= beds)
+        && (minP == null || (r.price_jod || 0) >= minP)
+        && (maxP == null || (r.price_jod || 0) <= maxP)
+      );
+    };
+
+    const orderRows = rows => {
+      const out = [...rows];
+      if (s.browseSort === 'price_asc') out.sort((a, b) => (a.price_jod || 0) - (b.price_jod || 0));
+      else if (s.browseSort === 'price_desc') out.sort((a, b) => (b.price_jod || 0) - (a.price_jod || 0));
+      else out.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+      return out;
+    };
+
+    const dealDeck = deal => orderRows(narrowRows(market.filter(r => r.deal === deal)));
+    const browseDeal = s.screen === 'rent' ? 'rent' : 'sale';
+    const browseAll = dealDeck(browseDeal);
+    const browseShown = Math.min(s.browseShown || 12, browseAll.length);
+    const browseSlice = browseAll.slice(0, browseShown);
+    // Everything on this page's side of the marketplace, before filtering, so
+    // the empty state can tell "nothing listed" apart from "nothing matches".
+    const browseTotalUnfiltered = market.filter(r => r.deal === browseDeal).length;
+    const browseFiltered = browseAll.length !== browseTotalUnfiltered;
+
+    const buyCards = dealDeck('sale').map(r => this.cardOf(r));
+    const rentCards = dealDeck('rent').map(r => this.cardOf(r));
 
     const areas = [...M.NEIGHBORHOODS.filter(n => n.city === 'amman'), ...M.CITIES.filter(c => c.id !== 'amman')]
       .slice(0, 18).map(a => ({
@@ -4398,9 +4611,73 @@ class Component extends DCLogic {
       stackCount: narrow && pool.length
         ? `${String(at + 1).padStart(2, '0')} / ${String(pool.length).padStart(2, '0')}`
         : '',
-      browseCards: s.screen === 'rent' ? rentCards : buyCards,
-      hasBrowse: (s.screen === 'rent' ? rentCards : buyCards).length > 0,
-      browseEmpty: !!s.market && (s.screen === 'rent' ? rentCards : buyCards).length === 0,
+      browseCards: browseSlice.map(r => this.cardOf(r)),
+      hasBrowse: browseSlice.length > 0,
+      // Only when this side of the marketplace really is empty. A filter that
+      // matched nothing is browseNoMatch, and says something different.
+      browseEmpty: !!s.market && browseTotalUnfiltered === 0,
+      noMatchTitle: ar ? 'لا نتائج مطابقة' : 'No properties match',
+      noMatchBody: ar
+        ? 'لا يوجد عقار يطابق هذه التصفية. وسّع النطاق أو أزل التصفية لعرض كل المعروض.'
+        : 'Nothing on the marketplace matches these filters. Widen them, or clear them to see everything listed.',
+
+      /* ── filter bar ── */
+      lblFilters: ar ? 'تصفية' : 'Filter',
+      fCity: bf.city || '',
+      fCityOpts: [{ value: '', label: [ar ? 'كل المدن' : 'All cities'] }]
+        .concat((M.CITIES || []).map(c => ({ value: c.id, label: [this.loc(c)] }))),
+      onFCity: e => this.setBrowseFilter('city', e.target.value),
+      fType: bf.type || '',
+      fTypeOpts: [{ value: '', label: [ar ? 'كل الأنواع' : 'All types'] }]
+        .concat((M.TYPES || []).map(t => ({ value: t.id, label: [this.loc(t)] }))),
+      onFType: e => this.setBrowseFilter('type', e.target.value),
+      fBeds: bf.beds || '',
+      fBedsOpts: [{ value: '', label: [ar ? 'أي عدد غرف' : 'Any beds'] }]
+        .concat([1, 2, 3, 4, 5].map(n => ({
+          value: String(n),
+          label: [ar ? `${n}+ غرف` : `${n}+ beds`]
+        }))),
+      onFBeds: e => this.setBrowseFilter('beds', e.target.value),
+      fMin: bf.minPrice || '',
+      fMax: bf.maxPrice || '',
+      onFMin: e => this.setBrowseFilter('minPrice', e.target.value),
+      onFMax: e => this.setBrowseFilter('maxPrice', e.target.value),
+      fMinPlaceholder: ar ? 'أقل سعر' : 'Min price',
+      fMaxPlaceholder: ar ? 'أعلى سعر' : 'Max price',
+
+      sortOpts: [
+        { id: 'newest', label: ar ? 'الأحدث' : 'Newest' },
+        { id: 'price_asc', label: ar ? 'الأقل سعراً' : 'Price low to high' },
+        { id: 'price_desc', label: ar ? 'الأعلى سعراً' : 'Price high to low' }
+      ].map(o => ({
+        label: o.label,
+        pick: () => this.setState({ browseSort: o.id, browseShown: 12 }),
+        bg: s.browseSort === o.id ? 'rgba(0,122,61,0.1)' : '#FFFFFF',
+        fg: s.browseSort === o.id ? '#00693A' : 'rgba(23,23,15,0.62)',
+        border: s.browseSort === o.id ? 'rgba(0,122,61,0.38)' : 'rgba(23,23,15,0.14)'
+      })),
+
+      // "12 of 34" rather than a bare count: with paging, the number on screen
+      // and the number that matched are different, and both matter.
+      browseCount: browseAll.length === 0 ? ''
+        : ar
+          ? `${browseShown} من ${browseAll.length}`
+          : `Showing ${browseShown} of ${browseAll.length}`,
+      hasFilters: browseFiltered,
+      clearFiltersLabel: ar ? 'أزل التصفية' : 'Clear filters',
+      clearFilters: () => this.setState({
+        browseFilters: { city: '', type: '', beds: '', minPrice: '', maxPrice: '' },
+        browseShown: 12
+      }),
+      canLoadMore: browseShown < browseAll.length,
+      loadMoreLabel: ar
+        ? `اعرض المزيد (${browseAll.length - browseShown})`
+        : `Load more (${browseAll.length - browseShown})`,
+      loadMore: () => this.setState({ browseShown: (s.browseShown || 12) + 12 }),
+      // An empty result from a filter is not the same as an empty marketplace,
+      // and telling someone "nothing is listed" when their own price cap is
+      // what hid it sends them away for no reason.
+      browseNoMatch: browseFiltered && browseAll.length === 0 && browseTotalUnfiltered > 0,
       browseKicker: s.screen === 'rent'
         ? (ar ? 'معروض للإيجار' : 'Available to rent')
         : (ar ? 'معروض للبيع' : 'Available to buy'),
