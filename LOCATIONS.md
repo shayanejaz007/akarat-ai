@@ -182,6 +182,49 @@ put it behind `/api` like the search route.
 6. Dashboard → **Edit** on that listing. The pin should return to the exact
    spot you placed, not the blurred one.
 
+## Deploying on Vercel
+
+Set `NEXT_PUBLIC_GOOGLE_MAPS_KEY` under Settings → Environment Variables.
+`prebuild` runs on Vercel, real environment variables take precedence over any
+file, and `.env.local` is not in the repository, so the key flows straight
+into `public/config.js`. Three things catch people out:
+
+1. **Environment variables do not apply to deployments that already exist.**
+   Adding the key changes nothing until you redeploy. Deployments →
+   ⋯ → Redeploy, or push a commit.
+2. **Tick every environment you use.** A key set for Production only is
+   absent from preview deployments, and the form there falls back to
+   dropdowns.
+3. **Preview URLs are different domains.** Vercel gives each deployment its
+   own `*.vercel.app` hostname, and the key's referrer list must include it or
+   Google refuses. Add `https://*.vercel.app/*` alongside your real domain
+   while you are still testing, and drop it once you are on the custom domain.
+
+Because the key is baked in at build time, changing it later also needs a
+redeploy.
+
+## Two headers to keep in mind
+
+`next.config.mjs` sets no Content-Security-Policy today, which is why the map
+works. `SECURITY-AUDIT.md` lists adding one as a pre-launch task — when you
+do, it has to allow Google or the map silently stops loading:
+
+```
+script-src  'self' https://maps.googleapis.com
+img-src     'self' data: https://*.googleapis.com https://*.gstatic.com
+connect-src 'self' https://maps.googleapis.com
+style-src   'self' 'unsafe-inline' https://fonts.googleapis.com
+font-src    'self' https://fonts.gstatic.com
+```
+
+`Referrer-Policy: strict-origin-when-cross-origin` is already set and is
+compatible: it still sends the origin to Google, which is what the referrer
+restriction matches on. Do not change it to `no-referrer` — that would make
+every restricted key fail.
+
+Separately, `Permissions-Policy` disables `geolocation`. Nothing here uses it,
+but a future "use my current location" button would need that relaxed.
+
 ## When it does not work
 
 Every one of these reports itself in the form, under the map, rather than
