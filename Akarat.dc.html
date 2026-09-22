@@ -1628,6 +1628,17 @@ class Component extends DCLogic {
     mapReady: false, mapError: ''
   };
 
+  // One stable function for the map container's ref, created once.
+  //
+  // This must not be an arrow function built inside listingVals. React
+  // compares refs by identity: a fresh closure each render means React
+  // detaches the old one and attaches the new one on every render, so the map
+  // would be torn down and rebuilt each time — and because mountMap calls
+  // setState when the map is ready, that rebuild triggers the next render and
+  // the loop never stops. With a real key each turn of it is a new
+  // google.maps.Map, which is a billed map load.
+  _mapRef = el => this.mountMap(el);
+
   // Opening a listing also writes it into the address bar, so the page can be
   // linked, shared and reloaded. Before this a property existed only as client
   // state and had no URL at all.
@@ -2134,8 +2145,9 @@ class Component extends DCLogic {
         secondary: sg.secondary,
         pick: () => this.pickSuggestion(sg)
       })),
-      // The ref is what creates and destroys the map; see mountMap.
-      mapRef: el => this.mountMap(el),
+      // The ref is what creates and destroys the map; see mountMap. Passed by
+      // identity from a class field — never rebuilt here. See _mapRef.
+      mapRef: this._mapRef,
       hasMapError: !!s.mapError,
       // Shown as-is. These messages already name the cause and the fix, and a
       // generic "the map could not load" prefix in front of them buries it.
@@ -2364,9 +2376,19 @@ class Component extends DCLogic {
       // An owner who opens the map with no pin yet has not chosen anything,
       // so the marker sitting at the city centre is not treated as a choice
       // until they drag or click it.
-      this.setState({ mapReady: true, mapError: '' });
+      //
+      // Guarded because this runs inside a ref callback: setting state that
+      // is already set would render again for no reason, and if the ref ever
+      // loses its stable identity again that render becomes a loop. Cheap
+      // insurance on a path where the failure mode is billed per iteration.
+      if (!this.state.mapReady || this.state.mapError) {
+        this.setState({ mapReady: true, mapError: '' });
+      }
     }).catch(e => {
-      this.setState({ mapReady: false, mapError: e.message || String(e) });
+      const msg = e.message || String(e);
+      if (this.state.mapError !== msg || this.state.mapReady) {
+        this.setState({ mapReady: false, mapError: msg });
+      }
     });
   }
 
