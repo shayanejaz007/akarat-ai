@@ -400,6 +400,54 @@
         </select>
       </label>
 
+      <sc-if value="{{ mapsOn }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-bottom: 22px;">
+        <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(23,23,15,0.45); margin-bottom: 6px;">{{ lblLocation }}</div>
+        <div style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.55); margin-bottom: 12px;">{{ locHint }}</div>
+
+        <div style="position: relative; margin-bottom: 10px;">
+          <input value="{{ addressText }}" onChange="{{ onAddressInput }}" type="text" placeholder="{{ addressPlaceholder }}" dir="{{ dir }}" autoComplete="off" style="width: 100%; box-sizing: border-box; padding: 12px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14.5px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+          <sc-if value="{{ hasSuggestions }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 30; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.14); border-radius: 12px; overflow: hidden; box-shadow: 0 14px 34px rgba(23,23,15,0.13);">
+            <sc-for list="{{ suggestions }}" as="sg" hint-placeholder-count="3">
+              <div onClick="{{ sg.pick }}" style="padding: 11px 13px; cursor: pointer; border-bottom: 1px solid rgba(23,23,15,0.06);" style-hover="background: rgba(0,122,61,0.06);">
+                <div style="font-size: 14px; font-weight: 400; color: #17170F;">{{ sg.primary }}</div>
+                <div style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ sg.secondary }}</div>
+              </div>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+
+        <div ref="{{ mapRef }}" style="width: 100%; height: 230px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.14); background: #EDE7D9; overflow: hidden;"></div>
+
+        <sc-if value="{{ hasMapError }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size: 12.5px; font-weight: 300; color: #B00F20; margin-top: 8px;">{{ mapError }}</div>
+        </sc-if>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px;">
+          <div style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55);" dir="ltr">{{ pinLabel }}</div>
+          <sc-if value="{{ isPinned }}" hint-placeholder-val="{{ false }}">
+            <span onClick="{{ clearPin }}" style="padding: 6px 11px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.55); white-space: nowrap;" style-hover="border-color: #CE1126; color: #B00F20;">{{ clearPinLabel }}</span>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ isPinned }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 14px;">
+          <div style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55); margin-bottom: 8px;">{{ lblPrecision }}</div>
+          <div style="display: grid; gap: 8px;">
+            <sc-for list="{{ precisionOpts }}" as="pr" hint-placeholder-count="2">
+              <div onClick="{{ pr.pick }}" style="padding: 11px 13px; border-radius: 12px; cursor: pointer; background: {{ pr.bg }}; border: 1px solid {{ pr.border }}; transition: background 180ms;">
+                <div style="font-size: 13.5px; font-weight: 400; color: {{ pr.fg }};">{{ pr.label }}</div>
+                <div style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5); margin-top: 2px;">{{ pr.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
       <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(23,23,15,0.45); margin-bottom: 12px;">{{ lblDetails }}</div>
       <div data-formgrid="true" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 22px;">
         <label style="display: grid; gap: 6px;">
@@ -1337,6 +1385,7 @@
               <span style="font-weight: 400; font-variant-numeric: tabular-nums;">{{ row.price }}</span>
               <span style="display: flex; align-items: center; gap: 8px; justify-content: {{ rowActionAlign }};">
                 <span style="padding: 5px 13px; border-radius: 100px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; background: {{ row.statusBg }}; border: 1px solid {{ row.statusBorder }}; color: {{ row.statusFg }};">{{ row.status }}</span>
+                <span onClick="{{ row.edit }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.editLabel }}</span>
                 <span onClick="{{ row.toggle }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.toggleLabel }}</span>
                 <span onClick="{{ row.remove }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.5); white-space: nowrap;" style-hover="border-color: #CE1126; color: #B00F20;">{{ row.removeLabel }}</span>
               </span>
@@ -1571,7 +1620,12 @@ class Component extends DCLogic {
     savedIds: [], descOpen: false, copiedPhone: false, copiedLink: false,
     authMode: 'signin', authName: '', authEmail: '', authPassword: '',
     authMsg: '', authMsgKind: 'error', authBusy: false,
-    myProps: null, propsBusy: false, propsError: '', lastSave: null
+    myProps: null, propsBusy: false, propsError: '', lastSave: null,
+    // Listing form: which row is being edited (null means a new listing),
+    // Storage paths dropped during this edit, and the location picker.
+    editingId: null, removedPhotos: [], geoSchema: false,
+    addressText: '', suggestions: [], addressBusy: false,
+    mapReady: false, mapError: ''
   };
 
   // Opening a listing also writes it into the address bar, so the page can be
@@ -1677,6 +1731,11 @@ class Component extends DCLogic {
 
     // Supabase: restore any existing session, then follow sign in/out.
     import('./lib/providers.js').then(p => { this.PV = p; this.forceUpdate(); }).catch(() => {});
+
+    // Location services. The module itself is tiny and loads either way; the
+    // Google script behind it is only fetched when a key is configured and
+    // the owner actually opens the listing form.
+    import('./lib/geo.js').then(g => { this.GEO = g; this.forceUpdate(); }).catch(() => {});
 
     // Is the crawler's index live, and how much is in it? Stated plainly in the
     // coverage panel so nobody has to guess whether external results are real.
@@ -1925,16 +1984,31 @@ class Component extends DCLogic {
     const f = s.form || this.blankListing();
     const on = k => e => this.setListingField(k, e.target.value);
     const hoods = (M.NEIGHBORHOODS || []).filter(n => n.city === f.city_id);
+    const editing = !!s.editingId;
+    const mapsOn = !!(this.GEO && this.GEO.hasMaps());
+    const pinned = f.lat != null && f.lng != null;
 
     return {
       listOpen: !!s.listOpen,
-      closeListing: () => this.setState({ listOpen: false, formError: '' }),
+      closeListing: () => {
+        this.teardownMap();
+        this.setState({
+          listOpen: false, formError: '', editingId: null, removedPhotos: [],
+          addressText: '', suggestions: []
+        });
+      },
       stopListing: e => e.stopPropagation(),
       form: f,
-      listTitle: ar ? 'أضف عقاراً' : 'Add a property',
-      listBody: ar
-        ? 'العنوان والسعر والمدينة مطلوبة. الباقي اختياري ويمكن تعديله لاحقاً.'
-        : 'Title, price and city are required. Everything else is optional and editable later.',
+      listTitle: editing
+        ? (ar ? 'تعديل العقار' : 'Edit property')
+        : (ar ? 'أضف عقاراً' : 'Add a property'),
+      listBody: editing
+        ? (ar
+          ? 'التغييرات تظهر فور الحفظ. حالة الإعلان لا تتغير: المخفي يبقى مخفياً حتى تنشره.'
+          : 'Changes go live as soon as you save. The listing’s status is left alone — a hidden listing stays hidden until you publish it.')
+        : (ar
+          ? 'العنوان والسعر والمدينة مطلوبة. الباقي اختياري ويمكن تعديله لاحقاً.'
+          : 'Title, price and city are required. Everything else is optional and editable later.'),
       dealOpts: [
         { id: 'sale', label: ar ? 'للبيع' : 'For sale' },
         { id: 'rent', label: ar ? 'للإيجار' : 'For rent' }
@@ -2034,10 +2108,71 @@ class Component extends DCLogic {
       formError: s.formError,
       listBtnLabel: s.formBusy
         ? (ar ? 'جارٍ الحفظ…' : 'Saving…')
+        : editing
+        ? (ar ? 'احفظ التغييرات' : 'Save changes')
         : (ar ? 'انشر الإعلان' : 'Publish listing'),
       listBtnBg: s.formBusy ? 'rgba(23,23,15,0.4)' : '#007A3D',
       submitListing: () => this.submitListing(),
-      cancelLabel: ar ? 'إلغاء' : 'Cancel'
+      cancelLabel: ar ? 'إلغاء' : 'Cancel',
+
+      /* ── location picker ──
+         Everything here is inert without a Google Maps key: `mapsOn` is
+         false, the whole block is hidden, and the city/area dropdowns above
+         are unchanged. */
+      mapsOn,
+      lblLocation: ar ? 'الموقع على الخريطة' : 'Location on the map',
+      locHint: ar
+        ? 'ابحث عن العنوان ثم اسحب الدبوس إلى المبنى بالضبط. المدينة والمنطقة تتحدثان تلقائياً.'
+        : 'Search for the address, then drag the pin onto the exact building. The city and area update themselves.',
+      addressText: s.addressText || '',
+      onAddressInput: e => this.onAddressInput(e.target.value),
+      addressPlaceholder: ar ? 'مثلاً: دوار عبدون، عمان' : 'e.g. Abdoun Circle, Amman',
+      addressBusy: !!s.addressBusy,
+      hasSuggestions: (s.suggestions || []).length > 0,
+      suggestions: (s.suggestions || []).map(sg => ({
+        primary: sg.primary,
+        secondary: sg.secondary,
+        pick: () => this.pickSuggestion(sg)
+      })),
+      // The ref is what creates and destroys the map; see mountMap.
+      mapRef: el => this.mountMap(el),
+      hasMapError: !!s.mapError,
+      mapError: s.mapError
+        ? (ar ? 'تعذّر تحميل الخريطة. ' : 'The map could not load. ') + s.mapError
+        : '',
+      isPinned: pinned,
+      notPinned: !pinned,
+      pinLabel: pinned
+        ? `${Number(f.lat).toFixed(5)}, ${Number(f.lng).toFixed(5)}`
+        : (ar ? 'لم يُحدَّد موقع بعد' : 'No pin placed yet'),
+      clearPinLabel: ar ? 'أزل الدبوس' : 'Remove pin',
+      clearPin: () => this.clearPin(),
+
+      // Privacy. Closes the gap README lists as a launch blocker: an owner
+      // who does not want their exact address published no longer has to
+      // choose between that and having a map at all.
+      lblPrecision: ar ? 'ما الذي يراه الآخرون' : 'What buyers see',
+      precisionOpts: [
+        {
+          id: 'approximate',
+          label: ar ? 'دائرة تقريبية' : 'Approximate circle',
+          note: ar ? 'يُنشر موقع يبعد حتى ٣٠٠ متر. العنوان الدقيق يبقى لك وحدك.'
+            : 'Publishes a point up to 300 m away. The exact address stays yours alone.'
+        },
+        {
+          id: 'exact',
+          label: ar ? 'الموقع الدقيق' : 'Exact pin',
+          note: ar ? 'يُنشر الموقع والعنوان كما حدّدتهما.'
+            : 'Publishes the pin and the address exactly as you set them.'
+        }
+      ].map(o => ({
+        label: o.label,
+        note: o.note,
+        pick: () => this.setListingField('precision', o.id),
+        bg: f.precision === o.id ? 'rgba(0,122,61,0.1)' : '#FFFFFF',
+        fg: f.precision === o.id ? '#00693A' : 'rgba(23,23,15,0.62)',
+        border: f.precision === o.id ? 'rgba(0,122,61,0.38)' : 'rgba(23,23,15,0.14)'
+      }))
     };
   }
 
@@ -2046,8 +2181,79 @@ class Component extends DCLogic {
       deal: 'sale', property_type: 'apartment', city_id: 'amman', neighborhood_id: '',
       price_jod: '', bedrooms: '', bathrooms: '', area_sqm: '', land_sqm: '', year_built: '',
       title_en: '', title_ar: '', description_en: '', description_ar: '', amenities: [],
-      contact_phone: '', photos: []
+      contact_phone: '', photos: [],
+      // The pin. `lat`/`lng` are the exact point the owner placed; what gets
+      // published is decided by `precision` at save time (lib/geo.js → blur).
+      // 'approximate' is the default because the conservative answer is the
+      // right one for an owner who never opened the map.
+      lat: null, lng: null, address: '', place_id: null, precision: 'approximate'
     };
+  }
+
+  /**
+   * Fills the sheet from a stored row and opens it in edit mode.
+   *
+   * The exact pin is fetched separately: properties.lat/lng may be the blurred
+   * point, and reopening the form on a blurred point would walk the pin a
+   * little further from the building on every save.
+   */
+  async editListing(row) {
+    const p = row.payload || {};
+    const form = {
+      ...this.blankListing(),
+      deal: row.deal || 'sale',
+      property_type: row.property_type || 'apartment',
+      city_id: row.city_id || 'amman',
+      neighborhood_id: row.neighborhood_id || '',
+      price_jod: row.price_jod == null ? '' : String(row.price_jod),
+      bedrooms: row.bedrooms == null ? '' : String(row.bedrooms),
+      bathrooms: row.bathrooms == null ? '' : String(row.bathrooms),
+      area_sqm: row.area_sqm == null ? '' : String(row.area_sqm),
+      land_sqm: row.land_sqm == null ? '' : String(row.land_sqm),
+      year_built: row.year_built == null ? '' : String(row.year_built),
+      title_en: row.title_en || '',
+      title_ar: row.title_ar || '',
+      description_en: p.description_en || '',
+      description_ar: p.description_ar || '',
+      amenities: Array.isArray(p.amenities) ? [...p.amenities] : [],
+      contact_phone: (p.contact && p.contact.phone) || '',
+      // Already in Storage. `existing` marks them so submit knows not to
+      // re-upload them and removePhoto knows there is no object URL to revoke.
+      photos: (p.images || []).map(img => ({
+        existing: true,
+        url: img.url,
+        path: img.path,
+        kind: img.type === 'video' ? 'video' : 'image',
+        preview: img.url
+      })),
+      address: row.address || '',
+      precision: row.location_precision || 'approximate',
+      lat: row.lat == null ? null : Number(row.lat),
+      lng: row.lng == null ? null : Number(row.lng)
+    };
+
+    this.setState({
+      screen: 'dash', listOpen: true, editingId: row.id, form,
+      formError: '', uploadNote: '', removedPhotos: [], mapReady: false,
+      addressText: row.address || '',
+      // Whether this database has 0010. A row that carries the column proves
+      // it, and the column is absent from the row when the migration has not
+      // been run — which is what decides whether the save may name it.
+      geoSchema: row.location_precision !== undefined
+    });
+    this.scrollTop();
+
+    if (this.db && this.db.getExactLocation) {
+      try {
+        const exact = await this.db.getExactLocation(row.id);
+        if (!exact || this.state.editingId !== row.id) return;
+        const f = { ...(this.state.form || {}), lat: exact.lat, lng: exact.lng };
+        if (exact.address) f.address = exact.address;
+        if (exact.place_id) f.place_id = exact.place_id;
+        this.setState({ form: f, addressText: f.address || '' });
+        if (this._pin) this._pin.moveTo({ lat: exact.lat, lng: exact.lng }, 17);
+      } catch { /* no exact pin stored, or 0010 not run: keep the public one */ }
+    }
   }
 
   // Files are held as objects until submit, each with a local preview URL so
@@ -2097,9 +2303,17 @@ class Component extends DCLogic {
   removePhoto(i) {
     const form = { ...(this.state.form || this.blankListing()) };
     const gone = form.photos[i];
-    if (gone && gone.preview) URL.revokeObjectURL(gone.preview);
+    // Only a local pick has an object URL. Revoking an https: URL is a no-op,
+    // but the distinction is what decides whether Storage needs cleaning up.
+    if (gone && !gone.existing && gone.preview) URL.revokeObjectURL(gone.preview);
+    // A file already in Storage is deleted only once the edit is saved. Doing
+    // it here would strand the listing's photo the moment the owner changed
+    // their mind and closed the sheet.
+    const removed = gone && gone.existing && gone.path
+      ? [...(this.state.removedPhotos || []), gone.path]
+      : (this.state.removedPhotos || []);
     form.photos = form.photos.filter((_, k) => k !== i);
-    this.setState({ form, formError: '' });
+    this.setState({ form, removedPhotos: removed, formError: '' });
   }
 
   setListingField(key, value) {
@@ -2107,6 +2321,109 @@ class Component extends DCLogic {
     // a neighbourhood belongs to one city: changing the city clears it
     if (key === 'city_id') form.neighborhood_id = '';
     this.setState({ form, formError: '' });
+    // Re-centre the map on the city the owner just chose, as long as they
+    // have not already placed a pin — moving a placed pin would throw away a
+    // deliberate act in response to an incidental one.
+    if (key === 'city_id' && this._pin && this.M && !form.lat) {
+      const c = (this.M.CITIES || []).find(x => x.id === value);
+      if (c && c.lat != null) this._pin.moveTo({ lat: c.lat, lng: c.lng }, 12);
+    }
+  }
+
+  /* ──────────────── location picker ────────────────
+     Optional throughout. With no NEXT_PUBLIC_GOOGLE_MAPS_KEY set, hasMaps()
+     is false, none of this is reachable, and the city/area dropdowns above
+     remain the whole of the location story. */
+
+  // Ref callback on the map container. React hands us the element on mount
+  // and null on unmount, which is exactly the map's lifetime.
+  mountMap(el) {
+    if (!el) { this.teardownMap(); return; }
+    if (this._pinEl === el && this._pin) return;
+    this._pinEl = el;
+    if (!this.GEO || !this.GEO.hasMaps()) return;
+
+    this.GEO.loadMaps().then(maps => {
+      // The sheet may have closed, or another map mounted, while the script
+      // was in flight.
+      if (this._pinEl !== el || !el.isConnected) return;
+      this._maps = maps;
+      const f = this.state.form || {};
+      const city = this.M && (this.M.CITIES || []).find(c => c.id === f.city_id);
+      const at = f.lat != null
+        ? { lat: f.lat, lng: f.lng }
+        : (city && city.lat != null ? { lat: city.lat, lng: city.lng } : null);
+
+      this._pin = this.GEO.pinMap(maps, el, at, p => this.movePin(p));
+      // An owner who opens the map with no pin yet has not chosen anything,
+      // so the marker sitting at the city centre is not treated as a choice
+      // until they drag or click it.
+      this.setState({ mapReady: true, mapError: '' });
+    }).catch(e => {
+      this.setState({ mapReady: false, mapError: e.message || String(e) });
+    });
+  }
+
+  teardownMap() {
+    if (this._pin) { this._pin.destroy(); this._pin = null; }
+    this._pinEl = null;
+    if (this._addrT) { clearTimeout(this._addrT); this._addrT = null; }
+  }
+
+  // Dropping or dragging the pin. The coordinate is the owner's, but city_id
+  // and neighborhood_id stay ours: they are foreign keys, and search, the
+  // Arabic place names and dedupe all read them rather than the raw point.
+  movePin({ lat, lng }) {
+    const form = { ...(this.state.form || this.blankListing()), lat, lng };
+    if (this.GEO && this.M) {
+      const snapped = this.GEO.nearestArea(this.M, { lat, lng });
+      if (snapped.city_id) form.city_id = snapped.city_id;
+      form.neighborhood_id = snapped.neighborhood_id || '';
+    }
+    this.setState({ form, formError: '' });
+  }
+
+  onAddressInput(text) {
+    this.setState({ addressText: text });
+    if (this._addrT) clearTimeout(this._addrT);
+    if (!this.GEO || !this._maps) return;
+    if (text.trim().length < 3) { this.setState({ suggestions: [] }); return; }
+    // Every keystroke is a billed request. 250 ms of quiet turns a typed
+    // address into a handful of calls instead of one per character.
+    this._addrT = setTimeout(async () => {
+      const f = this.state.form || {};
+      const city = this.M && (this.M.CITIES || []).find(c => c.id === f.city_id);
+      try {
+        const out = await this.GEO.suggest(
+          this._maps, text,
+          city && city.lat != null ? { lat: city.lat, lng: city.lng } : null
+        );
+        // Discard a response that arrived after the owner moved on.
+        if (this.state.addressText === text) this.setState({ suggestions: out });
+      } catch {
+        this.setState({ suggestions: [] });
+      }
+    }, 250);
+  }
+
+  async pickSuggestion(s) {
+    this.setState({ suggestions: [], addressBusy: true });
+    try {
+      const place = await s.fetch();
+      const form = { ...(this.state.form || this.blankListing()) };
+      form.address = place.address || s.primary;
+      form.place_id = s.id;
+      this.setState({ form, addressText: form.address, addressBusy: false });
+      this.movePin({ lat: place.lat, lng: place.lng });
+      if (this._pin) this._pin.moveTo({ lat: place.lat, lng: place.lng }, 17);
+    } catch (e) {
+      this.setState({ addressBusy: false, formError: e.message || String(e) });
+    }
+  }
+
+  clearPin() {
+    const form = { ...(this.state.form || this.blankListing()), lat: null, lng: null, address: '', place_id: null };
+    this.setState({ form, addressText: '', suggestions: [], formError: '' });
   }
 
   // A custom feature is stored as its own literal text in the same amenities
@@ -2161,15 +2478,26 @@ class Component extends DCLogic {
 
     // Photos upload before the row is written, so a storage failure never
     // leaves a listing pointing at files that are not there.
+    //
+    // On an edit, only the newly picked files are uploaded; the ones already
+    // in Storage are carried through by reference. Re-uploading them would
+    // cost the owner their bandwidth and orphan the originals.
     let photos = [];
-    if (f.photos.length) {
+    const fresh = f.photos.filter(p => !p.existing);
+    if (fresh.length) {
       try {
-        photos = await this.db.uploadListingMedia(
-          f.photos.map(p => p.file),
+        const uploaded = await this.db.uploadListingMedia(
+          fresh.map(p => p.file),
           (done, total) => this.setState({
             uploadNote: (ar ? `يجري رفع الملف ${done} من ${total}` : `Uploading file ${done} of ${total}`)
           })
         );
+        // Rebuilt in the order the owner arranged them, because the first
+        // entry is the cover.
+        let next = 0;
+        photos = f.photos.map(p => p.existing
+          ? { url: p.url, path: p.path, type: p.kind }
+          : uploaded[next++]);
       } catch (e) {
         const msg = String(e.message || e);
         this.setState({
@@ -2182,8 +2510,29 @@ class Component extends DCLogic {
         });
         return;
       }
+    } else {
+      // An edit where nothing new was picked. Without this the kept photos
+      // would be written back as an empty list and the listing would lose
+      // every image it had.
+      photos = f.photos.map(p => ({ url: p.url, path: p.path, type: p.kind }));
     }
     this.setState({ uploadNote: '' });
+
+    // The pin splits in two here. `pub` is what lands on the properties row,
+    // which RLS publishes to everyone; the exact point is written separately
+    // to property_locations, which only this owner can read. See
+    // lib/geo.js → blur() and supabase/migrations/0010_location.sql.
+    const exact = f.precision === 'exact';
+    const hasCoords = f.lat != null && f.lng != null;
+    const canBlur = !!(this.GEO && this.GEO.blur);
+    // If the owner asked for an approximate location and the module that
+    // blurs it did not load, publish no coordinate at all. Falling back to
+    // the exact one would publish the address they asked us to withhold,
+    // which is the one outcome worse than having no map. The exact point is
+    // still saved to the owner-only table below, so the pin is not lost.
+    const publishable = hasCoords && (exact || canBlur);
+    const pub = publishable && !exact ? this.GEO.blur(f.lat, f.lng) : { lat: f.lat, lng: f.lng };
+
     const cols = {
       deal: f.deal,
       property_type: f.property_type,
@@ -2198,7 +2547,23 @@ class Component extends DCLogic {
       // one title is required, the other falls back to it rather than saving null
       title_en: f.title_en.trim() || f.title_ar.trim(),
       title_ar: f.title_ar.trim() || f.title_en.trim(),
-      status: 'active'
+      // lat and lng have existed since 0001, so they are always safe to send.
+      lat: publishable ? pub.lat : null,
+      lng: publishable ? pub.lng : null,
+      // location_precision and address arrive with 0010. A listing with no
+      // pin does not need either, and omitting them keeps the form working on
+      // a database where that migration has not been run — PostgREST rejects
+      // the whole write if it names a column the schema does not have.
+      // ...and sent anyway when the row already carries them, so that an
+      // owner who removes a pin actually clears the address they published,
+      // rather than leaving it behind on a row nothing displays it from.
+      ...(hasCoords || this.state.geoSchema ? {
+        location_precision: f.precision,
+        // A street address is only published when the owner published the
+        // exact pin. Pairing a precise address with a blurred point would
+        // give the blur away for nothing.
+        address: publishable && exact ? (f.address || null) : null
+      } : {})
     };
     const payload = {
       amenities: f.amenities,
@@ -2210,25 +2575,58 @@ class Component extends DCLogic {
         whatsapp: true, messaging: true
       }
     };
+    const editing = this.state.editingId;
     try {
-      const row = await this.db.createProperty(cols, payload);
+      // Editing never touches status. A listing the owner had hidden stays
+      // hidden after a correction; republishing is the Publish button's job.
+      const row = editing
+        ? await this.db.updateProperty(editing, cols, payload)
+        : await this.db.createProperty({ ...cols, status: 'active' }, payload);
+
+      if (hasCoords) {
+        // Best effort, and deliberately not fatal: the listing is already
+        // saved, and failing the whole edit because the owner has not run
+        // 0010 yet would be worse than publishing without an exact pin.
+        try {
+          await this.db.saveExactLocation(row.id, {
+            lat: f.lat, lng: f.lng, placeId: f.place_id, address: f.address || null
+          });
+        } catch { /* 0010_location.sql not run yet */ }
+      }
+
+      // Files the owner dropped during this edit, removed from Storage only
+      // now that the row no longer references them.
+      for (const path of (this.state.removedPhotos || [])) {
+        try { await this.db.deleteListingPhoto(path); } catch { /* already gone */ }
+      }
+
       const c = row._compression;
       this.setState({
-        formBusy: false, listOpen: false, form: null,
+        formBusy: false, listOpen: false, form: null, editingId: null, removedPhotos: [],
+        addressText: '', suggestions: [],
         lastSave: { raw: c.raw_bytes, gz: c.payload_bytes, pct: Math.round((1 - c.ratio) * 100) }
       });
+      this.teardownMap();
       this.loadProperties();
+      this.loadMarket();
     } catch (e) {
       const msg = e.message || String(e);
       // A place the form offers but the database has never heard of. The raw
       // Postgres text names a constraint, which tells an owner nothing.
       const fk = /neighborhood_id_fkey|city_id_fkey/.test(msg);
+      // Same idea for the columns 0010 adds: without it the update is
+      // rejected for a reason that reads like a bug in the app.
+      const noGeo = /location_precision|'address'|column .* does not exist/i.test(msg);
       this.setState({
         formBusy: false,
         formError: fk
           ? (ar
             ? 'هذه المنطقة غير مضافة في قاعدة البيانات بعد. يلزم تشغيل الملف 0009_locations.sql في Supabase، ثم أعد المحاولة.'
             : 'This area is not set up in the database yet. Run 0009_locations.sql in Supabase, then try again.')
+          : noGeo
+          ? (ar
+            ? 'حقول الموقع غير مضافة بعد. شغّل الملف 0010_location.sql في Supabase، ثم أعد المحاولة.'
+            : 'The location columns are not set up yet. Run 0010_location.sql in Supabase, then try again.')
           : msg
       });
     }
@@ -2382,7 +2780,15 @@ class Component extends DCLogic {
     const place = this.placeOfIds(row.city_id, row.neighborhood_id) || (ar ? 'الأردن' : 'Jordan');
     const hood = (M.NEIGHBORHOODS || []).find(n => n.id === row.neighborhood_id);
     const city = (M.CITIES || []).find(c => c.id === row.city_id);
-    const geo = hood || city;
+    // The listing's own point when it has one, falling back to the area
+    // centroid as before. Whether this point is the real one or a displaced
+    // one was decided by the owner at save time — see location_precision in
+    // 0010_location.sql. Either way it is the publishable point, so the map
+    // link may use it directly.
+    const geo = (row.lat != null && row.lng != null)
+      ? { lat: row.lat, lng: row.lng }
+      : (hood || city);
+    const exactPin = row.location_precision === 'exact' && row.lat != null;
 
     // Price per m² is a number Jordanian buyers actually compare on, and it
     // is only meaningful for a sale with a recorded area.
@@ -2489,8 +2895,16 @@ class Component extends DCLogic {
       noDesc: ar ? 'لم يضف المالك وصفاً لهذا العقار.' : 'The owner has not written a description for this property.',
 
       // ── location ──
-      dLocationNote: [hood ? this.loc(hood) : null, city ? this.loc(city) : null]
-        .filter(Boolean).join(ar ? ' ، ' : ', ') || (ar ? 'الأردن' : 'Jordan'),
+      // An exact listing names its street address. An approximate one says so
+      // in as many words, because a pin that looks precise and is not is
+      // worse than no pin: someone will drive to it.
+      dLocationNote: exactPin && row.address
+        ? row.address
+        : ([hood ? this.loc(hood) : null, city ? this.loc(city) : null]
+            .filter(Boolean).join(ar ? ' ، ' : ', ') || (ar ? 'الأردن' : 'Jordan'))
+          + (row.lat != null && !exactPin
+            ? (ar ? ' · الموقع تقريبي' : ' · approximate location')
+            : ''),
       dHasMapLink: !!geo,
       dMapHref: geo ? `https://www.google.com/maps/search/?api=1&query=${geo.lat},${geo.lng}` : '',
       lblOpenMap: ar ? 'عرض على الخريطة' : 'View on map',
@@ -2702,7 +3116,13 @@ class Component extends DCLogic {
         this.setState({ ...patch, authPrompt: true, authMode: 'signup', authMsg: '' });
         return;
       }
-      this.setState({ ...patch, screen: 'dash', listOpen: true, form: this.state.form || this.blankListing(), formError: '' });
+      // Always a new listing. Without clearing editingId, "Sell" after an
+      // abandoned edit would reopen that listing's form and overwrite it.
+      this.setState({
+        ...patch, screen: 'dash', listOpen: true, editingId: null,
+        form: this.state.editingId ? this.blankListing() : (this.state.form || this.blankListing()),
+        formError: '', removedPhotos: [], addressText: '', suggestions: []
+      });
       this.scrollTop();
       return;
     }
@@ -2806,6 +3226,7 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    this.teardownMap();
     if (this._spot) window.removeEventListener('pointermove', this._spot);
     if (this._pendingReveal) document.removeEventListener('visibilitychange', this._pendingReveal);
     window.removeEventListener('scroll', this._scroll);
@@ -4019,6 +4440,10 @@ class Component extends DCLogic {
           // 'paused' is the enum's word for this. 'hidden' was never one of
           // its values, so Postgres rejected every attempt to hide a listing.
           toggle: () => this.setRowStatus(p.id, live ? 'paused' : 'active'),
+          editLabel: ar ? 'تعديل' : 'Edit',
+          // The whole row, not just its id: the sheet is filled from the
+          // payload too, which is already decompressed here.
+          edit: () => this.editListing(p),
           removeLabel: ar ? 'حذف' : 'Delete',
           remove: () => this.removeRow(p.id),
           busy: s.rowBusy === p.id

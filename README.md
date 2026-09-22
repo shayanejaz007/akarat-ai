@@ -11,6 +11,7 @@ Akarat.dc.html                    the application
 lib/aisearch.js                   query parsing, scoring, match explanations
 lib/providers.js                  portal deep links (verified URL grammar)
 lib/supabase.js                   auth, listings, compression, index reads
+lib/geo.js                        address autocomplete, map pin, location blurring
 data/market.js                    reference data only: locations, amenities, types
 app/api/ai/search/route.ts        server-side search pipeline + provider adapters
 app/api/admin/crawl/route.ts      crawl worker (robots.txt, JSON-LD, upsert)
@@ -21,7 +22,7 @@ supabase/migrations/*.sql         schema, RLS, external index, deduplication
 ```
 
 Reference documents: `SECURITY-AUDIT.md`, `SEARCH-ARCHITECTURE.md`,
-`SUPABASE.md`.
+`SUPABASE.md`, `LOCATIONS.md`.
 
 ## No invented data
 
@@ -91,6 +92,15 @@ this order, one at a time, checking each succeeds before moving on:
 3. `supabase/migrations/0003_dedupe.sql` — cross-source deduplication
 4. `supabase/migrations/0005_grants.sql` — table privileges for the `anon` and
    `authenticated` roles
+5. `supabase/migrations/0006_listing_photos.sql` and `0007_listing_video.sql` —
+   the media bucket and its size limits
+6. `supabase/migrations/0008_hardening.sql`
+7. `supabase/migrations/0009_locations.sql` — every city and area the listing
+   form offers. Without it, choosing an area the database has never heard of
+   fails the insert on a foreign key
+8. `supabase/migrations/0010_location.sql` — map pins, and the owner-only
+   table that keeps exact coordinates out of the public row. See
+   `LOCATIONS.md`
 
 Step 4 is not optional. RLS policies decide which rows a caller may see; they
 do not grant access to the table itself. Without the grants, every read comes
@@ -170,7 +180,19 @@ The full list is at the end of `SECURITY-AUDIT.md`. The essentials:
 6. Move `assets/hero-jordan.mp4` (19.7 MB) to a CDN, and re-encode it with
    `-movflags +faststart` so playback starts before the whole file downloads
 
-## Known gap
+## Locations and the map
 
-Owners cannot yet hide exact coordinates behind an approximate location. Build
-that before publishing real listings.
+Owners search for an address, drop a pin on the building, and choose whether
+buyers see that pin or a circle around it. Coordinates never replace `city_id`
+and `neighborhood_id` — those are foreign keys that search, deduplication and
+the Arabic place names all read, so every pin is snapped back to the nearest
+known area and the dropdowns stay the source of truth.
+
+The exact point is stored in `property_locations`, readable by its owner
+alone; `properties.lat/lng` carries the publishable point, displaced by up to
+300 m when the owner chose an approximate location. This is what closes the
+gap this file used to list as a launch blocker.
+
+The whole feature is optional. With no `NEXT_PUBLIC_GOOGLE_MAPS_KEY` set the
+form keeps its city and area dropdowns and Google is never contacted. Setup,
+key restrictions and costs are in `LOCATIONS.md`.
