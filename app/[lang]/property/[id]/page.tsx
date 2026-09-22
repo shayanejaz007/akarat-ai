@@ -87,7 +87,9 @@ export async function generateMetadata(
 
   const title = `${titleOf(row, lang)} — ${priceOf(row, lang)}`;
   const description = descriptionOf(row, lang).slice(0, 300);
-  const image = firstImage(row);
+  // Listings without photos fall back to the brand card rather than sharing
+  // as a bare link.
+  const image = firstImage(row) || "/assets/og-image.jpg";
 
   return {
     title,

@@ -85,12 +85,14 @@ akarat-ai/
 │   │   ├── 0005_grants.sql           Role grants
 │   │   ├── 0006_listing_photos.sql   Storage bucket + policies
 │   │   ├── 0007_listing_video.sql    Widens bucket for video
-│   │   └── 0008_hardening.sql        Inquiry policy + rate-limit table
+│   │   ├── 0008_hardening.sql        Inquiry policy + rate-limit table
+│   │   └── 0009_locations.sql        All cities + areas (generated)
 │   ├── diagnose.sql          Read-only health check
 │   └── cleanup-samples.sql   Removes seeded sample rows
 │
 ├── scripts/
 │   ├── gen-reference.mjs     Mirrors data/market.js into lib/reference.ts
+│   ├── gen-locations-sql.mjs Writes migration 0009 from data/market.js
 │   └── sync-public.mjs       Build step. Copies the document, support.js,
 │                             assets, lib and data into public/. Vendors
 │                             React locally. Generates public/config.js
@@ -141,10 +143,26 @@ re-running a migration you have already applied is safe.
 0006_listing_photos.sql
 0007_listing_video.sql      ← required before video upload works
 0008_hardening.sql          ← required for the shared rate limiter
+0009_locations.sql          ← required: every city and area the form offers
 ```
 
-If the project is already live and you are applying this update, you only need
-**0007** and **0008**.
+If the project is already live, run **0007, 0008 and 0009** in that order.
+All three are safe to run again if you are not sure whether you already did.
+
+### What 0009 does
+`properties.city_id` and `properties.neighborhood_id` are foreign keys into the
+`cities` and `neighborhoods` tables. The listing form offers every place in
+`data/market.js` (22 cities, 52 areas), but the database was only seeded with
+9 and 15. Picking any of the others failed with:
+
+```
+insert or update on table "properties" violates foreign key constraint
+"properties_neighborhood_id_fkey"
+```
+
+0009 upserts every place into the database. It is **generated** from
+`data/market.js` — after adding or renaming a place there, run
+`npm run gen:locations` and run the regenerated file in Supabase.
 
 ### What 0007 does
 Widens the `listing-photos` Storage bucket to accept `video/mp4`, `video/webm`
@@ -324,6 +342,8 @@ the listing form and by `lib/supabase.js`, which is a courtesy, not a control.
 | `/en` returns 404 | Old `next.config.mjs` | Use the current one — it rewrites `/en` and `/ar` |
 | Confirmation emails link to localhost | Supabase Auth URLs unset | Set Site URL (§6, step 6) |
 | AI search returns nothing | Migrations behind, or no active listings | Check `status`, then run `diagnose.sql` |
+| `violates foreign key constraint properties_neighborhood_id_fkey` | An area in the form is missing from the database | Run `0009_locations.sql` |
+| Hero video freezes | Old build | Current build resumes it automatically |
 
 **Next.js 14.** Pinned to 14.2.35, the latest patched 14.x. `npm audit` still
 reports advisories against the whole 14 line that are only fixed in 16.x. They

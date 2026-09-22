@@ -25,7 +25,12 @@
 <meta property="og:url" content="https://akarat.ai/en" />
 <meta property="og:locale" content="en" />
 <meta property="og:locale:alternate" content="ar" />
+<meta property="og:image" content="https://akarat.ai/assets/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Akarat.ai" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://akarat.ai/assets/og-image.jpg" />
 <meta name="theme-color" content="#F7F2E7" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -2214,7 +2219,18 @@ class Component extends DCLogic {
       });
       this.loadProperties();
     } catch (e) {
-      this.setState({ formBusy: false, formError: e.message || String(e) });
+      const msg = e.message || String(e);
+      // A place the form offers but the database has never heard of. The raw
+      // Postgres text names a constraint, which tells an owner nothing.
+      const fk = /neighborhood_id_fkey|city_id_fkey/.test(msg);
+      this.setState({
+        formBusy: false,
+        formError: fk
+          ? (ar
+            ? 'هذه المنطقة غير مضافة في قاعدة البيانات بعد. يلزم تشغيل الملف 0009_locations.sql في Supabase، ثم أعد المحاولة.'
+            : 'This area is not set up in the database yet. Run 0009_locations.sql in Supabase, then try again.')
+          : msg
+      });
     }
   }
 
@@ -2799,6 +2815,7 @@ class Component extends DCLogic {
       window.removeEventListener('resize', this._glowStale);
     }
     if (this._heroT) clearTimeout(this._heroT);
+    this.stopVideoLoop();
     if (this._pop) window.removeEventListener('popstate', this._pop);
     try { document.body.style.overflow = ''; } catch (e) {}
     if (this._outside) document.removeEventListener('pointerdown', this._outside, true);
@@ -2835,16 +2852,65 @@ class Component extends DCLogic {
     }
   }
 
-  // ── hero video: plain native loop.
+  /**
+   * Hero loop that stays playing.
+   *
+   * The old version called play() once and resumed only on the first
+   * 'canplay'. Anything that paused the clip afterwards left it frozen for
+   * good: switching tabs, the browser pausing a muted video while it was
+   * scrolled off screen, a network stall, a decoder hiccup on the loop seam.
+   *
+   * Now the clip is paused deliberately when the hero leaves the viewport or
+   * the tab is hidden — which also stops it spending battery decoding frames
+   * nobody sees — and resumed deterministically when either comes back. Any
+   * pause the page did not ask for is retried, with a slow heartbeat as a
+   * backstop for anything the events miss.
+   */
   initVideoLoop() {
     const v = this.vidA;
     if (!v || this._loopOn) return;
     this._loopOn = true;
+    this.stopVideoLoop();
     v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = true;
-    const play = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+
+    let onScreen = true;
+    const wanted = () => onScreen
+      && document.visibilityState !== 'hidden'
+      && v.isConnected
+      && !!v.getAttribute('src');
+    const play = () => {
+      if (!wanted() || !v.paused) return;
+      const p = v.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+    const retry = () => setTimeout(play, 150);
+
+    ['canplay', 'pause', 'stalled', 'waiting', 'emptied'].forEach(ev => v.addEventListener(ev, retry));
+    // loop=true means 'ended' should never fire; if a browser fires it anyway
+    // at the seam, restart rather than stop.
+    v.addEventListener('ended', () => { try { v.currentTime = 0; } catch (e) {} play(); });
+
+    if ('IntersectionObserver' in window) {
+      this._vidIO = new IntersectionObserver(entries => {
+        onScreen = entries[0].isIntersecting;
+        if (onScreen) play();
+        else if (!v.paused) v.pause();
+      }, { threshold: 0.02 });
+      this._vidIO.observe(v);
+    }
+    this._vidVis = () => {
+      if (document.visibilityState === 'hidden') { if (!v.paused) v.pause(); }
+      else play();
+    };
+    document.addEventListener('visibilitychange', this._vidVis);
+    this._vidBeat = setInterval(play, 3000);
     play();
-    v.addEventListener('canplay', () => { if (v.paused) play(); });
-    v.addEventListener('ended', () => { v.currentTime = 0; play(); });
+  }
+
+  stopVideoLoop() {
+    if (this._vidIO) { this._vidIO.disconnect(); this._vidIO = null; }
+    if (this._vidVis) { document.removeEventListener('visibilitychange', this._vidVis); this._vidVis = null; }
+    if (this._vidBeat) { clearInterval(this._vidBeat); this._vidBeat = null; }
   }
 
   // Hero headline, split per character so it can be typed on.
@@ -3283,7 +3349,13 @@ class Component extends DCLogic {
       heroRef: el => { this.hero = el; },
       // switching language remounts the hero, so a NEW video element arrives.
       // reset the guard, otherwise the fresh element never gets told to play.
-      videoARef: el => { if (el && el !== this.vidA) { this.vidA = el; this._loopOn = false; this.attachHeroVideo(el); } },
+      videoARef: el => {
+        if (el && el !== this.vidA) {
+          this.stopVideoLoop();
+          this.vidA = el; this._loopOn = false;
+          this.attachHeroVideo(el);
+        }
+      },
       // the scrim is directional: keep the dark side under the copy, whichever side that is
       scrimAngle: ar ? '260deg' : '100deg',
       scrimFocus: ar ? '86% 52%' : '14% 52%',

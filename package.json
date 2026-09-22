@@ -7,7 +7,8 @@
     "dev": "next dev",
     "prebuild": "node scripts/gen-reference.mjs && node scripts/sync-public.mjs",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "gen:locations": "node scripts/gen-locations-sql.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",

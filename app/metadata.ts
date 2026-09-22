@@ -60,8 +60,9 @@ export const metadata: Metadata = {
     url: "/en",
     locale: "en_JO",
     alternateLocale: ["ar_JO"],
+    images: [{ url: "/assets/og-image.jpg", width: 1200, height: 630, alt: "Akarat.ai" }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: ["/assets/og-image.jpg"] },
   robots: { index: true, follow: true },
 };
 
