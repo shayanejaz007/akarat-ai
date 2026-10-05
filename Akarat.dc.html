@@ -368,10 +368,39 @@
             <img src="assets/icons/google.svg" alt="" style="width: 18px; height: 18px; display: block;" />
             <span>{{ t.google }}</span>
           </div>
+          <div onClick="{{ openPhone }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
+            <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
+            <span>{{ t.phoneButton }}</span>
+          </div>
           <div style="display: flex; align-items: center; gap: 12px; margin: 4px 0; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.45);">
             <div style="flex: 1; height: 1px; background: rgba(23,23,15,0.12);"></div>
             <span>{{ t.orDivider }}</span>
             <div style="flex: 1; height: 1px; background: rgba(23,23,15,0.12);"></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showPhone }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 8px;">
+            <select value="{{ phoneCountry }}" onChange="{{ onPhoneCountry }}" dir="{{ dir }}" aria-label="{{ t.phoneTitle }}" style="flex: 0 0 auto; max-width: 56%; padding: 13px 10px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 46px; cursor: pointer;" style-focus="border-color: #007A3D;">
+              <sc-for list="{{ countryOpts }}" as="co" hint-placeholder-count="4"><option value="{{ co.value }}">{{ co.label }}</option></sc-for>
+            </select>
+            <input value="{{ phoneNumber }}" onChange="{{ onPhoneNumber }}" onKeyDown="{{ onAuthKey }}" type="tel" inputMode="tel" autoComplete="tel" placeholder="{{ phonePlaceholder }}" dir="ltr" style="flex: 1 1 auto; min-width: 0; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px; box-sizing: border-box;" style-focus="border-color: #007A3D;" />
+          </div>
+          <div style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5); margin-top: -2px;">{{ phoneHint }}</div>
+          <div style="padding: 10px 12px; border-radius: 10px; background: rgba(23,23,15,0.04); font-size: 12px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.6);">{{ t.phoneLinkNote }}</div>
+        </sc-if>
+
+        <sc-if value="{{ showOtp }}" hint-placeholder-val="{{ false }}">
+          <input value="{{ otpCode }}" onChange="{{ onOtpCode }}" onKeyDown="{{ onAuthKey }}" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="one-time-code" maxLength="8" placeholder="{{ otpPlaceholder }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 22px; font-weight: 400; letter-spacing: 0.3em; text-align: center; color: #17170F; outline: none; min-height: 52px; font-variant-numeric: tabular-nums;" style-focus="border-color: #007A3D;" />
+          <div dir="ltr" style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.55); text-align: center;">{{ t.codeSentTo }} {{ otpSentTo }}</div>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <sc-if value="{{ canResend }}" hint-placeholder-val="{{ true }}">
+              <span onClick="{{ resendOtp }}" style="font-size: 13px; font-weight: 300; cursor: pointer; color: #007A3D;" style-hover="color: #CE1126;">{{ resendLabel }}</span>
+            </sc-if>
+            <sc-if value="{{ notCanResend }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.42);">{{ resendLabel }}</span>
+            </sc-if>
+            <span onClick="{{ editPhone }}" style="font-size: 13px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.6);" style-hover="color: #007A3D;">{{ editPhoneLabel }}</span>
           </div>
         </sc-if>
         <sc-if value="{{ isSignUp }}" hint-placeholder-val="{{ false }}">
@@ -1473,6 +1502,37 @@
           <sc-if value="{{ hasRowsError }}" hint-placeholder-val="{{ false }}">
             <div style="padding: 11px 22px; background: rgba(206,17,38,0.06); border-bottom: 1px solid rgba(206,17,38,0.2); font-size: 12.5px; font-weight: 300; color: #B00F20;">{{ rowsError }}</div>
           </sc-if>
+          <sc-if value="{{ showPhoneRow }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 13px 22px; border-bottom: 1px solid rgba(23,23,15,0.09); background: #FBF8F1;">
+              <span style="width: 15px; height: 15px; flex: 0 0 auto; background: rgba(23,23,15,0.5); -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
+              <span style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.68);">{{ phoneRowLabel }}</span>
+              <sc-if value="{{ phoneLinkIdle }}" hint-placeholder-val="{{ true }}">
+                <span onClick="{{ openPhoneLink }}" style="margin-inline-start: auto; padding: 7px 14px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.16); font-size: 12px; font-weight: 400; cursor: pointer; color: rgba(23,23,15,0.7); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ phoneRowAction }}</span>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ phoneLinkOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 15px 22px; border-bottom: 1px solid rgba(23,23,15,0.09); background: #FBF8F1; display: grid; gap: 9px;">
+              <sc-if value="{{ linkStepNumber }}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <select value="{{ linkCountry }}" onChange="{{ onLinkCountry }}" dir="{{ dir }}" aria-label="{{ phoneRowAction }}" style="flex: 0 0 auto; max-width: 54%; padding: 11px 10px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; cursor: pointer;" style-focus="border-color: #007A3D;">
+                    <sc-for list="{{ countryOpts }}" as="lc" hint-placeholder-count="4"><option value="{{ lc.value }}">{{ lc.label }}</option></sc-for>
+                  </select>
+                  <input value="{{ linkNumber }}" onChange="{{ onLinkNumber }}" type="tel" inputMode="tel" placeholder="{{ phonePlaceholder }}" dir="ltr" style="flex: 1 1 140px; min-width: 0; padding: 11px 13px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; box-sizing: border-box;" style-focus="border-color: #007A3D;" />
+                </div>
+              </sc-if>
+              <sc-if value="{{ linkStepCode }}" hint-placeholder-val="{{ false }}">
+                <input value="{{ linkCode }}" onChange="{{ onLinkCode }}" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength="8" placeholder="{{ otpPlaceholder }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; font-family: inherit; font-size: 18px; font-weight: 400; letter-spacing: 0.26em; text-align: center; color: #17170F; outline: none; min-height: 46px; font-variant-numeric: tabular-nums;" style-focus="border-color: #007A3D;" />
+              </sc-if>
+              <sc-if value="{{ hasLinkMsg }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 12.5px; font-weight: 300; line-height: 1.5; color: {{ linkMsgFg }};">{{ linkMsg }}</div>
+              </sc-if>
+              <div style="display: flex; gap: 8px;">
+                <span onClick="{{ submitPhoneLink }}" style="padding: 10px 18px; border-radius: 10px; background: #007A3D; color: #FFFFFF; font-size: 12.5px; font-weight: 500; cursor: pointer; min-height: 42px; display: inline-flex; align-items: center;" style-hover="background: #CE1126;">{{ linkBtnLabel }}</span>
+                <span onClick="{{ cancelPhoneLink }}" style="padding: 10px 16px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); font-size: 12.5px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.6); min-height: 42px; display: inline-flex; align-items: center;" style-hover="border-color: rgba(23,23,15,0.34);">{{ cancelLabel }}</span>
+              </div>
+            </div>
+          </sc-if>
           <sc-if value="{{ hasSaveNote }}" hint-placeholder-val="{{ false }}">
             <div style="padding: 11px 22px; background: rgba(0,122,61,0.06); border-bottom: 1px solid rgba(0,122,61,0.18); font-size: 12.5px; font-weight: 300; color: #00693A; font-family: ui-monospace, monospace;">{{ saveNote }}</div>
           </sc-if>
@@ -1624,6 +1684,15 @@ const STR = {
     forgotLink: 'Forgot password?', backToSignIn: 'Back to sign in',
     forgotTitle: 'Reset your password', forgotBody: 'Enter the email you signed up with and we will send you a link to choose a new password.',
     sendLink: 'Send reset link', resetSent: 'If an account exists for that email, a reset link is on its way. Check your inbox.',
+    google: 'Continue with Google', orDivider: 'or',
+    phoneButton: 'Continue with a phone number',
+    phoneTitle: 'Sign in with your phone',
+    phoneBody: 'Choose your country, enter your number, and we will send you a code.',
+    otpTitle: 'Enter your code',
+    otpBody: 'We sent a six-digit code. It expires in a few minutes.',
+    sendCode: 'Send code', verifyCode: 'Verify and sign in',
+    codeSentTo: 'Sent to',
+    phoneLinkNote: 'Already have an account with an email? Sign in with it first, then add your number from the dashboard — otherwise this creates a second, empty account.',
     resetTitle: 'Choose a new password', resetBody: 'Enter a new password for your account. Use at least 6 characters.',
     fieldNewPassword: 'New password', savePassword: 'Save password',
     checkEmail: 'Account created. Check your email to confirm the address, then sign in.',
@@ -1676,6 +1745,15 @@ const STR = {
     forgotLink: 'نسيت كلمة المرور؟', backToSignIn: 'العودة لتسجيل الدخول',
     forgotTitle: 'إعادة تعيين كلمة المرور', forgotBody: 'أدخل البريد الإلكتروني الذي سجّلت به وسنرسل لك رابطاً لاختيار كلمة مرور جديدة.',
     sendLink: 'إرسال الرابط', resetSent: 'إذا كان هناك حساب بهذا البريد فسيصلك رابط إعادة التعيين. تحقق من بريدك.',
+    google: 'المتابعة باستخدام Google', orDivider: 'أو',
+    phoneButton: 'المتابعة برقم الهاتف',
+    phoneTitle: 'سجّل الدخول برقم هاتفك',
+    phoneBody: 'اختر الدولة وأدخل رقمك، وسنرسل لك رمز تحقق.',
+    otpTitle: 'أدخل رمز التحقق',
+    otpBody: 'أرسلنا رمزاً من ستة أرقام. ينتهي خلال دقائق.',
+    sendCode: 'إرسال الرمز', verifyCode: 'تحقق وسجّل الدخول',
+    codeSentTo: 'أُرسل إلى',
+    phoneLinkNote: 'لديك حساب بالبريد الإلكتروني؟ سجّل الدخول به أولاً ثم أضف رقمك من لوحة التحكم، وإلا سيُنشأ حساب ثانٍ فارغ.',
     resetTitle: 'اختر كلمة مرور جديدة', resetBody: 'أدخل كلمة مرور جديدة لحسابك، ستة أحرف على الأقل.',
     fieldNewPassword: 'كلمة المرور الجديدة', savePassword: 'حفظ كلمة المرور',
     checkEmail: 'تم إنشاء الحساب. تحقق من بريدك لتأكيد العنوان ثم سجّل الدخول.',
@@ -1817,6 +1895,13 @@ class Component extends DCLogic {
     savedIds: [], descOpen: false, copiedPhone: false, copiedLink: false,
     authMode: 'signin', authName: '', authEmail: '', authPassword: '',
     authMsg: '', authMsgKind: 'error', authBusy: false,
+    // Phone sign-in: the chosen country, what was typed, the E.164 number the
+    // code actually went to, the code itself, and the resend cooldown.
+    phoneCountry: 'jo', phoneNumber: '', otpPhone: '', otpCode: '', otpResendIn: 0,
+    // Linking a number to an account that already exists, from the dashboard.
+    accountPhone: null, phoneLinkOpen: false, phoneLinkStep: 'number',
+    linkCountry: 'jo', linkNumber: '', linkCode: '', linkE164: '',
+    linkMsg: '', linkMsgKind: 'error', linkBusy: false,
     myProps: null, propsBusy: false, propsError: '', lastSave: null,
     // Listing form: which row is being edited (null means a new listing),
     // Storage paths dropped during this edit, and the location picker.
@@ -1955,6 +2040,10 @@ class Component extends DCLogic {
     // the owner actually opens the listing form.
     import('./lib/geo.js').then(g => { this.GEO = g; this.forceUpdate(); }).catch(() => {});
 
+    // Country list and E.164 formatting for phone sign-in. Pure data and
+    // string handling; it reaches no network.
+    import('./lib/phone.js').then(m => { this.PH = m; this.forceUpdate(); }).catch(() => {});
+
     // Is the crawler's index live, and how much is in it? Stated plainly in the
     // coverage panel so nobody has to guess whether external results are real.
     import('./lib/supabase.js')
@@ -1981,8 +2070,14 @@ class Component extends DCLogic {
   applySession(session) {
     const user = session && session.user;
     this.setState({ signedIn: !!user, user: user || null });
-    if (user) this.loadProperties();
-    else this.setState({ myProps: null });
+    if (user) {
+      this.loadProperties();
+      // Read straight off the session rather than asking the server again:
+      // the phone, when there is one, is already on the user object.
+      this.setState({ accountPhone: user.phone ? ('+' + String(user.phone).replace(/^\+/, '')) : null });
+    } else {
+      this.setState({ myProps: null, accountPhone: null, phoneLinkOpen: false });
+    }
   }
 
   // Google and the password-reset email both return here with the outcome in
@@ -2017,6 +2112,130 @@ class Component extends DCLogic {
     }
   }
 
+  /* ──────────────── phone sign-in ────────────────
+     The code is sent by whatever provider is configured in Supabase; the app
+     only asks for it and hands back what was typed. */
+
+  // Two steps behind one button: send the code, then confirm it. A change of
+  // phone on an existing user verifies under 'phone_change', not 'sms'.
+  async submitPhoneLink() {
+    const s = this.state, ar = s.lang === 'ar';
+    if (s.linkBusy || !this.db || !this.PH) return;
+
+    if (s.phoneLinkStep !== 'code') {
+      const e164 = this.PH.toE164(s.linkNumber, s.linkCountry);
+      if (!e164) {
+        this.setState({ linkMsg: this.PH.hintFor(s.linkCountry, ar), linkMsgKind: 'error' });
+        return;
+      }
+      this.setState({ linkBusy: true, linkMsg: '' });
+      try {
+        await this.db.startPhoneLink(e164);
+        this.setState({
+          linkBusy: false, phoneLinkStep: 'code', linkE164: e164,
+          linkMsg: (ar ? 'أرسلنا رمزاً إلى ' : 'Code sent to ') + e164,
+          linkMsgKind: 'ok'
+        });
+      } catch (e) {
+        this.setState({ linkBusy: false, linkMsg: e.message || String(e), linkMsgKind: 'error' });
+      }
+      return;
+    }
+
+    this.setState({ linkBusy: true, linkMsg: '' });
+    try {
+      await this.db.confirmPhoneLink(s.linkE164, s.linkCode);
+      this.setState({
+        linkBusy: false, phoneLinkOpen: false, linkCode: '', linkNumber: '',
+        accountPhone: s.linkE164
+      });
+    } catch (e) {
+      const msg = String(e.message || e);
+      const bad = /invalid|expired|token/i.test(msg);
+      this.setState({
+        linkBusy: false, linkMsgKind: 'error',
+        linkMsg: bad
+          ? (ar ? 'الرمز غير صحيح أو انتهت صلاحيته.' : 'That code is wrong or has expired.')
+          : msg
+      });
+    }
+  }
+
+  async sendOtp(isResend) {
+    const s = this.state, L = STR[s.lang], ar = s.lang === 'ar';
+    if (s.authBusy || !this.db || !this.PH) return;
+    const e164 = this.PH.toE164(s.phoneNumber, s.phoneCountry);
+    if (!e164) {
+      this.setState({ authMsg: this.PH.hintFor(s.phoneCountry, ar), authMsgKind: 'error' });
+      return;
+    }
+    this.setState({ authBusy: true, authMsg: '' });
+    try {
+      await this.db.sendPhoneOtp(e164);
+      this.setState({
+        authBusy: false, authMode: 'otp', otpPhone: e164,
+        otpCode: isResend ? '' : s.otpCode,
+        authMsg: isResend ? (ar ? 'أرسلنا رمزاً جديداً.' : 'A new code is on its way.') : '',
+        authMsgKind: 'ok'
+      });
+      this.startResendTimer();
+    } catch (e) {
+      const msg = String(e.message || e);
+      // The provider has not been configured, which is the one failure an
+      // owner can actually fix and the one Supabase describes least clearly.
+      const unconfigured = /provider|not enabled|unsupported phone|sms/i.test(msg);
+      this.setState({
+        authBusy: false, authMsgKind: 'error',
+        authMsg: unconfigured
+          ? (ar
+            ? 'تسجيل الدخول بالهاتف غير مُفعَّل بعد على هذا المشروع. فعِّل مزوّد الهاتف في Supabase. التفاصيل في SUPABASE.md.'
+            : 'Phone sign-in is not switched on for this project yet. Enable the Phone provider in Supabase — see SUPABASE.md.')
+          : msg
+      });
+    }
+  }
+
+  // Sixty seconds before the resend link comes back. Without it, every tap
+  // is another message the project is billed for.
+  startResendTimer() {
+    if (this._otpTick) clearInterval(this._otpTick);
+    this.setState({ otpResendIn: 60 });
+    this._otpTick = setInterval(() => {
+      const left = (this.state.otpResendIn || 0) - 1;
+      if (left <= 0) { clearInterval(this._otpTick); this._otpTick = null; this.setState({ otpResendIn: 0 }); }
+      else this.setState({ otpResendIn: left });
+    }, 1000);
+  }
+
+  async verifyOtp() {
+    const s = this.state, ar = s.lang === 'ar';
+    if (s.authBusy || !this.db) return;
+    const code = String(s.otpCode || '').replace(/\D/g, '');
+    if (code.length < 4) {
+      this.setState({ authMsg: ar ? 'أدخل الرمز المرسل إليك.' : 'Enter the code you were sent.', authMsgKind: 'error' });
+      return;
+    }
+    this.setState({ authBusy: true, authMsg: '' });
+    try {
+      await this.db.verifyPhoneOtp(s.otpPhone, code);
+      // applySession, through onAuthChange, moves the screen on from here.
+      if (this._otpTick) { clearInterval(this._otpTick); this._otpTick = null; }
+      this.setState({
+        authBusy: false, authPrompt: false, authMode: 'signin',
+        phoneNumber: '', otpCode: '', otpPhone: '', otpResendIn: 0
+      });
+    } catch (e) {
+      const msg = String(e.message || e);
+      const bad = /invalid|expired|token/i.test(msg);
+      this.setState({
+        authBusy: false, authMsgKind: 'error',
+        authMsg: bad
+          ? (ar ? 'الرمز غير صحيح أو انتهت صلاحيته. اطلب رمزاً جديداً.' : 'That code is wrong or has expired. Ask for a new one.')
+          : msg
+      });
+    }
+  }
+
   async submitAuth() {
     const s = this.state, L = STR[s.lang];
     if (s.authBusy) return;
@@ -2033,6 +2252,11 @@ class Component extends DCLogic {
       }
       return;
     }
+    // Phone: the button sends the code, then verifies it. Both live in
+    // sendOtp/verifyOtp so the resend link can reuse the first without
+    // pretending to be a form submit.
+    if (s.authMode === 'phone') { this.sendOtp(false); return; }
+    if (s.authMode === 'otp') { this.verifyOtp(); return; }
     if (s.authMode === 'reset') {
       if (!s.authPassword) { this.setState({ authMsg: L.fieldNewPassword, authMsgKind: 'error' }); return; }
       this.setState({ authBusy: true, authMsg: '' });
@@ -3584,6 +3808,7 @@ class Component extends DCLogic {
     this.teardownMap();
     if (this._authHook) { this._authHook(); this._authHook = null; }
     if (this._onKbd && this.root) { this.root.removeEventListener('keydown', this._onKbd); this._onKbd = null; }
+    if (this._otpTick) { clearInterval(this._otpTick); this._otpTick = null; }
     if (this._spot) window.removeEventListener('pointermove', this._spot);
     if (this._pendingReveal) document.removeEventListener('visibilitychange', this._pendingReveal);
     window.removeEventListener('scroll', this._scroll);
@@ -4282,15 +4507,60 @@ class Component extends DCLogic {
       isSignUp: s.authMode === 'signup',
       isSignIn: s.authMode === 'signin',
       showGoogle: s.authMode === 'signin' || s.authMode === 'signup',
-      showEmail: s.authMode !== 'reset',
-      showPassword: s.authMode !== 'forgot',
+      // 'phone' collects the number, 'otp' collects the code. Neither wants
+      // the email or password fields, and the password field must also stay
+      // out of 'forgot', which is why these are flags rather than a mode test
+      // repeated at every input.
+      showEmail: s.authMode !== 'reset' && s.authMode !== 'phone' && s.authMode !== 'otp',
+      showPassword: s.authMode !== 'forgot' && s.authMode !== 'phone' && s.authMode !== 'otp',
       signInGoogle: () => this.signInGoogle(),
       openForgot: () => this.setState({ authMode: 'forgot', authMsg: '', authPassword: '' }),
-      authTitle: { signup: L.signUpTitle, forgot: L.forgotTitle, reset: L.resetTitle }[s.authMode] || L.authTitle,
-      authBody: { signup: L.signUpBody, forgot: L.forgotBody, reset: L.resetBody }[s.authMode] || L.authBody,
-      authBtnLabel: s.authBusy ? L.working : ({ signup: L.createAccount, forgot: L.sendLink, reset: L.savePassword }[s.authMode] || L.authSignIn),
+
+      /* ── phone sign-in ──
+         Supabase sends the code; a provider configured in the dashboard
+         delivers it. Nothing here reaches Google Cloud. */
+      showPhoneButton: s.authMode === 'signin' || s.authMode === 'signup',
+      openPhone: () => this.setState({
+        authMode: 'phone', authMsg: '', authPassword: '', otpCode: ''
+      }),
+      showPhone: s.authMode === 'phone',
+      showOtp: s.authMode === 'otp',
+      phoneCountry: s.phoneCountry || 'jo',
+      countryOpts: (this.PH ? this.PH.COUNTRIES : []).map(c => ({
+        value: c.id,
+        // The flag and the dial code, so the list is scannable without
+        // reading every country name.
+        label: [`${c.flag}  ${this.loc(c)}  +${c.dial}`]
+      })),
+      onPhoneCountry: e => this.setState({ phoneCountry: e.target.value, authMsg: '' }),
+      phoneNumber: s.phoneNumber || '',
+      onPhoneNumber: e => this.setState({ phoneNumber: e.target.value, authMsg: '' }),
+      phonePlaceholder: ar ? 'رقم الهاتف' : 'Phone number',
+      // Shown under the field so the expected shape is visible before the
+      // number is rejected, not after.
+      phoneHint: this.PH ? this.PH.hintFor(s.phoneCountry || 'jo', ar) : '',
+      otpCode: s.otpCode || '',
+      onOtpCode: e => this.setState({ otpCode: e.target.value, authMsg: '' }),
+      otpPlaceholder: ar ? 'رمز التحقق' : 'Verification code',
+      // The number the code went to, so nobody has to remember what they typed.
+      otpSentTo: s.otpPhone || '',
+      resendLabel: s.otpResendIn > 0
+        ? (ar ? `إعادة الإرسال خلال ${s.otpResendIn}s` : `Resend in ${s.otpResendIn}s`)
+        : (ar ? 'أعد إرسال الرمز' : 'Resend code'),
+      canResend: !s.otpResendIn,
+      notCanResend: !!s.otpResendIn,
+      resendOtp: () => this.sendOtp(true),
+      editPhoneLabel: ar ? 'تغيير الرقم' : 'Change number',
+      editPhone: () => this.setState({ authMode: 'phone', authMsg: '', otpCode: '' }),
+      authTitle: { signup: L.signUpTitle, forgot: L.forgotTitle, reset: L.resetTitle,
+                   phone: L.phoneTitle, otp: L.otpTitle }[s.authMode] || L.authTitle,
+      authBody: { signup: L.signUpBody, forgot: L.forgotBody, reset: L.resetBody,
+                  phone: L.phoneBody, otp: L.otpBody }[s.authMode] || L.authBody,
+      authBtnLabel: s.authBusy ? L.working : ({ signup: L.createAccount, forgot: L.sendLink, reset: L.savePassword,
+                   phone: L.sendCode, otp: L.verifyCode }[s.authMode] || L.authSignIn),
       authBtnBg: s.authBusy ? 'rgba(23,23,15,0.4)' : '#007A3D',
       authSwitchLabel: s.authMode === 'signup' ? L.haveAccount : s.authMode === 'signin' ? L.noAccount : L.backToSignIn,
+      switchBackOnly: s.authMode === 'phone' || s.authMode === 'otp',
       pwAutocomplete: s.authMode === 'signin' ? 'current-password' : 'new-password',
       pwPlaceholder: s.authMode === 'reset' ? L.fieldNewPassword : L.fieldPassword,
       authName: s.authName, authEmail: s.authEmail, authPassword: s.authPassword,
@@ -5058,6 +5328,43 @@ class Component extends DCLogic {
         : s.myProps ? (ar ? 'قاعدة البيانات متصلة' : 'Database connected') : (ar ? 'معاينة' : 'Preview data'),
       dbBadgeBg: s.propsError ? 'rgba(206,17,38,0.07)' : s.myProps ? 'rgba(0,122,61,0.1)' : 'rgba(23,23,15,0.05)',
       dbBadgeFg: s.propsError ? '#B00F20' : s.myProps ? '#00693A' : 'rgba(23,23,15,0.55)',
+      /* ── linking a phone to this account ──
+         Phone sign-in on its own would hand an existing email user a second,
+         empty account. Linking the number here means signing in by phone
+         later reaches this account and these listings. */
+      showPhoneRow: !!s.signedIn && !s.phoneLinkOpen,
+      phoneRowLabel: s.accountPhone
+        ? (ar ? `رقمك: ${s.accountPhone}` : `Your number: ${s.accountPhone}`)
+        : (ar ? 'لم تربط رقم هاتف بعد. اربطه لتسجّل الدخول برقمك لاحقاً.'
+              : 'No phone number linked. Add one to sign in by phone later.'),
+      phoneRowAction: s.accountPhone
+        ? (ar ? 'غيّر الرقم' : 'Change')
+        : (ar ? 'أضف رقماً' : 'Add a number'),
+      phoneLinkIdle: !s.phoneLinkOpen,
+      openPhoneLink: () => this.setState({
+        phoneLinkOpen: true, phoneLinkStep: 'number',
+        linkNumber: '', linkCode: '', linkMsg: ''
+      }),
+      phoneLinkOpen: !!s.phoneLinkOpen,
+      linkStepNumber: s.phoneLinkStep !== 'code',
+      linkStepCode: s.phoneLinkStep === 'code',
+      linkCountry: s.linkCountry || 'jo',
+      onLinkCountry: e => this.setState({ linkCountry: e.target.value, linkMsg: '' }),
+      linkNumber: s.linkNumber || '',
+      onLinkNumber: e => this.setState({ linkNumber: e.target.value, linkMsg: '' }),
+      linkCode: s.linkCode || '',
+      onLinkCode: e => this.setState({ linkCode: e.target.value, linkMsg: '' }),
+      hasLinkMsg: !!s.linkMsg,
+      linkMsg: s.linkMsg || '',
+      linkMsgFg: s.linkMsgKind === 'ok' ? '#00693A' : '#B00F20',
+      linkBtnLabel: s.linkBusy
+        ? L.working
+        : s.phoneLinkStep === 'code'
+          ? (ar ? 'تأكيد' : 'Confirm')
+          : (ar ? 'أرسل الرمز' : 'Send code'),
+      submitPhoneLink: () => this.submitPhoneLink(),
+      cancelPhoneLink: () => this.setState({ phoneLinkOpen: false, linkMsg: '', linkCode: '' }),
+
       hasSaveNote: !!s.lastSave,
       saveNote: s.lastSave
         ? `${L.savedOk} ${L.compression}: ${s.lastSave.raw} B → ${s.lastSave.gz} B (${s.lastSave.pct}%)`

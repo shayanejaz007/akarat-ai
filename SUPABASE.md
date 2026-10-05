@@ -285,3 +285,86 @@ it would make PostgREST reject the entire insert.
 The trade: you cannot filter *inside* `payload_gz` in SQL. That is deliberate.
 Anything you need to query belongs in a column; the blob is for content you
 only ever read back whole.
+
+## Phone sign-in (WhatsApp one-time codes)
+
+Google Cloud is not involved in this. That console was only ever for the
+Google button; phone sign-in is Supabase plus a message provider, and nothing
+else.
+
+Supabase generates and checks the code. It does not deliver it. Delivery is
+Twilio, and until Twilio is configured the app says so rather than failing
+silently.
+
+### What it costs
+
+This is the part to decide before switching it on, because it is the only
+feature in the project billed per use.
+
+| | Per message to Jordan / the Gulf |
+|---|---|
+| WhatsApp | roughly $0.005 |
+| SMS | roughly $0.05 |
+
+WhatsApp is the default (`OTP_CHANNEL` in `lib/supabase.js`) because it is
+about a tenth of the price and is near-universal in Jordan. SMS needs no
+approval and works on any handset, so it is the sensible way to launch if the
+WhatsApp sender review has not come back yet. Changing channel is one word in
+one file; nothing else in the codebase depends on it.
+
+### 1. Twilio
+
+1. Create an account at twilio.com and note the **Account SID** and **Auth
+   Token** from the console home.
+2. Create a **Messaging Service** (Messaging → Services) and copy its SID.
+   Supabase asks for this rather than a bare phone number.
+3. For WhatsApp: Messaging → Senders → WhatsApp senders, and register one.
+   Approval usually takes a day or two. For SMS: buy a number instead, which
+   is immediate.
+4. Set a **spend limit** on the account. SMS pumping — a bot requesting codes
+   to premium-rate numbers abroad so someone collects the carrier share — is
+   the normal way a phone-auth bill becomes a story, and a cap is what stops
+   it being an expensive one.
+
+### 2. Supabase
+
+**Authentication → Providers → Phone**, switch it on, and fill in:
+
+- Provider: **Twilio**
+- Account SID, Auth Token, Messaging Service SID from step 1
+- For WhatsApp, set the message channel to WhatsApp
+
+Then **Authentication → Rate Limits**, and lower the per-hour SMS limit to
+something a real marketplace would never reach. The default is generous; the
+cost of it being generous is yours.
+
+Supabase's own template carries the code. Keep it short and name the site, so
+it is obvious which site a code belongs to.
+
+### 3. Verify
+
+1. Open the app, **Sign in**, then **Continue with a phone number**.
+2. Pick a country and enter a number. A number of the wrong length is refused
+   in the browser, before anything is sent — nothing is billed for a typo.
+3. The code arrives on WhatsApp or by SMS. Entering it signs you in.
+4. Resend is locked for sixty seconds, because each tap is another message.
+
+Countries offered: Jordan, Saudi Arabia, the UAE, Kuwait, Qatar, Bahrain,
+Oman, the United States, Canada and the United Kingdom. The list, the lengths
+each one accepts and the E.164 formatting are all in `lib/phone.js`.
+
+### Two accounts for one person
+
+Supabase treats an email identity and a phone identity as different users. So
+someone who listed a property with an email address, and later signs in with
+their phone, lands in a second, empty account and concludes their listings
+have been deleted.
+
+The app handles this by linking rather than merging. The sign-in sheet says
+so, and the dashboard has a row for adding a number to the account you are
+already in: it sends a code, confirms it, and from then on phone sign-in
+reaches that same account and those same listings.
+
+What it cannot do is merge two accounts that already exist. If someone gets as
+far as creating both, moving the listings across means reassigning
+`properties.owner_id` in SQL.
