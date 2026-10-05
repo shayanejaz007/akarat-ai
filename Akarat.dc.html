@@ -848,7 +848,7 @@
 
         <div data-galleryhero="true" style="position: relative; aspect-ratio: 4 / 3; background-color: #EDE7D9; background-image: repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px); overflow: hidden;">
           <sc-if value="{{ dCoverIsImage }}" hint-placeholder-val="{{ false }}">
-            <img onClick="{{ dZoom }}" ref="{{ dCoverRef }}" alt="{{ dTitle }}" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in;" />
+            <img onClick="{{ dZoom }}" ref="{{ dCoverRef }}" alt="{{ dTitle }}" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; filter: {{ dClosedFilter }};" />
           </sc-if>
           <sc-if value="{{ dCoverIsVideo }}" hint-placeholder-val="{{ false }}">
             <video ref="{{ dCoverVideoRef }}" controls="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F;"></video>
@@ -857,16 +857,20 @@
           <sc-if value="{{ dNoMedia }}" hint-placeholder-val="{{ true }}">
             <span style="position: absolute; inset: auto 0 0 0; padding: 24px 20px; text-align: center; font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.46);">{{ dImgLabel }}</span>
           </sc-if>
+          <sc-if value="{{ dClosed }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; inset: 0; background: rgba(23,23,15,0.2); pointer-events: none;"></div>
+            <span style="position: absolute; top: 26px; right: -52px; width: 210px; transform: rotate(38deg); background: #CE1126; color: #FFFFFF; text-align: center; padding: 10px 0; font-size: 15px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; box-shadow: 0 4px 16px rgba(23,23,15,0.45); pointer-events: none;">{{ dBadge }}</span>
+          </sc-if>
         </div>
 
         <div data-gallerystack="true" style="display: grid; grid-template-rows: 1fr 1fr; gap: 10px;">
           <sc-for list="{{ dSideMedia }}" as="sm" hint-placeholder-count="2">
             <div onClick="{{ sm.zoom }}" style="position: relative; overflow: hidden; background: #EDE7D9; cursor: zoom-in; min-height: 120px;">
               <sc-if value="{{ sm.isImage }}" hint-placeholder-val="{{ true }}">
-                <img loading="lazy" decoding="async" ref="{{ sm.imgRef }}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                <img loading="lazy" decoding="async" ref="{{ sm.imgRef }}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ dClosedFilter }};" />
               </sc-if>
               <sc-if value="{{ sm.isVideo }}" hint-placeholder-val="{{ false }}">
-                <video ref="{{ sm.videoRef }}" muted="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F;"></video>
+                <video ref="{{ sm.videoRef }}" muted="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F; filter: {{ dClosedFilter }};"></video>
                 <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 30px; text-shadow: 0 2px 12px rgba(0,0,0,0.55); pointer-events: none;">▶</span>
               </sc-if>
               <sc-if value="{{ sm.isLast }}" hint-placeholder-val="{{ false }}">
@@ -882,10 +886,10 @@
         <sc-for list="{{ dAllMedia }}" as="gm" hint-placeholder-count="1">
           <div onClick="{{ gm.zoom }}" style="position: relative; flex: 0 0 100%; scroll-snap-align: center; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 18px; background: #EDE7D9;">
             <sc-if value="{{ gm.isImage }}" hint-placeholder-val="{{ true }}">
-              <img loading="lazy" decoding="async" ref="{{ gm.imgRef }}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              <img loading="lazy" decoding="async" ref="{{ gm.imgRef }}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ dClosedFilter }};" />
             </sc-if>
             <sc-if value="{{ gm.isVideo }}" hint-placeholder-val="{{ false }}">
-              <video ref="{{ gm.videoRef }}" controls="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F;"></video>
+              <video ref="{{ gm.videoRef }}" controls="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F; filter: {{ dClosedFilter }};"></video>
             </sc-if>
           </div>
         </sc-for>
@@ -988,6 +992,13 @@
             <div style="font-size: 17px; font-weight: 500; letter-spacing: -0.012em;">{{ lblInterested }}</div>
             <p style="margin: 8px 0 0; font-size: 14px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.6);">{{ lblContactSub }}</p>
 
+            <sc-if value="{{ dClosed }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 20px; padding: 16px 18px; border-radius: 14px; background: rgba(206,17,38,0.06); border: 1px solid rgba(206,17,38,0.26);">
+                <div style="font-size: 14.5px; font-weight: 500; color: #B00F20;">{{ dClosedTitle }}</div>
+                <p style="margin: 6px 0 0; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.62);">{{ dClosedBody }}</p>
+              </div>
+            </sc-if>
+
             <sc-if value="{{ dHasPhone }}" hint-placeholder-val="{{ false }}">
               <!-- dir="ltr" on the number itself: a phone number reads
                    left-to-right even inside an RTL page. -->
@@ -1027,8 +1038,12 @@
             <div onClick="{{ sim.open }}" data-glow="true" style="display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); cursor: pointer; transition: transform 260ms, border-color 260ms;" style-hover="transform: translateY(-4px); border-color: rgba(23,23,15,0.24);">
               <div data-media="true" style="position: relative; height: 175px; background-color: #EDE7D9; background-image: repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px);">
                 <sc-if value="{{ sim.hasCover }}" hint-placeholder-val="{{ false }}">
-                  <img loading="lazy" decoding="async" ref="{{ sim.coverRef }}" alt="{{ sim.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                  <img loading="lazy" decoding="async" ref="{{ sim.coverRef }}" alt="{{ sim.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ sim.coverFilter }};" />
                 </sc-if>
+              <sc-if value="{{ sim.isClosed }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; inset: 0; background: rgba(23,23,15,0.18); pointer-events: none;"></div>
+                <span style="position: absolute; top: 16px; right: -36px; width: 140px; transform: rotate(40deg); background: #CE1126; color: #FFFFFF; text-align: center; padding: 6px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; box-shadow: 0 3px 12px rgba(23,23,15,0.4); pointer-events: none;">{{ sim.closedLabel }}</span>
+              </sc-if>
                 <span style="position: absolute; top: 12px; inset-inline-start: 12px; padding: 5px 12px; border-radius: 100px; background: rgba(23,23,15,0.74); color: #FFFFFF; font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;">{{ sim.badge }}</span>
               </div>
               <div style="padding: 16px 18px 18px;">
@@ -1124,7 +1139,11 @@
           <div data-anim="tile" data-glow="true" onClick="{{ b.open }}" style="position: relative; border-radius: 22px; overflow: hidden; cursor: pointer; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); transition: transform 300ms cubic-bezier(.2,.7,.3,1), border-color 300ms;" style-hover="transform: translateY(-4px); border-color: rgba(23,23,15,0.24);">
             <div data-media="true" style="position: relative; height: 190px; background-color: #EDE7D9; background-image: repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px);">
               <sc-if value="{{ b.hasCover }}" hint-placeholder-val="{{ false }}">
-                <img loading="lazy" decoding="async" ref="{{ b.coverRef }}" alt="{{ b.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                <img loading="lazy" decoding="async" ref="{{ b.coverRef }}" alt="{{ b.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ b.coverFilter }};" />
+              </sc-if>
+              <sc-if value="{{ b.isClosed }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; inset: 0; background: rgba(23,23,15,0.18); pointer-events: none;"></div>
+                <span style="position: absolute; top: 16px; right: -36px; width: 140px; transform: rotate(40deg); background: #CE1126; color: #FFFFFF; text-align: center; padding: 6px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; box-shadow: 0 3px 12px rgba(23,23,15,0.4); pointer-events: none;">{{ b.closedLabel }}</span>
               </sc-if>
               <span style="position: absolute; top: 12px; left: 12px; padding: 5px 11px; border-radius: 100px; background: #007A3D; color: #FFFFFF; border: 1px solid rgba(23,23,15,0.14); font-size: 11px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;">{{ b.badge }}</span>
               <span style="position: absolute; bottom: 12px; left: 12px; padding: 7px 13px; border-radius: 100px; background: #17170F; color: #FFFFFF; font-size: 13.5px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ b.price }}</span>
@@ -1474,7 +1493,15 @@
               <span style="display: flex; align-items: center; gap: 8px; justify-content: {{ rowActionAlign }};">
                 <span style="padding: 5px 13px; border-radius: 100px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; background: {{ row.statusBg }}; border: 1px solid {{ row.statusBorder }}; color: {{ row.statusFg }};">{{ row.status }}</span>
                 <span onClick="{{ row.edit }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.editLabel }}</span>
-                <span onClick="{{ row.toggle }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.toggleLabel }}</span>
+                <sc-if value="{{ row.canToggle }}" hint-placeholder-val="{{ true }}">
+                  <span onClick="{{ row.toggle }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.toggleLabel }}</span>
+                </sc-if>
+                <sc-if value="{{ row.canClose }}" hint-placeholder-val="{{ true }}">
+                  <span onClick="{{ row.closeRow }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(206,17,38,0.3); background: rgba(206,17,38,0.05); font-size: 12px; font-weight: 400; cursor: pointer; color: #B00F20; white-space: nowrap;" style-hover="background: #CE1126; color: #FFFFFF; border-color: #CE1126;">{{ row.closeLabel }}</span>
+                </sc-if>
+                <sc-if value="{{ row.isClosed }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ row.relist }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(0,122,61,0.35); background: rgba(0,122,61,0.06); font-size: 12px; font-weight: 400; cursor: pointer; color: #00693A; white-space: nowrap;" style-hover="background: #007A3D; color: #FFFFFF; border-color: #007A3D;">{{ row.relistLabel }}</span>
+                </sc-if>
                 <span onClick="{{ row.remove }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.5); white-space: nowrap;" style-hover="border-color: #CE1126; color: #B00F20;">{{ row.removeLabel }}</span>
               </span>
             </div>
@@ -1550,7 +1577,7 @@
 
     <div onClick="{{ lbStop }}" style="position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; cursor: default;">
       <sc-if value="{{ lbIsImage }}" hint-placeholder-val="{{ true }}">
-        <img ref="{{ lbImgRef }}" alt="{{ dTitle }}" style="max-width: 100%; max-height: 82vh; width: auto; height: auto; object-fit: contain; display: block; border-radius: 10px;" />
+        <img ref="{{ lbImgRef }}" alt="{{ dTitle }}" style="max-width: 100%; max-height: 82vh; width: auto; height: auto; object-fit: contain; display: block; border-radius: 10px; filter: {{ dClosedFilter }};" />
       </sc-if>
       <sc-if value="{{ lbIsVideo }}" hint-placeholder-val="{{ false }}">
         <video ref="{{ lbVideoRef }}" controls="{{ true }}" playsInline="{{ true }}" preload="metadata" style="max-width: 100%; max-height: 82vh; display: block; border-radius: 10px; background: #17170F;"></video>
@@ -1714,6 +1741,10 @@ const STAGE_DEFS = [
    server render to disagree with — so reading the stored choice while the
    initial state is being built is safe, and avoids a visible flip from Arabic
    to English one frame after load for returning English readers. */
+
+// Statuses that mean the property is no longer available. Must match
+// CLOSED_STATUSES in lib/supabase.js and the policy in 0011_sold_visible.sql.
+const CLOSED = ['sold', 'rented'];
 
 const LANG_KEY = 'akarat.lang';
 
@@ -3069,6 +3100,7 @@ class Component extends DCLogic {
       ? { lat: row.lat, lng: row.lng }
       : (hood || city);
     const exactPin = row.location_precision === 'exact' && row.lat != null;
+    const dClosed = CLOSED.includes(row.status);
 
     // Price per m² is a number Jordanian buyers actually compare on, and it
     // is only meaningful for a sale with a recorded area.
@@ -3089,7 +3121,8 @@ class Component extends DCLogic {
       .map(r => {
         const c = this.cardOf(r);
         return { title: c.title, place: c.place, price: c.price, badge: c.badge,
-                 hasCover: c.hasCover, coverRef: c.coverRef, open: c.open };
+                 hasCover: c.hasCover, coverRef: c.coverRef, open: c.open,
+                 isClosed: c.isClosed, closedLabel: c.closedLabel, coverFilter: c.coverFilter };
       });
 
     return {
@@ -3101,8 +3134,21 @@ class Component extends DCLogic {
         : `${num(row.price_jod)} ${ar ? 'د.أ' : 'JOD'}`,
       dHasPricePer: !!perSqm,
       dPricePer: perSqm ? `${num(perSqm)} ${ar ? `د.أ / ${sqm}` : `JOD / ${sqm}`}` : '',
-      dBadge: rent ? (ar ? 'للإيجار' : 'For rent') : (ar ? 'للبيع' : 'For sale'),
-      dBadgeBg: rent ? '#17170F' : '#007A3D',
+      // A closed listing says so where the deal badge used to, in red. The
+      // old badge said "For sale" on a property that had already sold.
+      dBadge: dClosed
+        ? (row.status === 'rented' ? (ar ? 'مؤجَّر' : 'Rented') : (ar ? 'مباع' : 'Sold'))
+        : rent ? (ar ? 'للإيجار' : 'For rent') : (ar ? 'للبيع' : 'For sale'),
+      dBadgeBg: dClosed ? '#CE1126' : rent ? '#17170F' : '#007A3D',
+      dClosed,
+      dNotClosed: !dClosed,
+      dClosedFilter: dClosed ? 'grayscale(1) contrast(0.92) brightness(0.9)' : 'none',
+      dClosedTitle: row.status === 'rented'
+        ? (ar ? 'هذا العقار مؤجَّر' : 'This property has been rented')
+        : (ar ? 'هذا العقار مباع' : 'This property has been sold'),
+      dClosedBody: ar
+        ? 'الإعلان محفوظ للاطلاع على السعر والتفاصيل، ولم يعد متاحاً.'
+        : 'The listing is kept so the asking price and details stay on record. It is no longer available.',
       dImgLabel: ar ? 'لم يضف المالك صوراً بعد' : 'The owner has not added photos yet',
 
       // ── gallery ──
@@ -3484,6 +3530,25 @@ class Component extends DCLogic {
         ? `${Number(row.price_jod).toLocaleString('en-US')} ${ar ? 'د.أ/شهر' : 'JOD/mo'}`
         : `${Number(row.price_jod).toLocaleString('en-US')} ${ar ? 'د.أ' : 'JOD'}`,
       badge: row.deal === 'rent' ? (ar ? 'للإيجار' : 'For rent') : (ar ? 'للبيع' : 'For sale'),
+
+      /* ── sold and rented ──
+         A closed listing stays on the marketplace (0011_sold_visible.sql)
+         rather than disappearing and taking its shared links with it. It is
+         marked two ways on purpose: the photograph loses its colour, which
+         reads at a glance while scrolling, and a red sticker says the word,
+         which is what the greying would otherwise leave to inference. */
+      isClosed: CLOSED.includes(row.status),
+      notClosed: !CLOSED.includes(row.status),
+      // Rented, not sold, when it was a rental. Calling a let "sold" is wrong
+      // in both languages.
+      closedLabel: row.status === 'rented'
+        ? (ar ? 'مؤجَّر' : 'RENTED')
+        : (ar ? 'مباع' : 'SOLD'),
+      // grayscale alone leaves a bright photo competing with the live ones
+      // beside it, so it is dimmed slightly as well.
+      coverFilter: CLOSED.includes(row.status)
+        ? 'grayscale(1) contrast(0.92) brightness(0.9)'
+        : 'none',
       // payload.images holds [{ url, path, type }] written by the listing form.
       // A card is a still frame, so a listing whose first file is a video falls
       // back to its first photo rather than rendering an <img> at a video URL.
@@ -4086,7 +4151,12 @@ class Component extends DCLogic {
     // The marketplace lives in Postgres and arrives through loadMarket().
     // data/market.js ships INTERNAL as an empty array by design, so filtering
     // it here is what made every AI search come back with nothing.
-    return (this.state.market || []).map(row => this.toSearchItem(row)).filter(p => {
+    // A sold or rented listing stays on the marketplace, but a search is
+    // someone asking what they can buy. Offering a closed one as a match,
+    // scored and explained like the rest, would be a wrong answer.
+    return (this.state.market || [])
+      .filter(row => !CLOSED.includes(row.status))
+      .map(row => this.toSearchItem(row)).filter(p => {
       if (c.deal && p.deal !== c.deal) return false;
       if (c.type && p.type !== c.type) return false;
       if (c.city && p.city !== c.city) return false;
@@ -4376,6 +4446,8 @@ class Component extends DCLogic {
         dHasSimilar: false, dHasMedia: false, dGalleryCols: '1fr', dStripDisplay: 'none',
         dStripCount: '', dStripRef: () => {}, dViewAll: () => {}, dViewAllLabel: '',
         dHasPricePer: false, dPricePer: '', dBadgeBg: '#007A3D',
+        dClosed: false, dNotClosed: true, dClosedFilter: 'none',
+        dClosedTitle: '', dClosedBody: '',
         dDescClamped: false, dDescMax: 'none', dDescToggle: '', dToggleDesc: () => {},
         dLocationNote: '', dHasMapLink: false, dMapHref: '', lblOpenMap: '',
         dTitleTracking: '-0.032em', dHeadLine: '1.14', dBodyLine: '1.78',
@@ -4409,7 +4481,10 @@ class Component extends DCLogic {
     // screens, where there is no room for four of anything. `narrow` is state
     // rather than a live window read so a resize actually re-renders it.
     const narrow = s.narrow;
-    const pool = market.slice(0, narrow ? 10 : 8);
+    // The home showcase is what is available now, so closed listings are left
+    // out of it rather than greyed. They remain on Buy and Rent, which is the
+    // full picture of the marketplace including what has already gone.
+    const pool = market.filter(r => !CLOSED.includes(r.status)).slice(0, narrow ? 10 : 8);
     const at = pool.length ? ((s.stackAt || 0) % pool.length + pool.length) % pool.length : 0;
     const dirSign = ar ? -1 : 1;
     // A phone has no room to set cards aside; the offsets shrink so the stack
@@ -4907,6 +4982,7 @@ class Component extends DCLogic {
       // no sample row: an account with nothing listed shows the empty state.
       rows: (s.myProps || []).map(p => {
         const live = p.status === 'active';
+        const closed = CLOSED.includes(p.status);
         // Every value the listing_status enum actually defines. Showing a sold
         // listing as merely "Hidden" told the owner nothing.
         const STATUS_LABEL = {
@@ -4925,13 +5001,35 @@ class Component extends DCLogic {
           place: this.placeOfIds(p.city_id, p.neighborhood_id),
           price: this.money(p.price_jod, p.deal === 'rent' ? 'rent' : 'sale'),
           status: STATUS_LABEL[p.status] || p.status,
-          statusBg: live ? 'rgba(0,122,61,0.1)' : 'rgba(23,23,15,0.06)',
-          statusBorder: live ? 'rgba(0,122,61,0.3)' : 'rgba(23,23,15,0.16)',
-          statusFg: live ? '#00693A' : 'rgba(23,23,15,0.5)',
+          // Sold reads as a result, not as a fault, so it gets its own colour
+          // rather than the grey every other non-live state shares.
+          statusBg: closed ? 'rgba(206,17,38,0.08)' : live ? 'rgba(0,122,61,0.1)' : 'rgba(23,23,15,0.06)',
+          statusBorder: closed ? 'rgba(206,17,38,0.32)' : live ? 'rgba(0,122,61,0.3)' : 'rgba(23,23,15,0.16)',
+          statusFg: closed ? '#B00F20' : live ? '#00693A' : 'rgba(23,23,15,0.5)',
           toggleLabel: live ? (ar ? 'إخفاء' : 'Hide') : (ar ? 'نشر' : 'Publish'),
           // 'paused' is the enum's word for this. 'hidden' was never one of
           // its values, so Postgres rejected every attempt to hide a listing.
           toggle: () => this.setRowStatus(p.id, live ? 'paused' : 'active'),
+          // Hidden once the listing is closed: "Hide" and "Publish" are about
+          // a listing that is still for sale, and offering both alongside
+          // "Relist" is three buttons arguing about the same thing.
+          canToggle: !closed,
+
+          /* ── marking it gone ──
+             The listing stays on the marketplace with its photographs greyed
+             and a SOLD sticker on them (0011_sold_visible.sql), rather than
+             vanishing and taking every shared link with it. A let is marked
+             RENTED, because calling it sold is wrong. */
+          closeLabel: p.deal === 'rent'
+            ? (ar ? 'تم التأجير' : 'Mark rented')
+            : (ar ? 'تم البيع' : 'Mark sold'),
+          closeRow: () => this.setRowStatus(p.id, p.deal === 'rent' ? 'rented' : 'sold'),
+          canClose: !closed,
+          // Marking something sold by accident has to be undoable in one
+          // click; there is nothing destructive about it to justify a prompt.
+          relistLabel: ar ? 'أعد النشر' : 'Relist',
+          relist: () => this.setRowStatus(p.id, 'active'),
+          isClosed: closed,
           editLabel: ar ? 'تعديل' : 'Edit',
           // The whole row, not just its id: the sheet is filled from the
           // payload too, which is already decompressed here.

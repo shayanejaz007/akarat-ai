@@ -103,8 +103,13 @@ export async function getListing(id: string): Promise<Listing | null> {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
     return null;
   }
+  // Sold and rented are included alongside active: a listing that closed
+  // keeps its page rather than 404ing the link everyone already shared. The
+  // page itself greys the photographs and marks it. The statuses left out —
+  // draft, pending, paused, rejected, archived — match the public read policy
+  // in 0011_sold_visible.sql, which is what actually enforces this.
   const rows = await rest<Listing[]>(
-    `properties?id=eq.${id}&status=eq.active&select=*&limit=1`,
+    `properties?id=eq.${id}&status=in.(active,sold,rented)&select=*&limit=1`,
     300
   );
   const row = rows?.[0];
