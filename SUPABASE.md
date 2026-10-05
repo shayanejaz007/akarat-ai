@@ -130,6 +130,54 @@ While testing, uncheck *Confirm email* so sign-up returns a session straight
 away. Turn it back on before launch; the app already handles the "check your
 email" path.
 
+**Forgot password**
+
+Nothing to enable: it uses the built-in *Reset Password* email. The link sends
+the user back to the page they asked from, where the app asks for a new
+password. For that to work, every origin the app runs on must be in
+**Redirect URLs**, for example:
+
+```
+http://localhost:3000/**
+https://your-domain.com/**
+```
+
+The email itself is branded and bilingual. In **Authentication → Emails →
+Templates → Reset Password**:
+
+- Subject: `Reset your Akarat.ai password · إعادة تعيين كلمة المرور`
+- Body: paste the whole of `supabase/templates/reset-password.html`
+
+The logo is loaded from `{{ .SiteURL }}/assets/akarat-logo.png`, so the Site
+URL must be the deployed domain. Email clients can't reach `localhost`. The
+email says the link lasts 1 hour, which is Supabase's default (**Email OTP
+Expiration**, 3600 s). If you change that setting, change the email text too.
+
+Supabase's default mailer is limited to a few emails an hour and often lands
+in spam. Before launch, set up your own SMTP under **Authentication → Emails →
+SMTP Settings** (Resend, Postmark, SendGrid, Amazon SES or Brevo all work).
+Use a sender on your own domain, such as `no-reply@your-domain.com`, and add
+the SPF/DKIM records your provider gives you.
+
+**Authentication → Providers → Google**
+
+The Maps key (`NEXT_PUBLIC_GOOGLE_MAPS_KEY`) cannot be used for sign-in.
+Google sign-in needs an OAuth client:
+
+1. Google Cloud Console → **APIs & Services → OAuth consent screen**. Set it up
+   as *External*, with app name, support email and your domain. Scopes:
+   `email`, `profile`, `openid`.
+2. **Credentials → Create credentials → OAuth client ID → Web application.**
+   - Authorized JavaScript origins: `http://localhost:3000`, `https://your-domain.com`
+   - Authorized redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
+     (copy it from the Google provider page in Supabase)
+3. Paste the **Client ID** and **Client secret** into Supabase → Providers →
+   Google and enable it.
+
+The secret stays in Supabase; nothing goes in `.env.local`. While the consent
+screen is in *Testing* mode, only the test users you list can sign in. Publish
+it before launch.
+
 ---
 
 ## Step 4 — Environment variables

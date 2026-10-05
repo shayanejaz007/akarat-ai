@@ -363,11 +363,29 @@
       <p style="margin: 10px 0 22px; font-size: 14px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.6); text-wrap: pretty;">{{ authBody }}</p>
 
       <div style="display: grid; gap: 10px;">
+        <sc-if value="{{ showGoogle }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ signInGoogle }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
+            <img src="assets/icons/google.svg" alt="" style="width: 18px; height: 18px; display: block;" />
+            <span>{{ t.google }}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; margin: 4px 0; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.45);">
+            <div style="flex: 1; height: 1px; background: rgba(23,23,15,0.12);"></div>
+            <span>{{ t.orDivider }}</span>
+            <div style="flex: 1; height: 1px; background: rgba(23,23,15,0.12);"></div>
+          </div>
+        </sc-if>
         <sc-if value="{{ isSignUp }}" hint-placeholder-val="{{ false }}">
           <input value="{{ authName }}" onChange="{{ onAuthName }}" placeholder="{{ t.fieldName }}" dir="{{ dir }}" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
         </sc-if>
-        <input value="{{ authEmail }}" onChange="{{ onAuthEmail }}" onKeyDown="{{ onAuthKey }}" type="email" autoComplete="email" placeholder="{{ t.fieldEmail }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
-        <input value="{{ authPassword }}" onChange="{{ onAuthPassword }}" onKeyDown="{{ onAuthKey }}" type="password" autoComplete="{{ pwAutocomplete }}" placeholder="{{ t.fieldPassword }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        <sc-if value="{{ showEmail }}" hint-placeholder-val="{{ true }}">
+          <input value="{{ authEmail }}" onChange="{{ onAuthEmail }}" onKeyDown="{{ onAuthKey }}" type="email" autoComplete="email" placeholder="{{ t.fieldEmail }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        </sc-if>
+        <sc-if value="{{ showPassword }}" hint-placeholder-val="{{ true }}">
+          <input value="{{ authPassword }}" onChange="{{ onAuthPassword }}" onKeyDown="{{ onAuthKey }}" type="password" autoComplete="{{ pwAutocomplete }}" placeholder="{{ pwPlaceholder }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        </sc-if>
+        <sc-if value="{{ isSignIn }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ openForgot }}" style="justify-self: end; font-size: 13px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.62);" style-hover="color: #007A3D;">{{ t.forgotLink }}</div>
+        </sc-if>
 
         <sc-if value="{{ hasAuthMsg }}" hint-placeholder-val="{{ false }}">
           <div style="padding: 11px 13px; border-radius: 10px; background: {{ authMsgBg }}; border: 1px solid {{ authMsgBorder }}; font-size: 13px; font-weight: 300; line-height: 1.5; color: {{ authMsgFg }};">{{ authMsg }}</div>
@@ -1575,6 +1593,12 @@ const STR = {
     fieldName: 'Full name', fieldEmail: 'Email address', fieldPassword: 'Password',
     createAccount: 'Create account', haveAccount: 'Already have an account? Sign in',
     noAccount: 'New here? Create an account', working: 'Working…',
+    google: 'Continue with Google', orDivider: 'or',
+    forgotLink: 'Forgot password?', backToSignIn: 'Back to sign in',
+    forgotTitle: 'Reset your password', forgotBody: 'Enter the email you signed up with and we will send you a link to choose a new password.',
+    sendLink: 'Send reset link', resetSent: 'If an account exists for that email, a reset link is on its way. Check your inbox.',
+    resetTitle: 'Choose a new password', resetBody: 'Enter a new password for your account. Use at least 6 characters.',
+    fieldNewPassword: 'New password', savePassword: 'Save password',
     checkEmail: 'Account created. Check your email to confirm the address, then sign in.',
     loadingProps: 'Loading your listings…', dbEmpty: 'No listings yet. Add your first property to see it here.', dbSignedOut: 'Sign in to see your listings.',
     dbError: 'Could not reach the database.', savedOk: 'Listing saved to your account.',
@@ -1621,6 +1645,12 @@ const STR = {
     fieldName: 'الاسم الكامل', fieldEmail: 'البريد الإلكتروني', fieldPassword: 'كلمة المرور',
     createAccount: 'إنشاء حساب', haveAccount: 'لديك حساب؟ سجّل الدخول',
     noAccount: 'جديد هنا؟ أنشئ حساباً', working: 'جارٍ التنفيذ…',
+    google: 'المتابعة باستخدام Google', orDivider: 'أو',
+    forgotLink: 'نسيت كلمة المرور؟', backToSignIn: 'العودة لتسجيل الدخول',
+    forgotTitle: 'إعادة تعيين كلمة المرور', forgotBody: 'أدخل البريد الإلكتروني الذي سجّلت به وسنرسل لك رابطاً لاختيار كلمة مرور جديدة.',
+    sendLink: 'إرسال الرابط', resetSent: 'إذا كان هناك حساب بهذا البريد فسيصلك رابط إعادة التعيين. تحقق من بريدك.',
+    resetTitle: 'اختر كلمة مرور جديدة', resetBody: 'أدخل كلمة مرور جديدة لحسابك، ستة أحرف على الأقل.',
+    fieldNewPassword: 'كلمة المرور الجديدة', savePassword: 'حفظ كلمة المرور',
     checkEmail: 'تم إنشاء الحساب. تحقق من بريدك لتأكيد العنوان ثم سجّل الدخول.',
     loadingProps: 'جارٍ تحميل إعلاناتك…', dbEmpty: 'لا توجد إعلانات بعد. أضف عقارك الأول ليظهر هنا.', dbSignedOut: 'سجّل الدخول لعرض إعلاناتك.',
     dbError: 'تعذّر الوصول إلى قاعدة البيانات.', savedOk: 'تم حفظ الإعلان في حسابك.',
@@ -1847,6 +1877,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.readAuthRedirect();
     this._pop = () => {
       let id = null;
       try { id = new URLSearchParams(location.search).get('property'); } catch (e) {}
@@ -1906,7 +1937,10 @@ class Component extends DCLogic {
       try {
         const session = await db.getSession();
         this.applySession(session);
-        this._unsubAuth = await db.onAuthChange(sess => this.applySession(sess));
+        this._unsubAuth = await db.onAuthChange((sess, event) => {
+          if (event === 'PASSWORD_RECOVERY') this.openReset();
+          this.applySession(sess);
+        });
       } catch (e) {
         console.warn('auth unavailable', e);
       }
@@ -1920,11 +1954,66 @@ class Component extends DCLogic {
     else this.setState({ myProps: null });
   }
 
+  // Google and the password-reset email both return here with the outcome in
+  // the URL hash. Read it synchronously on mount: the Supabase client loads
+  // later, consumes the hash, and can announce PASSWORD_RECOVERY before
+  // anything has subscribed to hear it.
+  readAuthRedirect() {
+    let h;
+    try { h = new URLSearchParams(location.hash.slice(1)); } catch (e) { return; }
+    if (h.get('type') === 'recovery' && h.get('access_token')) { this.openReset(); return; }
+    const err = h.get('error_description');
+    if (err) {
+      // Expired or reused link, or the Google consent was cancelled.
+      this.setState({ authPrompt: true, authMode: 'signin', authMsg: err.replace(/\+/g, ' '), authMsgKind: 'error' });
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    }
+  }
+
+  openReset() {
+    this.setState({ authPrompt: true, authMode: 'reset', authPassword: '', authMsg: '', menuOpen: false });
+  }
+
+  async signInGoogle() {
+    const L = STR[this.state.lang];
+    if (this.state.authBusy) return;
+    if (!this.db) { this.setState({ authMsg: L.dbError, authMsgKind: 'error' }); return; }
+    this.setState({ authBusy: true, authMsg: '' });
+    try {
+      await this.db.signInWithGoogle(); // navigates away on success
+    } catch (e) {
+      this.setState({ authBusy: false, authMsg: e.message || String(e), authMsgKind: 'error' });
+    }
+  }
+
   async submitAuth() {
     const s = this.state, L = STR[s.lang];
     if (s.authBusy) return;
     if (!this.db) { this.setState({ authMsg: L.dbError, authMsgKind: 'error' }); return; }
     const email = s.authEmail.trim();
+    if (s.authMode === 'forgot') {
+      if (!email) { this.setState({ authMsg: L.fieldEmail, authMsgKind: 'error' }); return; }
+      this.setState({ authBusy: true, authMsg: '' });
+      try {
+        await this.db.sendPasswordReset(email);
+        this.setState({ authBusy: false, authMsg: L.resetSent, authMsgKind: 'ok' });
+      } catch (e) {
+        this.setState({ authBusy: false, authMsg: e.message || String(e), authMsgKind: 'error' });
+      }
+      return;
+    }
+    if (s.authMode === 'reset') {
+      if (!s.authPassword) { this.setState({ authMsg: L.fieldNewPassword, authMsgKind: 'error' }); return; }
+      this.setState({ authBusy: true, authMsg: '' });
+      try {
+        await this.db.updatePassword(s.authPassword);
+        this.setState({ authBusy: false, authPrompt: false, authMode: 'signin', authPassword: '', screen: 'dash' });
+        this.scrollTop();
+      } catch (e) {
+        this.setState({ authBusy: false, authMsg: e.message || String(e), authMsgKind: 'error' });
+      }
+      return;
+    }
     if (!email || !s.authPassword) {
       this.setState({ authMsg: L.fieldEmail + ' + ' + L.fieldPassword, authMsgKind: 'error' });
       return;
@@ -4119,20 +4208,27 @@ class Component extends DCLogic {
         this.setState({ signedIn: false, user: null, myProps: null, menuOpen: false, screen: s.screen === 'dash' ? 'home' : s.screen });
       },
       authPrompt: !!s.authPrompt,
-      closeAuthPrompt: () => this.setState({ authPrompt: false, authMsg: '' }),
+      closeAuthPrompt: () => this.setState({ authPrompt: false, authMsg: '', authMode: 'signin' }),
       isSignUp: s.authMode === 'signup',
-      authTitle: s.authMode === 'signup' ? L.signUpTitle : L.authTitle,
-      authBody: s.authMode === 'signup' ? L.signUpBody : L.authBody,
-      authBtnLabel: s.authBusy ? L.working : (s.authMode === 'signup' ? L.createAccount : L.authSignIn),
+      isSignIn: s.authMode === 'signin',
+      showGoogle: s.authMode === 'signin' || s.authMode === 'signup',
+      showEmail: s.authMode !== 'reset',
+      showPassword: s.authMode !== 'forgot',
+      signInGoogle: () => this.signInGoogle(),
+      openForgot: () => this.setState({ authMode: 'forgot', authMsg: '', authPassword: '' }),
+      authTitle: { signup: L.signUpTitle, forgot: L.forgotTitle, reset: L.resetTitle }[s.authMode] || L.authTitle,
+      authBody: { signup: L.signUpBody, forgot: L.forgotBody, reset: L.resetBody }[s.authMode] || L.authBody,
+      authBtnLabel: s.authBusy ? L.working : ({ signup: L.createAccount, forgot: L.sendLink, reset: L.savePassword }[s.authMode] || L.authSignIn),
       authBtnBg: s.authBusy ? 'rgba(23,23,15,0.4)' : '#007A3D',
-      authSwitchLabel: s.authMode === 'signup' ? L.haveAccount : L.noAccount,
-      pwAutocomplete: s.authMode === 'signup' ? 'new-password' : 'current-password',
+      authSwitchLabel: s.authMode === 'signup' ? L.haveAccount : s.authMode === 'signin' ? L.noAccount : L.backToSignIn,
+      pwAutocomplete: s.authMode === 'signin' ? 'current-password' : 'new-password',
+      pwPlaceholder: s.authMode === 'reset' ? L.fieldNewPassword : L.fieldPassword,
       authName: s.authName, authEmail: s.authEmail, authPassword: s.authPassword,
       onAuthName: e => this.setState({ authName: e.target.value }),
       onAuthEmail: e => this.setState({ authEmail: e.target.value }),
       onAuthPassword: e => this.setState({ authPassword: e.target.value }),
       onAuthKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.submitAuth(); } },
-      switchAuthMode: () => this.setState({ authMode: s.authMode === 'signup' ? 'signin' : 'signup', authMsg: '' }),
+      switchAuthMode: () => this.setState({ authMode: s.authMode === 'signin' ? 'signup' : 'signin', authMsg: '' }),
       submitAuth: () => this.submitAuth(),
       hasAuthMsg: !!s.authMsg,
       authMsg: s.authMsg,
