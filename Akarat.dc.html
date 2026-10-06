@@ -2108,7 +2108,19 @@ class Component extends DCLogic {
     try {
       await this.db.signInWithGoogle(); // navigates away on success
     } catch (e) {
-      this.setState({ authBusy: false, authMsg: e.message || String(e), authMsgKind: 'error' });
+      const ar = this.state.lang === 'ar';
+      // The provider has not been switched on in Supabase. Saying so, and
+      // offering the way in that does work, beats repeating "Unsupported
+      // provider: provider is not enabled" at someone trying to sign up.
+      const off = e && (e.code === 'provider-disabled' || /not enabled|unsupported provider/i.test(e.message || ''));
+      this.setState({
+        authBusy: false, authMsgKind: 'error',
+        authMsg: off
+          ? (ar
+            ? 'تسجيل الدخول عبر Google غير مُفعَّل بعد. استخدم بريدك الإلكتروني وكلمة المرور أدناه.'
+            : 'Google sign-in is not switched on yet. Use your email address and a password below instead.')
+          : (e.message || String(e))
+      });
     }
   }
 

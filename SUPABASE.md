@@ -286,6 +286,78 @@ The trade: you cannot filter *inside* `payload_gz` in SQL. That is deliberate.
 Anything you need to query belongs in a column; the blob is for content you
 only ever read back whole.
 
+## Google sign-in
+
+This is the one feature that does need the Google Cloud console. Until it is
+done, the button answers "Google sign-in is not switched on yet" and points
+people at the email form — it no longer throws them out of the site onto a
+Supabase error page.
+
+Two consoles, in this order. Google issues the credentials; Supabase holds
+them.
+
+### 1. Google Cloud: the OAuth client
+
+1. <https://console.cloud.google.com/> → create a project, or reuse the one
+   holding the Maps key.
+2. **APIs & Services → OAuth consent screen**. External. Fill in the app name,
+   a support email and a developer email. Add your domain under Authorised
+   domains: `akarat.ai`.
+   - While the screen is in **Testing**, only accounts you list as test users
+     can sign in. **Publish** it before launch, or sign-in works for you and
+     for nobody else — which looks exactly like the site being broken.
+   - Scopes: the defaults (`email`, `profile`, `openid`) are all this needs.
+     Asking for more triggers Google's verification review for no benefit.
+3. **APIs & Services → Credentials → Create credentials → OAuth client ID**,
+   type **Web application**.
+4. **Authorised redirect URIs** — this is the field people get wrong. It is
+   *Supabase's* callback, not your site:
+
+   ```
+   https://ppqftdcdpshfokjqnuhq.supabase.co/auth/v1/callback
+   ```
+
+   That exact string, nothing else. Your own domain does not belong here; the
+   browser reaches Google, Google returns to Supabase, and Supabase returns to
+   you. A mismatch here is `redirect_uri_mismatch`, Google's most common OAuth
+   error.
+5. Copy the **Client ID** and **Client secret**.
+
+### 2. Supabase: enable the provider
+
+**Authentication → Providers → Google**, switch it on, paste the Client ID and
+Client secret, save.
+
+Then **Authentication → URL Configuration**:
+
+- **Site URL**: `https://www.akarat.ai`
+- **Redirect URLs**: add every origin people actually sign in from, one per
+  line — `https://www.akarat.ai/**`, `https://akarat.ai/**`,
+  `http://localhost:3000/**`, and `https://*.vercel.app/**` while you are
+  still testing previews.
+
+The app sends people back to the page they started on, and Supabase refuses
+any return address not on this list, falling back to the Site URL.
+
+### 3. Verify
+
+Open the site, **Sign in**, **Continue with Google**. You should reach
+Google's account chooser and come back signed in. If instead you see:
+
+| What you see | What it means |
+|---|---|
+| "Google sign-in is not switched on yet" | Step 2 has not been done, or has not saved |
+| `redirect_uri_mismatch` on Google's page | Step 1.4 — it must be the Supabase callback |
+| Google says the app is not verified | Consent screen still in Testing; publish it |
+| Signs in, then lands signed out | The return address is not in Redirect URLs |
+
+### A note on accounts
+
+Google sign-in uses the email address on the Google account. Someone who
+already registered with a password on that same address gets the same account,
+because Supabase matches on the email. That is not true of phone sign-in,
+which is a separate identity — see the end of this file.
+
 ## Phone sign-in (WhatsApp one-time codes)
 
 Google Cloud is not involved in this. That console was only ever for the
