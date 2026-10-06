@@ -368,10 +368,12 @@
             <img src="assets/icons/google.svg" alt="" style="width: 18px; height: 18px; display: block;" />
             <span>{{ t.google }}</span>
           </div>
-          <div onClick="{{ openPhone }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
-            <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
-            <span>{{ t.phoneButton }}</span>
-          </div>
+          <sc-if value="{{ showPhoneButton }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ openPhone }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
+              <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
+              <span>{{ t.phoneButton }}</span>
+            </div>
+          </sc-if>
           <div style="display: flex; align-items: center; gap: 12px; margin: 4px 0; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.45);">
             <div style="flex: 1; height: 1px; background: rgba(23,23,15,0.12);"></div>
             <span>{{ t.orDivider }}</span>
@@ -1823,6 +1825,14 @@ const STAGE_DEFS = [
 // Statuses that mean the property is no longer available. Must match
 // CLOSED_STATUSES in lib/supabase.js and the policy in 0011_sold_visible.sql.
 const CLOSED = ['sold', 'rented'];
+
+// Phone sign-in is built and tested but switched off: it needs a Twilio
+// account and a WhatsApp sender, and every code it sends is billed. Turning
+// this to true brings back the "Continue with a phone number" button and the
+// dashboard row for attaching a number to an existing account. Nothing else
+// needs changing — lib/phone.js and the Supabase calls are all still here.
+// Setup is in SUPABASE.md.
+const PHONE_SIGNIN = false;
 
 const LANG_KEY = 'akarat.lang';
 
@@ -4531,12 +4541,12 @@ class Component extends DCLogic {
       /* ── phone sign-in ──
          Supabase sends the code; a provider configured in the dashboard
          delivers it. Nothing here reaches Google Cloud. */
-      showPhoneButton: s.authMode === 'signin' || s.authMode === 'signup',
+      showPhoneButton: PHONE_SIGNIN && (s.authMode === 'signin' || s.authMode === 'signup'),
       openPhone: () => this.setState({
         authMode: 'phone', authMsg: '', authPassword: '', otpCode: ''
       }),
-      showPhone: s.authMode === 'phone',
-      showOtp: s.authMode === 'otp',
+      showPhone: PHONE_SIGNIN && s.authMode === 'phone',
+      showOtp: PHONE_SIGNIN && s.authMode === 'otp',
       phoneCountry: s.phoneCountry || 'jo',
       countryOpts: (this.PH ? this.PH.COUNTRIES : []).map(c => ({
         value: c.id,
@@ -5344,7 +5354,7 @@ class Component extends DCLogic {
          Phone sign-in on its own would hand an existing email user a second,
          empty account. Linking the number here means signing in by phone
          later reaches this account and these listings. */
-      showPhoneRow: !!s.signedIn && !s.phoneLinkOpen,
+      showPhoneRow: PHONE_SIGNIN && !!s.signedIn && !s.phoneLinkOpen,
       phoneRowLabel: s.accountPhone
         ? (ar ? `رقمك: ${s.accountPhone}` : `Your number: ${s.accountPhone}`)
         : (ar ? 'لم تربط رقم هاتف بعد. اربطه لتسجّل الدخول برقمك لاحقاً.'
@@ -5357,7 +5367,7 @@ class Component extends DCLogic {
         phoneLinkOpen: true, phoneLinkStep: 'number',
         linkNumber: '', linkCode: '', linkMsg: ''
       }),
-      phoneLinkOpen: !!s.phoneLinkOpen,
+      phoneLinkOpen: PHONE_SIGNIN && !!s.phoneLinkOpen,
       linkStepNumber: s.phoneLinkStep !== 'code',
       linkStepCode: s.phoneLinkStep === 'code',
       linkCountry: s.linkCountry || 'jo',
