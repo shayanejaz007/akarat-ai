@@ -390,10 +390,22 @@ one file; nothing else in the codebase depends on it.
    Token** from the console home.
 2. Create a **Messaging Service** (Messaging → Services) and copy its SID.
    Supabase asks for this rather than a bare phone number.
-3. For WhatsApp: Messaging → Senders → WhatsApp senders, and register one.
-   Approval usually takes a day or two. For SMS: buy a number instead, which
-   is immediate.
-4. Set a **spend limit** on the account. SMS pumping — a bot requesting codes
+3. For SMS: buy a number (Phone Numbers → Buy a number) and add it to the
+   Messaging Service. Immediate, nothing to approve.
+4. For WhatsApp: Messaging → Senders → WhatsApp senders, and register one.
+   Two things about WhatsApp that are easy to hit and hard to diagnose:
+
+   - **Approval takes a day or two.** Until it lands, use the **WhatsApp
+     sandbox** (Messaging → Try it out → Send a WhatsApp message). The
+     sandbox works straight away, but every test phone must first send the
+     sandbox its join phrase, so it is for you and your testers, never for
+     real users.
+   - **WhatsApp will not let a business start a conversation with free text.**
+     Business-initiated messages have to use an approved template. Twilio
+     ships a pre-approved authentication template for exactly this; pick it
+     for the Messaging Service rather than writing your own, or the first
+     real send is rejected after everything else looks configured.
+5. Set a **spend limit** on the account. SMS pumping — a bot requesting codes
    to premium-rate numbers abroad so someone collects the carrier share — is
    the normal way a phone-auth bill becomes a story, and a cap is what stops
    it being an expensive one.
@@ -413,7 +425,31 @@ cost of it being generous is yours.
 Supabase's own template carries the code. Keep it short and name the site, so
 it is obvious which site a code belongs to.
 
-### 3. Verify
+### 3. Switch the feature on in the app
+
+Phone sign-in ships **off**, because it is billed per message and useless
+until the two steps above are done. Nothing in the interface shows it while it
+is off, which is why this step has to come before testing:
+
+```js
+// Akarat.dc.html
+const PHONE_SIGNIN = true;   // was false
+```
+
+That one line restores the "Continue with a phone number" button and the
+dashboard row for attaching a number to an account. Then rebuild and redeploy
+— the app document is baked into `public/` at build time, so an edit alone
+changes nothing on a running server.
+
+If Twilio approval has not come back yet, also set the channel to SMS so the
+codes actually arrive:
+
+```js
+// lib/supabase.js
+export const OTP_CHANNEL = 'sms';   // 'whatsapp' once the sender is approved
+```
+
+### 4. Verify
 
 1. Open the app, **Sign in**, then **Continue with a phone number**.
 2. Pick a country and enter a number. A number of the wrong length is refused
