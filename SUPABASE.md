@@ -384,6 +384,47 @@ approval and works on any handset, so it is the sensible way to launch if the
 WhatsApp sender review has not come back yet. Changing channel is one word in
 one file; nothing else in the codebase depends on it.
 
+### Will it reach the countries we care about?
+
+Twilio reaches all of them. Coverage is not the question — registration is,
+and it is strictest in exactly the two markets this site targets.
+
+**SMS is a regulated product in the Gulf and in the United States.** Carriers
+there drop unregistered application traffic rather than delivering it, and the
+failure is silent: Twilio reports the message as sent, and nothing arrives.
+
+| Where | What SMS needs before it is delivered |
+|---|---|
+| Saudi Arabia | A Sender ID registered with the regulator. Unregistered traffic is blocked outright, not throttled |
+| UAE | Sender ID registration; traffic from foreign long numbers is largely filtered, and per-message cost is among the highest anywhere |
+| Jordan, Qatar, Kuwait, Bahrain, Oman | Sender ID registration in most cases; rules differ per operator and change |
+| United States | A2P 10DLC brand and campaign registration for a normal number, or a verified toll-free number. Mandatory since 2023; unregistered traffic is heavily filtered |
+
+Each of those is paperwork with a lead time, per country, and the Gulf ones
+usually want a local trade licence or a local entity. That is the real cost of
+an SMS-first launch across this list — not the per-message price.
+
+**WhatsApp avoids nearly all of it.** It travels over the internet rather than
+the carrier network, so there is no Sender ID to register, no 10DLC, and no
+per-country regulator. One approved sender reaches every country on the list,
+at a price that barely varies between them. It is also the messaging default
+across Jordan and the wider region, so a code arriving there is the normal
+thing rather than the exception.
+
+That is the argument for WhatsApp as the primary channel and SMS as the
+fallback, rather than the other way round — not the price difference.
+
+**Twilio Verify is worth a look** if this grows. Supabase can use it in place
+of plain Twilio, and it is built for one-time codes specifically: it carries
+some of the compliance burden, and can fall back from WhatsApp to SMS to voice
+on its own when a channel fails. It costs more per verification than sending a
+raw message, and it is the usual answer once "the codes did not arrive in
+country X" becomes a recurring support thread.
+
+Prices and registration rules in this section move. Check Twilio's current
+country-by-country guidance before committing to a launch date that depends on
+one of them.
+
 ### 1. Twilio
 
 1. Create an account at twilio.com and note the **Account SID** and **Auth
