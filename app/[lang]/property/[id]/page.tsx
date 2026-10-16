@@ -119,6 +119,35 @@ export async function generateMetadata(
   };
 }
 
+/**
+ * JSON-LD for an inline <script>, with the characters that can close the tag
+ * escaped.
+ *
+ * JSON.stringify escapes quotes and backslashes but leaves < and / alone, and
+ * `name` and `description` here come from the listing title and description —
+ * fields any registered owner types. A title of
+ *
+ *     Nice flat </script><script>...</script>
+ *
+ * therefore closed this tag and ran whatever came after it, on a public,
+ * server-rendered page: stored cross-site scripting, waiting for someone to
+ * try it.
+ *
+ * These are JSON escapes, so anything parsing this gets the original string
+ * back unchanged and Google reads the same structured data as before. U+2028
+ * and U+2029 are escaped as well: both are legal inside a JSON string but are
+ * line terminators to a JavaScript parser, which breaks it a different way.
+ */
+function safeJsonLd(value: unknown): string {
+  const BS = String.fromCharCode(92);
+  return JSON.stringify(value)
+    .split('<').join(BS + 'u003c')
+    .split('>').join(BS + 'u003e')
+    .split('&').join(BS + 'u0026')
+    .split(String.fromCharCode(0x2028)).join(BS + 'u2028')
+    .split(String.fromCharCode(0x2029)).join(BS + 'u2029');
+}
+
 export default async function PropertyPage(
   { params }: { params: { lang: string; id: string } }
 ) {
@@ -203,7 +232,7 @@ export default async function PropertyPage(
     >
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <div style={{ maxWidth: 940, margin: "0 auto", padding: "28px 20px 72px" }}>
