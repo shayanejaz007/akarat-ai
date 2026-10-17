@@ -17,6 +17,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const roots: MetadataRoute.Sitemap = [
     { url: `${SITE}/en`, lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: `${SITE}/ar`, lastModified: now, changeFrequency: "daily", priority: 1 },
+    // The policy pages are listed because things ask for their URL — an app
+    // store, a payment provider, a partner onboarding form — and a URL that
+    // nothing links to is one a crawler never confirms exists.
+    { url: `${SITE}/en/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/ar/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/en/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/ar/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const rows = await listActiveListings();

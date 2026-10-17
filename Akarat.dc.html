@@ -1116,6 +1116,7 @@
         <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.54);">{{ legalKicker }}</span>
       </div>
       <h1 style="margin: 0 0 10px; font-size: clamp(2rem, 3.4vw, 2.8rem); font-weight: 300; letter-spacing: -0.032em;">{{ legalTitle }}</h1>
+      <p style="margin: 0 0 12px; font-size: 15.5px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.6); max-width: 60ch; text-wrap: pretty;">{{ legalIntro }}</p>
       <div style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.5); font-family: ui-monospace, monospace; margin-bottom: 40px;">{{ legalUpdated }}</div>
 
       <div style="display: grid; gap: 34px;">
@@ -2061,6 +2062,9 @@ class Component extends DCLogic {
     // Country list and E.164 formatting for phone sign-in. Pure data and
     // string handling; it reaches no network.
     import('./lib/phone.js').then(m => { this.PH = m; this.forceUpdate(); }).catch(() => {});
+
+    // Privacy policy and terms. Small, and only the legal screen reads it.
+    import('./lib/legal.js').then(m => { this.LEGAL = m; this.forceUpdate(); }).catch(() => {});
 
     // Is the crawler's index live, and how much is in it? Stated plainly in the
     // coverage panel so nobody has to guess whether external results are real.
@@ -3733,47 +3737,14 @@ class Component extends DCLogic {
     const go = fn => () => { fn(); this.scrollTop(); };
     const year = new Date().getFullYear();
 
-    const DOCS = {
-      privacy: ar ? {
-        kicker: 'المستندات القانونية', title: 'سياسة الخصوصية',
-        updated: 'آخر تحديث: آب ٢٠٢٦',
-        sections: [
-          { h: 'ما الذي نجمعه', p: 'حسابك يحتاج بريداً إلكترونياً واسماً. وإذا عرضت عقاراً، نحفظ ما تكتبه عنه: الموقع والسعر والمواصفات والوصف. وتُحفظ نصوص بحثك لتحسين قراءة الطلبات، دون ربطها بحسابك.' },
-          { h: 'ما الذي لا نجمعه', p: 'لا نطلب رقم هوية ولا بيانات بنكية ولا موقعك الجغرافي. ولا نضع إعلانات، ولا نبيع بياناتك، ولا نشاركها مع وسطاء إعلان.' },
-          { h: 'روابط المنصات الأخرى', p: 'حين تفتح نتيجة من منصة أردنية أخرى، تنتقل إلى موقعها بتبويب جديد. من تلك اللحظة تنطبق سياسة خصوصيتهم لا سياستنا، ونحن لا نمرر لهم من هو الباحث.' },
-          { h: 'حقوقك', p: 'يمكنك تعديل أو حذف أي إعلان من لوحة التحكم في أي وقت، وحذفه يزيله من قاعدة بياناتنا. ولطلب حذف الحساب بالكامل، راسلنا على privacy@akarat.ai.' }
-        ]
-      } : {
-        kicker: 'Legal', title: 'Privacy policy',
-        updated: 'Last updated: August 2026',
-        sections: [
-          { h: 'What we collect', p: 'An account needs an email address and a name. If you list a property, we store what you write about it: location, price, specifications and descriptions. Search text is kept to improve how requests are read, and is not tied to your account.' },
-          { h: 'What we do not collect', p: 'We do not ask for national ID numbers, banking details or your physical location. We run no advertising, we do not sell your data, and we do not share it with ad brokers.' },
-          { h: 'Links to other portals', p: 'When you open a result from another Jordanian portal, you leave for their site in a new tab. From that moment their privacy policy applies, not ours, and we do not tell them who was searching.' },
-          { h: 'Your rights', p: 'You can edit or delete any listing from your dashboard at any time, and deleting removes it from our database. To request full account deletion, write to privacy@akarat.ai.' }
-        ]
-      },
-      terms: ar ? {
-        kicker: 'المستندات القانونية', title: 'شروط الاستخدام',
-        updated: 'آخر تحديث: آب ٢٠٢٦',
-        sections: [
-          { h: 'استخدام المنصة', p: 'البحث متاح للجميع. أما عرض عقار فيحتاج حساباً، وأنت مسؤول عمّا يُنشر تحته. لا تعرض عقاراً لا تملك حق تسويقه.' },
-          { h: 'دقة الإعلانات', p: 'المعلومات التي تكتبها هي التي تُعرض. عرض عقار بسعر أو مساحة أو موقع غير صحيح سبب كافٍ لإزالة الإعلان دون إشعار.' },
-          { h: 'النتائج الخارجية', p: 'ما يظهر من منصات أخرى هو ما نشرته تلك المنصات، ونعرضه كما هو مع رابط مصدره. نحن لا نضمن توفر تلك العقارات ولا صحة أسعارها، ولا نتقاضى عمولة على أي صفقة.' },
-          { h: 'المسؤولية', p: 'أكارات أداة بحث وعرض، لا وسيط ولا وكيل عقاري. عاين العقار ووثّق الملكية قبل أي دفعة. أي اتفاق يبقى بينك وبين الطرف الآخر.' }
-        ]
-      } : {
-        kicker: 'Legal', title: 'Terms of use',
-        updated: 'Last updated: August 2026',
-        sections: [
-          { h: 'Using the platform', p: 'Searching is open to everyone. Listing a property requires an account, and you are responsible for what is published under it. Do not list a property you have no right to market.' },
-          { h: 'Listing accuracy', p: 'What you write is what gets shown. Listing a property at a price, size or location that is not real is reason enough to remove it without notice.' },
-          { h: 'External results', p: 'Results from other portals are what those portals published. We show them as they are, with a link to the source. We do not guarantee those properties are still available or correctly priced, and we take no commission on any deal.' },
-          { h: 'Liability', p: 'Akarat is a search and listing tool, not a broker or an agent. View the property and verify ownership before any payment. Any agreement stays between you and the other party.' }
-        ]
-      }
-    };
-    const doc = DOCS[s.legalDoc] || DOCS.privacy;
+    // Content lives in lib/legal.js, so the in-app screen and the
+    // server-rendered /privacy and /terms pages cannot drift apart. Until the
+    // module lands there is nothing to show, which is correct: an empty legal
+    // page is better than a stale one.
+    const doc = this.LEGAL
+      ? this.LEGAL.legalDoc(s.legalDoc, s.lang)
+      : { kicker: '', title: '', intro: '', sections: [] };
+    const updated = this.LEGAL ? this.LEGAL.LEGAL_UPDATED[s.lang] || '' : '';
 
     return {
       footBlurb: ar
@@ -3786,7 +3757,7 @@ class Component extends DCLogic {
       openTerms: () => this.openLegal('terms'),
       backHome: ar ? '← العودة للرئيسية' : '← Back to home',
       legalKicker: doc.kicker, legalTitle: doc.title,
-      legalUpdated: doc.updated, legalSections: doc.sections,
+      legalUpdated: updated, legalIntro: doc.intro || '', legalSections: doc.sections,
       footCols: [
         {
           title: ar ? 'تصفّح' : 'Browse',
@@ -4897,7 +4868,7 @@ class Component extends DCLogic {
         inquiryRows: empty, noInquiries: true, inquiriesEmptyLabel: '', statCards: empty,
         footBlurb: '', footCopyright: '', lblPrivacy: '', lblTerms: '',
         openPrivacy: () => {}, openTerms: () => {}, backHome: '',
-        legalKicker: '', legalTitle: '', legalUpdated: '',
+        legalKicker: '', legalTitle: '', legalUpdated: '', legalIntro: '',
         dashInitials: '·', dashRole: '', dashRoleFg: 'rgba(23,23,15,0.45)' };
     }
 
