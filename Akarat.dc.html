@@ -1830,13 +1830,14 @@ const STAGE_DEFS = [
 // CLOSED_STATUSES in lib/supabase.js and the policy in 0011_sold_visible.sql.
 const CLOSED = ['sold', 'rented'];
 
-// Phone sign-in is built and tested but switched off: it needs a Twilio
-// account and a WhatsApp sender, and every code it sends is billed. Turning
-// this to true brings back the "Continue with a phone number" button and the
-// dashboard row for attaching a number to an existing account. Nothing else
-// needs changing — lib/phone.js and the Supabase calls are all still here.
-// Setup is in SUPABASE.md.
-const PHONE_SIGNIN = false;
+// Phone sign-in. On, now that Twilio is configured with a WhatsApp sender and
+// the Phone provider is enabled in Supabase. This controls the "Continue with
+// a phone number" button and the dashboard row for attaching a number to an
+// existing account; the channel itself is OTP_CHANNEL in lib/supabase.js.
+//
+// Every code sent is billed, so if a bill ever needs stopping in a hurry,
+// this is the one line to flip. Setup and costs are in SUPABASE.md.
+const PHONE_SIGNIN = true;
 
 const LANG_KEY = 'akarat.lang';
 

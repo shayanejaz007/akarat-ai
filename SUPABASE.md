@@ -466,29 +466,33 @@ cost of it being generous is yours.
 Supabase's own template carries the code. Keep it short and name the site, so
 it is obvious which site a code belongs to.
 
-### 3. Switch the feature on in the app
+### 3. The switch in the app
 
-Phone sign-in ships **off**, because it is billed per message and useless
-until the two steps above are done. Nothing in the interface shows it while it
-is off, which is why this step has to come before testing:
+Phone sign-in is controlled by one constant:
 
 ```js
 // Akarat.dc.html
-const PHONE_SIGNIN = true;   // was false
+const PHONE_SIGNIN = true;
 ```
 
-That one line restores the "Continue with a phone number" button and the
-dashboard row for attaching a number to an account. Then rebuild and redeploy
-— the app document is baked into `public/` at build time, so an edit alone
-changes nothing on a running server.
+It is currently **on**. It governs the "Continue with a phone number" button
+and the dashboard row for attaching a number to an existing account. Setting
+it to `false` removes both from the interface without deleting anything, which
+is the fastest way to stop codes being sent if a bill ever needs halting.
 
-If Twilio approval has not come back yet, also set the channel to SMS so the
-codes actually arrive:
+Changing it needs a rebuild and a redeploy: the app document is baked into
+`public/` at build time, so editing the file alone changes nothing on a
+running server.
+
+The channel is a second constant, currently WhatsApp:
 
 ```js
 // lib/supabase.js
-export const OTP_CHANNEL = 'sms';   // 'whatsapp' once the sender is approved
+export const OTP_CHANNEL = 'whatsapp';   // or 'sms'
 ```
+
+Switch it to `'sms'` if WhatsApp delivery fails in a particular country, or
+while a new WhatsApp sender is awaiting approval. Nothing else changes.
 
 ### 4. Verify
 
