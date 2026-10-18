@@ -1830,14 +1830,20 @@ const STAGE_DEFS = [
 // CLOSED_STATUSES in lib/supabase.js and the policy in 0011_sold_visible.sql.
 const CLOSED = ['sold', 'rented'];
 
-// Phone sign-in. On, now that Twilio is configured with a WhatsApp sender and
-// the Phone provider is enabled in Supabase. This controls the "Continue with
-// a phone number" button and the dashboard row for attaching a number to an
-// existing account; the channel itself is OTP_CHANNEL in lib/supabase.js.
+// Phone sign-in. Off while the WhatsApp template is in approval.
 //
-// Every code sent is billed, so if a bill ever needs stopping in a hurry,
-// this is the one line to flip. Setup and costs are in SUPABASE.md.
-const PHONE_SIGNIN = true;
+// Everything on our side works — Twilio is configured, the Phone provider is
+// enabled, and a code sent through this path arrived on a real handset. What
+// is missing is Twilio's approved authentication template, without which
+// WhatsApp refuses a business-initiated message to anyone who has not messaged
+// the sender first. So the button would appear for every visitor and deliver
+// to almost none of them, which is worse than not offering it: a sign-in
+// method that fails silently costs more trust than one that is simply absent.
+//
+// Set back to true once the template is approved. Nothing else needs touching
+// — lib/phone.js, the Supabase calls and the OTP screens are all still here,
+// and the channel is OTP_CHANNEL in lib/supabase.js. See SUPABASE.md.
+const PHONE_SIGNIN = false;
 
 const LANG_KEY = 'akarat.lang';
 

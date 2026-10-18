@@ -475,10 +475,17 @@ Phone sign-in is controlled by one constant:
 const PHONE_SIGNIN = true;
 ```
 
-It is currently **on**. It governs the "Continue with a phone number" button
-and the dashboard row for attaching a number to an existing account. Setting
-it to `false` removes both from the interface without deleting anything, which
-is the fastest way to stop codes being sent if a bill ever needs halting.
+It is currently **off**, waiting on Twilio's approved authentication template.
+Everything else works: Twilio is configured, the Phone provider is enabled,
+and a code sent through this path has arrived on a real handset. Without the
+template, though, WhatsApp refuses a business-initiated message to anyone who
+has not messaged the sender first — so the button would show for everyone and
+deliver to almost nobody.
+
+Set it to `true` when the template is approved. It governs the "Continue with
+a phone number" button and the dashboard row for attaching a number to an
+existing account, and flipping it to `false` is also the fastest way to stop
+codes being sent if a bill ever needs halting.
 
 Changing it needs a rebuild and a redeploy: the app document is baked into
 `public/` at build time, so editing the file alone changes nothing on a
