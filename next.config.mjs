@@ -33,6 +33,19 @@ const nextConfig = {
       { source: '/en', destination: '/Akarat.dc.html' },
       { source: '/ar', destination: '/Akarat.dc.html' }
     ];
+  },
+
+  async redirects() {
+    // The bare paths are what people type, and what gets pasted into a
+    // Facebook app's Privacy Policy and Data Deletion fields or an app store
+    // submission — none of which know about the /en and /ar prefixes. English
+    // is the default for the same reason it is the x-default in metadata: it
+    // is what a reader of neither language should land on.
+    return [
+      { source: '/privacy', destination: '/en/privacy', permanent: false },
+      { source: '/terms', destination: '/en/terms', permanent: false },
+      { source: '/data-deletion', destination: '/en/data-deletion', permanent: false }
+    ];
   }
 };
 

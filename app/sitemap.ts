@@ -24,6 +24,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE}/ar/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE}/en/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE}/ar/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/en/data-deletion`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/ar/data-deletion`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const rows = await listActiveListings();

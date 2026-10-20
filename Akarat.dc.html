@@ -368,6 +368,10 @@
             <img src="assets/icons/google.svg" alt="" style="width: 18px; height: 18px; display: block;" />
             <span>{{ t.google }}</span>
           </div>
+          <div onClick="{{ signInFacebook }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #1877F2;">
+            <img src="assets/icons/facebook.svg" alt="" style="width: 18px; height: 18px; display: block;" />
+            <span>{{ t.facebook }}</span>
+          </div>
           <sc-if value="{{ showPhoneButton }}" hint-placeholder-val="{{ false }}">
             <div onClick="{{ openPhone }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
               <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
@@ -1508,6 +1512,35 @@
           <sc-if value="{{ hasRowsError }}" hint-placeholder-val="{{ false }}">
             <div style="padding: 11px 22px; background: rgba(206,17,38,0.06); border-bottom: 1px solid rgba(206,17,38,0.2); font-size: 12.5px; font-weight: 300; color: #B00F20;">{{ rowsError }}</div>
           </sc-if>
+          <sc-if value="{{ showConnected }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 16px 22px; border-bottom: 1px solid rgba(23,23,15,0.09); background: #FBF8F1;">
+              <div style="font-size: 12px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.45);">{{ lblConnected }}</div>
+              <div style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.55); margin-top: 5px;">{{ connectedHint }}</div>
+
+              <div style="display: grid; gap: 8px; margin-top: 13px;">
+                <sc-if value="{{ hasPasswordLogin }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; align-items: center; gap: 11px; padding: 10px 13px; border-radius: 11px; border: 1px solid rgba(23,23,15,0.1); background: #FFFFFF;">
+                    <span style="width: 17px; height: 17px; flex: 0 0 auto; border-radius: 4px; background: rgba(23,23,15,0.12);"></span>
+                    <span style="font-size: 13.5px; font-weight: 400;">{{ lblPasswordLogin }}</span>
+                  </div>
+                </sc-if>
+
+                <sc-for list="{{ connectedRows }}" as="cr" hint-placeholder-count="2">
+                  <div style="display: flex; align-items: center; gap: 11px; padding: 10px 13px; border-radius: 11px; border: 1px solid rgba(23,23,15,0.1); background: #FFFFFF; flex-wrap: wrap;">
+                    <img ref="{{ cr.iconRef }}" alt="" style="width: 17px; height: 17px; display: block; flex: 0 0 auto;" />
+                    <span style="font-size: 13.5px; font-weight: 400;">{{ cr.label }}</span>
+                    <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5);" dir="ltr">{{ cr.detail }}</span>
+                    <span onClick="{{ cr.act }}" style="margin-inline-start: auto; padding: 7px 14px; border-radius: 9px; border: 1px solid {{ cr.border }}; background: {{ cr.bg }}; font-size: 12px; font-weight: 400; cursor: {{ cr.cursor }}; color: {{ cr.fg }}; white-space: nowrap;">{{ cr.actionLabel }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ hasLinkNote }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 10px; font-size: 12.5px; font-weight: 300; line-height: 1.5; color: {{ linkNoteFg }};">{{ linkNote }}</div>
+              </sc-if>
+            </div>
+          </sc-if>
+
           <sc-if value="{{ showPhoneRow }}" hint-placeholder-val="{{ false }}">
             <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 13px 22px; border-bottom: 1px solid rgba(23,23,15,0.09); background: #FBF8F1;">
               <span style="width: 15px; height: 15px; flex: 0 0 auto; background: rgba(23,23,15,0.5); -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
@@ -1615,7 +1648,12 @@
             <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(23,23,15,0.45); margin-bottom: 16px;">{{ fc.title }}</div>
             <div style="display: grid; gap: 11px;">
               <sc-for list="{{ fc.links }}" as="fl" hint-placeholder-count="4">
-                <span onClick="{{ fl.go }}" style="font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.66); cursor: pointer; width: fit-content; transition: color 180ms;" style-hover="color: #007A3D;">{{ fl.label }}</span>
+                <sc-if value="{{ fl.isLink }}" hint-placeholder-val="{{ false }}">
+                  <a href="{{ fl.href }}" style="font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.66); cursor: pointer; width: fit-content; text-decoration: none; transition: color 180ms;" style-hover="color: #007A3D;">{{ fl.label }}</a>
+                </sc-if>
+                <sc-if value="{{ fl.notLink }}" hint-placeholder-val="{{ true }}">
+                  <span onClick="{{ fl.go }}" style="font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.66); cursor: pointer; width: fit-content; transition: color 180ms;" style-hover="color: #007A3D;">{{ fl.label }}</span>
+                </sc-if>
               </sc-for>
             </div>
           </div>
@@ -1626,8 +1664,8 @@
       <div style="padding: 20px 6vw 26px; border-top: 1px solid rgba(23,23,15,0.09); display: flex; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.46);">
         <span>{{ footCopyright }}</span>
         <div style="flex: 1;"></div>
-        <span onClick="{{ openPrivacy }}" style="cursor: pointer;" style-hover="color: #007A3D;">{{ lblPrivacy }}</span>
-        <span onClick="{{ openTerms }}" style="cursor: pointer;" style-hover="color: #007A3D;">{{ lblTerms }}</span>
+        <a href="{{ hrefPrivacy }}" style="cursor: pointer; color: inherit; text-decoration: none;" style-hover="color: #007A3D;">{{ lblPrivacy }}</a>
+        <a href="{{ hrefTerms }}" style="cursor: pointer; color: inherit; text-decoration: none;" style-hover="color: #007A3D;">{{ lblTerms }}</a>
         <span style="font-family: ui-monospace, monospace; letter-spacing: 0.06em;">{{ t.footerNote }}</span>
       </div>
     </footer>
@@ -1686,7 +1724,7 @@ const STR = {
     fieldName: 'Full name', fieldEmail: 'Email address', fieldPassword: 'Password',
     createAccount: 'Create account', haveAccount: 'Already have an account? Sign in',
     noAccount: 'New here? Create an account', working: 'Working…',
-    google: 'Continue with Google', orDivider: 'or',
+    google: 'Continue with Google', facebook: 'Continue with Facebook', orDivider: 'or',
     forgotLink: 'Forgot password?', backToSignIn: 'Back to sign in',
     forgotTitle: 'Reset your password', forgotBody: 'Enter the email you signed up with and we will send you a link to choose a new password.',
     sendLink: 'Send reset link', resetSent: 'If an account exists for that email, a reset link is on its way. Check your inbox.',
@@ -1747,7 +1785,7 @@ const STR = {
     fieldName: 'الاسم الكامل', fieldEmail: 'البريد الإلكتروني', fieldPassword: 'كلمة المرور',
     createAccount: 'إنشاء حساب', haveAccount: 'لديك حساب؟ سجّل الدخول',
     noAccount: 'جديد هنا؟ أنشئ حساباً', working: 'جارٍ التنفيذ…',
-    google: 'المتابعة باستخدام Google', orDivider: 'أو',
+    google: 'المتابعة باستخدام Google', facebook: 'المتابعة باستخدام Facebook', orDivider: 'أو',
     forgotLink: 'نسيت كلمة المرور؟', backToSignIn: 'العودة لتسجيل الدخول',
     forgotTitle: 'إعادة تعيين كلمة المرور', forgotBody: 'أدخل البريد الإلكتروني الذي سجّلت به وسنرسل لك رابطاً لاختيار كلمة مرور جديدة.',
     sendLink: 'إرسال الرابط', resetSent: 'إذا كان هناك حساب بهذا البريد فسيصلك رابط إعادة التعيين. تحقق من بريدك.',
@@ -1920,6 +1958,8 @@ class Component extends DCLogic {
     // code actually went to, the code itself, and the resend cooldown.
     phoneCountry: 'jo', phoneNumber: '', otpPhone: '', otpCode: '', otpResendIn: 0,
     // Linking a number to an account that already exists, from the dashboard.
+    // Connected accounts: which ways of signing in this account already has.
+    identities: null, linkBusy: '', linkNote: '', linkNoteKind: 'error',
     accountPhone: null, phoneLinkOpen: false, phoneLinkStep: 'number',
     linkCountry: 'jo', linkNumber: '', linkCode: '', linkE164: '',
     linkMsg: '', linkMsgKind: 'error', linkBusy: false,
@@ -2104,8 +2144,9 @@ class Component extends DCLogic {
       // Read straight off the session rather than asking the server again:
       // the phone, when there is one, is already on the user object.
       this.setState({ accountPhone: user.phone ? ('+' + String(user.phone).replace(/^\+/, '')) : null });
+      this.loadIdentities();
     } else {
-      this.setState({ myProps: null, accountPhone: null, phoneLinkOpen: false });
+      this.setState({ myProps: null, accountPhone: null, phoneLinkOpen: false, identities: null });
     }
   }
 
@@ -2129,36 +2170,99 @@ class Component extends DCLogic {
     this.setState({ authPrompt: true, authMode: 'reset', authPassword: '', authMsg: '', menuOpen: false });
   }
 
-  async signInGoogle() {
-    const L = STR[this.state.lang];
+  /**
+   * One OAuth path for both providers. The message when a provider is not
+   * switched on names it and points at the email form, rather than repeating
+   * Supabase's "Unsupported provider: provider is not enabled" at someone in
+   * the middle of signing up.
+   */
+  async signInOAuth(provider) {
+    const L = STR[this.state.lang], ar = this.state.lang === 'ar';
     if (this.state.authBusy) return;
     if (!this.db) { this.setState({ authMsg: L.dbError, authMsgKind: 'error' }); return; }
     this.setState({ authBusy: true, authMsg: '' });
     try {
-      await this.db.signInWithGoogle(); // navigates away on success
+      await this.db.signInWithProvider(provider); // navigates away on success
     } catch (e) {
-      const ar = this.state.lang === 'ar';
-      // The provider has not been switched on in Supabase. Saying so, and
-      // offering the way in that does work, beats repeating "Unsupported
-      // provider: provider is not enabled" at someone trying to sign up.
-      const off = e && (e.code === 'provider-disabled' || /not enabled|unsupported provider/i.test(e.message || ''));
+      const name = provider === 'facebook' ? 'Facebook' : 'Google';
+      const off = e && (e.code === 'provider-disabled'
+        || /not enabled|unsupported provider/i.test(e.message || ''));
       this.setState({
         authBusy: false, authMsgKind: 'error',
         authMsg: off
           ? (ar
-            ? 'تسجيل الدخول عبر Google غير مُفعَّل بعد. استخدم بريدك الإلكتروني وكلمة المرور أدناه.'
-            : 'Google sign-in is not switched on yet. Use your email address and a password below instead.')
+            ? `تسجيل الدخول عبر ${name} غير مُفعَّل بعد. استخدم بريدك الإلكتروني وكلمة المرور أدناه.`
+            : `${name} sign-in is not switched on yet. Use your email address and a password below instead.`)
           : (e.message || String(e))
       });
     }
   }
 
-  /* ──────────────── phone sign-in ────────────────
-     The code is sent by whatever provider is configured in Supabase; the app
-     only asks for it and hands back what was typed. */
+  signInGoogle() { return this.signInOAuth('google'); }
 
-  // Two steps behind one button: send the code, then confirm it. A change of
-  // phone on an existing user verifies under 'phone_change', not 'sms'.
+  /* ──────────────── connected accounts ────────────────
+     Supabase keeps one identity per way of signing in, so the same account can
+     hold an email/password login, a Google one and a Facebook one at once.
+     Linking is what stops a seller who registered by email, and later clicks
+     Continue with Facebook, from landing in a second empty account and
+     concluding their listings were deleted. */
+
+  async loadIdentities() {
+    if (!this.db || !this.db.listIdentities) return;
+    try {
+      this.setState({ identities: await this.db.listIdentities() });
+    } catch {
+      this.setState({ identities: [] });
+    }
+  }
+
+  async linkAccount(provider) {
+    const ar = this.state.lang === 'ar';
+    if (this.state.linkBusy || !this.db) return;
+    this.setState({ linkBusy: provider, linkNote: '' });
+    try {
+      // Navigates away to the provider and returns to this page signed in.
+      await this.db.linkProvider(provider);
+    } catch (e) {
+      const name = provider === 'facebook' ? 'Facebook' : 'Google';
+      const off = e && (e.code === 'provider-disabled'
+        || /manual linking|not enabled|disabled/i.test(e.message || ''));
+      this.setState({
+        linkBusy: '', linkNoteKind: 'error',
+        linkNote: off
+          ? (ar
+            ? `ربط الحسابات غير مُفعَّل بعد. فعّل Manual linking في إعدادات Supabase، وتأكد أن مزوّد ${name} مُفعَّل.`
+            : `Account linking is not switched on yet. Enable Manual linking in Supabase settings, and check the ${name} provider is on.`)
+          : (e.message || String(e))
+      });
+    }
+  }
+
+  async unlinkAccount(identity) {
+    const ar = this.state.lang === 'ar';
+    if (this.state.linkBusy || !this.db) return;
+    this.setState({ linkBusy: identity.provider, linkNote: '' });
+    try {
+      await this.db.unlinkProvider(identity);
+      await this.loadIdentities();
+      this.setState({ linkBusy: '', linkNote: '', linkNoteKind: 'ok' });
+    } catch (e) {
+      const msg = String(e.message || e);
+      // Supabase refuses to remove the last identity, which is correct: an
+      // account with none left cannot be signed into by anyone, its owner
+      // included. Worth saying plainly rather than passing the raw text on.
+      const last = /last identity|single identity|at least one/i.test(msg);
+      this.setState({
+        linkBusy: '', linkNoteKind: 'error',
+        linkNote: last
+          ? (ar
+            ? 'هذه آخر طريقة لتسجيل الدخول إلى حسابك، ولا يمكن إزالتها. أضف طريقة أخرى أولاً.'
+            : 'That is the only way left to sign in to this account, so it cannot be removed. Add another first.')
+          : msg
+      });
+    }
+  }
+
   async submitPhoneLink() {
     const s = this.state, ar = s.lang === 'ar';
     if (s.linkBusy || !this.db || !this.PH) return;
@@ -3760,8 +3864,12 @@ class Component extends DCLogic {
       footCopyright: `© ${year} Akarat.ai. ` + (ar ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'),
       lblPrivacy: ar ? 'سياسة الخصوصية' : 'Privacy policy',
       lblTerms: ar ? 'شروط الاستخدام' : 'Terms of use',
-      openPrivacy: () => this.openLegal('privacy'),
-      openTerms: () => this.openLegal('terms'),
+      // Real addresses, not a client-state flip. These are served pages, so
+      // the links have to behave like links: copyable, bookmarkable, openable
+      // in a new tab, and usable by anything that asks for a policy URL —
+      // which is what Facebook and the app stores do.
+      hrefPrivacy: `/${s.lang}/privacy`,
+      hrefTerms: `/${s.lang}/terms`,
       backHome: ar ? '← العودة للرئيسية' : '← Back to home',
       legalKicker: doc.kicker, legalTitle: doc.title,
       legalUpdated: updated, legalIntro: doc.intro || '', legalSections: doc.sections,
@@ -3787,8 +3895,9 @@ class Component extends DCLogic {
         {
           title: ar ? 'المنصة' : 'Company',
           links: [
-            { label: ar ? 'سياسة الخصوصية' : 'Privacy policy', go: () => this.openLegal('privacy') },
-            { label: ar ? 'شروط الاستخدام' : 'Terms of use', go: () => this.openLegal('terms') },
+            { label: ar ? 'سياسة الخصوصية' : 'Privacy policy', href: `/${s.lang}/privacy`, isLink: true, notLink: false, go: () => {} },
+            { label: ar ? 'شروط الاستخدام' : 'Terms of use', href: `/${s.lang}/terms`, isLink: true, notLink: false, go: () => {} },
+            { label: ar ? 'حذف بياناتك' : 'Delete your data', href: `/${s.lang}/data-deletion`, isLink: true, notLink: false, go: () => {} },
             { label: ar ? 'تواصل معنا' : 'Contact', go: () => { window.location.href = 'mailto:hello@akarat.ai'; } },
             { label: ar ? 'الدعم' : 'Support', go: () => { window.location.href = 'mailto:support@akarat.ai'; } }
           ]
@@ -4655,6 +4764,7 @@ class Component extends DCLogic {
       showEmail: s.authMode !== 'reset' && s.authMode !== 'phone' && s.authMode !== 'otp',
       showPassword: s.authMode !== 'forgot' && s.authMode !== 'phone' && s.authMode !== 'otp',
       signInGoogle: () => this.signInGoogle(),
+      signInFacebook: () => this.signInOAuth('facebook'),
       openForgot: () => this.setState({ authMode: 'forgot', authMsg: '', authPassword: '' }),
 
       /* ── phone sign-in ──
@@ -4818,6 +4928,9 @@ class Component extends DCLogic {
         results: empty, sources: empty, sideNav: empty, rows: empty, tableHead: empty, panels: empty,
         noRows: false, rowsEmptyLabel: '', hasRowsError: false, rowsError: '',
         dbDotLabel: '', dbDotColor: 'rgba(23,23,15,0.25)', dbDotRing: 'transparent',
+        showConnected: false, lblConnected: '', connectedHint: '', connectedRows: empty,
+        hasPasswordLogin: false, lblPasswordLogin: '', hasLinkNote: false,
+        linkNote: '', linkNoteFg: '#B00F20',
         hasSaveNote: false, saveNote: '', addProperty: () => {}, addBusy: false,
         listOpen: false, form: this.blankListing(), dealOpts: empty, typeOpts: empty,
         cityOpts: empty, hoodOpts: empty, amenityOpts: empty, hasFormError: false,
@@ -5483,6 +5596,66 @@ class Component extends DCLogic {
          Phone sign-in on its own would hand an existing email user a second,
          empty account. Linking the number here means signing in by phone
          later reaches this account and these listings. */
+      /* ── connected accounts ──
+         Shown signed in, so a seller who registered by email can attach
+         Google or Facebook to the account they already have, instead of
+         clicking one of those buttons later and landing in an empty one. */
+      showConnected: !!s.signedIn,
+      lblConnected: ar ? 'طرق تسجيل الدخول' : 'Ways to sign in',
+      connectedHint: ar
+        ? 'اربط حساباً لتتمكن من الدخول به لاحقاً إلى الحساب نفسه وإعلاناته.'
+        : 'Link an account to sign in with it later — to this same account and these same listings.',
+      connectedRows: [
+        { id: 'google', label: 'Google', icon: 'assets/icons/google.svg' },
+        { id: 'facebook', label: 'Facebook', icon: 'assets/icons/facebook.svg' }
+      ].map(prov => {
+        const list = s.identities || [];
+        const hit = list.find(i => i.provider === prov.id);
+        const busy = s.linkBusy === prov.id;
+        // Unlinking the only way in would lock the owner out, so the button is
+        // not offered when it is the last one standing.
+        const isLast = list.length <= 1;
+        return {
+          label: prov.label,
+          icon: prov.icon,
+          linked: !!hit,
+          notLinked: !hit,
+          // The address the provider returned, so it is obvious which account
+          // is attached when someone has more than one.
+          detail: hit ? (hit.identity_data && (hit.identity_data.email || hit.identity_data.name)) || '' : '',
+          // Assigned through a ref, never as src="{{ }}". A hole in src sits
+          // in the document as literal text while the template streams, and
+          // the browser fetches that text as a URL before the runtime can
+          // resolve it — which is a 404 for /%7B%7B%20cr.icon%20%7D%7D.
+          iconRef: el => { if (el && el.getAttribute('src') !== prov.icon) el.src = prov.icon; },
+          actionLabel: busy
+            ? L.working
+            : hit
+              ? (ar ? 'فك الربط' : 'Disconnect')
+              : (ar ? 'اربط' : 'Connect'),
+          // One control, styled for its state, rather than two mutually
+          // exclusive ones: the pair rendered together and gave every row two
+          // buttons saying the same thing.
+          act: () => {
+            if (busy || (hit && isLast)) return;
+            return hit ? this.unlinkAccount(hit) : this.linkAccount(prov.id);
+          },
+          cursor: (busy || (hit && isLast)) ? 'default' : 'pointer',
+          fg: (busy || (hit && isLast)) ? 'rgba(23,23,15,0.38)' : hit ? '#B00F20' : '#00693A',
+          bg: 'transparent',
+          border: (busy || (hit && isLast))
+            ? 'rgba(23,23,15,0.12)'
+            : hit ? 'rgba(206,17,38,0.3)' : 'rgba(0,122,61,0.35)'
+        };
+      }),
+      // Email and password is an identity too, and the one most accounts start
+      // with. Listing it stops "ways to sign in" looking like it has lost one.
+      hasPasswordLogin: (s.identities || []).some(i => i.provider === 'email'),
+      lblPasswordLogin: ar ? 'البريد الإلكتروني وكلمة المرور' : 'Email and password',
+      hasLinkNote: !!s.linkNote,
+      linkNote: s.linkNote || '',
+      linkNoteFg: s.linkNoteKind === 'ok' ? '#00693A' : '#B00F20',
+
       showPhoneRow: PHONE_SIGNIN && !!s.signedIn && !s.phoneLinkOpen,
       phoneRowLabel: s.accountPhone
         ? (ar ? `رقمك: ${s.accountPhone}` : `Your number: ${s.accountPhone}`)

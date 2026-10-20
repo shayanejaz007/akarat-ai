@@ -358,6 +358,67 @@ already registered with a password on that same address gets the same account,
 because Supabase matches on the email. That is not true of phone sign-in,
 which is a separate identity — see the end of this file.
 
+## Facebook sign-in
+
+Two values, and neither goes anywhere near this repository:
+
+| Value | Where it comes from | Where it goes |
+|---|---|---|
+| **App ID** | Facebook app → Settings → Basic | Supabase → Authentication → Providers → Facebook |
+| **App Secret** | the same page, behind *Show* | the same place |
+
+Same shape as Google: Facebook issues the credentials, Supabase holds them,
+the code never sees them. There is no new environment variable and nothing to
+redeploy for.
+
+### 1. The Facebook app
+
+1. <https://developers.facebook.com/apps> → Create app → **Consumer**.
+2. Add the **Facebook Login** product.
+3. Facebook Login → Settings → **Valid OAuth Redirect URIs**. This is the
+   field people get wrong; it is *Supabase's* callback, not this site's:
+
+   ```
+   https://ppqftdcdpshfokjqnuhq.supabase.co/auth/v1/callback
+   ```
+
+4. Settings → Basic, and fill in the two URLs Facebook requires before an app
+   can go Live. Both now exist:
+
+   - Privacy Policy URL: `https://akarat.ai/en/privacy`
+   - Terms of Service URL: `https://akarat.ai/en/terms`
+
+5. Copy the **App ID** and **App Secret**.
+6. Switch the app from **Development** to **Live**, top of the dashboard.
+   While it is in Development only accounts listed as app roles can sign in —
+   which looks exactly like the feature being broken for everyone else, and is
+   the same trap as Google's unpublished consent screen.
+
+### 2. Supabase
+
+Authentication → Providers → **Facebook**, enable, paste the App ID and App
+Secret, save. The redirect URLs configured for Google already cover this.
+
+### 3. For linking to work as well as signing in
+
+Authentication → Settings → enable **Manual linking**.
+
+Without it, signing in with Facebook creates a *separate* account. A seller
+who registered with an email and later clicks Continue with Facebook then
+lands in an empty dashboard and concludes their listings were deleted. With it
+on, the "Ways to sign in" panel on the dashboard can attach Facebook to the
+account they already have, and from then on either route reaches the same
+listings. The app says so plainly if linking is off rather than failing
+quietly.
+
+### What Facebook returns, and the one case it does not
+
+Email, name and profile picture. Note that a Facebook account registered with
+a phone number rather than an email may have **no email to return**; the app
+asks for the `email` scope explicitly so this fails at Facebook's consent
+screen rather than producing an account with no address on it.
+
+
 ## Phone sign-in (WhatsApp one-time codes)
 
 Google Cloud is not involved in this. That console was only ever for the

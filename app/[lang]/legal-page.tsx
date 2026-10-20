@@ -19,7 +19,17 @@ export const revalidate = 3600;
 
 const SITE = "https://akarat.ai";
 type Lang = "en" | "ar";
-type Which = "privacy" | "terms";
+type Which = "privacy" | "terms" | "deletion";
+
+// The document key and its URL segment are not the same word: "deletion" is
+// the key, /data-deletion is the path, because that is the phrase Facebook,
+// Google Play and the App Store all use for the field they ask for. Building
+// a URL straight from the key silently produced /ar/deletion, which 404s.
+const PATH: Record<Which, string> = {
+  privacy: "privacy",
+  terms: "terms",
+  deletion: "data-deletion",
+};
 
 const ink = "#17170F";
 const cream = "#F7F2E7";
@@ -31,16 +41,16 @@ export function asLang(v: string): Lang {
 export function legalMetadata(which: Which, langRaw: string): Metadata {
   const lang = asLang(langRaw);
   const doc = legalDoc(which, lang);
-  const path = `/${lang}/${which}`;
+  const path = `/${lang}/${PATH[which]}`;
   return {
     title: doc.title,
     description: doc.intro,
     alternates: {
       canonical: path,
       languages: {
-        "ar-JO": `/ar/${which}`,
-        "en-JO": `/en/${which}`,
-        "x-default": `/en/${which}`,
+        "ar-JO": `/ar/${PATH[which]}`,
+        "en-JO": `/en/${PATH[which]}`,
+        "x-default": `/en/${PATH[which]}`,
       },
     },
     openGraph: {
@@ -58,8 +68,9 @@ export default function LegalPage({ which, langRaw }: { which: Which; langRaw: s
   const lang = asLang(langRaw);
   const rtl = lang === "ar";
   const doc = legalDoc(which, lang);
-  const other: Which = which === "privacy" ? "terms" : "privacy";
-  const otherDoc = legalDoc(other, lang);
+  // The other two documents, so each page links to its siblings rather than
+  // to a single hard-coded partner.
+  const siblings: Which[] = (["privacy", "terms", "deletion"] as Which[]).filter((w) => w !== which);
 
   return (
     <main
@@ -139,11 +150,13 @@ export default function LegalPage({ which, langRaw }: { which: Which; langRaw: s
             fontSize: 14,
           }}
         >
-          <a href={`/${lang}/${other}`} style={{ color: "#007A3D", textDecoration: "none" }}>
-            {otherDoc.title}
-          </a>
+          {siblings.map((w) => (
+            <a key={w} href={`/${lang}/${PATH[w]}`} style={{ color: "#007A3D", textDecoration: "none" }}>
+              {legalDoc(w, lang).title}
+            </a>
+          ))}
           <a
-            href={`/${lang === "ar" ? "en" : "ar"}/${which}`}
+            href={`/${lang === "ar" ? "en" : "ar"}/${PATH[which]}`}
             style={{ color: "rgba(23,23,15,0.6)", textDecoration: "none" }}
           >
             {rtl ? "English" : "عربي"}
