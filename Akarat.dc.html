@@ -364,14 +364,12 @@
 
       <div style="display: grid; gap: 10px;">
         <sc-if value="{{ showGoogle }}" hint-placeholder-val="{{ false }}">
-          <div onClick="{{ signInGoogle }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
-            <img src="assets/icons/google.svg" alt="" style="width: 18px; height: 18px; display: block;" />
-            <span>{{ t.google }}</span>
-          </div>
-          <div onClick="{{ signInFacebook }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #1877F2;">
-            <img src="assets/icons/facebook.svg" alt="" style="width: 18px; height: 18px; display: block;" />
-            <span>{{ t.facebook }}</span>
-          </div>
+          <sc-for list="{{ oauthButtons }}" as="ob" hint-placeholder-count="2">
+            <div onClick="{{ ob.go }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: {{ ob.hover }};">
+              <img ref="{{ ob.iconRef }}" alt="" style="width: 18px; height: 18px; display: block;" />
+              <span>{{ ob.label }}</span>
+            </div>
+          </sc-for>
           <sc-if value="{{ showPhoneButton }}" hint-placeholder-val="{{ false }}">
             <div onClick="{{ openPhone }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FFFFFF; color: #17170F; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D;">
               <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
@@ -1882,6 +1880,13 @@ const CLOSED = ['sold', 'rented'];
 // — lib/phone.js, the Supabase calls and the OTP screens are all still here,
 // and the channel is OTP_CHANNEL in lib/supabase.js. See SUPABASE.md.
 const PHONE_SIGNIN = false;
+
+// Which third-party sign-in buttons are offered, in the order they appear.
+// All three are enabled in Supabase, so this is a product decision rather than
+// a technical one: Facebook is held back until its app leaves Development
+// mode, where only listed app-role accounts can sign in and everyone else sees
+// a failure. Adding it back is putting 'facebook' in this list.
+const OAUTH_SHOWN = ['google', 'apple'];
 
 const LANG_KEY = 'akarat.lang';
 
@@ -4763,8 +4768,23 @@ class Component extends DCLogic {
       // repeated at every input.
       showEmail: s.authMode !== 'reset' && s.authMode !== 'phone' && s.authMode !== 'otp',
       showPassword: s.authMode !== 'forgot' && s.authMode !== 'phone' && s.authMode !== 'otp',
-      signInGoogle: () => this.signInGoogle(),
-      signInFacebook: () => this.signInOAuth('facebook'),
+      // Built from OAUTH_SHOWN, so the sheet and the dashboard panel can never
+      // offer a different set. The icon goes through a ref, never a src hole:
+      // a hole in src is fetched as a literal URL before the runtime resolves
+      // it, which is a 404 for /%7B%7B%20...%20%7D%7D.
+      oauthButtons: OAUTH_SHOWN.map(id => {
+        const meta = {
+          google:   { label: ar ? 'المتابعة باستخدام Google' : 'Continue with Google',   icon: 'assets/icons/google.svg',   hover: '#007A3D' },
+          facebook: { label: ar ? 'المتابعة باستخدام Facebook' : 'Continue with Facebook', icon: 'assets/icons/facebook.svg', hover: '#1877F2' },
+          apple:    { label: ar ? 'المتابعة باستخدام Apple' : 'Continue with Apple',     icon: 'assets/icons/apple.svg',    hover: '#17170F' }
+        }[id];
+        return {
+          label: meta.label,
+          hover: meta.hover,
+          iconRef: el => { if (el && el.getAttribute('src') !== meta.icon) el.src = meta.icon; },
+          go: () => this.signInOAuth(id)
+        };
+      }),
       openForgot: () => this.setState({ authMode: 'forgot', authMsg: '', authPassword: '' }),
 
       /* ── phone sign-in ──
@@ -4929,6 +4949,7 @@ class Component extends DCLogic {
         noRows: false, rowsEmptyLabel: '', hasRowsError: false, rowsError: '',
         dbDotLabel: '', dbDotColor: 'rgba(23,23,15,0.25)', dbDotRing: 'transparent',
         showConnected: false, lblConnected: '', connectedHint: '', connectedRows: empty,
+        oauthButtons: empty,
         hasPasswordLogin: false, lblPasswordLogin: '', hasLinkNote: false,
         linkNote: '', linkNoteFg: '#B00F20',
         hasSaveNote: false, saveNote: '', addProperty: () => {}, addBusy: false,
@@ -5605,10 +5626,11 @@ class Component extends DCLogic {
       connectedHint: ar
         ? 'اربط حساباً لتتمكن من الدخول به لاحقاً إلى الحساب نفسه وإعلاناته.'
         : 'Link an account to sign in with it later — to this same account and these same listings.',
-      connectedRows: [
-        { id: 'google', label: 'Google', icon: 'assets/icons/google.svg' },
-        { id: 'facebook', label: 'Facebook', icon: 'assets/icons/facebook.svg' }
-      ].map(prov => {
+      connectedRows: OAUTH_SHOWN.map(id => ({
+        id,
+        label: { google: 'Google', facebook: 'Facebook', apple: 'Apple' }[id],
+        icon: `assets/icons/${id}.svg`
+      })).map(prov => {
         const list = s.identities || [];
         const hit = list.find(i => i.provider === prov.id);
         const busy = s.linkBusy === prov.id;
