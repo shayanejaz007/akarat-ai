@@ -77,6 +77,7 @@ Step-by-step guides for the owner, as PDFs kept outside the repository:
 - [x] Sign in with Apple capability (`Runner/Runner.entitlements`). Signing it needs the paid developer program: a free Personal Team cannot. To try the app on your own iPhone before enrolling, remove the capability in Xcode → Signing & Capabilities for that run
 - [x] `ios/Podfile` with `platform :ios, '15.0'`: Google Maps comes through CocoaPods (the other plugins through Swift Package Manager), and 15.0 resolves Google Maps SDK 9
 - [x] Sign in with Apple in the app: Apple's sheet with a SHA-256 nonce, Apple's button design, first on iPhones; sign-up, sign-in and Profile → Apple to connect or disconnect; the name Apple shares only the first time is kept; deleting an Apple account asks Apple to confirm and revokes the token on the server (once `APPLE_*` are set in Vercel)
+- [x] Signing: automatic, with team `HH9KHW7BFP` set in the project (22 October 2026), so a Mac builds without Xcode editing project files
 - [ ] **(you)** Apple Developer Program ($99/year); App ID `ai.akarat.app` with Sign in with Apple; the app in App Store Connect
 - [ ] Build on a Mac (`flutter build ipa --release --obfuscate --split-debug-info=build/symbols --dart-define-from-file=env/production.json`) or on Codemagic (project path `mobile`, `env/production.json` supplied from a secret variable); automatic signing with your team
 - [x] The app's code is on GitHub (`main`, 21 October 2026), for a Mac or a cloud build to check out
