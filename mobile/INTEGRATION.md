@@ -44,7 +44,7 @@ Public values only, passed at build time (`lib/core/config/env.dart`):
 | `FACEBOOK_SIGNIN` | `auto` (`off` in `env/example.json` until the Meta app is Live, as on the website) | Facebook sign-in and connecting Facebook in Profile: `auto` offers them once the project's Facebook provider is on; `off` never; `on` always. On iOS only beside Sign in with Apple (App Store 4.8), as Google |
 | `APPLE_SIGNIN` | `auto` | Sign in with Apple and connecting Apple in Profile: `auto` offers them once the project's Apple provider is on; `off` never; `on` always. Apple's own sheet on iPhone, Apple's web page on Android. While it is offered, iPhones also offer Google and Facebook |
 | `OTP_CHANNEL` | `sms` (`whatsapp` in `env/example.json`, as the website) | How codes travel: `sms`, or `whatsapp` once Twilio has approved a WhatsApp sender. Only names the channel; Twilio's credentials are in Supabase |
-| `APP_VERSION` | `1.0.0` | Shown in Profile |
+| `APP_VERSION` | `1.0.1` | Shown in Profile; keep it equal to the version in `pubspec.yaml` |
 
 ```bash
 cp env/example.json env/staging.json     # git-ignored

@@ -109,7 +109,7 @@ class Env {
 
   /// Shown in Profile. Keep in step with `version:` in pubspec.yaml, or pass
   /// --dart-define=APP_VERSION from CI.
-  static const String appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
+  static const String appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '1.0.1');
 
   static const String supportEmail = 'hello@akarat.ai';
   static const String privacyEmail = 'privacy@akarat.ai';

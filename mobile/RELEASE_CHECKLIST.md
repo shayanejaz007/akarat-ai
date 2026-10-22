@@ -41,7 +41,7 @@ Step-by-step guides for the owner, as PDFs kept outside the repository:
 - [x] `env/production.json` from `env/example.json`: the production Supabase URL and publishable key, `SITE_URL` = `https://www.akarat.ai` (public values only; git-ignored). Maps keys still empty
 - [x] `APPLE_SIGNIN` = `auto` in `env/production.json` (Supabase's Apple provider was on by 22 October, so the button shows); `FACEBOOK_SIGNIN` = `off`, as on the website, until the Meta app is **Live**: in Development mode Facebook refuses everyone without a role on the app, which looks like a broken button
 - [x] `PHONE_SIGNIN` = `off` in `env/production.json` (21 October 2026), as on the website, until codes can be delivered: the website keeps it off until Twilio approves the WhatsApp template, and SMS to Jordan needs a registered Sender ID (SUPABASE.md → Phone sign-in). Then `auto`, with `OTP_CHANNEL` = `whatsapp` (as the website) or `sms`
-- [x] `APP_VERSION` and `version:` in `pubspec.yaml` agree: `1.0.0+1` for the first release. Every later release: bump both, and the build number after `+`
+- [x] `APP_VERSION` and `version:` in `pubspec.yaml` agree: `1.0.1+2` (22 October 2026). Every later release: bump both, and the build number after `+`
 - [ ] **(you)** Google Maps: two keys locked to the app (Android: package + SHA-1s; iOS: bundle ID), Maps SDK only, in `env/production.json` as `GOOGLE_MAPS_ANDROID_KEY` / `GOOGLE_MAPS_IOS_KEY` (PUBLISHING.md). Without them the app uses OpenStreetMap tiles (`MAP_TILE_URL`), which need a commercial provider for real traffic
 - [ ] **(you)** Website Maps key (public at `/config.js`): restricted to your domains, Maps JavaScript + Places only, with a quota and a budget alert
 
