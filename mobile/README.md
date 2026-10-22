@@ -69,7 +69,7 @@ switching and Street View); without them, OpenStreetMap tiles from
 `MAP_TILE_URL`. How to make the keys: PUBLISHING.md.
 
 Verified on this branch (Windows, Flutter 3.47.7, JDK 17) on 17 October 2026:
-`flutter analyze` clean, 334 tests passing, and the release commands above
+`flutter analyze` clean, 347 tests passing, and the release commands above
 succeed: APKs of 21.6 MB (armv7), 23.9 MB (arm64) and 25.4 MB (x86_64), and the
 app bundle. The release package was checked (package `ai.akarat.app`, target
 SDK 36, not debuggable, only the launcher activity exported, 16 KB-aligned

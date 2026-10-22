@@ -17,6 +17,7 @@ import '../../core/widgets/state_views.dart';
 import '../../core/widgets/surfaces.dart';
 import '../../shared/models/listing.dart';
 import '../../shared/reference/market_data.dart';
+import '../../shared/services/profile_photos.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../../shared/widgets/pickers.dart';
 import '../../shared/widgets/property_card.dart';
@@ -270,6 +271,8 @@ class _HomeHeader extends ConsumerWidget {
     final initial = name.isNotEmpty
         ? name.characters.first.toUpperCase()
         : (user?.email ?? '').characters.firstOrNull?.toUpperCase();
+    // The profile picture kept on this phone, when there is one.
+    final photo = ref.watch(profilePhotoProvider).value;
 
     return SafeArea(
       bottom: false,
@@ -328,8 +331,8 @@ class _HomeHeader extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: Space.sm),
-                // The account: initials once signed in.
-                if (user != null && initial != null)
+                // The account: its picture, or its initial, once signed in.
+                if (user != null && (photo != null || initial != null))
                   Semantics(
                     button: true,
                     label: l.tabProfile,
@@ -337,13 +340,24 @@ class _HomeHeader extends ConsumerWidget {
                     child: Pressable(
                       onTap: () => context.go(Routes.profile),
                       borderRadius: Radii.tile,
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(color: c.surfaceMuted, borderRadius: Radii.tile),
-                        child: Text(initial, style: context.text.titleMedium),
-                      ),
+                      child: photo != null
+                          ? ClipRRect(
+                              borderRadius: Radii.tile,
+                              child: Image.memory(
+                                photo,
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true,
+                              ),
+                            )
+                          : Container(
+                              width: 48,
+                              height: 48,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(color: c.surfaceMuted, borderRadius: Radii.tile),
+                              child: Text(initial!, style: context.text.titleMedium),
+                            ),
                     ),
                   )
                 else

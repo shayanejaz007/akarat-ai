@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart' show ImageSource, XFile;
 import 'package:material_ui/material_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show SignOutScope;
 import 'package:url_launcher/url_launcher.dart';
@@ -22,6 +23,7 @@ import '../../shared/repositories/account_repositories.dart';
 import '../../shared/repositories/listings_repository.dart';
 import '../../shared/services/hidden_owners.dart';
 import '../../shared/services/preferences.dart';
+import '../../shared/services/profile_photos.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../authentication/auth_service.dart';
 import '../authentication/presentation/auth_scaffold.dart' show AppleMark, FacebookMark;
@@ -483,6 +485,8 @@ class ProfileScreen extends ConsumerWidget {
     try {
       final appleCode = viaApple ? await ref.read(authServiceProvider).appleCodeForDeletion() : null;
       await ref.read(accountRepositoryProvider).deleteMyAccount(appleAuthorizationCode: appleCode);
+      // The picture kept on this phone goes with the account.
+      if (user != null) await ref.read(profilePhotosProvider).remove(user.id).catchError((Object _) {});
       await ref.read(supabaseClientProvider).auth.signOut(scope: SignOutScope.local).catchError((Object _) {});
       final prefs = ref.read(preferencesProvider);
       await prefs.setLocalFavorites(const []);
@@ -568,6 +572,136 @@ class _GuestCard extends StatelessWidget {
   }
 }
 
+/// The account's picture, kept on this phone (ProfilePhotos), or its
+/// initials. A tap changes it; the rest of the card edits the profile.
+class _Avatar extends ConsumerWidget {
+  const _Avatar({required this.userId, required this.initials});
+  final String userId;
+  final String? initials;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final c = context.colors;
+    final photo = ref.watch(profilePhotoProvider).value;
+    return Semantics(
+      button: true,
+      label: l.profilePhotoChange,
+      excludeSemantics: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _choose(context, ref, hasPhoto: photo != null),
+        child: SizedBox(
+          width: 60,
+          height: 60,
+          child: Stack(
+            children: [
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: const Color(0xFF123C34),
+                foregroundImage: photo == null ? null : MemoryImage(photo),
+                child: initials == null
+                    ? const Icon(Icons.person_rounded, color: Colors.white)
+                    : Text(initials!, style: context.text.titleMedium?.copyWith(color: Colors.white)),
+              ),
+              PositionedDirectional(
+                end: 0,
+                bottom: 0,
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: c.surface,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: c.surfaceMuted, width: 2),
+                  ),
+                  child: Icon(Icons.photo_camera_rounded, size: 13, color: c.ink),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _choose(BuildContext context, WidgetRef ref, {required bool hasPhoto}) async {
+    final l = context.l10n;
+    final c = context.colors;
+    final messenger = ScaffoldMessenger.of(context);
+    // Each message replaces the last, so "removed" never waits behind "updated".
+    void say(String text) => messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+    final choice = await showModalBottomSheet<String>(
+      context: context,
+      useSafeArea: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.gutter, Space.xs),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l.profilePhoto, style: context.text.titleLarge),
+                  const SizedBox(height: Space.xxs),
+                  Text(l.profilePhotoNote, style: context.text.bodySmall),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(l.profilePhotoChoose),
+              onTap: () => Navigator.pop(context, 'library'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: Text(l.profilePhotoTake),
+              onTap: () => Navigator.pop(context, 'camera'),
+            ),
+            if (hasPhoto)
+              ListTile(
+                leading: Icon(Icons.delete_outline_rounded, color: c.danger),
+                title: Text(l.profilePhotoRemove, style: TextStyle(color: c.danger)),
+                onTap: () => Navigator.pop(context, 'remove'),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (choice == null || !context.mounted) return;
+    final photos = ref.read(profilePhotosProvider);
+    if (choice == 'remove') {
+      await photos.remove(userId);
+      if (!context.mounted) return;
+      ref.invalidate(profilePhotoProvider);
+      say(l.profilePhotoRemoved);
+      return;
+    }
+    final camera = choice == 'camera';
+    final XFile? picked;
+    try {
+      picked = await ref.read(profilePhotoPickerProvider)(camera ? ImageSource.camera : ImageSource.gallery);
+    } on Object {
+      // A phone or simulator without a camera says so here.
+      say(camera ? l.profilePhotoNoCamera : l.profilePhotoFailed);
+      return;
+    }
+    if (picked == null) return;
+    try {
+      await photos.save(userId, picked);
+      if (!context.mounted) return;
+      ref.invalidate(profilePhotoProvider);
+      say(l.profilePhotoUpdated);
+    } on Object {
+      say(l.profilePhotoFailed);
+    }
+  }
+}
+
 class _AccountCard extends ConsumerWidget {
   const _AccountCard();
 
@@ -604,13 +738,7 @@ class _AccountCard extends ConsumerWidget {
           padding: const EdgeInsets.all(Space.md),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: const Color(0xFF123C34),
-                child: initials == null
-                    ? const Icon(Icons.person_rounded, color: Colors.white)
-                    : Text(initials, style: context.text.titleMedium?.copyWith(color: Colors.white)),
-              ),
+              _Avatar(userId: user.id, initials: initials),
               const SizedBox(width: Space.md),
               Expanded(
                 child: Column(

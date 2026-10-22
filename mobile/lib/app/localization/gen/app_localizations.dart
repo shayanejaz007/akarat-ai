@@ -2840,6 +2840,66 @@ abstract class AppLocalizations {
   /// **'Their listings will show again.'**
   String get showHiddenDone;
 
+  /// No description provided for @profilePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture'**
+  String get profilePhoto;
+
+  /// No description provided for @profilePhotoChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change profile picture'**
+  String get profilePhotoChange;
+
+  /// No description provided for @profilePhotoChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from your photos'**
+  String get profilePhotoChoose;
+
+  /// No description provided for @profilePhotoTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get profilePhotoTake;
+
+  /// No description provided for @profilePhotoRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove picture'**
+  String get profilePhotoRemove;
+
+  /// No description provided for @profilePhotoNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept on this phone only: it isn’t uploaded, and no one else sees it.'**
+  String get profilePhotoNote;
+
+  /// No description provided for @profilePhotoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture updated'**
+  String get profilePhotoUpdated;
+
+  /// No description provided for @profilePhotoRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture removed'**
+  String get profilePhotoRemoved;
+
+  /// No description provided for @profilePhotoFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That picture couldn’t be used. Try another one.'**
+  String get profilePhotoFailed;
+
+  /// No description provided for @profilePhotoNoCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'The camera isn’t available. Choose from your photos instead.'**
+  String get profilePhotoNoCamera;
+
   /// No description provided for @savedTitle.
   ///
   /// In en, this message translates to:

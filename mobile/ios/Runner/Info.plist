@@ -36,7 +36,7 @@
 		<string>https</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Akarat.ai uses the camera only when you choose to take a photo of a property you are listing.</string>
+	<string>Akarat.ai uses the camera only when you choose to take a photo: of a property you are listing, or for your profile picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Akarat.ai doesn't use your location. If it ever offers to show where you are on a map, your location will be used only for that.</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -44,7 +44,7 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Akarat.ai turns what you say into a property search when you tap the microphone. Recognition is done by Apple's speech service.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Akarat.ai opens your photo library so you can add photos and videos to a property you are listing.</string>
+	<string>Akarat.ai opens your photo library so you can add photos and videos to a property you are listing, or choose your profile picture.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

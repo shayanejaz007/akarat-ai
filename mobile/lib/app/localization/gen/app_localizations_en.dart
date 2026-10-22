@@ -1528,6 +1528,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showHiddenDone => 'Their listings will show again.';
 
   @override
+  String get profilePhoto => 'Profile picture';
+
+  @override
+  String get profilePhotoChange => 'Change profile picture';
+
+  @override
+  String get profilePhotoChoose => 'Choose from your photos';
+
+  @override
+  String get profilePhotoTake => 'Take a photo';
+
+  @override
+  String get profilePhotoRemove => 'Remove picture';
+
+  @override
+  String get profilePhotoNote => 'Kept on this phone only: it isn’t uploaded, and no one else sees it.';
+
+  @override
+  String get profilePhotoUpdated => 'Profile picture updated';
+
+  @override
+  String get profilePhotoRemoved => 'Profile picture removed';
+
+  @override
+  String get profilePhotoFailed => 'That picture couldn’t be used. Try another one.';
+
+  @override
+  String get profilePhotoNoCamera => 'The camera isn’t available. Choose from your photos instead.';
+
+  @override
   String get savedTitle => 'Saved';
 
   @override

@@ -243,6 +243,9 @@ to review, and to translate for the Arabic version:
 > them only to sign you in. Deleting your account also removes Akarat.ai from
 > your Apple ID.
 >
+> **Profile picture.** A picture you choose for your profile stays on your
+> phone. It is not uploaded to Akarat.ai, and no one else sees it.
+>
 > **Reports and hidden advertisers.** You can report a listing from its page:
 > we keep the report, your account and what you wrote, to review it. Hiding an
 > advertiser is kept on your device only.
@@ -263,6 +266,7 @@ inquiries), search text; no location, no advertising, no tracking, nothing
 sold. Phone numbers are shared with Twilio only to deliver sign-in codes.
 Sign in with Apple and Facebook sign-in add nothing to the forms beyond the
 account details above (no Facebook SDK in the app); reports are user content,
-like inquiries; Meta asks for the privacy policy URL and a
+like inquiries; the profile picture never leaves the phone, so it is not
+collected; Meta asks for the privacy policy URL and a
 data-deletion page for the Facebook app itself: the website's `/privacy` and
 `/data-deletion`.

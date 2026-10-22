@@ -1,6 +1,6 @@
 /* Arabic permission prompts. Keep in step with Info.plist and en.lproj. */
-"NSCameraUsageDescription" = "يستخدم Akarat.ai الكاميرا فقط عندما تختار التقاط صورة لعقار تعلن عنه.";
+"NSCameraUsageDescription" = "يستخدم Akarat.ai الكاميرا فقط عندما تختار التقاط صورة: لعقار تعلن عنه، أو لصورتك الشخصية.";
 "NSLocationWhenInUseUsageDescription" = "لا يستخدم Akarat.ai موقعك. وإن عرض يومًا إظهار مكانك على الخريطة، فلن يُستخدم موقعك إلا لذلك.";
 "NSMicrophoneUsageDescription" = "يستخدم Akarat.ai الميكروفون فقط عندما تختار البحث بصوتك أو تصوير فيديو لعقار تعلن عنه.";
 "NSSpeechRecognitionUsageDescription" = "يحوّل Akarat.ai ما تقوله إلى بحث عن عقار عندما تضغط على الميكروفون. تتولّى خدمة الكلام من Apple التعرّف على كلامك.";
-"NSPhotoLibraryUsageDescription" = "يفتح Akarat.ai مكتبة الصور لتضيف صورًا ومقاطع فيديو إلى عقار تعلن عنه.";
+"NSPhotoLibraryUsageDescription" = "يفتح Akarat.ai مكتبة الصور لتضيف صورًا ومقاطع فيديو إلى عقار تعلن عنه، أو لتختار صورتك الشخصية.";

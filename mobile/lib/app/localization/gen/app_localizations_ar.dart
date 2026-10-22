@@ -1533,6 +1533,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get showHiddenDone => 'ستظهر إعلاناتهم مجدداً.';
 
   @override
+  String get profilePhoto => 'الصورة الشخصية';
+
+  @override
+  String get profilePhotoChange => 'تغيير الصورة الشخصية';
+
+  @override
+  String get profilePhotoChoose => 'اختر من صورك';
+
+  @override
+  String get profilePhotoTake => 'التقط صورة';
+
+  @override
+  String get profilePhotoRemove => 'إزالة الصورة';
+
+  @override
+  String get profilePhotoNote => 'تبقى على هذا الهاتف فقط: لا تُرفع ولا يراها أحد غيرك.';
+
+  @override
+  String get profilePhotoUpdated => 'تم تحديث الصورة الشخصية';
+
+  @override
+  String get profilePhotoRemoved => 'تمت إزالة الصورة الشخصية';
+
+  @override
+  String get profilePhotoFailed => 'تعذّر استخدام هذه الصورة. جرّب صورة أخرى.';
+
+  @override
+  String get profilePhotoNoCamera => 'الكاميرا غير متاحة. اختر من صورك بدلاً من ذلك.';
+
+  @override
   String get savedTitle => 'المحفوظات';
 
   @override

@@ -23,11 +23,19 @@ final currentUserProvider = Provider<User?>((ref) {
 
 final isSignedInProvider = Provider<bool>((ref) => ref.watch(currentUserProvider) != null);
 
-/// Fires whenever the session changes. GoRouter re-runs its redirect on it,
-/// so a protected screen bounces to sign-in the moment a session ends.
+/// Fires when a session ends. GoRouter re-runs its redirect on it, so a
+/// protected screen bounces to sign-in the moment the session goes.
+///
+/// A new session is not announced here. The screen that signed someone in
+/// leaves by itself (back where they were, or on to where they were going),
+/// as does the auth callback page after a sign-in in the browser. A router
+/// redirect fired by the same event raced that: on a sign-in page opened over
+/// another screen, the router moved and the page stayed on screen.
 class AuthChangeNotifier extends ChangeNotifier {
   AuthChangeNotifier(GoTrueClient auth) {
-    _sub = auth.onAuthStateChange.listen((_) => notifyListeners(), onError: (Object _) {});
+    _sub = auth.onAuthStateChange.listen((s) {
+      if (s.event == AuthChangeEvent.signedOut) notifyListeners();
+    }, onError: (Object _) {});
   }
   late final StreamSubscription<AuthState> _sub;
 

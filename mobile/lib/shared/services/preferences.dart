@@ -27,6 +27,13 @@ class Preferences {
 
   bool get onboarded => _prefs.getBool(_onboarded) ?? false;
 
+  /// The file name of the profile picture account [userId] chose on this
+  /// phone (ProfilePhotos), or null.
+  String? profilePhoto(String userId) => _prefs.getString('akarat.profilePhoto.$userId');
+  Future<void> setProfilePhoto(String userId, String? fileName) => fileName == null
+      ? _prefs.remove('akarat.profilePhoto.$userId')
+      : _prefs.setString('akarat.profilePhoto.$userId', fileName);
+
   /// Advertisers this reader chose to hide (Hide this advertiser, on a
   /// listing): their account ids. Their listings are left out everywhere.
   List<String> get hiddenOwners => _prefs.getStringList(_hiddenOwners) ?? const [];

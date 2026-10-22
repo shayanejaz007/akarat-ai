@@ -70,8 +70,11 @@ class TestDeps {
   /// FakeGoogleMapsPlatform (test/support/fake_google_maps.dart).
   /// [phoneSignIn], [facebookSignIn], [appleSignIn]: as if the project had
   /// them switched on.
+  /// [auth]: a client the test signs in on; the signed-in user then follows
+  /// its auth events, as in the app, instead of being fixed to [user].
   Future<List<Override>> overrides({
     User? user,
+    SupabaseClient? auth,
     Map<String, Object> prefs = seen,
     bool googleMaps = false,
     bool phoneSignIn = false,
@@ -82,8 +85,8 @@ class TestDeps {
     final p = await SharedPreferences.getInstance();
     return [
       preferencesProvider.overrideWithValue(Preferences(p)),
-      supabaseClientProvider.overrideWithValue(client),
-      currentUserProvider.overrideWithValue(user),
+      supabaseClientProvider.overrideWithValue(auth ?? client),
+      if (auth == null) currentUserProvider.overrideWithValue(user),
       listingsRepositoryProvider.overrideWithValue(listings),
       favoritesRepositoryProvider.overrideWithValue(favorites),
       inquiriesRepositoryProvider.overrideWithValue(inquiries),

@@ -50,7 +50,7 @@ real `SupabaseClient` in the harness points at an unresolvable host.
 `map_and_tours_test.dart` also checks that map cards put pinned listings first
 and that a guest's tour ends on the Log in wording.
 
-Total: 334 tests (plus the visual renders, run on demand). The production
+Total: 347 tests (plus the visual renders, run on demand). The production
 pass (17 October) added the last three suites above; each was run against the
 old code first and failed there. The link tests first passed a bare path and
 missed the bug a device showed (the platform hands over the whole link);

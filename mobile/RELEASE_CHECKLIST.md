@@ -13,7 +13,7 @@ Step-by-step guides for the owner, as PDFs kept outside the repository:
 ## Both stores
 
 - [x] **Report and block.** Every listing (not your own) has *More → Report this listing / Hide this advertiser*, and *Report this listing* at the foot of the page. Reports go into `listing_reports` (migration 0015) with a reason and the reporter's words; hiding an advertiser removes all their listings everywhere in the app, on that device (Profile → *Hidden advertisers* brings them back). The terms (in the app and on the website) forbid unlawful, discriminatory, offensive or abusive content. That is what App Store guideline 1.2 and Google Play's user-generated content policy ask for
-- [ ] **(you)** Run `supabase/migrations/0015_listing_reports.sql` before the first review. Until it runs, a report opens an email to `hello@akarat.ai` instead, which a reviewer's device may not be able to send
+- [ ] **(you)** Run `supabase/migrations/0015_listing_reports.sql` before the first review, then the website's `0016_revoke_stray_anon_reads.sql`, which takes back read access 0015 left to signed-out callers through the schema's default privileges. Until it runs, a report opens an email to `hello@akarat.ai` instead, which a reviewer's device may not be able to send
 - [ ] **(you)** Someone reads new reports every day (Supabase → Table Editor → `listing_reports`, `status` = `open`) and acts on them within 24 hours, the standard Apple sets for apps with user content: hide or delete the listing, and set `status` to `removed`, `reviewed` or `dismissed`
 - [ ] **(you)** Make sure `hello@akarat.ai` and `privacy@akarat.ai` receive mail: the app names them for help, reports and deletion requests, and both stores want working contact details
 - [ ] **(you)** A review account: an email-and-password account made for App Review and Google Play's review (not your own, not the development test account), confirmed, with one sample listing; enter it under App Store Connect → *App Review Information* and Play Console → *App access*. Reviewers should not need phone sign-in
@@ -39,7 +39,7 @@ Step-by-step guides for the owner, as PDFs kept outside the repository:
 ## Configuration
 
 - [x] `env/production.json` from `env/example.json`: the production Supabase URL and publishable key, `SITE_URL` = `https://www.akarat.ai` (public values only; git-ignored). Maps keys still empty
-- [x] `FACEBOOK_SIGNIN` = `auto` and `APPLE_SIGNIN` = `auto` in `env/production.json`: each appears once its Supabase provider is on
+- [x] `APPLE_SIGNIN` = `auto` in `env/production.json` (Supabase's Apple provider was on by 22 October, so the button shows); `FACEBOOK_SIGNIN` = `off`, as on the website, until the Meta app is **Live**: in Development mode Facebook refuses everyone without a role on the app, which looks like a broken button
 - [x] `PHONE_SIGNIN` = `off` in `env/production.json` (21 October 2026), as on the website, until codes can be delivered: the website keeps it off until Twilio approves the WhatsApp template, and SMS to Jordan needs a registered Sender ID (SUPABASE.md → Phone sign-in). Then `auto`, with `OTP_CHANNEL` = `whatsapp` (as the website) or `sms`
 - [x] `APP_VERSION` and `version:` in `pubspec.yaml` agree: `1.0.0+1` for the first release. Every later release: bump both, and the build number after `+`
 - [ ] **(you)** Google Maps: two keys locked to the app (Android: package + SHA-1s; iOS: bundle ID), Maps SDK only, in `env/production.json` as `GOOGLE_MAPS_ANDROID_KEY` / `GOOGLE_MAPS_IOS_KEY` (PUBLISHING.md). Without them the app uses OpenStreetMap tiles (`MAP_TILE_URL`), which need a commercial provider for real traffic
@@ -71,7 +71,7 @@ Step-by-step guides for the owner, as PDFs kept outside the repository:
 ## iOS (not yet built — needs a Mac)
 
 - [x] Bundle id `ai.akarat.app`, display name, URL scheme, launch screen, icons (no alpha)
-- [x] Permission prompts (camera, photos, microphone, speech) in English and Arabic (`en.lproj`, `ar.lproj`), which also lists Arabic on the App Store page; a location string for the Google Maps SDK, which Apple's upload check can ask for although the app never requests location
+- [x] Permission prompts (camera, photos, microphone, speech), each naming every use (listing photos and videos, the profile picture, voice search), in English and Arabic (`en.lproj`, `ar.lproj`), which also lists Arabic on the App Store page; a location string for the Google Maps SDK, which Apple's upload check can ask for although the app never requests location
 - [x] **iPhone only for 1.0** (`TARGETED_DEVICE_FAMILY = 1`), portrait only: the tablet pass is not done, and an iPad build is reviewed on an iPad. iPhone apps still run on iPads. To add iPad later: finish the tablet layouts, set `1,2`, test on iPad, and add iPad screenshots
 - [x] Privacy manifest `Runner/PrivacyInfo.xcprivacy`: no tracking; account details, photos, listings and inquiries, search history, all for the app's functioning; UserDefaults and file-timestamp reasons. The plugins carry their own
 - [x] Sign in with Apple capability (`Runner/Runner.entitlements`). Signing it needs the paid developer program: a free Personal Team cannot. To try the app on your own iPhone before enrolling, remove the capability in Xcode → Signing & Capabilities for that run
@@ -87,7 +87,7 @@ Step-by-step guides for the owner, as PDFs kept outside the repository:
 ## Quality gates
 
 - [x] `flutter analyze` — no issues; `dart format` clean
-- [x] `flutter test` — 334 passing (plus the visual renders, run on demand)
+- [x] `flutter test` — 347 passing (plus the visual renders, run on demand)
 - [x] Known advisories (OSV database, 17 October 2026): none for any of the 174 Dart packages in `pubspec.lock`. Native Android and iOS libraries not scanned
 - [ ] Integration tests on a physical Android and iPhone (TESTING.md)
 - [ ] Manual release checks (TESTING.md)

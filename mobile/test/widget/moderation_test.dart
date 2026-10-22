@@ -58,11 +58,22 @@ Future<void> _pumpDetails(
       GoRoute(
         path: '/',
         builder: (_, _) => const Scaffold(body: Text('before')),
-        routes: [GoRoute(path: 'p', builder: (_, _) => PropertyDetailsScreen(id: row.id, initial: row))],
+        routes: [
+          GoRoute(
+            path: 'p',
+            builder: (_, _) => PropertyDetailsScreen(id: row.id, initial: row),
+          ),
+        ],
       ),
-      GoRoute(path: Routes.signIn, builder: (_, _) => const Scaffold(body: Text('sign-in page'))),
+      GoRoute(
+        path: Routes.signIn,
+        builder: (_, _) => const Scaffold(body: Text('sign-in page')),
+      ),
     ],
-    overrides: [...await deps.overrides(user: user, prefs: prefs), ...extra],
+    overrides: [
+      ...await deps.overrides(user: user, prefs: prefs),
+      ...extra,
+    ],
     initial: '/p',
   );
 }
