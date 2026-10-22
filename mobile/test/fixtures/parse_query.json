@@ -1,0 +1,1510 @@
+[
+  {
+    "input": "Find me a 3-bedroom apartment in Abdoun under 150,000 JOD.",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "abdoun",
+        "budgetMax": 150000,
+        "budgetMin": null,
+        "beds": 3,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "budgetMax",
+        "beds"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "Find me a 3-bedroom apartment in Abdoun under 150,000 JOD."
+    }
+  },
+  {
+    "input": "Show me villas in Amman with a garden and parking.",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [
+          "garden",
+          "parking"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type",
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "Show me villas in Amman with a garden and parking."
+    }
+  },
+  {
+    "input": "بدي شقة بعمان غرفتين وبسعر أقل من ٨٠ ألف دينار",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": 80000,
+        "budgetMin": null,
+        "beds": 2,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "city",
+        "type",
+        "budgetMax",
+        "beds"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "بدي شقة بعمان غرفتين وبسعر أقل من ٨٠ ألف دينار"
+    }
+  },
+  {
+    "input": "A four-bedroom villa in Abdoun with a garden, under 900,000 JOD.",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "abdoun",
+        "budgetMax": 900000,
+        "budgetMin": null,
+        "beds": 4,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [
+          "garden"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "budgetMax",
+        "beds",
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "A four-bedroom villa in Abdoun with a garden, under 900,000 JOD."
+    }
+  },
+  {
+    "input": "apartment for rent in Sweifieh 500 JOD per month",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": "amman",
+        "hood": "sweifieh",
+        "budgetMax": 500,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type",
+        "budgetMax"
+      ],
+      "missing": [],
+      "text": "apartment for rent in Sweifieh 500 JOD per month"
+    }
+  },
+  {
+    "input": "flat in Khalda between 100k and 200k",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "khalda",
+        "budgetMax": 200000,
+        "budgetMin": 100000,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "budgetMin",
+        "budgetMax"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "flat in Khalda between 100k and 200k"
+    }
+  },
+  {
+    "input": "studio for rent in Jabal Amman",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": "amman",
+        "hood": "jabalamman",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": 1,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type",
+        "beds"
+      ],
+      "missing": [],
+      "text": "studio for rent in Jabal Amman"
+    }
+  },
+  {
+    "input": "warehouse in Zarqa",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "zarqa",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "warehouse",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "warehouse in Zarqa"
+    }
+  },
+  {
+    "input": "penthouse in Dabouq with pool but no garden",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "dabouq",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [
+          "pool"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "penthouse in Dabouq with pool but no garden"
+    }
+  },
+  {
+    "input": "land in Rabieh at least 500 sqm",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "rabieh",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "land",
+        "areaMin": 500,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "areaMin"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "land in Rabieh at least 500 sqm"
+    }
+  },
+  {
+    "input": "شقة للإيجار في الصويفية ٣ غرف نوم",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": "amman",
+        "hood": "sweifieh",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": 3,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type",
+        "beds"
+      ],
+      "missing": [],
+      "text": "شقة للإيجار في الصويفية ٣ غرف نوم"
+    }
+  },
+  {
+    "input": "فيلا للبيع في عبدون مع مسبح وحديقة بحدود مليون دينار",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "abdoun",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type"
+      ],
+      "missing": [],
+      "text": "فيلا للبيع في عبدون مع مسبح وحديقة بحدود مليون دينار"
+    }
+  },
+  {
+    "input": "max 300 sqm office in Shmeisani",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "shmeisani",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "office",
+        "areaMin": 300,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "areaMin"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "max 300 sqm office in Shmeisani"
+    }
+  },
+  {
+    "input": "under 200,000, actually make it 250,000",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": null,
+        "hood": null,
+        "budgetMax": 250000,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": null,
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "budgetMax",
+        "budgetMax"
+      ],
+      "missing": [
+        "deal",
+        "location"
+      ],
+      "text": "under 200,000, actually make it 250,000"
+    }
+  },
+  {
+    "input": "house in Irbid 2 bathrooms",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "irbid",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": 2,
+        "type": "house",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type",
+        "baths"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "house in Irbid 2 bathrooms"
+    }
+  },
+  {
+    "input": "chalet at the Dead Sea with sea view",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "deadsea",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "chalet",
+        "areaMin": null,
+        "amenities": [
+          "seaview"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type",
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "chalet at the Dead Sea with sea view"
+    }
+  },
+  {
+    "input": "only on this website apartments in amman",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": true
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type",
+        "internalOnly"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "only on this website apartments in amman"
+    }
+  },
+  {
+    "input": "شقة مفروشة في الجبيهة بالشهر",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": "amman",
+        "hood": "jubaiha",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [
+          "furnished"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "deal",
+        "amenities"
+      ],
+      "missing": [],
+      "text": "شقة مفروشة في الجبيهة بالشهر"
+    }
+  },
+  {
+    "input": "3 bed 2 bath apartment in Jabal Al Hussein under 120k",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "jabalhussein",
+        "budgetMax": 120000,
+        "budgetMin": null,
+        "beds": 3,
+        "baths": 2,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "budgetMax",
+        "beds",
+        "baths"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "3 bed 2 bath apartment in Jabal Al Hussein under 120k"
+    }
+  },
+  {
+    "input": "شاليه في البحر الميت",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "deadsea",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "chalet",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "شاليه في البحر الميت"
+    }
+  },
+  {
+    "input": "مستودع في الزرقاء",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "zarqa",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "warehouse",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "مستودع في الزرقاء"
+    }
+  },
+  {
+    "input": "ستوديو للإيجار",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": null,
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": 1,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "deal",
+        "type",
+        "beds"
+      ],
+      "missing": [
+        "location"
+      ],
+      "text": "ستوديو للإيجار"
+    }
+  },
+  {
+    "input": "أرض في مادبا من 50 الف الى 80 الف",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": null,
+        "hood": null,
+        "budgetMax": 80000,
+        "budgetMin": 50000,
+        "beds": null,
+        "baths": null,
+        "type": "land",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "type",
+        "budgetMin",
+        "budgetMax"
+      ],
+      "missing": [
+        "deal",
+        "location"
+      ],
+      "text": "أرض في مادبا من 50 الف الى 80 الف"
+    }
+  },
+  {
+    "input": "villa in Aqaba over 500,000 JOD",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "aqaba",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": 500000,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type",
+        "budgetMin"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "villa in Aqaba over 500,000 JOD"
+    }
+  },
+  {
+    "input": "apartment Tla Al Ali 2 bedrooms rent 400 JOD/mo",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": "amman",
+        "hood": "tlaalali",
+        "budgetMax": 400,
+        "budgetMin": null,
+        "beds": 2,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type",
+        "budgetMax",
+        "beds"
+      ],
+      "missing": [],
+      "text": "apartment Tla Al Ali 2 bedrooms rent 400 JOD/mo"
+    }
+  },
+  {
+    "input": "shop for sale downtown",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "downtown",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "shop",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type"
+      ],
+      "missing": [],
+      "text": "shop for sale downtown"
+    }
+  },
+  {
+    "input": "farm in Jerash",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "jerash",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "farm",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "farm in Jerash"
+    }
+  },
+  {
+    "input": "Rabieh apartment",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "rabieh",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "Rabieh apartment"
+    }
+  },
+  {
+    "input": "Al Rabieh apartment for sale 1.5m",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "rabieh",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type"
+      ],
+      "missing": [],
+      "text": "Al Rabieh apartment for sale 1.5m"
+    }
+  },
+  {
+    "input": "building in Abdali",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "abdali",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "building",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "building in Abdali"
+    }
+  },
+  {
+    "input": "apartment in amman with elevator and balcony, not furnished",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [
+          "balcony",
+          "elevator"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type",
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "apartment in amman with elevator and balcony, not furnished"
+    }
+  },
+  {
+    "input": "شقة ثلاث غرف في خلدا مع مصعد وبدون مسبح",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "khalda",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": 3,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [
+          "elevator"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "beds",
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "شقة ثلاث غرف في خلدا مع مصعد وبدون مسبح"
+    }
+  },
+  {
+    "input": "I want to buy a home in Fuheis with solar heating, budget 180k",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "fuheis",
+        "hood": null,
+        "budgetMax": 180000,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "house",
+        "areaMin": null,
+        "amenities": [
+          "heating",
+          "solar"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "city",
+        "type",
+        "budgetMax",
+        "amenities"
+      ],
+      "missing": [],
+      "text": "I want to buy a home in Fuheis with solar heating, budget 180k"
+    }
+  },
+  {
+    "input": "Apartment in Irbid near Yarmouk University for rent monthly",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "rent",
+        "city": "irbid",
+        "hood": "hayjameaa",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type"
+      ],
+      "missing": [],
+      "text": "Apartment in Irbid near Yarmouk University for rent monthly"
+    }
+  },
+  {
+    "input": "shopping centre unit in Amman",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": null,
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "shopping centre unit in Amman"
+    }
+  },
+  {
+    "input": "luxury modern villa in Dabouq",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "dabouq",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [
+          "modern",
+          "luxury"
+        ],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "styles"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "luxury modern villa in Dabouq"
+    }
+  },
+  {
+    "input": "quiet investment flat",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": null,
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [
+          "quiet",
+          "investment"
+        ],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "type",
+        "styles"
+      ],
+      "missing": [
+        "deal",
+        "location"
+      ],
+      "text": "quiet investment flat"
+    }
+  },
+  {
+    "input": "أبحث عن بيت في السلط أكثر من ١٠٠ ألف دينار",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "salt",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": 100000,
+        "beds": null,
+        "baths": null,
+        "type": "house",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "city",
+        "type",
+        "budgetMin"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "أبحث عن بيت في السلط أكثر من ١٠٠ ألف دينار"
+    }
+  },
+  {
+    "input": "apartment with 2 bedrooms in Wasfi Al Tal",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": "gardens",
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": 2,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood",
+        "city",
+        "type",
+        "beds"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "apartment with 2 bedrooms in Wasfi Al Tal"
+    }
+  },
+  {
+    "input": "apartment for sale in Abdoun under 200k",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "abdoun",
+        "budgetMax": 200000,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "deal",
+        "hood",
+        "city",
+        "type",
+        "budgetMax"
+      ],
+      "missing": [],
+      "text": "apartment for sale in Abdoun under 200k"
+    }
+  },
+  {
+    "input": "raise the budget to 300,000",
+    "previous": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 200000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "abdoun",
+        "budgetMax": 300000,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "budgetMax"
+      ],
+      "missing": [],
+      "text": "raise the budget to 300,000"
+    }
+  },
+  {
+    "input": "only Sweifieh",
+    "previous": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 300000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "sweifieh",
+        "budgetMax": 300000,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "hood"
+      ],
+      "missing": [],
+      "text": "only Sweifieh"
+    }
+  },
+  {
+    "input": "make it 3 bedrooms",
+    "previous": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 300000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "result": {
+      "constraints": {
+        "deal": "sale",
+        "city": "amman",
+        "hood": "sweifieh",
+        "budgetMax": 300000,
+        "budgetMin": null,
+        "beds": 3,
+        "baths": null,
+        "type": "apartment",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "beds"
+      ],
+      "missing": [],
+      "text": "make it 3 bedrooms"
+    }
+  },
+  {
+    "input": "villa in Amman",
+    "previous": null,
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "city",
+        "type"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "villa in Amman"
+    }
+  },
+  {
+    "input": "with a pool",
+    "previous": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [
+          "pool"
+        ],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "with a pool"
+    }
+  },
+  {
+    "input": "no pool",
+    "previous": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": null,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "en",
+      "changed": [
+        "amenities"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "no pool"
+    }
+  },
+  {
+    "input": "خليها 500 ألف",
+    "previous": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "result": {
+      "constraints": {
+        "deal": null,
+        "city": "amman",
+        "hood": null,
+        "budgetMax": 500000,
+        "budgetMin": null,
+        "beds": null,
+        "baths": null,
+        "type": "villa",
+        "areaMin": null,
+        "amenities": [],
+        "styles": [],
+        "internalOnly": false
+      },
+      "lang": "ar",
+      "changed": [
+        "budgetMax"
+      ],
+      "missing": [
+        "deal"
+      ],
+      "text": "خليها 500 ألف"
+    }
+  }
+]

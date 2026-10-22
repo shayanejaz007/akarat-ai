@@ -1,0 +1,7459 @@
+[
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 100,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. Within your 150,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. داخل ميزانيتك 150,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 52,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. 7% above your budget"
+      },
+      {
+        "kind": "warn",
+        "text": "2 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. أعلى من ميزانيتك بنسبة 7%"
+      },
+      {
+        "kind": "warn",
+        "text": "2 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 38,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. 500% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "5 bedrooms. Exceeds your 3+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. أعلى من ميزانيتك بنسبة 500%"
+      },
+      {
+        "kind": "good",
+        "text": "5 غرف نوم. أكثر من طلبك (3+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 89,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 150,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 150,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 42,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. Within your 150,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. داخل ميزانيتك 150,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 87,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. 3% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. أعلى من ميزانيتك بنسبة 3%"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 70,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 150,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 150,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 66,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Has parking"
+      },
+      {
+        "kind": "warn",
+        "text": "garden not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "يتضمن موقف سيارات"
+      },
+      {
+        "kind": "warn",
+        "text": "حديقة غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 54,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "garden, parking not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "حديقة، موقف سيارات غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 94,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Has garden, parking"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "يتضمن حديقة، موقف سيارات"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 57,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "garden, parking not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "حديقة، موقف سيارات غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 8,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "garden, parking not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "حديقة، موقف سيارات غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 56,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "garden, parking not listed by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "حديقة، موقف سيارات غير مذكور من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 48,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "garden, parking not listed by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "حديقة، موقف سيارات غير مذكور من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 68,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "140,000 JOD. 75% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exceeds your 2+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "140,000 JOD. أعلى من ميزانيتك بنسبة 75%"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. أكثر من طلبك (2+)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 66,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. 100% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "2 bedrooms. Exact match"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. أعلى من ميزانيتك بنسبة 100%"
+      },
+      {
+        "kind": "good",
+        "text": "2 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 49,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. 1025% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "5 bedrooms. Exceeds your 2+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. أعلى من ميزانيتك بنسبة 1025%"
+      },
+      {
+        "kind": "good",
+        "text": "5 غرف نوم. أكثر من طلبك (2+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 100,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 80,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exceeds your 2+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 80,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. أكثر من طلبك (2+)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 42,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. Within your 80,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. داخل ميزانيتك 80,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 67,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. 94% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exceeds your 2+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. أعلى من ميزانيتك بنسبة 94%"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. أكثر من طلبك (2+)"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 81,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 80,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 80,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 67,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "warn",
+        "text": "3 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "warn",
+        "text": "garden not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "warn",
+        "text": "3 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "warn",
+        "text": "حديقة غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 48,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "160,000 JOD. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "warn",
+        "text": "2 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "warn",
+        "text": "garden not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "160,000 JOD. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "warn",
+        "text": "2 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "warn",
+        "text": "حديقة غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 87,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "900,000 JOD. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "5 bedrooms. Exceeds your 4+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Has garden"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "900,000 JOD. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "5 غرف نوم. أكثر من طلبك (4+)"
+      },
+      {
+        "kind": "good",
+        "text": "يتضمن حديقة"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 57,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "warn",
+        "text": "3 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "warn",
+        "text": "garden not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "warn",
+        "text": "3 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "warn",
+        "text": "حديقة غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 38,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "warn",
+        "text": "garden not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "warn",
+        "text": "حديقة غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 66,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "155,000 JOD. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "warn",
+        "text": "3 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "bad",
+        "text": "garden not listed by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "155,000 JOD. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "warn",
+        "text": "3 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "bad",
+        "text": "حديقة غير مذكور من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 50,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 900,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "garden not listed by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 900,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "حديقة غير مذكور من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 47,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "140,000 JOD. 27900% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "140,000 JOD. أعلى من ميزانيتك بنسبة 27900%"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 58,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. 31900% above your budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. أعلى من ميزانيتك بنسبة 31900%"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 24,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. 179900% above your budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. أعلى من ميزانيتك بنسبة 179900%"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 86,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 500 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 500 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 6,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "30,000 JOD. 5900% above your budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "30,000 JOD. أعلى من ميزانيتك بنسبة 5900%"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 46,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. 30900% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. أعلى من ميزانيتك بنسبة 30900%"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 79,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 500 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 500 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 86,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. Within your 200,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. داخل ميزانيتك 200,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 84,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "160,000 JOD. Within your 200,000 JOD budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "160,000 JOD. داخل ميزانيتك 200,000 JOD"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 24,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. 350% above your budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. أعلى من ميزانيتك بنسبة 350%"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 86,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 200,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 200,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 45,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. Within your 200,000 JOD budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. داخل ميزانيتك 200,000 JOD"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 86,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "155,000 JOD. Within your 200,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "155,000 JOD. داخل ميزانيتك 200,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 93,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 200,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 200,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 84,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exceeds your 1+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. أكثر من طلبك (1+)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 81,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "2 bedrooms. Exceeds your 1+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "2 غرف نوم. أكثر من طلبك (1+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 56,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "5 bedrooms. Exceeds your 1+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "5 غرف نوم. أكثر من طلبك (1+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 84,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exceeds your 1+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. أكثر من طلبك (1+)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 15,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 83,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exceeds your 1+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. أكثر من طلبك (1+)"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 56,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 20,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 16,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 13,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 20,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 9,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 19,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 8,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 63,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "swimming pool not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مسبح غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 60,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "swimming pool not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مسبح غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 69,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Has swimming pool"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "يتضمن مسبح"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 63,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "swimming pool not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مسبح غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 8,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "swimming pool not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مسبح غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 62,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "swimming pool not listed by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "مسبح غير مذكور من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 54,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "swimming pool not listed by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "مسبح غير مذكور من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 40,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "180 m². Below your 500+ m² requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "180 م². أقل من طلبك (500+ م²)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 36,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "150 m². Below your 500+ m² requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "150 م². أقل من طلبك (500+ م²)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 50,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "600 m². Meets your 500+ m² requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "600 م². يلبي طلبك (500+ م²)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 45,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Area not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "المساحة غير متوفرة من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 49,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "900 m². Meets your 500+ m² requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "900 م². يلبي طلبك (500+ م²)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 44,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Area not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "المساحة غير متوفرة من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 35,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Area not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "المساحة غير متوفرة من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 84,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 81,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "2 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "2 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 56,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "5 bedrooms. Exceeds your 3+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "5 غرف نوم. أكثر من طلبك (3+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 84,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 15,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 83,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 56,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 70,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 44,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 70,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 48,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 9,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 69,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 36,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 40,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "180 m². Below your 300+ m² requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "180 م². أقل من طلبك (300+ م²)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 36,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "150 m². Below your 300+ m² requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "150 م². أقل من طلبك (300+ م²)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 50,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "600 m². Meets your 300+ m² requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "600 م². يلبي طلبك (300+ م²)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 45,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Area not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "المساحة غير متوفرة من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 24,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "900 m². Meets your 300+ m² requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "900 م². يلبي طلبك (300+ م²)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 44,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Area not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "المساحة غير متوفرة من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 35,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Area not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "المساحة غير متوفرة من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 100,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. Within your 250,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "140,000 JOD. داخل ميزانيتك 250,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 96,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "160,000 JOD. Within your 250,000 JOD budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "160,000 JOD. داخل ميزانيتك 250,000 JOD"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 15,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. 260% above your budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. أعلى من ميزانيتك بنسبة 260%"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 100,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 250,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 250,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 88,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. Within your 250,000 JOD budget"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. داخل ميزانيتك 250,000 JOD"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 99,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "155,000 JOD. Within your 250,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "155,000 JOD. داخل ميزانيتك 250,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 86,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 250,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 250,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 36,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "2 bathrooms. Meets your 2+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "2 حمام. يلبي طلبك (2+)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 33,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "2 bathrooms. Meets your 2+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "2 حمام. يلبي طلبك (2+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 30,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "5 bathrooms. Meets your 2+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "5 حمام. يلبي طلبك (2+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 22,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 14,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 21,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 13,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 16,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "sea view not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "إطلالة بحرية غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 13,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "sea view not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "إطلالة بحرية غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 10,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "sea view not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "إطلالة بحرية غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 16,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "sea view not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "إطلالة بحرية غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 8,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "sea view not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "إطلالة بحرية غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 15,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "sea view not listed by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "إطلالة بحرية غير مذكور من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 7,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "sea view not listed by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "إطلالة بحرية غير مذكور من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 100,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 96,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 63,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 100,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 9,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 99,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": true
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 88,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 63,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "furnished not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مفروش غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 60,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "furnished not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مفروش غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 33,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "furnished not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مفروش غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 63,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "furnished not listed"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مفروش غير مذكور"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 8,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "furnished not listed"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "مفروش غير مذكور"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 62,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "furnished not listed by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "مفروش غير مذكور من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jubaiha",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "furnished"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 54,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "furnished not listed by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "مفروش غير مذكور من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 62,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "140,000 JOD. 17% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "good",
+        "text": "2 bathrooms. Meets your 2+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "140,000 JOD. أعلى من ميزانيتك بنسبة 17%"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "good",
+        "text": "2 حمام. يلبي طلبك (2+)"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 50,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. 33% above your budget"
+      },
+      {
+        "kind": "warn",
+        "text": "2 bedrooms. One short of your requirement"
+      },
+      {
+        "kind": "good",
+        "text": "2 bathrooms. Meets your 2+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "160,000 JOD. أعلى من ميزانيتك بنسبة 33%"
+      },
+      {
+        "kind": "warn",
+        "text": "2 غرف نوم. أقل بغرفة واحدة من طلبك"
+      },
+      {
+        "kind": "good",
+        "text": "2 حمام. يلبي طلبك (2+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 45,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. 650% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "5 bedrooms. Exceeds your 3+ requirement"
+      },
+      {
+        "kind": "good",
+        "text": "5 bathrooms. Meets your 2+ requirement"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "900,000 JOD. أعلى من ميزانيتك بنسبة 650%"
+      },
+      {
+        "kind": "good",
+        "text": "5 غرف نوم. أكثر من طلبك (3+)"
+      },
+      {
+        "kind": "good",
+        "text": "5 حمام. يلبي طلبك (2+)"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 82,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. Within your 120,000 JOD budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "500 JOD/mo. داخل ميزانيتك 120,000 JOD"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 41,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. Within your 120,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "30,000 JOD. داخل ميزانيتك 120,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 53,
+    "explain_en": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. 29% above your budget"
+      },
+      {
+        "kind": "good",
+        "text": "3 bedrooms. Exact match"
+      },
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "warn",
+        "text": "155,000 JOD. أعلى من ميزانيتك بنسبة 29%"
+      },
+      {
+        "kind": "good",
+        "text": "3 غرف نوم. مطابق تماماً"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "jabalhussein",
+      "budgetMax": 120000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": 2,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 66,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Not provided. Within your 120,000 JOD budget"
+      },
+      {
+        "kind": "bad",
+        "text": "Bedrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Bathrooms not provided by the source"
+      },
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "Not provided. داخل ميزانيتك 120,000 JOD"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد غرف النوم غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "عدد الحمامات غير متوفر من المصدر"
+      },
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "a",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 140000,
+      "beds": 3,
+      "baths": 2,
+      "area": 180,
+      "amen": [
+        "parking",
+        "elevator"
+      ],
+      "days": 3
+    },
+    "score": 20,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed 3 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف قبل 3 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "b",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "sweifieh",
+      "price": 160000,
+      "beds": 2,
+      "baths": 2,
+      "area": 150,
+      "amen": [
+        "balcony"
+      ],
+      "days": 20
+    },
+    "score": 16,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 20 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 20 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "c",
+      "deal": "sale",
+      "type": "villa",
+      "city": "amman",
+      "hood": "dabouq",
+      "price": 900000,
+      "beds": 5,
+      "baths": 5,
+      "area": 600,
+      "amen": [
+        "garden",
+        "pool",
+        "parking"
+      ],
+      "days": 45
+    },
+    "score": 13,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 45 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 45 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "d",
+      "deal": "rent",
+      "type": "apartment",
+      "city": "amman",
+      "hood": null,
+      "price": 500,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "days": 0
+    },
+    "score": 20,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Listed today"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "أُضيف اليوم"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "e",
+      "deal": "sale",
+      "type": "land",
+      "city": "salt",
+      "hood": null,
+      "price": 30000,
+      "beds": null,
+      "baths": null,
+      "area": 900,
+      "amen": [],
+      "days": 120
+    },
+    "score": 9,
+    "explain_en": [
+      {
+        "kind": "plain",
+        "text": "Listed 120 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "plain",
+        "text": "أُضيف قبل 120 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "x",
+      "source": "opensooq",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "abdoun",
+      "price": 155000,
+      "beds": 3,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": 2
+    },
+    "score": 19,
+    "explain_en": [
+      {
+        "kind": "good",
+        "text": "Checked on the source 2 days ago"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "good",
+        "text": "تم التحقق من المصدر قبل 2 أيام"
+      }
+    ]
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "item": {
+      "id": "y",
+      "source": "2 sources",
+      "kind": "known_marketplace",
+      "deal": "sale",
+      "type": "apartment",
+      "city": "amman",
+      "hood": "khalda",
+      "price": null,
+      "beds": null,
+      "baths": null,
+      "area": null,
+      "amen": [],
+      "checked": null
+    },
+    "score": 8,
+    "explain_en": [
+      {
+        "kind": "bad",
+        "text": "Last checked date not provided"
+      }
+    ],
+    "explain_ar": [
+      {
+        "kind": "bad",
+        "text": "وقت آخر تحقق غير متوفر"
+      }
+    ]
+  }
+]

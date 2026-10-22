@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#17170F</color>
+    <color name="splash_background">#FFFFFF</color>
+    <color name="splash_background_dark">#0B0B0B</color>
+    <!-- The launch screen, in both themes: black, as the intro video's own
+         edges are, which the app's opening (lib/app/launch_splash.dart) plays on. -->
+    <color name="launch_ground">#000000</color>
+</resources>

@@ -1,0 +1,3 @@
+tags:
+  visual:
+    skip: "Visual review renders; run with --tags visual --update-goldens"

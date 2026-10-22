@@ -1,0 +1,1524 @@
+[
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-sale/3-bedrooms",
+        "coverage": "3/5",
+        "note": "drops Abdoun, price. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/3-bedroom-apartments-for-sale/",
+        "coverage": "3/5",
+        "note": "drops Abdoun, price. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=3%20bedroom%20Apartment%20for%20sale%20Abdoun%20Amman%20Jordan%20under%20150%2C000%20JOD",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "3 bedroom Apartment for sale Abdoun Amman Jordan under 150,000 JOD"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 150000,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-sale/3-bedrooms",
+        "coverage": "3/5",
+        "note": "يتجاهل عبدون، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/3-bedroom-apartments-for-sale/",
+        "coverage": "3/5",
+        "note": "يتجاهل عبدون، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=3%20%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%B9%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20150%2C000%20%D8%AF%D9%8A%D9%86%D8%A7%D8%B1",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "3 غرف نوم شقة للبيع عبدون عمان الأردن أقل من 150,000 دينار"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/property-for-sale",
+        "coverage": "1/2",
+        "note": "drops property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/villas-for-sale/",
+        "coverage": "2/2",
+        "note": "carries your full brief"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Villa%20for%20sale%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Villa for sale Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden",
+        "parking"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/property-for-sale",
+        "coverage": "1/2",
+        "note": "يتجاهل نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/villas-for-sale/",
+        "coverage": "2/2",
+        "note": "يحمل طلبك كاملاً"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D9%81%D9%8A%D9%84%D8%A7%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "فيلا للبيع عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-sale/2-bedrooms",
+        "coverage": "3/4",
+        "note": "drops price. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/2-bedroom-apartments-for-sale/",
+        "coverage": "3/4",
+        "note": "drops price. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=2%20bedroom%20Apartment%20for%20sale%20Amman%20Jordan%20under%2080%2C000%20JOD",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "2 bedroom Apartment for sale Amman Jordan under 80,000 JOD"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": null,
+      "budgetMax": 80000,
+      "budgetMin": null,
+      "beds": 2,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-sale/2-bedrooms",
+        "coverage": "3/4",
+        "note": "يتجاهل السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/2-bedroom-apartments-for-sale/",
+        "coverage": "3/4",
+        "note": "يتجاهل السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=2%20%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%2080%2C000%20%D8%AF%D9%8A%D9%86%D8%A7%D8%B1",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "2 غرف نوم شقة للبيع عمان الأردن أقل من 80,000 دينار"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/property-for-sale/4-bedrooms",
+        "coverage": "2/5",
+        "note": "drops Abdoun, property type, price. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/villas-for-sale/",
+        "coverage": "2/5",
+        "note": "drops Abdoun, bedrooms, price. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=4%20bedroom%20Villa%20for%20sale%20Abdoun%20Amman%20Jordan%20under%20900%2C000%20JOD",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "4 bedroom Villa for sale Abdoun Amman Jordan under 900,000 JOD"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": 900000,
+      "budgetMin": null,
+      "beds": 4,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [
+        "garden"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/property-for-sale/4-bedrooms",
+        "coverage": "2/5",
+        "note": "يتجاهل عبدون، نوع العقار، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/villas-for-sale/",
+        "coverage": "2/5",
+        "note": "يتجاهل عبدون، غرف النوم، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=4%20%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D9%81%D9%8A%D9%84%D8%A7%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%B9%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20900%2C000%20%D8%AF%D9%8A%D9%86%D8%A7%D8%B1",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "4 غرف نوم فيلا للبيع عبدون عمان الأردن أقل من 900,000 دينار"
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-rent",
+        "coverage": "3/5",
+        "note": "drops Sweifieh, price. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/apartments-for-rent/",
+        "coverage": "3/5",
+        "note": "drops Sweifieh, price. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Apartment%20for%20rent%20Sweifieh%20Amman%20Jordan%20under%20500%20JOD",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Apartment for rent Sweifieh Amman Jordan under 500 JOD"
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": 500,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-rent",
+        "coverage": "3/5",
+        "note": "يتجاهل الصويفية، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/apartments-for-rent/",
+        "coverage": "3/5",
+        "note": "يتجاهل الصويفية، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A5%D9%8A%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B5%D9%88%D9%8A%D9%81%D9%8A%D8%A9%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20500%20%D8%AF%D9%8A%D9%86%D8%A7%D8%B1",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "شقة للإيجار الصويفية عمان الأردن أقل من 500 دينار"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-sale",
+        "coverage": "2/4",
+        "note": "drops Khalda, price. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/apartments-for-sale/",
+        "coverage": "2/4",
+        "note": "drops Khalda, price. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Apartment%20for%20sale%20Khalda%20Amman%20Jordan%20under%20200%2C000%20JOD",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Apartment for sale Khalda Amman Jordan under 200,000 JOD"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "khalda",
+      "budgetMax": 200000,
+      "budgetMin": 100000,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-sale",
+        "coverage": "2/4",
+        "note": "يتجاهل خلدا، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/apartments-for-sale/",
+        "coverage": "2/4",
+        "note": "يتجاهل خلدا، السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%AE%D9%84%D8%AF%D8%A7%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20200%2C000%20%D8%AF%D9%8A%D9%86%D8%A7%D8%B1",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "شقة للبيع خلدا عمان الأردن أقل من 200,000 دينار"
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-rent/1-bedrooms",
+        "coverage": "4/5",
+        "note": "drops Jabal Amman. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/1-bedroom-apartments-for-rent-in-jabal-amman/",
+        "coverage": "5/5",
+        "note": "carries your full brief"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=1%20bedroom%20Apartment%20for%20rent%20Jabal%20Amman%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "1 bedroom Apartment for rent Jabal Amman Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "jabalamman",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 1,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-rent/1-bedrooms",
+        "coverage": "4/5",
+        "note": "يتجاهل جبل عمان. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/1-bedroom-apartments-for-rent-in-jabal-amman/",
+        "coverage": "5/5",
+        "note": "يحمل طلبك كاملاً"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=1%20%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A5%D9%8A%D8%AC%D8%A7%D8%B1%20%D8%AC%D8%A8%D9%84%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "1 غرف نوم شقة للإيجار جبل عمان عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/zarqa/property/property-for-sale",
+        "coverage": "1/2",
+        "note": "drops property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/zarqa/properties-for-sale/",
+        "coverage": "1/2",
+        "note": "drops property type. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Warehouse%20for%20sale%20Zarqa%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Warehouse for sale Zarqa Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "zarqa",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "warehouse",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/zarqa/property/property-for-sale",
+        "coverage": "1/2",
+        "note": "يتجاهل نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/zarqa/properties-for-sale/",
+        "coverage": "1/2",
+        "note": "يتجاهل نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%A7%D9%84%D8%B2%D8%B1%D9%82%D8%A7%D8%A1%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "مستودع للبيع الزرقاء الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-sale",
+        "coverage": "2/3",
+        "note": "drops Dabouq. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/apartments-for-sale/",
+        "coverage": "2/3",
+        "note": "drops Dabouq. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Apartment%20for%20sale%20Dabouq%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Apartment for sale Dabouq Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "dabouq",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [
+        "pool"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-sale",
+        "coverage": "2/3",
+        "note": "يتجاهل دابوق. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/apartments-for-sale/",
+        "coverage": "2/3",
+        "note": "يتجاهل دابوق. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%AF%D8%A7%D8%A8%D9%88%D9%82%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "شقة للبيع دابوق عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/property-for-sale",
+        "coverage": "1/3",
+        "note": "drops Al Rabieh, property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/properties-for-sale/",
+        "coverage": "1/3",
+        "note": "drops Al Rabieh, property type. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Land%20for%20sale%20Al%20Rabieh%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Land for sale Al Rabieh Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "rabieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "land",
+      "areaMin": 500,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/property-for-sale",
+        "coverage": "1/3",
+        "note": "يتجاهل الرابية، نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/properties-for-sale/",
+        "coverage": "1/3",
+        "note": "يتجاهل الرابية، نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%A3%D8%B1%D8%B6%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D9%8A%D8%A9%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "أرض للبيع الرابية عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/apartments-for-rent/3-bedrooms",
+        "coverage": "4/5",
+        "note": "drops Sweifieh. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/3-bedroom-apartments-for-rent/",
+        "coverage": "4/5",
+        "note": "drops Sweifieh. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=3%20bedroom%20Apartment%20for%20rent%20Sweifieh%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "3 bedroom Apartment for rent Sweifieh Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": "rent",
+      "city": "amman",
+      "hood": "sweifieh",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": 3,
+      "baths": null,
+      "type": "apartment",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/apartments-for-rent/3-bedrooms",
+        "coverage": "4/5",
+        "note": "يتجاهل الصويفية. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/3-bedroom-apartments-for-rent/",
+        "coverage": "4/5",
+        "note": "يتجاهل الصويفية. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=3%20%D8%BA%D8%B1%D9%81%20%D9%86%D9%88%D9%85%20%D8%B4%D9%82%D8%A9%20%D9%84%D9%84%D8%A5%D9%8A%D8%AC%D8%A7%D8%B1%20%D8%A7%D9%84%D8%B5%D9%88%D9%8A%D9%81%D9%8A%D8%A9%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "3 غرف نوم شقة للإيجار الصويفية عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/property-for-sale",
+        "coverage": "2/4",
+        "note": "drops Abdoun, property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/villas-for-sale/",
+        "coverage": "3/4",
+        "note": "drops Abdoun. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Villa%20for%20sale%20Abdoun%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Villa for sale Abdoun Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": "sale",
+      "city": "amman",
+      "hood": "abdoun",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "villa",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/property-for-sale",
+        "coverage": "2/4",
+        "note": "يتجاهل عبدون، نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/villas-for-sale/",
+        "coverage": "3/4",
+        "note": "يتجاهل عبدون. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D9%81%D9%8A%D9%84%D8%A7%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%B9%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "فيلا للبيع عبدون عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/amman/property/property-for-sale",
+        "coverage": "1/3",
+        "note": "drops Shmeisani, property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/amman/properties-for-sale/",
+        "coverage": "1/3",
+        "note": "drops Shmeisani, property type. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Office%20for%20sale%20Shmeisani%20Amman%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Office for sale Shmeisani Amman Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "amman",
+      "hood": "shmeisani",
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "office",
+      "areaMin": 300,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/amman/property/property-for-sale",
+        "coverage": "1/3",
+        "note": "يتجاهل الشميساني، نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/amman/properties-for-sale/",
+        "coverage": "1/3",
+        "note": "يتجاهل الشميساني، نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D9%85%D9%83%D8%AA%D8%A8%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%A7%D9%84%D8%B4%D9%85%D9%8A%D8%B3%D8%A7%D9%86%D9%8A%20%D8%B9%D9%85%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "مكتب للبيع الشميساني عمان الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/property/property-for-sale",
+        "coverage": "0/1",
+        "note": "drops price. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/jordan/properties-for-sale/",
+        "coverage": "0/1",
+        "note": "drops price. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=property%20for%20sale%20Jordan%20under%20250%2C000%20JOD",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "property for sale Jordan under 250,000 JOD"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": null,
+      "hood": null,
+      "budgetMax": 250000,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": null,
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/property/property-for-sale",
+        "coverage": "0/1",
+        "note": "يتجاهل السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/jordan/properties-for-sale/",
+        "coverage": "0/1",
+        "note": "يتجاهل السعر. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%B9%D9%82%D8%A7%D8%B1%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20250%2C000%20%D8%AF%D9%8A%D9%86%D8%A7%D8%B1",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "عقار للبيع الأردن أقل من 250,000 دينار"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/irbid/property/property-for-sale",
+        "coverage": "1/2",
+        "note": "drops property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/irbid/properties-for-sale/",
+        "coverage": "1/2",
+        "note": "drops property type. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=House%20for%20sale%20Irbid%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "House for sale Irbid Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "irbid",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": 2,
+      "type": "house",
+      "areaMin": null,
+      "amenities": [],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/irbid/property/property-for-sale",
+        "coverage": "1/2",
+        "note": "يتجاهل نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/irbid/properties-for-sale/",
+        "coverage": "1/2",
+        "note": "يتجاهل نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%A8%D9%8A%D8%AA%20%D9%85%D8%B3%D8%AA%D9%82%D9%84%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%A5%D8%B1%D8%A8%D8%AF%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "بيت مستقل للبيع إربد الأردن"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "en",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/en/property/property-for-sale",
+        "coverage": "0/2",
+        "note": "drops city, property type. Set it on their site"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/en/jordan/properties-for-sale/",
+        "coverage": "1/2",
+        "note": "drops property type. Set it on their site"
+      },
+      {
+        "id": "web",
+        "name": "Wider web search",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=Chalet%20for%20sale%20Dead%20Sea%20Jordan",
+        "carried": [
+          "all"
+        ],
+        "coverage": "full brief",
+        "note": "agencies and developers beyond the portals"
+      }
+    ],
+    "describe": "Chalet for sale Dead Sea Jordan"
+  },
+  {
+    "constraints": {
+      "deal": null,
+      "city": "deadsea",
+      "hood": null,
+      "budgetMax": null,
+      "budgetMin": null,
+      "beds": null,
+      "baths": null,
+      "type": "chalet",
+      "areaMin": null,
+      "amenities": [
+        "seaview"
+      ],
+      "styles": [],
+      "internalOnly": false
+    },
+    "lang": "ar",
+    "searches": [
+      {
+        "id": "opensooq",
+        "name": "OpenSooq Jordan",
+        "kind": "known_marketplace",
+        "url": "https://jo.opensooq.com/ar/property/property-for-sale",
+        "coverage": "0/2",
+        "note": "يتجاهل المدينة، نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "bayut",
+        "name": "Bayut Jordan",
+        "kind": "known_marketplace",
+        "url": "https://www.bayut.jo/ar/jordan/properties-for-sale/",
+        "coverage": "1/2",
+        "note": "يتجاهل نوع العقار. حدّدها على الموقع"
+      },
+      {
+        "id": "web",
+        "name": "بحث عام في السوق",
+        "kind": "general_web_result",
+        "url": "https://www.google.com/search?q=%D8%B4%D8%A7%D9%84%D9%8A%D9%87%20%D9%84%D9%84%D8%A8%D9%8A%D8%B9%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D9%85%D9%8A%D8%AA%20%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86",
+        "carried": [
+          "all"
+        ],
+        "coverage": "كل الشروط",
+        "note": "وكلاء ومطوّرون خارج المنصات"
+      }
+    ],
+    "describe": "شاليه للبيع البحر الميت الأردن"
+  }
+]

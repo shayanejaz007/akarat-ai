@@ -1,0 +1,130 @@
+[
+  {
+    "lat": 31.936,
+    "lng": 35.879,
+    "out": {
+      "city_id": "amman",
+      "neighborhood_id": "abdoun"
+    }
+  },
+  {
+    "lat": 31.9493,
+    "lng": 35.8671,
+    "out": {
+      "city_id": "amman",
+      "neighborhood_id": "sweifieh"
+    }
+  },
+  {
+    "lat": 31.987654,
+    "lng": 35.826543,
+    "out": {
+      "city_id": "amman",
+      "neighborhood_id": "khalda"
+    }
+  },
+  {
+    "lat": 32.556,
+    "lng": 35.847,
+    "out": {
+      "city_id": "irbid",
+      "neighborhood_id": "irbidcentre"
+    }
+  },
+  {
+    "lat": 29.532,
+    "lng": 35.006,
+    "out": {
+      "city_id": "aqaba",
+      "neighborhood_id": "aqabacentre"
+    }
+  },
+  {
+    "lat": 31.502,
+    "lng": 35.583,
+    "out": {
+      "city_id": "deadsea",
+      "neighborhood_id": "sweimeh"
+    }
+  },
+  {
+    "lat": 30.322,
+    "lng": 35.478,
+    "out": {
+      "city_id": "wadimusa",
+      "neighborhood_id": null
+    }
+  },
+  {
+    "lat": 32.0711,
+    "lng": 36.0882,
+    "out": {
+      "city_id": "zarqa",
+      "neighborhood_id": "zarqacentre"
+    }
+  },
+  {
+    "lat": 31.95,
+    "lng": 35.93,
+    "out": {
+      "city_id": "amman",
+      "neighborhood_id": "jabalamman"
+    }
+  },
+  {
+    "lat": 31.8,
+    "lng": 35.9,
+    "out": {
+      "city_id": "sahab",
+      "neighborhood_id": null
+    }
+  },
+  {
+    "lat": 32.343,
+    "lng": 36.208,
+    "out": {
+      "city_id": "mafraq",
+      "neighborhood_id": null
+    }
+  },
+  {
+    "lat": 31.123456,
+    "lng": 35.654321,
+    "out": {
+      "city_id": "karak",
+      "neighborhood_id": null
+    }
+  },
+  {
+    "lat": 29.4,
+    "lng": 34.98,
+    "out": {
+      "city_id": "aqaba",
+      "neighborhood_id": "talabay"
+    }
+  },
+  {
+    "lat": 32.6,
+    "lng": 36,
+    "out": {
+      "city_id": "ramtha",
+      "neighborhood_id": null
+    }
+  },
+  {
+    "lat": 31,
+    "lng": 36.5,
+    "out": {
+      "city_id": "karak",
+      "neighborhood_id": null
+    }
+  },
+  {
+    "lat": 31.963,
+    "lng": 35.93,
+    "out": {
+      "city_id": "amman",
+      "neighborhood_id": "weibdeh"
+    }
+  }
+]

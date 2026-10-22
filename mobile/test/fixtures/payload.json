@@ -1,0 +1,30 @@
+{
+  "object": {
+    "amenities": [
+      "garden",
+      "parking"
+    ],
+    "description_en": "Bright corner apartment with a view over the valley.",
+    "description_ar": "شقة زاوية مشمسة بإطلالة على الوادي.",
+    "images": [
+      {
+        "url": "https://example.invalid/a.jpg",
+        "path": "user/a.jpg",
+        "type": "image"
+      },
+      {
+        "url": "https://example.invalid/b.mp4",
+        "path": "user/b.mp4",
+        "type": "video"
+      }
+    ],
+    "contact": {
+      "phone": "+962791234567",
+      "whatsapp": true,
+      "messaging": true
+    }
+  },
+  "packed": "gz:H4sIAAAAAAAACoWQ3UrDQBCFX2WZW0OKtbZ0L30NKTImQ3Y12Sy709RSciMt1L6H1F4JWhDfZPdtJPEH9MbL8x34mDkrwIqMZk0e5CUU6HIykIBFd6tNAbMEcvKZ05Z1ba7IgIQLpwvFIqudISfQouOKDIuFZiVQNJoWom7ICVYkGixLWqbw24MOJIRjvA8HEV7CPm7jLhxE3IRj3ITXjj6Fx/AW12Ef1118j+v4ILoUt2EfnuOuc+oKi/7yFcxdCRIUs/VyMKA7rGxJqTYNljofYHpji/4vViBh7sn9MF5aAvnpgjb5T3WdVnb0R/XNvlSNzqmGdpZAVhvGjEGuwKradOXJdDycTE+HZ6Pz8QQSWChkj9aCZDenBCryHotu/B607QfQBPsBpAEAAA==",
+  "payload_bytes": 301,
+  "raw_bytes": 420
+}

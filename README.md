@@ -24,6 +24,15 @@ supabase/migrations/*.sql         schema, RLS, external index, deduplication
 Reference documents: `SECURITY-AUDIT.md`, `SEARCH-ARCHITECTURE.md`,
 `SUPABASE.md`, `LOCATIONS.md`.
 
+## Mobile app
+
+`mobile/` is the Flutter iOS/Android client. It uses this same Supabase
+project and these same API routes — no separate backend. Start with
+`mobile/README.md`; what it needs from this side (a redirect URL, two route
+changes, and the optional `supabase/migrations/0014_favorites.sql`) is in
+`mobile/INTEGRATION.md`. `app/api/account/route.ts` (in-app account
+deletion) exists for it.
+
 ## No invented data
 
 There is no seed inventory and no sample metrics anywhere in this codebase.
@@ -101,6 +110,15 @@ this order, one at a time, checking each succeeds before moving on:
 8. `supabase/migrations/0010_location.sql` — map pins, and the owner-only
    table that keeps exact coordinates out of the public row. See
    `LOCATIONS.md`
+9. `supabase/migrations/0011_sold_visible.sql` — sold and rented listings
+   stay public, greyed
+10. `supabase/migrations/0012_storage_no_listing.sql` — only a photo's owner
+    can list it, so the bucket can't be enumerated (photos still load)
+11. `supabase/migrations/0013_protect_trust_fields.sql` — verification,
+    featured, counters and roles stay staff-only; the crawler's maintenance
+    functions run for the service role only
+12. `supabase/migrations/0014_favorites.sql` — optional: saved properties per
+    account, used by the mobile app. Additive only
 
 Step 4 is not optional. RLS policies decide which rows a caller may see; they
 do not grant access to the table itself. Without the grants, every read comes

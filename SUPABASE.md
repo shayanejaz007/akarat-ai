@@ -562,6 +562,19 @@ export const OTP_CHANNEL = 'whatsapp';   // or 'sms'
 Switch it to `'sms'` if WhatsApp delivery fails in a particular country, or
 while a new WhatsApp sender is awaiting approval. Nothing else changes.
 
+**The mobile app** (`mobile/`) has its own switch, `PHONE_SIGNIN` in
+`mobile/env/production.json`, set before building. Its default, `auto`,
+offers phone sign-in whenever the Phone provider is enabled — and it is —
+so while the website's switch is off for want of the template, build the app
+with `off` as well. Its channel is `OTP_CHANNEL` in the same file (`sms` or
+`whatsapp`). In the app, signing in by phone only reaches an account that
+already has the number; new accounts come from its sign-up page, with a name.
+
+Set the code's lifetime under **Authentication → Providers → Phone** to
+about five minutes (300 seconds): Supabase's default is much shorter, and an
+SMS can take a while to arrive. Keep the code length at 6, which both clients
+expect.
+
 ### 4. Verify
 
 1. Open the app, **Sign in**, then **Continue with a phone number**.

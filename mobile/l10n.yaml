@@ -1,0 +1,6 @@
+arb-dir: lib/app/localization/arb
+template-arb-file: app_en.arb
+output-dir: lib/app/localization/gen
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

@@ -1,0 +1,12 @@
+{
+  "SUPABASE_URL": "https://your-project-ref.supabase.co",
+  "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_xxx",
+  "SITE_URL": "https://your-deployment.vercel.app",
+  "MAP_TILE_URL": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "GOOGLE_MAPS_ANDROID_KEY": "",
+  "GOOGLE_MAPS_IOS_KEY": "",
+  "PHONE_SIGNIN": "auto",
+  "OTP_CHANNEL": "sms",
+  "FACEBOOK_SIGNIN": "auto",
+  "APP_VERSION": "1.0.0"
+}

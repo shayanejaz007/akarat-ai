@@ -1,0 +1,111 @@
+name: akarat
+description: "Akarat.ai — property search across Jordan. Native client for the same Supabase project and Vercel API the website uses."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Material lives in its own package as of Flutter 3.44. go_router 18 builds
+  # its pages from it, so the app uses it too rather than the legacy
+  # package:flutter/material.dart copy.
+  material_ui: ^1.6.0
+  cupertino_ui: ^1.1.2
+  # The icon font cupertino_ui's widgets draw from; without it any Cupertino
+  # icon would render as a missing glyph.
+  cupertino_icons: ^2.0.0
+
+  # State, navigation, backend
+  flutter_riverpod: ^3.4.3
+  go_router: ^18.0.2
+  supabase_flutter: ^2.18.3
+  dio: ^5.11.1
+
+  # Device
+  flutter_secure_storage: ^11.2.0
+  shared_preferences: ^2.5.6
+  connectivity_plus: ^7.3.2
+  image_picker: ^1.2.4
+  url_launcher: ^6.3.3
+  share_plus: ^13.3.1
+
+  # Media and maps
+  cached_network_image: ^4.0.4
+  video_player: ^2.14.1
+  intl: ^0.20.3
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
+  speech_to_text: ^7.5.0
+  google_maps_flutter: ^2.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_driver:
+    sdk: flutter
+  google_maps_flutter_platform_interface: ^2.17.0
+  # The splash test plays its clip on a fake player.
+  video_player_platform_interface: ^6.9.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    # The opening's intro clip (lib/app/launch_splash.dart): the Akarat.ai
+    # logo reveal, in full, 720×1280, 5 s, no audio track.
+    - assets/splash/
+    # Font licences, shown in Profile → Open-source licences.
+    - assets/fonts/OFL-Inter.txt
+    - assets/fonts/OFL-IBMPlexSansArabic.txt
+    - assets/fonts/OFL-Poppins.txt
+
+  # Inter (the closest open relative of Apple's San Francisco) in its text and
+  # display optical sizes, IBM Plex Sans Arabic (the website's Arabic face),
+  # and Poppins SemiBold only for the "Akarat.ai" wordmark, part of the logo.
+  # Bundled so the first frame is already in the right face, offline too.
+  # All SIL OFL; licences in assets/fonts. Inter is subset to Latin.
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+    - family: InterDisplay
+      fonts:
+        - asset: assets/fonts/InterDisplay-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/InterDisplay-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/InterDisplay-Bold.ttf
+          weight: 700
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+    - family: IBMPlexSansArabic
+      fonts:
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
+          weight: 700
