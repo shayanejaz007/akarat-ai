@@ -10,12 +10,17 @@ import '../../../core/networking/api_client.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../shared/models/listing.dart';
 import '../../../shared/models/search_constraints.dart';
+import '../../../shared/services/hidden_owners.dart';
 import '../../../shared/services/supabase_providers.dart';
 import '../domain/ranker.dart';
 import '../domain/search_item.dart';
 
 final searchRepositoryProvider = Provider<SearchRepository>(
-  (ref) => SearchRepository(ref.watch(apiClientProvider), ref.watch(supabaseClientProvider)),
+  (ref) => SearchRepository(
+    ref.watch(apiClientProvider),
+    ref.watch(supabaseClientProvider),
+    hiddenOwners: ref.watch(hiddenOwnersProvider),
+  ),
 );
 
 class RankedResult {
@@ -76,9 +81,12 @@ class SearchOutcome {
 ///
 /// No provider key, LLM key or crawler credential is involved on the device.
 class SearchRepository {
-  SearchRepository(this._api, this._db);
+  SearchRepository(this._api, this._db, {this.hiddenOwners = const {}});
   final Dio _api;
   final SupabaseClient _db;
+
+  /// Advertisers the reader hid (hiddenOwnersProvider): never in results.
+  final Set<String> hiddenOwners;
 
   Future<SearchOutcome> search(SearchConstraints c, {CancelToken? cancelToken, DateTime? now}) async {
     // Both start at once. Awaited one by one rather than with `.wait`, which
@@ -91,7 +99,10 @@ class SearchRepository {
 
     final at = now ?? DateTime.now();
     final pool = <SearchItem>[
-      ..._filterInternal(internal.rows, c).map((l) => SearchItem.fromListing(l, now: at)),
+      ..._filterInternal(
+        internal.rows.where((l) => !hiddenOwners.contains(l.ownerId)).toList(),
+        c,
+      ).map((l) => SearchItem.fromListing(l, now: at)),
       ...internal.partner,
       ...index,
     ];

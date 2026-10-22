@@ -73,13 +73,32 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
   }
 
+  Future<void> _apple() async {
+    setState(() => _error = null);
+    final l = context.l10n;
+    final fallback = context.failureMessage;
+    try {
+      // On an iPhone it finishes here; elsewhere the browser takes over.
+      if (await ref.read(authServiceProvider).signInWithApple() != AuthOutcome.done || !mounted) return;
+      arriveSignedIn(context, ref, widget.next);
+    } on Object catch (e) {
+      if (mounted) setState(() => _error = appleSignInErrorMessage(l, e, fallback));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final social = offersSocialLogin(Theme.of(context).platform);
+    final platform = Theme.of(context).platform;
+    final apple = ref.watch(appleSignInAvailableProvider).value ?? false;
+    final social = offersSocialLogin(platform, apple: apple);
     final facebook = social && (ref.watch(facebookSignInAvailableProvider).value ?? false);
     final phone = ref.watch(phoneSignInAvailableProvider).value ?? false;
+    // Apple's way in leads on Apple's platforms, as its guidelines ask.
+    final appleFirst = hasNativeAppleSignIn(platform);
+    final appleButton = AppleButton(label: l.authApple, onPressed: _apple);
     final ways = <Widget>[
+      if (apple && appleFirst) appleButton,
       if (social)
         BusyButton(
           label: l.authGoogle,
@@ -95,6 +114,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           style: BusyButtonStyle.outlined,
           onPressed: _facebook,
         ),
+      if (apple && !appleFirst) appleButton,
       // Phone sign-in is the project's own (Supabase), not a third-party
       // login, so it is offered on iOS too.
       if (phone)
@@ -143,8 +163,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         ),
         const SizedBox(height: Space.xs),
         BusyButton(label: l.actionSignIn, busyLabel: l.previewWorking, onPressed: _submit),
-        // Google and Facebook on Android only (offersSocialLogin); email and
-        // phone everywhere. An account made any way is the same account.
+        // Google and Facebook on iOS only beside Apple (offersSocialLogin);
+        // email and phone everywhere. An account made any way is the same
+        // account.
         if (ways.isNotEmpty) const AuthDivider(),
         for (final (i, way) in ways.indexed) ...[if (i > 0) const SizedBox(height: Space.sm), way],
         const SizedBox(height: Space.xl),

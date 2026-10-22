@@ -35,6 +35,7 @@ import '../../shared/widgets/pickers.dart';
 import '../../shared/widgets/property_card.dart';
 import '../ai_search/presentation/ai_search_controller.dart';
 import '../inquiries/inquiry_sheet.dart';
+import '../moderation/listing_actions.dart';
 import '../tour/tour.dart';
 import 'media_viewer.dart';
 
@@ -260,6 +261,16 @@ class _DetailsState extends ConsumerState<_Details> {
               ),
             ),
             actions: [
+              // Report the listing or hide its advertiser; not on your own.
+              if (!mine) ...[
+                _BarAction(
+                  icon: Icons.more_horiz_rounded,
+                  overImage: !_collapsed,
+                  tooltip: t.detailsMore,
+                  onTap: () => showListingActions(context, ref, l),
+                ),
+                const SizedBox(width: Space.xs),
+              ],
               _BarAction(icon: Icons.ios_share_rounded, overImage: !_collapsed, tooltip: t.actionShare, onTap: _share),
               const SizedBox(width: Space.xs),
               KeyedSubtree(
@@ -391,9 +402,23 @@ class _DetailsState extends ConsumerState<_Details> {
                   _Title(t.detailsLocation, key: _locationKey),
                   _Location(listing: l),
                   const SizedBox(height: Space.md),
-                  Text(
-                    '${t.specRef} ${l.id.substring(0, 8)}',
-                    style: context.text.labelSmall?.copyWith(color: c.inkFaint),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${t.specRef} ${l.id.substring(0, 8)}',
+                          style: context.text.labelSmall?.copyWith(color: c.inkFaint),
+                        ),
+                      ),
+                      // Also in the bar's "More", but here too, where the
+                      // reader finishes reading.
+                      if (!mine)
+                        TextButton.icon(
+                          onPressed: () => reportListing(context, ref, l),
+                          icon: const Icon(Icons.flag_outlined, size: 18),
+                          label: Text(t.reportListing),
+                        ),
+                    ],
                   ),
                 ],
               ),

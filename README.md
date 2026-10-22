@@ -119,6 +119,9 @@ this order, one at a time, checking each succeeds before moving on:
     functions run for the service role only
 12. `supabase/migrations/0014_favorites.sql` — optional: saved properties per
     account, used by the mobile app. Additive only
+13. `supabase/migrations/0015_listing_reports.sql` — reports of listings from
+    the mobile app's "Report this listing", readable only in the dashboard.
+    Additive only; both app stores require a way to report content
 
 Step 4 is not optional. RLS policies decide which rows a caller may see; they
 do not grant access to the table itself. Without the grants, every read comes

@@ -167,8 +167,11 @@ project**. They take a couple of minutes:
      - for test builds made on the development machine (debug key):
        `26:2E:7A:5F:81:A1:A9:80:27:68:C6:E4:0E:B3:0D:99:00:EC:CB:4D`
    - *API restrictions* → **Restrict key** → only **Maps SDK for Android**.
-3. **(you)** Another key, "Akarat iOS": **iOS apps** → bundle ID
-   `ai.akarat.app`; API restriction: only **Maps SDK for iOS**.
+3. **(you)** Another key for iPhone: *Credentials* → *Create credentials* →
+   *API key*, then *Edit API key*: name it "Akarat iOS"; *Application
+   restrictions* → **iOS apps** → *Add an item* → bundle ID `ai.akarat.app`;
+   *API restrictions* → **Restrict key** → only **Maps SDK for iOS**; *Save*.
+   A restriction can take a few minutes to apply.
 4. Put both in `mobile/env/production.json` (git-ignored, never committed):
    ```json
    "GOOGLE_MAPS_ANDROID_KEY": "AIza…",
@@ -194,6 +197,9 @@ restrict it now: that one is billed per use.
 
 These matter more than the store listing:
 
+- [ ] **(you)** Get `www.akarat.ai` serving the newest deployment again: on 21 October 2026 it was still on a build from 19 October, although every push since had deployed (RELEASE_CHECKLIST.md, first section). Until then the app's account deletion and the website's legal pages are not live
+- [ ] **(you)** Run `supabase/migrations/0015_listing_reports.sql`, and have someone read new reports every day (Table Editor → `listing_reports`) and act within 24 hours
+- [ ] **(you)** A review account (email and password, confirmed, one sample listing) for App Review and Google Play
 - [x] **(you)** Apply `supabase/migrations/0013_protect_trust_fields.sql`, before the first push (done; checked on 21 October 2026)
 - [x] Deploy the website's API changes the app relies on (`app/api/ai/search`, `app/api/account`): pushed to `main` with the app on 21 October 2026
 - [ ] **(you)** Supabase: turn on email confirmation, add `ai.akarat.app://login-callback` to Redirect URLs, raise the password minimum to 8 and turn on leaked-password protection
@@ -231,6 +237,16 @@ to review, and to translate for the Arabic version:
 > new owner by the phone company: if you change your number, update it in
 > Profile.
 >
+> **Sign in with Apple.** If you sign in with Apple, Apple tells us an account
+> identifier, the email address you choose to share (it may be a private relay
+> address that forwards to you) and, the first time only, your name. We use
+> them only to sign you in. Deleting your account also removes Akarat.ai from
+> your Apple ID.
+>
+> **Reports and hidden advertisers.** You can report a listing from its page:
+> we keep the report, your account and what you wrote, to review it. Hiding an
+> advertiser is kept on your device only.
+>
 > **Facebook.** If you sign in with Facebook, Facebook tells us your name, your
 > email address (if you have one there) and an account identifier, under
 > Facebook's privacy policy; we use them only to sign you in. You can
@@ -245,7 +261,8 @@ answers follow from the same facts: account details (name, email, and the phone
 number for those who sign in with one), content you create (listings, photos,
 inquiries), search text; no location, no advertising, no tracking, nothing
 sold. Phone numbers are shared with Twilio only to deliver sign-in codes.
-Facebook sign-in adds nothing to the forms beyond the account details above
-(no Facebook SDK in the app); Meta asks for the privacy policy URL and a
+Sign in with Apple and Facebook sign-in add nothing to the forms beyond the
+account details above (no Facebook SDK in the app); reports are user content,
+like inquiries; Meta asks for the privacy policy URL and a
 data-deletion page for the Facebook app itself: the website's `/privacy` and
 `/data-deletion`.

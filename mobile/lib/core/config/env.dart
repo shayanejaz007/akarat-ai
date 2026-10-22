@@ -44,7 +44,7 @@ class Env {
 
   /// The deployed website. Its `/api/ai/search` route runs the search
   /// pipeline, and its `/en|ar/property/<id>` pages are what shared links open.
-  static const String siteUrl = String.fromEnvironment('SITE_URL', defaultValue: 'https://akarat-ai-swart.vercel.app');
+  static const String siteUrl = String.fromEnvironment('SITE_URL', defaultValue: 'https://www.akarat.ai');
 
   /// Raster map tiles (`{z}/{x}/{y}`). The default is OpenStreetMap's own
   /// server, which needs no key and suits development and light use; its
@@ -78,10 +78,18 @@ class Env {
 
   /// Facebook sign-in, and connecting Facebook to an account in Profile:
   /// `auto` (the default) offers it once the project's Facebook provider is
-  /// switched on; `off` never; `on` always (to try the screens first). Never
-  /// on iOS, where Apple requires Sign in with Apple beside any social login.
-  /// The Facebook App ID and secret live in Supabase, never here.
+  /// switched on; `off` never; `on` always (to try the screens first). On iOS
+  /// only beside Sign in with Apple, which Apple requires next to any social
+  /// login. The Facebook App ID and secret live in Supabase, never here.
   static const String facebookSignIn = String.fromEnvironment('FACEBOOK_SIGNIN', defaultValue: 'auto');
+
+  /// Sign in with Apple, and connecting Apple to an account in Profile:
+  /// `auto` (the default) offers it once the project's Apple provider is
+  /// switched on; `off` never; `on` always (to try the screens first). On an
+  /// iPhone it is Apple's own sheet; elsewhere, Apple's page in the browser.
+  /// While it is offered, iPhones offer Google and Facebook too (App Store
+  /// guideline 4.8). Apple's keys live in Supabase, never here.
+  static const String appleSignIn = String.fromEnvironment('APPLE_SIGNIN', defaultValue: 'auto');
 
   /// How one-time codes travel: `sms`, or `whatsapp` once Twilio has approved
   /// a WhatsApp sender with its authentication template. Twilio's credentials

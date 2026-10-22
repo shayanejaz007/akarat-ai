@@ -44,6 +44,8 @@ dependencies:
   latlong2: ^0.10.1
   speech_to_text: ^7.5.0
   google_maps_flutter: ^2.19.0
+  sign_in_with_apple: ^8.2.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +58,8 @@ dev_dependencies:
   google_maps_flutter_platform_interface: ^2.17.0
   # The splash test plays its clip on a fake player.
   video_player_platform_interface: ^6.9.0
+  # Already in the app through Supabase; tests read the requests it would send.
+  http: ^1.6.0
 
 flutter:
   uses-material-design: true

@@ -20,10 +20,11 @@ import '../../shared/models/account_models.dart';
 import '../../shared/models/listing.dart';
 import '../../shared/repositories/account_repositories.dart';
 import '../../shared/repositories/listings_repository.dart';
+import '../../shared/services/hidden_owners.dart';
 import '../../shared/services/preferences.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../authentication/auth_service.dart';
-import '../authentication/presentation/auth_scaffold.dart' show FacebookMark;
+import '../authentication/presentation/auth_scaffold.dart' show AppleMark, FacebookMark;
 import '../property_details/property_details_screen.dart';
 import '../settings/settings_controller.dart';
 import '../tour/tour.dart';
@@ -43,12 +44,20 @@ class ProfileScreen extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
     final phoneSignIn = ref.watch(phoneSignInAvailableProvider).value ?? false;
     final signInPhone = Phone.display(user?.phone);
-    // Facebook as a way into this account (Android only; offersSocialLogin).
+    // Apple and Facebook as ways into this account; on iOS, Facebook only
+    // beside Apple (offersSocialLogin).
+    final apple = appleIdentity(user);
+    final appleOn = ref.watch(appleSignInAvailableProvider).value ?? false;
+    final showApple = appleOn || apple != null;
     final facebook = facebookIdentity(user);
     final facebookOn = ref.watch(facebookSignInAvailableProvider).value ?? false;
-    final showFacebook = offersSocialLogin(Theme.of(context).platform) && (facebookOn || facebook != null);
+    final showFacebook =
+        offersSocialLogin(Theme.of(context).platform, apple: appleOn) && (facebookOn || facebook != null);
     // Supabase will not remove an account's only way in.
-    final facebookOnly = facebook != null && (user?.identities?.length ?? 0) <= 1;
+    final ways = user?.identities?.length ?? 0;
+    final facebookOnly = facebook != null && ways <= 1;
+    final appleOnly = apple != null && ways <= 1;
+    final hidden = ref.watch(hiddenOwnersProvider);
     final inset = Layout.inset(context);
     const gap = SizedBox(height: Space.lg);
     final external = Icon(Icons.open_in_new_rounded, size: 18, color: c.inkFaint);
@@ -108,6 +117,15 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ),
                     const _AppearanceRow(),
+                    // Advertisers hidden from a listing's "More", on this
+                    // device; a tap brings them back.
+                    if (hidden.isNotEmpty)
+                      GroupedTile(
+                        icon: Icons.visibility_off_outlined,
+                        title: l.profileHiddenAdvertisers(hidden.length),
+                        subtitle: l.profileHiddenAdvertisersShow,
+                        onTap: () => _showHidden(context, ref),
+                      ),
                   ],
                 ),
                 gap,
@@ -183,6 +201,22 @@ class ProfileScreen extends ConsumerWidget {
                           subtitle: signInPhone.isEmpty ? l.profileSignInPhoneNone : '\u2066$signInPhone\u2069',
                           onTap: phoneSignIn ? () => context.push(Routes.phoneLink) : null,
                         ),
+                      // "Connected: the way this account signs in" and
+                      // "Disconnect" read the same for any provider.
+                      if (showApple)
+                        GroupedTile(
+                          leading: const AppleMark(),
+                          title: l.profileApple,
+                          subtitle: apple == null
+                              ? l.profileAppleConnect
+                              : (appleOnly ? l.profileFacebookOnly : l.profileAppleConnected),
+                          trailing: apple == null || appleOnly
+                              ? null
+                              : Text(l.facebookDisconnect, style: context.text.labelLarge?.copyWith(color: c.danger)),
+                          onTap: apple == null
+                              ? () => _connectApple(context, ref)
+                              : () => _disconnect(context, ref, provider: 'apple', onlyWayIn: appleOnly),
+                        ),
                       if (showFacebook)
                         GroupedTile(
                           leading: const FacebookMark(),
@@ -195,7 +229,7 @@ class ProfileScreen extends ConsumerWidget {
                               : Text(l.facebookDisconnect, style: context.text.labelLarge?.copyWith(color: c.danger)),
                           onTap: facebook == null
                               ? () => _connectFacebook(context, ref)
-                              : () => _disconnectFacebook(context, ref, onlyWayIn: facebookOnly),
+                              : () => _disconnect(context, ref, provider: 'facebook', onlyWayIn: facebookOnly),
                         ),
                       GroupedTile(
                         icon: Icons.logout_rounded,
@@ -313,29 +347,72 @@ class ProfileScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _disconnectFacebook(BuildContext context, WidgetRef ref, {required bool onlyWayIn}) async {
+  /// On an iPhone, Apple's sheet connects it at once. Elsewhere Apple
+  /// confirms in the browser and the app says so on the way back, as with
+  /// Facebook.
+  Future<void> _connectApple(BuildContext context, WidgetRef ref) async {
     final l = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
+    final fallback = context.failureMessage;
+    final prefs = ref.read(preferencesProvider);
+    try {
+      await prefs.setPendingLink('apple');
+      final outcome = await ref.read(authServiceProvider).linkApple();
+      if (outcome == AuthOutcome.inBrowser) return;
+      await prefs.setPendingLink(null);
+      if (outcome == AuthOutcome.done) messenger.showSnackBar(SnackBar(content: Text(l.appleConnected)));
+    } on Object catch (e) {
+      await prefs.setPendingLink(null);
+      messenger.showSnackBar(SnackBar(content: Text(linkErrorMessage(l, e, fallback, provider: 'apple'))));
+    }
+  }
+
+  /// Disconnects [provider] (`apple` or `facebook`), after confirming.
+  Future<void> _disconnect(
+    BuildContext context,
+    WidgetRef ref, {
+    required String provider,
+    required bool onlyWayIn,
+  }) async {
+    final l = context.l10n;
+    final apple = provider == 'apple';
+    final messenger = ScaffoldMessenger.of(context);
     if (onlyWayIn) {
-      messenger.showSnackBar(SnackBar(content: Text(l.facebookOnlyWayIn)));
+      messenger.showSnackBar(SnackBar(content: Text(apple ? l.appleOnlyWayIn : l.facebookOnlyWayIn)));
       return;
     }
     final fallback = context.failureMessage;
     final ok = await confirmAction(
       context,
-      title: l.facebookDisconnectTitle,
-      body: l.facebookDisconnectBody,
+      title: apple ? l.appleDisconnectTitle : l.facebookDisconnectTitle,
+      body: apple ? l.appleDisconnectBody : l.facebookDisconnectBody,
       confirmLabel: l.facebookDisconnect,
       cancelLabel: l.actionCancel,
       destructive: true,
     );
     if (!ok) return;
+    final auth = ref.read(authServiceProvider);
     try {
-      await ref.read(authServiceProvider).unlinkFacebook();
-      messenger.showSnackBar(SnackBar(content: Text(l.facebookDisconnected)));
+      await (apple ? auth.unlinkApple() : auth.unlinkFacebook());
+      messenger.showSnackBar(SnackBar(content: Text(apple ? l.appleDisconnected : l.facebookDisconnected)));
     } on Object catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(linkErrorMessage(l, e, fallback))));
+      messenger.showSnackBar(SnackBar(content: Text(linkErrorMessage(l, e, fallback, provider: provider))));
     }
+  }
+
+  Future<void> _showHidden(BuildContext context, WidgetRef ref) async {
+    final l = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await confirmAction(
+      context,
+      title: l.showHiddenTitle,
+      body: l.showHiddenBody,
+      confirmLabel: l.showHiddenAction,
+      cancelLabel: l.actionCancel,
+    );
+    if (!ok) return;
+    await ref.read(hiddenOwnersProvider.notifier).showAll();
+    messenger.showSnackBar(SnackBar(content: Text(l.showHiddenDone)));
   }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
@@ -355,6 +432,11 @@ class ProfileScreen extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final router = GoRouter.of(context);
     final failText = context.failureMessage;
+    final user = ref.read(currentUserProvider);
+    // An account that signs in with Apple: Apple confirms too, and the
+    // website revokes Akarat.ai's access to the Apple ID as the account goes,
+    // as Apple requires. That takes Apple's sheet, so iPhones only.
+    final viaApple = appleIdentity(user) != null && hasNativeAppleSignIn(Theme.of(context).platform);
     // Typing the word is the confirmation; the button stays inert until then.
     final typed = TextEditingController();
     final matches = ValueNotifier(false);
@@ -373,10 +455,19 @@ class ProfileScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(top: Space.md),
         child: Material(
           type: MaterialType.transparency,
-          child: TextField(
-            controller: typed,
-            autocorrect: false,
-            decoration: InputDecoration(hintText: l.deleteAccountConfirmHint),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (viaApple) ...[
+                Text(l.deleteAccountAppleNote, style: context.text.bodyMedium),
+                const SizedBox(height: Space.sm),
+              ],
+              TextField(
+                controller: typed,
+                autocorrect: false,
+                decoration: InputDecoration(hintText: l.deleteAccountConfirmHint),
+              ),
+            ],
           ),
         ),
       ),
@@ -389,15 +480,17 @@ class ProfileScreen extends ConsumerWidget {
       });
     });
     if (!confirmed) return;
-    final user = ref.read(currentUserProvider);
     try {
-      await ref.read(accountRepositoryProvider).deleteMyAccount();
+      final appleCode = viaApple ? await ref.read(authServiceProvider).appleCodeForDeletion() : null;
+      await ref.read(accountRepositoryProvider).deleteMyAccount(appleAuthorizationCode: appleCode);
       await ref.read(supabaseClientProvider).auth.signOut(scope: SignOutScope.local).catchError((Object _) {});
       final prefs = ref.read(preferencesProvider);
       await prefs.setLocalFavorites(const []);
       await prefs.setListingDraft(null);
       messenger.showSnackBar(SnackBar(content: Text(l.deleteAccountDone)));
       router.go(Routes.home);
+    } on AppleCancelled {
+      messenger.showSnackBar(SnackBar(content: Text(l.deleteAccountAppleCancelled)));
     } on AccountDeletionUnavailable {
       // The deployed website does not have the deletion route yet: fall back
       // to the documented request by email, prefilled so nothing is lost.

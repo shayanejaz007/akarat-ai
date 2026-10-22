@@ -1,11 +1,17 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart'
+    show AppleLogoPainter, SignInWithAppleButton, SignInWithAppleButtonStyle;
 
 import '../../../app/localization/l10n.dart';
 import '../../../app/router/routes.dart';
 import '../../../app/theme/tokens.dart';
 import '../../../core/widgets/brand.dart';
+import '../../../core/widgets/motion.dart';
+import '../../../shared/services/supabase_providers.dart';
+import '../../tour/tour_store.dart';
 
 /// Signed in: close the auth page, back to where the reader was (the tab bar's
 /// Log in, a listing, a saved search), or on to [next] when the page was the
@@ -16,6 +22,20 @@ void leaveAuth(BuildContext context, String? next) {
     context.pop();
   } else {
     context.go(next ?? Routes.profile);
+  }
+}
+
+/// Signed in by Apple's sheet, with no browser in between: say so and go on
+/// as the other ways in do. An account made just now starts on Home, where
+/// its welcome tour begins, unless it was on its way somewhere.
+void arriveSignedIn(BuildContext context, WidgetRef ref, String? next) {
+  final l = context.l10n;
+  final fresh = TourStore.isNewAccount(ref.read(supabaseClientProvider).auth.currentUser);
+  showSuccess(context, fresh ? l.authAccountCreated : l.authWelcomeBack);
+  if (fresh && next == null) {
+    context.go(Routes.home);
+  } else {
+    leaveAuth(context, next);
   }
 }
 
@@ -112,6 +132,60 @@ class FacebookMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Icon(Icons.facebook, color: blue, size: 22);
+}
+
+/// Sign in with Apple's button, drawn as Apple's guidelines ask: Apple's own
+/// logo and wording, black on light pages and white on dark ones, and as
+/// large as the other ways in. A second tap waits for the first.
+class AppleButton extends StatefulWidget {
+  const AppleButton({super.key, required this.label, required this.onPressed});
+  final String label;
+  final Future<void> Function() onPressed;
+
+  @override
+  State<AppleButton> createState() => _AppleButtonState();
+}
+
+class _AppleButtonState extends State<AppleButton> {
+  bool _busy = false;
+
+  Future<void> _tap() async {
+    setState(() => _busy = true);
+    try {
+      await widget.onPressed();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SignInWithAppleButton(
+    text: widget.label,
+    height: 52,
+    borderRadius: Radii.field,
+    style: Theme.of(context).brightness == Brightness.dark
+        ? SignInWithAppleButtonStyle.white
+        : SignInWithAppleButtonStyle.black,
+    onPressed: _busy ? null : _tap,
+  );
+}
+
+/// Apple's logo, for Apple's row in Profile.
+class AppleMark extends StatelessWidget {
+  const AppleMark({super.key});
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 22,
+    height: 22,
+    child: Center(
+      child: SizedBox(
+        width: 16,
+        height: 19,
+        child: CustomPaint(painter: AppleLogoPainter(color: context.colors.ink)),
+      ),
+    ),
+  );
 }
 
 /// "— or —" between the email form and the other ways in.

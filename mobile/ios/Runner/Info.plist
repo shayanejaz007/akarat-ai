@@ -37,6 +37,8 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>Akarat.ai uses the camera only when you choose to take a photo of a property you are listing.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Akarat.ai doesn't use your location. If it ever offers to show where you are on a map, your location will be used only for that.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Akarat.ai uses the microphone only when you choose to search by voice or to film a video of a property you are listing.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
@@ -91,8 +93,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

@@ -1,3 +1,4 @@
+import { createPrivateKey, sign } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
@@ -18,9 +19,14 @@ import { createClient } from "@supabase/supabase-js";
  *   exact locations), saved_searches, favorites, inquiries addressed to them.
  *   Inquiries they SENT stay with their recipients; sender_id is set null.
  * Then their folder in the listing-photos bucket is emptied, best effort.
+ *
+ * An account that signs in with Apple also loses Akarat.ai's access to the
+ * Apple ID first, as Apple requires (see revokeApple below).
  */
 
 export const runtime = "nodejs";
+// Apple's two calls, before the deletion itself.
+export const maxDuration = 30;
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -30,6 +36,71 @@ const BUCKET = "listing-photos";
 function bearerToken(request: NextRequest): string | null {
   const m = /^Bearer\s+([A-Za-z0-9._-]+)$/i.exec(request.headers.get("authorization") ?? "");
   return m ? m[1] : null;
+}
+
+/* ── Sign in with Apple ───────────────────────────────────────────────────
+   Apple requires an app that offers Sign in with Apple to revoke its access
+   when someone deletes their account. The iPhone app sends a fresh one-time
+   code from Apple's sheet; it is exchanged here for a token, which is then
+   revoked. It takes the Sign in with Apple key from the Apple Developer
+   account (the one Supabase's Apple provider is set up with):
+
+     APPLE_TEAM_ID, APPLE_KEY_ID, APPLE_PRIVATE_KEY (the .p8 file's text),
+     APPLE_BUNDLE_ID (defaults to ai.akarat.app)
+
+   Best effort: without them, or if Apple does not answer, the account is
+   deleted all the same, and the person can still remove Akarat.ai from
+   their Apple ID in Settings. */
+
+const APPLE_TEAM_ID = process.env.APPLE_TEAM_ID;
+const APPLE_KEY_ID = process.env.APPLE_KEY_ID;
+const APPLE_PRIVATE_KEY = process.env.APPLE_PRIVATE_KEY;
+const APPLE_BUNDLE_ID = process.env.APPLE_BUNDLE_ID || "ai.akarat.app";
+const APPLE_CODE = /^[A-Za-z0-9._-]{10,2048}$/;
+
+const b64url = (data: Buffer | string) => Buffer.from(data).toString("base64url");
+
+/** Apple's client secret: a short-lived ES256 token signed with the .p8 key. */
+function appleClientSecret(): string | null {
+  if (!APPLE_TEAM_ID || !APPLE_KEY_ID || !APPLE_PRIVATE_KEY) return null;
+  // A key pasted into Vercel keeps its line breaks, or arrives with them
+  // written out as the two characters backslash and n.
+  const pem = APPLE_PRIVATE_KEY.split(String.fromCharCode(92) + "n").join(String.fromCharCode(10));
+  const now = Math.floor(Date.now() / 1000);
+  const header = b64url(JSON.stringify({ alg: "ES256", kid: APPLE_KEY_ID }));
+  const claims = b64url(
+    JSON.stringify({ iss: APPLE_TEAM_ID, iat: now, exp: now + 300, aud: "https://appleid.apple.com", sub: APPLE_BUNDLE_ID }),
+  );
+  const signature = sign("sha256", Buffer.from(`${header}.${claims}`), {
+    key: createPrivateKey(pem),
+    dsaEncoding: "ieee-p1363",
+  });
+  return `${header}.${claims}.${b64url(signature)}`;
+}
+
+async function revokeApple(code: string): Promise<void> {
+  try {
+    const secret = appleClientSecret();
+    if (!secret) return;
+    const post = (url: string, fields: Record<string, string>) =>
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ client_id: APPLE_BUNDLE_ID, client_secret: secret, ...fields }).toString(),
+        signal: AbortSignal.timeout(6000),
+      });
+    const res = await post("https://appleid.apple.com/auth/token", { code, grant_type: "authorization_code" });
+    if (!res.ok) return;
+    const tokens = (await res.json()) as { refresh_token?: string; access_token?: string };
+    const token = tokens.refresh_token ?? tokens.access_token;
+    if (!token) return;
+    await post("https://appleid.apple.com/auth/revoke", {
+      token,
+      token_type_hint: tokens.refresh_token ? "refresh_token" : "access_token",
+    });
+  } catch {
+    /* best effort; see above */
+  }
 }
 
 export async function DELETE(request: NextRequest) {
@@ -54,6 +125,13 @@ export async function DELETE(request: NextRequest) {
   const { data, error } = await verifier.auth.getUser(token);
   const user = data?.user;
   if (error || !user) return NextResponse.json({ error: "Sign in again to delete your account." }, { status: 401 });
+
+  // Only for an account that really signs in with Apple, and only a code
+  // that looks like one.
+  const appleCode = (body as { apple_authorization_code?: unknown }).apple_authorization_code;
+  if (typeof appleCode === "string" && APPLE_CODE.test(appleCode) && user.identities?.some((i) => i.provider === "apple")) {
+    await revokeApple(appleCode);
+  }
 
   const admin = createClient(URL_, SERVICE, { auth: { persistSession: false, autoRefreshToken: false } });
 

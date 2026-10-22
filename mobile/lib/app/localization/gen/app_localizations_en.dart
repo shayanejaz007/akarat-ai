@@ -1404,6 +1404,130 @@ class AppLocalizationsEn extends AppLocalizations {
       'Facebook is how this account signs in. Add a phone number first, then you can disconnect it.';
 
   @override
+  String get authApple => 'Continue with Apple';
+
+  @override
+  String get authAppleDisabled => 'Sign in with Apple isn’t switched on yet. Use your email or phone for now.';
+
+  @override
+  String get authAppleFailed =>
+      'Apple couldn’t sign you in. Check that this device is signed in to an Apple ID, or use your email or phone.';
+
+  @override
+  String get profileApple => 'Apple';
+
+  @override
+  String get profileAppleConnect => 'Connect it to sign in with Apple';
+
+  @override
+  String get profileAppleConnected => 'Connected: you can sign in with Apple';
+
+  @override
+  String get appleConnected => 'Apple connected. You can sign in with it now.';
+
+  @override
+  String get appleDisconnectTitle => 'Disconnect Apple?';
+
+  @override
+  String get appleDisconnectBody =>
+      'You won’t be able to sign in with Apple any more. Your account, listings and saved homes stay as they are.';
+
+  @override
+  String get appleDisconnected => 'Apple disconnected';
+
+  @override
+  String get appleTaken =>
+      'That Apple ID already belongs to another Akarat.ai account. Sign in with Apple to use that one.';
+
+  @override
+  String get appleOnlyWayIn =>
+      'Apple is how this account signs in. Add a phone number first, then you can disconnect it.';
+
+  @override
+  String get deleteAccountAppleNote =>
+      'You sign in with Apple, so Apple asks you to confirm next. Akarat.ai is then removed from your Apple ID too.';
+
+  @override
+  String get deleteAccountAppleCancelled => 'Nothing was deleted: Apple’s confirmation was cancelled.';
+
+  @override
+  String get detailsMore => 'More';
+
+  @override
+  String get reportListing => 'Report this listing';
+
+  @override
+  String get reportBody => 'Tell us what’s wrong. We review every report and remove listings that break the rules.';
+
+  @override
+  String get reportReasonScam => 'It’s a scam or fake';
+
+  @override
+  String get reportReasonWrong => 'Wrong price, photos or details';
+
+  @override
+  String get reportReasonUnavailable => 'Already sold or rented';
+
+  @override
+  String get reportReasonOffensive => 'Offensive or inappropriate';
+
+  @override
+  String get reportReasonOther => 'Something else';
+
+  @override
+  String get reportDetails => 'Anything else we should know (optional)';
+
+  @override
+  String get reportSend => 'Send report';
+
+  @override
+  String get reportThanks => 'Thanks. We’ll review this listing.';
+
+  @override
+  String get reportSignIn => 'Sign in to report a listing, so we can follow up with you.';
+
+  @override
+  String reportByEmail(String email) {
+    return 'Reports aren’t switched on in the app yet. We’ve opened an email to $email instead.';
+  }
+
+  @override
+  String get hideAdvertiser => 'Hide this advertiser';
+
+  @override
+  String get hideAdvertiserTitle => 'Hide this advertiser?';
+
+  @override
+  String get hideAdvertiserBody =>
+      'You won’t see any of their listings again on this device. You can show them again from Profile.';
+
+  @override
+  String get hideAdvertiserAction => 'Hide';
+
+  @override
+  String get hideAdvertiserDone => 'Hidden. You won’t see their listings any more.';
+
+  @override
+  String profileHiddenAdvertisers(int count) {
+    return 'Hidden advertisers: $count';
+  }
+
+  @override
+  String get profileHiddenAdvertisersShow => 'Tap to show their listings again';
+
+  @override
+  String get showHiddenTitle => 'Show hidden advertisers again?';
+
+  @override
+  String get showHiddenBody => 'Their listings will appear in your results again.';
+
+  @override
+  String get showHiddenAction => 'Show again';
+
+  @override
+  String get showHiddenDone => 'Their listings will show again.';
+
+  @override
   String get savedTitle => 'Saved';
 
   @override
@@ -1954,7 +2078,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get termsP1 =>
-      'Searching is open to everyone. Listing a property requires an account, and you are responsible for what is published under it. Do not list a property you have no right to market.';
+      'Searching is open to everyone. Listing a property requires an account, and you are responsible for what is published under it. Do not list a property you have no right to market. Nothing unlawful, discriminatory, offensive or abusive, in a listing or an enquiry: we remove it, and may close the account that posted it. Anyone can report a listing from its page.';
 
   @override
   String get termsH2 => 'Listing accuracy';

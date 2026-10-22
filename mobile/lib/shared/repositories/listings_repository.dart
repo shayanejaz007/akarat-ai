@@ -6,10 +6,13 @@ import '../../core/errors/app_failure.dart';
 import '../../core/utils/payload_codec.dart';
 import '../models/listing.dart';
 import '../models/listing_filters.dart';
+import '../services/hidden_owners.dart';
 import '../services/supabase_providers.dart';
 
+/// Rebuilt when the reader hides an advertiser, so every list refetches
+/// without them.
 final listingsRepositoryProvider = Provider<ListingsRepository>(
-  (ref) => ListingsRepository(ref.watch(supabaseClientProvider)),
+  (ref) => ListingsRepository(ref.watch(supabaseClientProvider), hiddenOwners: ref.watch(hiddenOwnersProvider)),
 );
 
 class ListingPage {
@@ -30,8 +33,11 @@ class ListingPage {
 /// Nothing here can widen that. The `.eq('owner_id', …)` on writes is belt and
 /// braces against a bug in this file, not the control itself.
 class ListingsRepository {
-  ListingsRepository(this._db);
+  ListingsRepository(this._db, {Set<String> hiddenOwners = const {}}) : _hidden = hiddenOwners.toList()..sort();
   final SupabaseClient _db;
+
+  /// Advertisers the reader hid (hiddenOwnersProvider).
+  final List<String> _hidden;
 
   static const pageSize = 20;
   static const _int32Max = 2147483647;
@@ -56,6 +62,11 @@ class ListingsRepository {
 
   String? get _uid => _db.auth.currentUser?.id;
 
+  /// Leaves out the advertisers the reader hid. Postgres applies it, so counts
+  /// and pages stay right.
+  PostgrestFilterBuilder<List<Map<String, dynamic>>> _visible(PostgrestFilterBuilder<List<Map<String, dynamic>>> q) =>
+      _hidden.isEmpty ? q : q.not('owner_id', 'in', _hidden);
+
   String _requireUid() {
     final id = _uid;
     if (id == null) throw const AppFailure(FailureKind.unauthorized, detail: 'Not signed in');
@@ -78,7 +89,7 @@ class ListingsRepository {
     if (f.maxPrice case final p?) q = q.lte('price_jod', _clamp(p));
     if (f.minArea case final a?) q = q.gte('area_sqm', _clamp(a));
     if (f.maxArea case final a?) q = q.lte('area_sqm', _clamp(a));
-    return q;
+    return _visible(q);
   }
 
   /// Every row matching [f], newest first, for the map view: pins for those
@@ -112,7 +123,7 @@ class ListingsRepository {
   /// Newest live listings, for Home.
   Future<List<Listing>> recent({DealType? deal, String? cityId, int limit = 10}) async {
     try {
-      var q = _db.from('properties').select().eq('status', 'active');
+      var q = _visible(_db.from('properties').select().eq('status', 'active'));
       if (deal != null) q = q.eq('deal', deal.name);
       if (cityId != null) q = q.eq('city_id', cityId);
       return _rows(await q.order('created_at', ascending: false).limit(limit));
@@ -125,7 +136,7 @@ class ListingsRepository {
   /// Home hides the section rather than promoting arbitrary listings.
   Future<List<Listing>> featured({DealType? deal, String? cityId, int limit = 8}) async {
     try {
-      var q = _db.from('properties').select().eq('status', 'active').eq('featured', true);
+      var q = _visible(_db.from('properties').select().eq('status', 'active').eq('featured', true));
       if (deal != null) q = q.eq('deal', deal.name);
       if (cityId != null) q = q.eq('city_id', cityId);
       return _rows(await q.order('created_at', ascending: false).limit(limit));
@@ -153,7 +164,7 @@ class ListingsRepository {
     final valid = ids.where(_uuid.hasMatch).toList();
     if (valid.isEmpty) return const [];
     try {
-      final rows = _rows(await _db.from('properties').select().inFilter('id', valid));
+      final rows = _rows(await _visible(_db.from('properties').select().inFilter('id', valid)));
       final byId = {for (final r in rows) r.id: r};
       return [for (final id in valid) ?byId[id]];
     } on Object catch (e) {
@@ -171,20 +182,20 @@ class ListingsRepository {
     int limit = 6,
   }) async {
     try {
-      var q = _db.from('properties').select().eq('status', 'active').eq('deal', deal.name).neq('id', id);
+      var q = _visible(_db.from('properties').select().eq('status', 'active').eq('deal', deal.name).neq('id', id));
       if (cityId != null) q = q.eq('city_id', cityId);
       final sameCity = _rows(await q.order('created_at', ascending: false).limit(limit));
       if (sameCity.isNotEmpty) return sameCity;
       return _rows(
-        await _db
-            .from('properties')
-            .select()
-            .eq('status', 'active')
-            .eq('deal', deal.name)
-            .eq('property_type', type)
-            .neq('id', id)
-            .order('created_at', ascending: false)
-            .limit(limit),
+        await _visible(
+          _db
+              .from('properties')
+              .select()
+              .eq('status', 'active')
+              .eq('deal', deal.name)
+              .eq('property_type', type)
+              .neq('id', id),
+        ).order('created_at', ascending: false).limit(limit),
       );
     } on Object catch (e) {
       throw AppFailure.from(e);

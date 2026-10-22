@@ -69,7 +69,7 @@ switching and Street View); without them, OpenStreetMap tiles from
 `MAP_TILE_URL`. How to make the keys: PUBLISHING.md.
 
 Verified on this branch (Windows, Flutter 3.47.7, JDK 17) on 17 October 2026:
-`flutter analyze` clean, 302 tests passing, and the release commands above
+`flutter analyze` clean, 334 tests passing, and the release commands above
 succeed: APKs of 21.6 MB (armv7), 23.9 MB (arm64) and 25.4 MB (x86_64), and the
 app bundle. The release package was checked (package `ai.akarat.app`, target
 SDK 36, not debuggable, only the launcher activity exported, 16 KB-aligned
@@ -104,8 +104,9 @@ listing, editing, inquiries and saved searches. These need someone with
 dashboard access (details in INTEGRATION.md §4 and RELEASE_CHECKLIST.md):
 
 1. Add `ai.akarat.app://login-callback` to Supabase Auth redirect URLs.
-2. Deploy the two website route changes (search bearer auth, account deletion).
+2. Get the website's domain serving the newest deployment (on 21 October it was stuck on 19 October's, so the app's two API routes were not live: RELEASE_CHECKLIST.md, first section).
 3. Apply `supabase/migrations/0014_favorites.sql` for cross-device saved properties.
-4. Apply `supabase/migrations/0013_protect_trust_fields.sql` (before the first push) and turn on email confirmation.
-5. Signing keys and store listings.
-6. Optional: phone sign-in. Switch on Supabase's Phone provider with Twilio (`SUPABASE.md` → Phone sign-in); the app offers it by itself once it is on.
+4. Done: `supabase/migrations/0013_protect_trust_fields.sql`. Still to do: turn on email confirmation.
+5. Apply `supabase/migrations/0015_listing_reports.sql`, so *Report this listing* files reports (both stores require it), and read them daily.
+6. Signing keys and store listings, with a review account.
+7. Optional: phone sign-in (`SUPABASE.md` → Phone sign-in; then `PHONE_SIGNIN=auto`), and Sign in with Apple (the iOS guide; with it iPhones also offer Google and Facebook).

@@ -1411,6 +1411,128 @@ class AppLocalizationsAr extends AppLocalizations {
   String get facebookOnlyWayIn => 'فيسبوك هو طريقة الدخول إلى هذا الحساب. أضف رقم هاتف أولاً، ثم يمكنك إلغاء ربطه.';
 
   @override
+  String get authApple => 'المتابعة باستخدام Apple';
+
+  @override
+  String get authAppleDisabled => 'تسجيل الدخول عبر Apple غير مفعّل بعد. استخدم بريدك الإلكتروني أو هاتفك حالياً.';
+
+  @override
+  String get authAppleFailed =>
+      'تعذّر على Apple تسجيل دخولك. تأكّد أن هذا الجهاز مسجّل الدخول بمعرّف Apple، أو استخدم بريدك أو هاتفك.';
+
+  @override
+  String get profileApple => 'Apple';
+
+  @override
+  String get profileAppleConnect => 'اربطه لتسجّل الدخول عبر Apple';
+
+  @override
+  String get profileAppleConnected => 'مرتبط: يمكنك تسجيل الدخول عبر Apple';
+
+  @override
+  String get appleConnected => 'تم ربط Apple. يمكنك تسجيل الدخول به الآن.';
+
+  @override
+  String get appleDisconnectTitle => 'إلغاء ربط Apple؟';
+
+  @override
+  String get appleDisconnectBody =>
+      'لن تتمكن من تسجيل الدخول عبر Apple بعد الآن. يبقى حسابك وعقاراتك والمنازل المحفوظة كما هي.';
+
+  @override
+  String get appleDisconnected => 'تم إلغاء ربط Apple';
+
+  @override
+  String get appleTaken => 'معرّف Apple هذا مرتبط بحساب آخر على Akarat.ai. سجّل الدخول عبر Apple لاستخدامه.';
+
+  @override
+  String get appleOnlyWayIn => 'Apple هو طريقة الدخول إلى هذا الحساب. أضف رقم هاتف أولاً، ثم يمكنك إلغاء ربطه.';
+
+  @override
+  String get deleteAccountAppleNote =>
+      'تسجّل الدخول عبر Apple، لذا سيطلب منك Apple التأكيد بعد ذلك. ثم يُزال Akarat.ai من معرّف Apple الخاص بك أيضاً.';
+
+  @override
+  String get deleteAccountAppleCancelled => 'لم يُحذف شيء: أُلغي تأكيد Apple.';
+
+  @override
+  String get detailsMore => 'المزيد';
+
+  @override
+  String get reportListing => 'الإبلاغ عن هذا الإعلان';
+
+  @override
+  String get reportBody => 'أخبرنا بالمشكلة. نراجع كل بلاغ ونزيل الإعلانات المخالفة للقواعد.';
+
+  @override
+  String get reportReasonScam => 'احتيال أو إعلان وهمي';
+
+  @override
+  String get reportReasonWrong => 'سعر أو صور أو تفاصيل غير صحيحة';
+
+  @override
+  String get reportReasonUnavailable => 'بيع أو أُجّر بالفعل';
+
+  @override
+  String get reportReasonOffensive => 'مسيء أو غير لائق';
+
+  @override
+  String get reportReasonOther => 'شيء آخر';
+
+  @override
+  String get reportDetails => 'أي شيء آخر يجب أن نعرفه (اختياري)';
+
+  @override
+  String get reportSend => 'إرسال البلاغ';
+
+  @override
+  String get reportThanks => 'شكراً. سنراجع هذا الإعلان.';
+
+  @override
+  String get reportSignIn => 'سجّل الدخول للإبلاغ عن إعلان، لنتمكن من متابعة البلاغ معك.';
+
+  @override
+  String reportByEmail(String email) {
+    return 'البلاغات غير مفعّلة في التطبيق بعد. فتحنا رسالة إلى $email بدلاً من ذلك.';
+  }
+
+  @override
+  String get hideAdvertiser => 'إخفاء هذا المعلن';
+
+  @override
+  String get hideAdvertiserTitle => 'إخفاء هذا المعلن؟';
+
+  @override
+  String get hideAdvertiserBody =>
+      'لن ترى أيّاً من إعلاناته مجدداً على هذا الجهاز. يمكنك إظهارها مرة أخرى من الملف الشخصي.';
+
+  @override
+  String get hideAdvertiserAction => 'إخفاء';
+
+  @override
+  String get hideAdvertiserDone => 'تم الإخفاء. لن ترى إعلاناته بعد الآن.';
+
+  @override
+  String profileHiddenAdvertisers(int count) {
+    return 'المعلنون المخفيّون: $count';
+  }
+
+  @override
+  String get profileHiddenAdvertisersShow => 'اضغط لإظهار إعلاناتهم مجدداً';
+
+  @override
+  String get showHiddenTitle => 'إظهار المعلنين المخفيين مجدداً؟';
+
+  @override
+  String get showHiddenBody => 'ستظهر إعلاناتهم في نتائجك مجدداً.';
+
+  @override
+  String get showHiddenAction => 'إظهار';
+
+  @override
+  String get showHiddenDone => 'ستظهر إعلاناتهم مجدداً.';
+
+  @override
   String get savedTitle => 'المحفوظات';
 
   @override
@@ -1956,7 +2078,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsP1 =>
-      'البحث متاح للجميع. أما عرض عقار فيحتاج حساباً، وأنت مسؤول عمّا يُنشر تحته. لا تعرض عقاراً لا تملك حق تسويقه.';
+      'البحث متاح للجميع. أما عرض عقار فيحتاج حساباً، وأنت مسؤول عمّا يُنشر تحته. لا تعرض عقاراً لا تملك حق تسويقه. لا يُسمح بأي محتوى مخالف للقانون أو تمييزي أو مسيء، في إعلان أو استفسار: نزيله، وقد نغلق الحساب الذي نشره. يمكن لأي شخص الإبلاغ عن إعلان من صفحته.';
 
   @override
   String get termsH2 => 'دقة الإعلانات';

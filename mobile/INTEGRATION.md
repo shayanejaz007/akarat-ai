@@ -37,12 +37,13 @@ Public values only, passed at build time (`lib/core/config/env.dart`):
 |---|---|---|
 | `SUPABASE_URL` | production project | Same as the website's `NEXT_PUBLIC_SUPABASE_URL` |
 | `SUPABASE_PUBLISHABLE_KEY` | production publishable key | Same as `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Public by design; RLS bounds it |
-| `SITE_URL` | `https://akarat-ai-swart.vercel.app` | The deployed website: API routes and shared links |
+| `SITE_URL` | `https://www.akarat.ai` | The deployed website: API routes and shared links. The `www` host itself: `akarat.ai` redirects there, and a redirected DELETE or POST is not followed |
 | `MAP_TILE_URL` | OpenStreetMap's tile server | Raster tiles for every map. OSM's server suits development and light use; its usage policy asks apps with real traffic to use their own provider (MapTiler, Stadia, Mapbox raster…), which may need a key in the URL |
 | `GOOGLE_MAPS_ANDROID_KEY` / `GOOGLE_MAPS_IOS_KEY` | empty | Google's native map SDKs, with satellite view. Each key locked in Google Cloud to this app and the Maps SDK; Android's also reaches the manifest through Gradle. Empty: the OpenStreetMap tiles above |
-| `PHONE_SIGNIN` | `auto` | Phone sign-in: `auto` offers it once the project's Phone provider is switched on (read from the public auth settings, so no app update is needed); `off` never; `on` always (to try the screens first) |
-| `FACEBOOK_SIGNIN` | `auto` | Facebook sign-in and connecting Facebook in Profile: `auto` offers them once the project's Facebook provider is on; `off` never; `on` always. Never on iOS (App Store 4.8) |
-| `OTP_CHANNEL` | `sms` | How codes travel: `sms`, or `whatsapp` once Twilio has approved a WhatsApp sender. Only names the channel; Twilio's credentials are in Supabase |
+| `PHONE_SIGNIN` | `auto` (`off` in `env/example.json`) | Phone sign-in: `auto` offers it once the project's Phone provider is switched on (read from the public auth settings, so no app update is needed); `off` never; `on` always (to try the screens first). Off for now, as on the website, until codes can be delivered |
+| `FACEBOOK_SIGNIN` | `auto` | Facebook sign-in and connecting Facebook in Profile: `auto` offers them once the project's Facebook provider is on; `off` never; `on` always. On iOS only beside Sign in with Apple (App Store 4.8), as Google |
+| `APPLE_SIGNIN` | `auto` | Sign in with Apple and connecting Apple in Profile: `auto` offers them once the project's Apple provider is on; `off` never; `on` always. Apple's own sheet on iPhone, Apple's web page on Android. While it is offered, iPhones also offer Google and Facebook |
+| `OTP_CHANNEL` | `sms` (`whatsapp` in `env/example.json`, as the website) | How codes travel: `sms`, or `whatsapp` once Twilio has approved a WhatsApp sender. Only names the channel; Twilio's credentials are in Supabase |
 | `APP_VERSION` | `1.0.0` | Shown in Profile |
 
 ```bash
@@ -135,7 +136,19 @@ properties yet…").
    For connecting Facebook from Profile, also turn on **manual linking**
    (Authentication settings). Turn on *Confirm email* first (SECURITY_AUDIT.md
    S23). The app offers Facebook by itself once it is on (`FACEBOOK_SIGNIN=auto`).
-8. **Universal / App Links (optional)**: to open `https://www.akarat.ai/en/property/<id>`
+8. **Sign in with Apple**: in the Apple Developer account, *Sign in with Apple*
+   on the App ID `ai.akarat.app`, a **Services ID** whose return URL is the
+   project's Supabase callback, and a **Key** for Sign in with Apple (`.p8`,
+   with its Key ID and your Team ID). Then Supabase → Authentication →
+   Providers → **Apple** on, *Client IDs* `ai.akarat.app,<Services ID>`, and
+   the secret generated from the key (renew it every six months). For
+   revoking on account deletion, `APPLE_TEAM_ID`, `APPLE_KEY_ID` and
+   `APPLE_PRIVATE_KEY` in Vercel's production environment. The app offers
+   Apple by itself once it is on (`APPLE_SIGNIN=auto`). Steps: the iOS guide.
+9. **Reports**: run `supabase/migrations/0015_listing_reports.sql`, and read
+   new reports daily (Table Editor → `listing_reports`). Until it runs,
+   *Report this listing* sends an email instead.
+10. **Universal / App Links (optional)**: to open `https://www.akarat.ai/en/property/<id>`
    straight in the app, publish `/.well-known/assetlinks.json` (Android, with
    the release SHA-256) and `/.well-known/apple-app-site-association` (iOS,
    with your Team ID) from the website, and add the Associated Domains
@@ -191,8 +204,10 @@ absent, Google + email auth enabled, email confirmation required).
 | Enquire | `mailto:hello@akarat.ai` | real inquiry into `inquiries`, reaches the owner's dashboard | ➕ improved |
 | Saved properties | memory only, lost on reload | persisted (account after 0014, device until then) | ➕ |
 | Email sign-up / sign-in / reset | yes | yes (deep-link redirects) | ✅ |
-| Google sign-in | yes | Android: yes (browser + PKCE). iOS: hidden until Sign in with Apple is configured (App Store 4.8) | ✅ Android / ⏸ iOS |
-| Facebook sign-in / connecting it | yes: beside Google; connect or disconnect under the dashboard's Ways to sign in | Android: sign in, sign up, connect and disconnect in Profile (browser + PKCE). iOS: hidden, as Google | ✅ Android / ⏸ iOS |
+| Google sign-in | yes | yes (browser + PKCE); on iOS beside Sign in with Apple, once its provider is on (App Store 4.8) | ✅ |
+| Facebook sign-in / connecting it | yes: beside Google; connect or disconnect under the dashboard's Ways to sign in | sign in, sign up, connect and disconnect in Profile (browser + PKCE). On iOS only beside Sign in with Apple, as Google | ✅ |
+| Sign in with Apple / connecting it | none | iPhone: Apple's sheet (nonce-checked ID token); Android: Apple's page through Supabase. Sign in, sign up, connect and disconnect in Profile; deleting an Apple account revokes Akarat.ai's access (server, once `APPLE_*` are set) | ➕ app only |
+| Report a listing / hide an advertiser | none | *More → Report this listing* (reason + words, into `listing_reports`, 0015) and *Hide this advertiser* (on the device, everywhere; Profile shows them again) | ➕ app only |
 | Phone OTP sign-in / linking | built, switched off (`PHONE_SIGNIN=false`) | built: sign in (existing accounts only), sign up with a name, add or change the number in Profile; offered automatically once the Phone provider is on | ➕ app ahead; web needs its switch flipped |
 | Owner dashboard | listings, hide/publish, mark sold/rented, relist, edit, delete, inquiries, stat cards | same; delete confirmed and removes photos; inquiries received **and** sent | ✅ |
 | Listing form | one sheet; map pin with Places autocomplete; precision; up to 8 files / 2 videos; drag reorder | 9-step wizard, same fields, limits and precision rules; pin by tapping the map (no Places autocomplete); device draft + server draft | ✅ (autocomplete ➖) |

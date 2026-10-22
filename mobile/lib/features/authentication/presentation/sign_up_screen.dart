@@ -59,6 +59,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     }
   }
 
+  /// A first Sign in with Apple makes the account (with the name Apple
+  /// shares); on an iPhone it finishes here.
+  Future<void> _apple() async {
+    setState(() => _message = null);
+    final l = context.l10n;
+    final fallback = context.failureMessage;
+    try {
+      if (await ref.read(authServiceProvider).signInWithApple() != AuthOutcome.done || !mounted) return;
+      arriveSignedIn(context, ref, widget.next);
+    } on Object catch (e) {
+      if (mounted) {
+        setState(() {
+          _ok = false;
+          _message = appleSignInErrorMessage(l, e, fallback);
+        });
+      }
+    }
+  }
+
   Future<void> _submit() async {
     setState(() => _message = null);
     if (!_form.currentState!.validate()) return;
@@ -111,8 +130,32 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final phone = ref.watch(phoneSignInAvailableProvider).value ?? false;
+    final platform = Theme.of(context).platform;
+    final apple = ref.watch(appleSignInAvailableProvider).value ?? false;
     final facebook =
-        offersSocialLogin(Theme.of(context).platform) && (ref.watch(facebookSignInAvailableProvider).value ?? false);
+        offersSocialLogin(platform, apple: apple) && (ref.watch(facebookSignInAvailableProvider).value ?? false);
+    // Apple's way in leads on Apple's platforms, as its guidelines ask.
+    final appleFirst = hasNativeAppleSignIn(platform);
+    final appleButton = AppleButton(label: l.authApple, onPressed: _apple);
+    final ways = <Widget>[
+      if (apple && appleFirst) appleButton,
+      // A Facebook user's first sign-in makes their account.
+      if (facebook)
+        BusyButton(
+          label: l.authFacebook,
+          leading: const FacebookMark(),
+          style: BusyButtonStyle.outlined,
+          onPressed: _facebook,
+        ),
+      if (apple && !appleFirst) appleButton,
+      if (phone)
+        BusyButton(
+          label: l.authPhoneSignUpButton,
+          icon: Icons.phone_iphone_rounded,
+          style: BusyButtonStyle.outlined,
+          onPressed: () async => context.pushReplacement(Routes.phoneSignUp(widget.next)),
+        ),
+    ];
     final sentTo = _sentTo;
     if (sentTo != null) {
       return _CheckEmail(
@@ -167,24 +210,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         BusyButton(label: l.authCreateAccount, busyLabel: l.previewWorking, onPressed: _submit),
         const SizedBox(height: Space.md),
         const AuthAgreement(),
-        if (facebook || phone) const AuthDivider(),
-        // A Facebook user's first sign-in makes their account (Android only;
-        // see offersSocialLogin).
-        if (facebook)
-          BusyButton(
-            label: l.authFacebook,
-            leading: const FacebookMark(),
-            style: BusyButtonStyle.outlined,
-            onPressed: _facebook,
-          ),
-        if (facebook && phone) const SizedBox(height: Space.sm),
-        if (phone)
-          BusyButton(
-            label: l.authPhoneSignUpButton,
-            icon: Icons.phone_iphone_rounded,
-            style: BusyButtonStyle.outlined,
-            onPressed: () async => context.pushReplacement(Routes.phoneSignUp(widget.next)),
-          ),
+        if (ways.isNotEmpty) const AuthDivider(),
+        for (final (i, way) in ways.indexed) ...[if (i > 0) const SizedBox(height: Space.sm), way],
         const SizedBox(height: Space.xl),
         Center(
           child: TextButton(

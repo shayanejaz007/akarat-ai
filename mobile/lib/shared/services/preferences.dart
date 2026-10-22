@@ -23,11 +23,18 @@ class Preferences {
   static const _mapLayer = 'akarat.mapLayer';
   static const _localFavorites = 'akarat.favorites.local';
   static const _listingDraft = 'akarat.listingDraft';
+  static const _hiddenOwners = 'akarat.hiddenOwners';
 
   bool get onboarded => _prefs.getBool(_onboarded) ?? false;
+
+  /// Advertisers this reader chose to hide (Hide this advertiser, on a
+  /// listing): their account ids. Their listings are left out everywhere.
+  List<String> get hiddenOwners => _prefs.getStringList(_hiddenOwners) ?? const [];
+  Future<void> setHiddenOwners(List<String> ids) =>
+      ids.isEmpty ? _prefs.remove(_hiddenOwners) : _prefs.setStringList(_hiddenOwners, ids);
   Future<void> setOnboarded() => _prefs.setBool(_onboarded, true);
 
-  /// An account being connected in the browser (`facebook`), so the app can
+  /// An account being connected in the browser (`facebook`, `apple`), so the app can
   /// say so when Supabase sends the reader back. Kept on the device in case
   /// the system closes the app while the browser is open.
   String? get pendingLink => _prefs.getString(_pendingLink);

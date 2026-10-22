@@ -1,15 +1,28 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart' show TargetPlatform;
+import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart'
+    show
+        AppleIDAuthorizationScopes,
+        AuthorizationErrorCode,
+        SignInWithApple,
+        SignInWithAppleAuthorizationException,
+        SignInWithAppleException,
+        generateNonce;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/localization/l10n.dart';
 import '../../core/config/env.dart';
+import '../../shared/repositories/account_repositories.dart';
 import '../../shared/services/supabase_providers.dart';
 
-final authServiceProvider = Provider<AuthService>((ref) => AuthService(ref.watch(supabaseClientProvider).auth));
+final authServiceProvider = Provider<AuthService>(
+  (ref) => AuthService(ref.watch(supabaseClientProvider).auth, profiles: ref.watch(profileRepositoryProvider)),
+);
 
 /// The sign-in methods switched on in the Supabase project (`phone`,
 /// `facebook`, `google`…), read from its public auth settings. Options that
@@ -52,7 +65,7 @@ final phoneSignInAvailableProvider = FutureProvider.autoDispose<bool>((ref) asyn
 
 /// Whether to offer Facebook (Env.facebookSignIn): in the default `auto`,
 /// once the project's Facebook provider is on. Screens also check
-/// [offersSocialLogin], which rules it out on iOS.
+/// [offersSocialLogin], which on iOS asks for Sign in with Apple beside it.
 final facebookSignInAvailableProvider = FutureProvider.autoDispose<bool>((ref) async {
   switch (Env.facebookSignIn) {
     case 'off':
@@ -63,11 +76,48 @@ final facebookSignInAvailableProvider = FutureProvider.autoDispose<bool>((ref) a
   return (await ref.watch(authProvidersProvider.future))['facebook'] ?? false;
 });
 
-/// Google and Facebook sign-in on Android only. App Store guideline 4.8
-/// requires Sign in with Apple wherever a third-party login is offered, and
-/// the Supabase project has no Apple provider yet. Email and phone work
-/// everywhere, and an account made any way is the same account.
-bool offersSocialLogin(TargetPlatform platform) => platform != TargetPlatform.iOS && platform != TargetPlatform.macOS;
+/// Whether to offer Sign in with Apple (Env.appleSignIn): in the default
+/// `auto`, once the project's Apple provider is on.
+final appleSignInAvailableProvider = FutureProvider.autoDispose<bool>((ref) async {
+  switch (Env.appleSignIn) {
+    case 'off':
+      return false;
+    case 'on':
+      return true;
+  }
+  return (await ref.watch(authProvidersProvider.future))['apple'] ?? false;
+});
+
+/// Whether Google and Facebook may be offered. App Store guideline 4.8
+/// requires Sign in with Apple wherever a third-party login is offered on
+/// Apple's platforms, so there they come only with it ([apple]: Sign in with
+/// Apple is offered). Email and phone work everywhere, and an account made
+/// any way is the same account.
+bool offersSocialLogin(TargetPlatform platform, {required bool apple}) =>
+    apple || (platform != TargetPlatform.iOS && platform != TargetPlatform.macOS);
+
+/// Where Apple's own sign-in sheet exists. Elsewhere Apple signs people in
+/// on its web page, through Supabase, as Google does.
+bool hasNativeAppleSignIn(TargetPlatform platform) =>
+    !kIsWeb && (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
+
+/// How a sign-in or connection that may leave the app went.
+enum AuthOutcome {
+  /// Finished here: signed in, or connected.
+  done,
+
+  /// Goes on in the browser; the session comes back through the
+  /// ai.akarat.app://login-callback link.
+  inBrowser,
+
+  /// The person closed Apple's sheet: nothing to say.
+  cancelled,
+}
+
+/// The person closed Apple's sheet while confirming an account's deletion.
+class AppleCancelled implements Exception {
+  const AppleCancelled();
+}
 
 /// Sign-in, sign-up and recovery against the website's own Supabase Auth
 /// project. An account made here signs in on the website and the other way
@@ -77,8 +127,16 @@ bool offersSocialLogin(TargetPlatform platform) => platform != TargetPlatform.iO
 /// configured in the Supabase dashboard. No message provider's credentials
 /// are in the app; it only asks for a code and hands back what was typed.
 class AuthService {
-  AuthService(this._auth, {this._dio, OtpChannel? channel}) : channel = channel ?? configuredChannel;
+  AuthService(this._auth, {this._dio, OtpChannel? channel, this._profiles, TargetPlatform? platform})
+    : channel = channel ?? configuredChannel,
+      _platform = platform ?? defaultTargetPlatform;
   final GoTrueClient _auth;
+
+  /// Where a name Apple shares is kept (see [_keepAppleName]).
+  final ProfileRepository? _profiles;
+
+  /// Decides between Apple's sheet and its web page.
+  final TargetPlatform _platform;
 
   /// Only for a change of number over WhatsApp; made when first needed.
   Dio? _dio;
@@ -144,11 +202,112 @@ class AuthService {
 
   /// Disconnects Facebook. Supabase refuses to remove an account's only way
   /// in; the session is refreshed so the change shows at once.
-  Future<void> unlinkFacebook() async {
-    final identity = (await _auth.getUserIdentities()).where((i) => i.provider == 'facebook').firstOrNull;
+  Future<void> unlinkFacebook() => _unlink('facebook');
+
+  /// Sign in with Apple. On an iPhone, Apple's own sheet: Supabase checks the
+  /// identity token it returns, and the session is ready at once. Elsewhere,
+  /// Apple's page in the browser, as with Google. Someone new to Akarat.ai
+  /// gets an account the first time.
+  Future<AuthOutcome> signInWithApple() async {
+    if (!hasNativeAppleSignIn(_platform)) {
+      await _auth.signInWithOAuth(
+        OAuthProvider.apple,
+        redirectTo: Env.authCallbackUrl,
+        authScreenLaunchMode: LaunchMode.externalApplication,
+      );
+      return AuthOutcome.inBrowser;
+    }
+    final apple = await _appleCredential();
+    if (apple == null) return AuthOutcome.cancelled;
+    final res = await _auth.signInWithIdToken(provider: OAuthProvider.apple, idToken: apple.token, nonce: apple.nonce);
+    await _keepAppleName(res.user, apple.name);
+    return AuthOutcome.done;
+  }
+
+  /// Connects Apple to the signed-in account, so "Continue with Apple"
+  /// reaches it. Immediate on an iPhone; elsewhere Apple confirms in the
+  /// browser, as Facebook does. Needs manual linking switched on in Supabase.
+  Future<AuthOutcome> linkApple() async {
+    if (!hasNativeAppleSignIn(_platform)) {
+      await _auth.linkIdentity(
+        OAuthProvider.apple,
+        redirectTo: Env.authCallbackUrl,
+        authScreenLaunchMode: LaunchMode.externalApplication,
+      );
+      return AuthOutcome.inBrowser;
+    }
+    final apple = await _appleCredential();
+    if (apple == null) return AuthOutcome.cancelled;
+    final res = await _auth.linkIdentityWithIdToken(
+      provider: OAuthProvider.apple,
+      idToken: apple.token,
+      nonce: apple.nonce,
+    );
+    await _keepAppleName(res.user, apple.name);
+    await _auth.refreshSession();
+    return AuthOutcome.done;
+  }
+
+  /// Disconnects Apple, as [unlinkFacebook] does Facebook.
+  Future<void> unlinkApple() => _unlink('apple');
+
+  /// For deleting an account that signs in with Apple: Apple's confirmation,
+  /// a one-time code the website exchanges to revoke Akarat.ai's access to
+  /// the Apple ID, as Apple requires. Null where there is no Apple sheet or
+  /// Apple could not be asked (the account is deleted all the same); throws
+  /// [AppleCancelled] if the person closes the sheet, which stops it.
+  Future<String?> appleCodeForDeletion() async {
+    if (!hasNativeAppleSignIn(_platform)) return null;
+    try {
+      return (await SignInWithApple.getAppleIDCredential(scopes: const [])).authorizationCode;
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) throw const AppleCancelled();
+      return null;
+    } on Object {
+      return null;
+    }
+  }
+
+  Future<void> _unlink(String provider) async {
+    final identity = (await _auth.getUserIdentities()).where((i) => i.provider == provider).firstOrNull;
     if (identity == null) return;
     await _auth.unlinkIdentity(identity);
     await _auth.refreshSession();
+  }
+
+  /// Apple's sheet, with a fresh nonce: Apple signs its SHA-256 into the
+  /// identity token and Supabase checks it against the original, so a token
+  /// captured elsewhere cannot be replayed here. Null if it was closed.
+  Future<({String token, String nonce, String? name})?> _appleCredential() async {
+    final nonce = generateNonce();
+    try {
+      final c = await SignInWithApple.getAppleIDCredential(
+        scopes: const [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
+        nonce: sha256.convert(utf8.encode(nonce)).toString(),
+      );
+      final token = c.identityToken;
+      if (token == null) throw const AuthException('Apple returned no identity token.');
+      final name = [c.givenName, c.familyName].map((s) => s?.trim() ?? '').where((s) => s.isNotEmpty).join(' ');
+      return (token: token, nonce: nonce, name: name.isEmpty ? null : name);
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) return null;
+      rethrow;
+    }
+  }
+
+  /// Apple tells an app someone's name only the first time they use it with
+  /// that app, and never in the token, so a new account starts nameless.
+  /// Kept where both clients read it: the user metadata (which the sign-up
+  /// trigger copies from) and the profile.
+  Future<void> _keepAppleName(User? user, String? name) async {
+    if (user == null || name == null) return;
+    if ('${user.userMetadata?['full_name'] ?? ''}'.trim().isNotEmpty) return;
+    try {
+      await _auth.updateUser(UserAttributes(data: {'full_name': name}));
+      await _profiles?.update(fullName: name);
+    } on Object {
+      // Best effort: the account works without a name.
+    }
   }
 
   Future<void> sendPasswordReset(String email) =>
@@ -219,8 +378,15 @@ Future<void> requestPhoneChange(
   }
 }
 
+/// The [provider] identity on [user] (`facebook`, `apple`…), if connected.
+UserIdentity? identityOf(User? user, String provider) =>
+    user?.identities?.where((i) => i.provider == provider).firstOrNull;
+
 /// The Facebook identity on [user], if Facebook is connected.
-UserIdentity? facebookIdentity(User? user) => user?.identities?.where((i) => i.provider == 'facebook').firstOrNull;
+UserIdentity? facebookIdentity(User? user) => identityOf(user, 'facebook');
+
+/// The Apple identity on [user], if Apple is connected.
+UserIdentity? appleIdentity(User? user) => identityOf(user, 'apple');
 
 /// A sign-in method switched off in the Supabase project.
 bool isProviderDisabled(Object error) {
@@ -232,16 +398,34 @@ bool isProviderDisabled(Object error) {
 }
 
 /// A reader-facing sentence for a failure connecting or disconnecting an
-/// account (Facebook), in their language.
-String linkErrorMessage(AppLocalizations l, Object error, String Function(Object) fallback) {
+/// account ([provider]: `facebook` or `apple`), in their language.
+String linkErrorMessage(
+  AppLocalizations l,
+  Object error,
+  String Function(Object) fallback, {
+  String provider = 'facebook',
+}) {
+  final apple = provider == 'apple';
   if (error is AuthException) {
     final code = error.code ?? '';
     final msg = error.message.toLowerCase();
     if (code == 'manual_linking_disabled' || msg.contains('manual linking')) return l.facebookLinkDisabled;
-    if (code == 'identity_already_exists' || msg.contains('already linked')) return l.facebookTaken;
-    if (code == 'single_identity_not_deletable' || msg.contains('at least 1 identity')) return l.facebookOnlyWayIn;
-    if (isProviderDisabled(error)) return l.authFacebookDisabled;
+    if (code == 'identity_already_exists' || msg.contains('already linked')) {
+      return apple ? l.appleTaken : l.facebookTaken;
+    }
+    if (code == 'single_identity_not_deletable' || msg.contains('at least 1 identity')) {
+      return apple ? l.appleOnlyWayIn : l.facebookOnlyWayIn;
+    }
+    if (isProviderDisabled(error)) return apple ? l.authAppleDisabled : l.authFacebookDisabled;
   }
+  if (error is SignInWithAppleException) return l.authAppleFailed;
+  return authErrorMessage(l, error, fallback);
+}
+
+/// A reader-facing sentence for a failed Sign in with Apple.
+String appleSignInErrorMessage(AppLocalizations l, Object error, String Function(Object) fallback) {
+  if (isProviderDisabled(error)) return l.authAppleDisabled;
+  if (error is SignInWithAppleException) return l.authAppleFailed;
   return authErrorMessage(l, error, fallback);
 }
 

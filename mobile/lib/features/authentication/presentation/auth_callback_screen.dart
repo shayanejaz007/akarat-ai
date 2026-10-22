@@ -38,10 +38,14 @@ class _AuthCallbackScreenState extends ConsumerState<AuthCallbackScreen> {
   /// `access_denied`…), or empty.
   String _failure = '';
 
+  /// The way in being connected from Profile (`facebook`, `apple`), if any.
+  String? _linking;
+
   @override
   void initState() {
     super.initState();
     final params = widget.params;
+    _linking = ref.read(preferencesProvider).pendingLink;
     if (params.containsKey('error') || params.containsKey('error_description')) {
       _failed = true;
       _failure = params['error_code'] ?? params['error'] ?? '';
@@ -69,17 +73,18 @@ class _AuthCallbackScreenState extends ConsumerState<AuthCallbackScreen> {
     });
   }
 
-  /// On, once. Facebook connected from Profile goes back there, saying so;
-  /// a brand-new account starts on Home, where its welcome tour begins;
-  /// anyone else lands on their profile.
+  /// On, once. Facebook or Apple connected from Profile goes back there,
+  /// saying so; a brand-new account starts on Home, where its welcome tour
+  /// begins; anyone else lands on their profile.
   void _arrive(User? user) {
     if (_left) return;
     _left = true;
     final prefs = ref.read(preferencesProvider);
-    if (prefs.pendingLink == 'facebook') {
+    final linking = prefs.pendingLink;
+    if (linking == 'facebook' || linking == 'apple') {
       unawaited(prefs.setPendingLink(null));
-      if (facebookIdentity(user) != null) {
-        showSuccess(context, context.l10n.facebookConnected);
+      if (identityOf(user, linking!) != null) {
+        showSuccess(context, linking == 'apple' ? context.l10n.appleConnected : context.l10n.facebookConnected);
         context.go(Routes.profile);
         return;
       }
@@ -87,8 +92,8 @@ class _AuthCallbackScreenState extends ConsumerState<AuthCallbackScreen> {
     context.go(TourStore.isNewAccount(user) ? Routes.home : Routes.profile);
   }
 
-  static String _failureText(AppLocalizations l, String reason) => switch (reason) {
-    'identity_already_exists' => l.facebookTaken,
+  static String _failureText(AppLocalizations l, String reason, {required bool apple}) => switch (reason) {
+    'identity_already_exists' => apple ? l.appleTaken : l.facebookTaken,
     'manual_linking_disabled' => l.facebookLinkDisabled,
     'access_denied' => l.authCancelled,
     _ => l.authLinkExpired,
@@ -108,7 +113,7 @@ class _AuthCallbackScreenState extends ConsumerState<AuthCallbackScreen> {
       // Signed in (connecting Facebook from Profile): back there; otherwise
       // to sign-in.
       final signedIn = ref.watch(currentUserProvider) != null;
-      final text = _failureText(l, _failure);
+      final text = _failureText(l, _failure, apple: _linking == 'apple');
       return AuthScaffold(
         title: l.authCallbackFailedTitle,
         body: text,

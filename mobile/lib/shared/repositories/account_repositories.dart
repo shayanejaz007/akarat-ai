@@ -169,9 +169,15 @@ class AccountRepository {
   AccountRepository(this._api);
   final Dio _api;
 
-  Future<void> deleteMyAccount() async {
+  /// [appleAuthorizationCode]: Apple's confirmation, for an account that
+  /// signs in with Apple; the server uses it to revoke Akarat.ai's access to
+  /// the Apple ID, as Apple requires, before deleting.
+  Future<void> deleteMyAccount({String? appleAuthorizationCode}) async {
     try {
-      await _api.deleteUri<Object?>(Env.accountEndpoint, data: {'confirm': true});
+      await _api.deleteUri<Object?>(
+        Env.accountEndpoint,
+        data: {'confirm': true, 'apple_authorization_code': ?appleAuthorizationCode},
+      );
     } on DioException catch (e) {
       final status = e.response?.statusCode;
       if (status == 404 || status == 405) throw const AccountDeletionUnavailable();

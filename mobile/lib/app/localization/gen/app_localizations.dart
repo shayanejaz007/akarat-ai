@@ -2612,6 +2612,234 @@ abstract class AppLocalizations {
   /// **'Facebook is how this account signs in. Add a phone number first, then you can disconnect it.'**
   String get facebookOnlyWayIn;
 
+  /// No description provided for @authApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get authApple;
+
+  /// No description provided for @authAppleDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Apple isn’t switched on yet. Use your email or phone for now.'**
+  String get authAppleDisabled;
+
+  /// No description provided for @authAppleFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple couldn’t sign you in. Check that this device is signed in to an Apple ID, or use your email or phone.'**
+  String get authAppleFailed;
+
+  /// No description provided for @profileApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get profileApple;
+
+  /// No description provided for @profileAppleConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect it to sign in with Apple'**
+  String get profileAppleConnect;
+
+  /// No description provided for @profileAppleConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected: you can sign in with Apple'**
+  String get profileAppleConnected;
+
+  /// No description provided for @appleConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple connected. You can sign in with it now.'**
+  String get appleConnected;
+
+  /// No description provided for @appleDisconnectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect Apple?'**
+  String get appleDisconnectTitle;
+
+  /// No description provided for @appleDisconnectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You won’t be able to sign in with Apple any more. Your account, listings and saved homes stay as they are.'**
+  String get appleDisconnectBody;
+
+  /// No description provided for @appleDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple disconnected'**
+  String get appleDisconnected;
+
+  /// No description provided for @appleTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'That Apple ID already belongs to another Akarat.ai account. Sign in with Apple to use that one.'**
+  String get appleTaken;
+
+  /// No description provided for @appleOnlyWayIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple is how this account signs in. Add a phone number first, then you can disconnect it.'**
+  String get appleOnlyWayIn;
+
+  /// No description provided for @deleteAccountAppleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You sign in with Apple, so Apple asks you to confirm next. Akarat.ai is then removed from your Apple ID too.'**
+  String get deleteAccountAppleNote;
+
+  /// No description provided for @deleteAccountAppleCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was deleted: Apple’s confirmation was cancelled.'**
+  String get deleteAccountAppleCancelled;
+
+  /// No description provided for @detailsMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get detailsMore;
+
+  /// No description provided for @reportListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this listing'**
+  String get reportListing;
+
+  /// No description provided for @reportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what’s wrong. We review every report and remove listings that break the rules.'**
+  String get reportBody;
+
+  /// No description provided for @reportReasonScam.
+  ///
+  /// In en, this message translates to:
+  /// **'It’s a scam or fake'**
+  String get reportReasonScam;
+
+  /// No description provided for @reportReasonWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong price, photos or details'**
+  String get reportReasonWrong;
+
+  /// No description provided for @reportReasonUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Already sold or rented'**
+  String get reportReasonUnavailable;
+
+  /// No description provided for @reportReasonOffensive.
+  ///
+  /// In en, this message translates to:
+  /// **'Offensive or inappropriate'**
+  String get reportReasonOffensive;
+
+  /// No description provided for @reportReasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get reportReasonOther;
+
+  /// No description provided for @reportDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything else we should know (optional)'**
+  String get reportDetails;
+
+  /// No description provided for @reportSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get reportSend;
+
+  /// No description provided for @reportThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks. We’ll review this listing.'**
+  String get reportThanks;
+
+  /// No description provided for @reportSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to report a listing, so we can follow up with you.'**
+  String get reportSignIn;
+
+  /// No description provided for @reportByEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports aren’t switched on in the app yet. We’ve opened an email to {email} instead.'**
+  String reportByEmail(String email);
+
+  /// No description provided for @hideAdvertiser.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this advertiser'**
+  String get hideAdvertiser;
+
+  /// No description provided for @hideAdvertiserTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this advertiser?'**
+  String get hideAdvertiserTitle;
+
+  /// No description provided for @hideAdvertiserBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You won’t see any of their listings again on this device. You can show them again from Profile.'**
+  String get hideAdvertiserBody;
+
+  /// No description provided for @hideAdvertiserAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hideAdvertiserAction;
+
+  /// No description provided for @hideAdvertiserDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden. You won’t see their listings any more.'**
+  String get hideAdvertiserDone;
+
+  /// No description provided for @profileHiddenAdvertisers.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden advertisers: {count}'**
+  String profileHiddenAdvertisers(int count);
+
+  /// No description provided for @profileHiddenAdvertisersShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to show their listings again'**
+  String get profileHiddenAdvertisersShow;
+
+  /// No description provided for @showHiddenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show hidden advertisers again?'**
+  String get showHiddenTitle;
+
+  /// No description provided for @showHiddenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Their listings will appear in your results again.'**
+  String get showHiddenBody;
+
+  /// No description provided for @showHiddenAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Show again'**
+  String get showHiddenAction;
+
+  /// No description provided for @showHiddenDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Their listings will show again.'**
+  String get showHiddenDone;
+
   /// No description provided for @savedTitle.
   ///
   /// In en, this message translates to:
@@ -3659,7 +3887,7 @@ abstract class AppLocalizations {
   /// No description provided for @termsP1.
   ///
   /// In en, this message translates to:
-  /// **'Searching is open to everyone. Listing a property requires an account, and you are responsible for what is published under it. Do not list a property you have no right to market.'**
+  /// **'Searching is open to everyone. Listing a property requires an account, and you are responsible for what is published under it. Do not list a property you have no right to market. Nothing unlawful, discriminatory, offensive or abusive, in a listing or an enquiry: we remove it, and may close the account that posted it. Anyone can report a listing from its page.'**
   String get termsP1;
 
   /// No description provided for @termsH2.

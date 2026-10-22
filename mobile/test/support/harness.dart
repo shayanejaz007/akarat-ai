@@ -68,13 +68,15 @@ class TestDeps {
 
   /// [googleMaps]: as if a Maps key were built in. Pair it with a
   /// FakeGoogleMapsPlatform (test/support/fake_google_maps.dart).
-  /// [phoneSignIn], [facebookSignIn]: as if the project had them switched on.
+  /// [phoneSignIn], [facebookSignIn], [appleSignIn]: as if the project had
+  /// them switched on.
   Future<List<Override>> overrides({
     User? user,
     Map<String, Object> prefs = seen,
     bool googleMaps = false,
     bool phoneSignIn = false,
     bool facebookSignIn = false,
+    bool appleSignIn = false,
   }) async {
     SharedPreferences.setMockInitialValues({...seen, ...prefs});
     final p = await SharedPreferences.getInstance();
@@ -97,6 +99,7 @@ class TestDeps {
       // Never asks the real project whether phone sign-in is on.
       phoneSignInAvailableProvider.overrideWith((ref) async => phoneSignIn),
       facebookSignInAvailableProvider.overrideWith((ref) async => facebookSignIn),
+      appleSignInAvailableProvider.overrideWith((ref) async => appleSignIn),
     ];
   }
 }
