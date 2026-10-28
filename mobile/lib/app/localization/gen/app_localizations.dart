@@ -3263,7 +3263,7 @@ abstract class AppLocalizations {
   /// No description provided for @fieldTitleHelp.
   ///
   /// In en, this message translates to:
-  /// **'Add at least one. The other language shows this one until you add it.'**
+  /// **'Write in Arabic or English. The other language is filled in automatically, and you can change it.'**
   String get fieldTitleHelp;
 
   /// No description provided for @fieldDescEn.
@@ -3277,6 +3277,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Description in Arabic'**
   String get fieldDescAr;
+
+  /// No description provided for @listingTranslating.
+  ///
+  /// In en, this message translates to:
+  /// **'Translating…'**
+  String get listingTranslating;
+
+  /// No description provided for @listingTranslatedAr.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic filled in automatically. Check it before publishing.'**
+  String get listingTranslatedAr;
+
+  /// No description provided for @listingTranslatedEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English filled in automatically. Check it before publishing.'**
+  String get listingTranslatedEn;
 
   /// No description provided for @mediaAddPhotos.
   ///

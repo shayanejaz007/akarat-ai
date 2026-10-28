@@ -609,10 +609,13 @@
       <div>
       <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(23,23,15,0.45); margin-bottom: 12px;">{{ lblWords }}</div>
       <div style="display: grid; gap: 10px;">
-        <input value="{{ form.title_en }}" onChange="{{ onTitleEn }}" placeholder="{{ lblTitleEn }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
-        <input value="{{ form.title_ar }}" onChange="{{ onTitleAr }}" placeholder="{{ lblTitleAr }}" dir="rtl" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
-        <textarea value="{{ form.description_en }}" onChange="{{ onDescEn }}" placeholder="{{ lblDescEn }}" rows="5" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; line-height: 1.6; color: #17170F; outline: none; resize: vertical;" style-focus="border-color: #007A3D;"></textarea>
-        <textarea value="{{ form.description_ar }}" onChange="{{ onDescAr }}" placeholder="{{ lblDescAr }}" rows="5" dir="rtl" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; line-height: 1.8; color: #17170F; outline: none; resize: vertical;" style-focus="border-color: #007A3D;"></textarea>
+        <input value="{{ form.title_en }}" onChange="{{ onTitleEn }}" onBlur="{{ translateFromEn }}" placeholder="{{ lblTitleEn }}" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        <input value="{{ form.title_ar }}" onChange="{{ onTitleAr }}" onBlur="{{ translateFromAr }}" placeholder="{{ lblTitleAr }}" dir="rtl" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        <textarea value="{{ form.description_en }}" onChange="{{ onDescEn }}" onBlur="{{ translateFromEn }}" placeholder="{{ lblDescEn }}" rows="5" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; line-height: 1.6; color: #17170F; outline: none; resize: vertical;" style-focus="border-color: #007A3D;"></textarea>
+        <textarea value="{{ form.description_ar }}" onChange="{{ onDescAr }}" onBlur="{{ translateFromAr }}" placeholder="{{ lblDescAr }}" rows="5" dir="rtl" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; line-height: 1.8; color: #17170F; outline: none; resize: vertical;" style-focus="border-color: #007A3D;"></textarea>
+        <sc-if value="{{ hasTranslateNote }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size: 12px; font-weight: 300; line-height: 1.5; color: rgba(23,23,15,0.55);">{{ translateNote }}</div>
+        </sc-if>
         <label style="display: grid; gap: 6px; margin-top: 4px;">
           <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ lblPhone }}</span>
           <input value="{{ form.contact_phone }}" onChange="{{ onPhone }}" type="tel" inputMode="tel" autoComplete="tel" placeholder="07 9123 4567" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
@@ -2648,9 +2651,10 @@ class Component extends DCLogic {
       listOpen: !!s.listOpen,
       closeListing: () => {
         this.teardownMap();
+        this._auto = {};
         this.setState({
           listOpen: false, formError: '', editingId: null, removedPhotos: [],
-          addressText: '', suggestions: []
+          addressText: '', suggestions: [], translateNote: ''
         });
       },
       stopListing: e => e.stopPropagation(),
@@ -2758,6 +2762,10 @@ class Component extends DCLogic {
       hasUploadNote: !!s.uploadNote,
       uploadNote: s.uploadNote || '',
       onDescEn: on('description_en'), onDescAr: on('description_ar'),
+      translateFromEn: () => this.autoTranslate('en'),
+      translateFromAr: () => this.autoTranslate('ar'),
+      hasTranslateNote: !!s.translateNote,
+      translateNote: s.translateNote || '',
       priceLabel: f.deal === 'rent'
         ? (ar ? 'الإيجار الشهري بالدينار' : 'Monthly rent in JOD')
         : (ar ? 'السعر بالدينار' : 'Price in JOD'),
@@ -3129,6 +3137,86 @@ class Component extends DCLogic {
     }
   }
 
+  /* ──────────────── translation ────────────────
+     When the owner leaves a title or description field, the same field in the
+     other language is filled from it, so a listing written in one language
+     reads in both. A field is only filled while it is empty, or still holds
+     exactly what was filled in last time: anything the owner typed there
+     themselves is theirs and is never overwritten. */
+
+  async autoTranslate(from) {
+    if (!this.db || !this.db.translateListing) return;
+    const to = from === 'en' ? 'ar' : 'en';
+    const auto = this._auto || (this._auto = {});
+    const f = this.state.form || this.blankListing();
+    const wanted = k => {
+      const src = (f[`${k}_${from}`] || '').trim();
+      const dst = (f[`${k}_${to}`] || '').trim();
+      const prev = auto[`${k}_${to}`];
+      if (!src) return null;
+      if (dst && !(prev && dst === prev.out)) return null;  // the owner's own text
+      if (prev && prev.src === src) return null;            // already done
+      return src;
+    };
+    const title = wanted('title'), description = wanted('description');
+    if (!title && !description) return;
+
+    const ar = this.state.lang === 'ar';
+    this._translating = (this._translating || 0) + 1;
+    this.setState({ translateNote: ar ? 'جارٍ الترجمة…' : 'Translating…' });
+    const out = await this.db.translateListing(from, title || '', description || '');
+    this._translating -= 1;
+
+    // Re-read: the owner may have typed into the other field meanwhile.
+    const now = this.state.form || this.blankListing();
+    const form = { ...now };
+    let filled = false;
+    for (const [k, src] of [['title', title], ['description', description]]) {
+      const key = `${k}_${to}`;
+      const text = out && out[k];
+      if (!src || !text) continue;
+      const dst = (now[key] || '').trim();
+      const prev = auto[key];
+      if (dst && !(prev && dst === prev.out)) continue;
+      form[key] = text;
+      auto[key] = { src, out: text };
+      filled = true;
+    }
+    const other = to === 'ar' ? (ar ? 'العربية' : 'Arabic') : (ar ? 'الإنجليزية' : 'English');
+    this.setState({
+      ...(filled ? { form } : {}),
+      translateNote: this._translating ? this.state.translateNote
+        : filled
+          ? (ar ? `تُرجمت ${other} تلقائياً. راجعها قبل النشر.` : `${other} filled in automatically. Check it before publishing.`)
+          : ''
+    });
+  }
+
+  // On save, any language still empty is translated from the other one, so
+  // readers of both languages see the listing in their own. Falls back to
+  // what is there (the caller copies the title across) if translation fails.
+  async translateMissing(f) {
+    const t = {
+      title_en: f.title_en.trim(), title_ar: f.title_ar.trim(),
+      description_en: f.description_en.trim(), description_ar: f.description_ar.trim()
+    };
+    if (!this.db.translateListing) return t;
+    for (const [from, to] of [['en', 'ar'], ['ar', 'en']]) {
+      const needTitle = t[`title_${from}`] && !t[`title_${to}`];
+      const needDesc = t[`description_${from}`] && !t[`description_${to}`];
+      if (!needTitle && !needDesc) continue;
+      const out = await this.db.translateListing(
+        from,
+        needTitle ? t[`title_${from}`] : '',
+        needDesc ? t[`description_${from}`] : ''
+      );
+      if (!out) continue;
+      if (needTitle && out.title) t[`title_${to}`] = out.title;
+      if (needDesc && out.description) t[`description_${to}`] = out.description;
+    }
+    return t;
+  }
+
   /* ──────────────── location picker ────────────────
      Optional throughout. With no NEXT_PUBLIC_GOOGLE_MAPS_KEY set, hasMaps()
      is false, none of this is reachable, and the city/area dropdowns above
@@ -3334,6 +3422,8 @@ class Component extends DCLogic {
       // every image it had.
       photos = f.photos.map(p => ({ url: p.url, path: p.path, type: p.kind }));
     }
+    this.setState({ uploadNote: ar ? 'جارٍ تجهيز الإعلان باللغتين…' : 'Preparing the listing in both languages…' });
+    const words = await this.translateMissing(f);
     this.setState({ uploadNote: '' });
 
     // The pin splits in two here. `pub` is what lands on the properties row,
@@ -3362,9 +3452,10 @@ class Component extends DCLogic {
       area_sqm: num(f.area_sqm),
       land_sqm: num(f.land_sqm),
       year_built: num(f.year_built),
-      // one title is required, the other falls back to it rather than saving null
-      title_en: f.title_en.trim() || f.title_ar.trim(),
-      title_ar: f.title_ar.trim() || f.title_en.trim(),
+      // one title is required; the other was translated above, and falls back
+      // to the same text rather than saving null if translation was unavailable
+      title_en: words.title_en || words.title_ar,
+      title_ar: words.title_ar || words.title_en,
       // lat and lng have existed since 0001, so they are always safe to send.
       lat: publishable ? pub.lat : null,
       lng: publishable ? pub.lng : null,
@@ -3385,8 +3476,8 @@ class Component extends DCLogic {
     };
     const payload = {
       amenities: f.amenities,
-      description_en: f.description_en.trim(),
-      description_ar: f.description_ar.trim(),
+      description_en: words.description_en,
+      description_ar: words.description_ar,
       images: photos,
       contact: {
         phone: (f.contact_phone || '').trim(),
@@ -4956,6 +5047,7 @@ class Component extends DCLogic {
         listOpen: false, form: this.blankListing(), dealOpts: empty, typeOpts: empty,
         cityOpts: empty, hoodOpts: empty, amenityOpts: empty, hasFormError: false,
         photoTiles: empty, hasPhotos: false, hasUploadNote: false, uploadNote: '',
+        translateFromEn: () => {}, translateFromAr: () => {}, hasTranslateNote: false, translateNote: '',
         customChips: empty, customOpen: false, notCustomOpen: false, customText: '',
         customAddLabel: '', customPlaceholder: '', customAdd: '',
         openCustom: () => {}, onCustomText: () => {}, onCustomKey: () => {}, addCustom: () => {},

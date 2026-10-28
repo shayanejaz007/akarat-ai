@@ -1741,13 +1741,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldTitleAr => 'Title in Arabic';
 
   @override
-  String get fieldTitleHelp => 'Add at least one. The other language shows this one until you add it.';
+  String get fieldTitleHelp =>
+      'Write in Arabic or English. The other language is filled in automatically, and you can change it.';
 
   @override
   String get fieldDescEn => 'Description in English';
 
   @override
   String get fieldDescAr => 'Description in Arabic';
+
+  @override
+  String get listingTranslating => 'Translating…';
+
+  @override
+  String get listingTranslatedAr => 'Arabic filled in automatically. Check it before publishing.';
+
+  @override
+  String get listingTranslatedEn => 'English filled in automatically. Check it before publishing.';
 
   @override
   String get mediaAddPhotos => 'Add photos';

@@ -119,6 +119,8 @@ your host's dashboard for production.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser + server | Publishable key. Safe to expose — RLS decides what it can reach |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | **Bypasses RLS.** Never expose to the browser, never commit |
 | `CRON_SECRET` | Server only | Bearer token guarding `/api/admin/crawl` |
+| `ANTHROPIC_API_KEY` | Server only | Listing translation, English ⇄ Arabic (`/api/translate`). Optional: unset, the forms leave the other language to the owner |
+| `BACKFILL_SECRET` | Server only | Any long random string. Guards `/api/admin/backfill-translations`, which translates listings saved before translation existed: `BACKFILL_SECRET=… npm run backfill:translations` (dry run), then again with `-- --apply` |
 
 If the two `NEXT_PUBLIC_*` variables are unset, the app falls back to literals
 in `lib/supabase.js` so a fresh checkout still runs. Set them properly in

@@ -1745,13 +1745,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fieldTitleAr => 'العنوان بالعربية';
 
   @override
-  String get fieldTitleHelp => 'أضف واحداً على الأقل. تعرض اللغة الأخرى هذا العنوان إلى أن تضيفه.';
+  String get fieldTitleHelp => 'اكتب بالعربية أو بالإنجليزية. تُملأ اللغة الأخرى تلقائياً، ويمكنك تعديلها.';
 
   @override
   String get fieldDescEn => 'الوصف بالإنجليزية';
 
   @override
   String get fieldDescAr => 'الوصف بالعربية';
+
+  @override
+  String get listingTranslating => 'جارٍ الترجمة…';
+
+  @override
+  String get listingTranslatedAr => 'تُرجمت العربية تلقائياً. راجعها قبل النشر.';
+
+  @override
+  String get listingTranslatedEn => 'تُرجمت الإنجليزية تلقائياً. راجعها قبل النشر.';
 
   @override
   String get mediaAddPhotos => 'أضف صوراً';

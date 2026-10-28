@@ -12,6 +12,7 @@ import 'package:akarat/shared/repositories/account_repositories.dart';
 import 'package:akarat/shared/repositories/favorites_repository.dart';
 import 'package:akarat/shared/repositories/listings_repository.dart';
 import 'package:akarat/shared/repositories/media_repository.dart';
+import 'package:akarat/shared/repositories/translation_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -195,6 +196,28 @@ class FakeMediaRepository extends Fake implements MediaRepository {
 
   @override
   Future<void> remove(List<String> paths) async => removed.addAll(paths);
+}
+
+/// Translates by tagging the text with its target language, so a test can see
+/// which way it went. [available] false answers like a deployment without the
+/// route or the key: null, every time.
+class FakeTranslationRepository extends Fake implements TranslationRepository {
+  FakeTranslationRepository({this.available = false});
+  bool available;
+  final calls = <({String from, String title, String description})>[];
+
+  @override
+  Future<({String title, String description})?> translate({
+    required String from,
+    String title = '',
+    String description = '',
+  }) async {
+    calls.add((from: from, title: title, description: description));
+    if (!available) return null;
+    final to = from == 'en' ? 'ar' : 'en';
+    String t(String s) => s.isEmpty ? '' : '[$to] $s';
+    return (title: t(title), description: t(description));
+  }
 }
 
 class FakeFavoritesRepository extends Fake implements FavoritesRepository {

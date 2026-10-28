@@ -116,6 +116,7 @@ class Env {
 
   static Uri get searchEndpoint => Uri.parse('$siteUrl/api/ai/search');
   static Uri get accountEndpoint => Uri.parse('$siteUrl/api/account');
+  static Uri get translateEndpoint => Uri.parse('$siteUrl/api/translate');
 
   static Uri listingWebUrl(String id, String lang) => Uri.parse('$siteUrl/${lang == 'ar' ? 'ar' : 'en'}/property/$id');
 }

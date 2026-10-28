@@ -8,6 +8,7 @@ import '../../../core/utils/geo.dart';
 import '../../../shared/models/listing.dart';
 import '../../../shared/repositories/listings_repository.dart';
 import '../../../shared/repositories/media_repository.dart';
+import '../../../shared/repositories/translation_repository.dart';
 import '../../../shared/services/preferences.dart';
 import '../../../shared/services/refresh.dart';
 import '../../dashboard/dashboard_providers.dart';
@@ -28,6 +29,8 @@ class WizardState {
     this.error,
     this.restored = false,
     this.removedPaths = const [],
+    this.translating = false,
+    this.translatedInto,
   });
 
   final ListingDraft draft;
@@ -50,6 +53,13 @@ class WizardState {
   /// only after the row no longer references them.
   final List<String> removedPaths;
 
+  /// A title or description is being translated into the other language.
+  final bool translating;
+
+  /// 'ar' or 'en' once a field in that language was filled automatically,
+  /// so the form can ask the owner to check it.
+  final String? translatedInto;
+
   bool get editing => original != null;
 
   WizardState copyWith({
@@ -64,6 +74,8 @@ class WizardState {
     bool clearError = false,
     bool? restored,
     List<String>? removedPaths,
+    bool? translating,
+    String? translatedInto,
   }) => WizardState(
     draft: draft ?? this.draft,
     step: step ?? this.step,
@@ -75,6 +87,8 @@ class WizardState {
     error: clearError ? null : (error ?? this.error),
     restored: restored ?? this.restored,
     removedPaths: removedPaths ?? this.removedPaths,
+    translating: translating ?? this.translating,
+    translatedInto: translatedInto ?? this.translatedInto,
   );
 }
 
@@ -172,6 +186,105 @@ class ListingWizardController extends Notifier<WizardState> {
     );
   }
 
+  /* Translation. When the owner leaves a title or description field, the same
+     field in the other language is filled from it, so a listing written in
+     one language reads in both. A field is only filled while it is empty, or
+     still holds exactly what was filled in last time: anything the owner
+     typed there themselves is theirs and is never overwritten. Mirrors
+     autoTranslate in the website's Akarat.dc.html. */
+
+  /// Keyed by the filled field (titleAr, descriptionEn, …): the source text
+  /// it was translated from, and what was filled in.
+  final _auto = <String, ({String src, String out})>{};
+  int _translating = 0;
+
+  static String _field(ListingDraft d, String key) => switch (key) {
+    'titleEn' => d.titleEn,
+    'titleAr' => d.titleAr,
+    'descriptionEn' => d.descriptionEn,
+    _ => d.descriptionAr,
+  };
+
+  static ListingDraft _withField(ListingDraft d, String key, String v) => switch (key) {
+    'titleEn' => d.copyWith(titleEn: v),
+    'titleAr' => d.copyWith(titleAr: v),
+    'descriptionEn' => d.copyWith(descriptionEn: v),
+    _ => d.copyWith(descriptionAr: v),
+  };
+
+  /// [from] is 'en' or 'ar': the language of the field the owner just left.
+  Future<void> autoTranslate(String from) async {
+    final src = from == 'en' ? 'En' : 'Ar';
+    final to = from == 'en' ? 'Ar' : 'En';
+    bool ownersOwn(ListingDraft d, String key) {
+      final dst = _field(d, key).trim();
+      return dst.isNotEmpty && dst != _auto[key]?.out;
+    }
+
+    String? wanted(String base) {
+      final s = _field(state.draft, '$base$src').trim();
+      final key = '$base$to';
+      if (s.isEmpty || ownersOwn(state.draft, key) || _auto[key]?.src == s) return null;
+      return s;
+    }
+
+    final title = wanted('title');
+    final description = wanted('description');
+    if (title == null && description == null) return;
+
+    _translating++;
+    state = state.copyWith(translating: true);
+    final out = await ref
+        .read(translationRepositoryProvider)
+        .translate(from: from, title: title ?? '', description: description ?? '');
+    _translating--;
+    if (!ref.mounted) return;
+
+    // Re-read: the owner may have typed into the other field meanwhile.
+    var d = state.draft;
+    var filled = false;
+    for (final (base, s, text) in [('title', title, out?.title), ('description', description, out?.description)]) {
+      final key = '$base$to';
+      if (s == null || text == null || text.isEmpty || ownersOwn(d, key)) continue;
+      d = _withField(d, key, text);
+      _auto[key] = (src: s, out: text);
+      filled = true;
+    }
+    state = state.copyWith(
+      draft: filled ? d : null,
+      translating: _translating > 0,
+      translatedInto: filled ? to.toLowerCase() : null,
+    );
+    if (filled) _schedulePersist();
+  }
+
+  /// On save, any language still empty is translated from the other one.
+  /// Returns what is there unchanged if translation is unavailable; the
+  /// caller then copies the title across, as before.
+  Future<({String titleEn, String titleAr, String descEn, String descAr})> _translateMissing(ListingDraft d) async {
+    final t = {
+      'titleEn': d.titleEn.trim(),
+      'titleAr': d.titleAr.trim(),
+      'descriptionEn': d.descriptionEn.trim(),
+      'descriptionAr': d.descriptionAr.trim(),
+    };
+    final repo = ref.read(translationRepositoryProvider);
+    for (final (from, src, to) in [('en', 'En', 'Ar'), ('ar', 'Ar', 'En')]) {
+      final needTitle = t['title$src']!.isNotEmpty && t['title$to']!.isEmpty;
+      final needDesc = t['description$src']!.isNotEmpty && t['description$to']!.isEmpty;
+      if (!needTitle && !needDesc) continue;
+      final out = await repo.translate(
+        from: from,
+        title: needTitle ? t['title$src']! : '',
+        description: needDesc ? t['description$src']! : '',
+      );
+      if (out == null) continue;
+      if (needTitle && out.title.isNotEmpty) t['title$to'] = out.title;
+      if (needDesc && out.description.isNotEmpty) t['description$to'] = out.description;
+    }
+    return (titleEn: t['titleEn']!, titleAr: t['titleAr']!, descEn: t['descriptionEn']!, descAr: t['descriptionAr']!);
+  }
+
   List<DraftProblem> problems() {
     final d = state.draft;
     return [
@@ -225,7 +338,8 @@ class ListingWizardController extends Notifier<WizardState> {
       final pub = !d.hasPin ? null : (exact ? LatLngPoint(d.lat!, d.lng!) : Geo.blur(d.lat!, d.lng!));
       final geoSchema = state.original?.locationPrecision != null || state.original == null;
 
-      final title = (en: d.titleEn.trim(), ar: d.titleAr.trim());
+      final words = await _translateMissing(d);
+      final title = (en: words.titleEn, ar: words.titleAr);
       final columns = <String, Object?>{
         'deal': d.deal.name,
         'property_type': d.propertyType,
@@ -237,7 +351,8 @@ class ListingWizardController extends Notifier<WizardState> {
         'area_sqm': ListingDraft.number(d.areaSqm),
         'land_sqm': ListingDraft.number(d.landSqm),
         'year_built': ListingDraft.number(d.yearBuilt),
-        // One title is required; the other falls back to it rather than null.
+        // One title is required; the other was translated above, and falls
+        // back to the same text rather than null if translation was unavailable.
         'title_en': title.en.isNotEmpty ? title.en : title.ar,
         'title_ar': title.ar.isNotEmpty ? title.ar : title.en,
         'lat': pub?.lat,
@@ -251,8 +366,8 @@ class ListingWizardController extends Notifier<WizardState> {
       };
       final payload = ListingPayload(
         amenities: d.amenities,
-        descriptionEn: d.descriptionEn,
-        descriptionAr: d.descriptionAr,
+        descriptionEn: words.descEn,
+        descriptionAr: words.descAr,
         media: [for (final m in d.media) m.stored!],
         contact: ListingContact(phone: d.contactPhone.trim(), whatsapp: true, messaging: true),
       );

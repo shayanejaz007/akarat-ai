@@ -64,6 +64,7 @@ class DraftTextField extends StatefulWidget {
     this.textDirection,
     this.prefixIcon,
     this.suffixText,
+    this.onBlur,
   });
 
   final String value;
@@ -79,15 +80,36 @@ class DraftTextField extends StatefulWidget {
   final IconData? prefixIcon;
   final String? suffixText;
 
+  /// Called when the field loses focus, e.g. to translate what was typed.
+  final VoidCallback? onBlur;
+
   @override
   State<DraftTextField> createState() => _DraftTextFieldState();
 }
 
 class _DraftTextFieldState extends State<DraftTextField> {
   late final _c = TextEditingController(text: widget.value);
+  final _focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focus.addListener(() {
+      if (!_focus.hasFocus) widget.onBlur?.call();
+    });
+  }
+
+  @override
+  void didUpdateWidget(DraftTextField old) {
+    super.didUpdateWidget(old);
+    // Text set from outside (a translation filling this field) shows up here;
+    // never while the owner is typing in it.
+    if (widget.value != _c.text && !_focus.hasFocus) _c.text = widget.value;
+  }
 
   @override
   void dispose() {
+    _focus.dispose();
     _c.dispose();
     super.dispose();
   }
@@ -96,6 +118,7 @@ class _DraftTextFieldState extends State<DraftTextField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _c,
+      focusNode: _focus,
       onChanged: widget.onChanged,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
@@ -608,7 +631,9 @@ class DescriptionStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-    final d = ref.read(listingWizardProvider(editId)).draft;
+    // Watched, not read: a translation fills fields from outside.
+    final s = ref.watch(listingWizardProvider(editId));
+    final d = s.draft;
     final ctrl = ref.read(listingWizardProvider(editId).notifier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -621,6 +646,7 @@ class DescriptionStep extends ConsumerWidget {
           maxLength: 140,
           textDirection: TextDirection.rtl,
           onChanged: (v) => ctrl.update((x) => x.copyWith(titleAr: v)),
+          onBlur: () => ctrl.autoTranslate('ar'),
         ),
         const SizedBox(height: Space.sm),
         DraftTextField(
@@ -629,6 +655,7 @@ class DescriptionStep extends ConsumerWidget {
           maxLength: 140,
           textDirection: TextDirection.ltr,
           onChanged: (v) => ctrl.update((x) => x.copyWith(titleEn: v)),
+          onBlur: () => ctrl.autoTranslate('en'),
         ),
         const SizedBox(height: Space.md),
         DraftTextField(
@@ -639,6 +666,7 @@ class DescriptionStep extends ConsumerWidget {
           maxLength: 4000,
           textDirection: TextDirection.rtl,
           onChanged: (v) => ctrl.update((x) => x.copyWith(descriptionAr: v)),
+          onBlur: () => ctrl.autoTranslate('ar'),
         ),
         const SizedBox(height: Space.sm),
         DraftTextField(
@@ -649,7 +677,17 @@ class DescriptionStep extends ConsumerWidget {
           maxLength: 4000,
           textDirection: TextDirection.ltr,
           onChanged: (v) => ctrl.update((x) => x.copyWith(descriptionEn: v)),
+          onBlur: () => ctrl.autoTranslate('en'),
         ),
+        if (s.translating || s.translatedInto != null) ...[
+          const SizedBox(height: Space.sm),
+          Text(
+            s.translating
+                ? l.listingTranslating
+                : (s.translatedInto == 'ar' ? l.listingTranslatedAr : l.listingTranslatedEn),
+            style: context.text.bodySmall,
+          ),
+        ],
       ],
     );
   }

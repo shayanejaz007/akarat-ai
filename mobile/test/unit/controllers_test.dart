@@ -191,6 +191,64 @@ void main() {
     });
   });
 
+  group('ListingWizardController translation', () {
+    Future<(ProviderContainer, ListingWizardController, TestDeps)> wizard({bool available = true}) async {
+      final deps = TestDeps(translation: FakeTranslationRepository(available: available));
+      final c = await container(deps, signedIn: true);
+      c.listen(listingWizardProvider(null), (_, _) {});
+      return (c, c.read(listingWizardProvider(null).notifier), deps);
+    }
+
+    test('leaving an English field fills the empty Arabic one', () async {
+      final (c, ctrl, _) = await wizard();
+      ctrl.update((d) => d.copyWith(titleEn: 'Flat in Abdoun', descriptionEn: 'Sunny'));
+      await ctrl.autoTranslate('en');
+      final s = c.read(listingWizardProvider(null));
+      expect(s.draft.titleAr, '[ar] Flat in Abdoun');
+      expect(s.draft.descriptionAr, '[ar] Sunny');
+      expect(s.translatedInto, 'ar');
+      expect(s.translating, isFalse);
+    });
+
+    test("never overwrites what the owner typed in the other language", () async {
+      final (c, ctrl, deps) = await wizard();
+      ctrl.update((d) => d.copyWith(titleEn: 'Flat', titleAr: 'شقة مميزة'));
+      await ctrl.autoTranslate('en');
+      expect(c.read(listingWizardProvider(null)).draft.titleAr, 'شقة مميزة');
+      expect(deps.translation.calls, isEmpty);
+    });
+
+    test('a changed source re-fills its own earlier translation', () async {
+      final (c, ctrl, deps) = await wizard();
+      ctrl.update((d) => d.copyWith(titleAr: 'شقة'));
+      await ctrl.autoTranslate('ar');
+      await ctrl.autoTranslate('ar');
+      expect(deps.translation.calls, hasLength(1), reason: 'the same text is not translated twice');
+      ctrl.update((d) => d.copyWith(titleAr: 'فيلا'));
+      await ctrl.autoTranslate('ar');
+      expect(c.read(listingWizardProvider(null)).draft.titleEn, '[en] فيلا');
+    });
+
+    test('saving translates any language still missing', () async {
+      final (_, ctrl, deps) = await wizard();
+      ctrl.update((d) => d.copyWith(price: '500', cityId: 'amman', titleAr: 'شقة', descriptionEn: 'Quiet street'));
+      expect(await ctrl.save(publish: true), isNotNull);
+      final cols = deps.listings.created.single;
+      expect(cols['title_ar'], 'شقة');
+      expect(cols['title_en'], '[en] شقة');
+      final payload = deps.listings.createdPayloads.single;
+      expect(payload.descriptionAr, '[ar] Quiet street');
+      expect(payload.descriptionEn, 'Quiet street');
+    });
+
+    test('without translation, saving still works and copies the title', () async {
+      final (_, ctrl, deps) = await wizard(available: false);
+      ctrl.update((d) => d.copyWith(price: '500', cityId: 'amman', titleEn: 'Flat'));
+      expect(await ctrl.save(publish: true), isNotNull);
+      expect(deps.listings.created.single['title_ar'], 'Flat');
+    });
+  });
+
   group('AiSearchController', () {
     test('a follow-up refines the brief rather than replacing it', () async {
       final repo = FakeSearchRepository((c) => outcomeOf(const []));
