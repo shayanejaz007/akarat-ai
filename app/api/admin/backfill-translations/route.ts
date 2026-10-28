@@ -134,7 +134,10 @@ export async function POST(request: NextRequest) {
     { headers: headers(), cache: "no-store" },
   );
   if (!res.ok) {
-    return NextResponse.json({ error: `Reading listings failed: ${res.status}` }, { status: 502 });
+    // Supabase's own message: behind the secret, and the only way to tell a
+    // wrong key from a missing grant without access to the dashboard.
+    const detail = (await res.text()).slice(0, 300);
+    return NextResponse.json({ error: `Reading listings failed: ${res.status} ${detail}` }, { status: 502 });
   }
   const rows = (await res.json()) as Row[];
 
