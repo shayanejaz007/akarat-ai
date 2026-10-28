@@ -111,8 +111,12 @@ async function fix(row: Row, apply: boolean): Promise<string | null> {
 }
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.BACKFILL_SECRET;
-  if (!secret || request.headers.get("authorization") !== `Bearer ${secret}`) {
+  // Trimmed: a value pasted into Vercel easily carries a trailing newline.
+  const secret = process.env.BACKFILL_SECRET?.trim();
+  if (!secret) {
+    return NextResponse.json({ error: "BACKFILL_SECRET is not set on this deployment." }, { status: 503 });
+  }
+  if (request.headers.get("authorization")?.trim() !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Not authorised" }, { status: 401 });
   }
   if (!URL_ || !SERVICE) {
