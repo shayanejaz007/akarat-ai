@@ -50,7 +50,14 @@ function pack(obj: Payload) {
   return { payload_gz: "gz:" + b64, payload_bytes: b64.length, raw_bytes: raw.length };
 }
 
-const isArabic = (s: string) => /[؀-ۿ]/.test(s);
+// Written mostly in Arabic script. Owners do type Arabic into the English
+// fields (and the odd English line into the Arabic ones), so which column a
+// text sits in says little about its language.
+function isArabic(s: string): boolean {
+  const ar = (s.match(/[؀-ۿ]/g) ?? []).length;
+  const latin = (s.match(/[A-Za-z]/g) ?? []).length;
+  return ar > latin;
+}
 
 function headers() {
   return { apikey: SERVICE!, Authorization: `Bearer ${SERVICE}`, "Content-Type": "application/json" };
@@ -67,23 +74,42 @@ async function fix(row: Row, apply: boolean): Promise<string | null> {
     description_ar: String(payload.description_ar ?? "").trim(),
   };
 
-  // A title copied across: whichever script it is written in is the source.
-  if (t.title_en && t.title_en === t.title_ar) {
-    if (isArabic(t.title_en)) t.title_en = "";
-    else t.title_ar = "";
+  const before = { ...t };
+
+  // What each field should be translated from, if anything. An English field
+  // needs work when it is empty or holds Arabic; an Arabic one when it is
+  // empty or holds English. The source is whichever text is written in the
+  // other language: a field's own text when it is in the wrong script (so a
+  // distinct Arabic line typed under English is translated, not discarded),
+  // otherwise the other field.
+  const jobs: Record<Lang, { title: string; description: string }> = {
+    ar: { title: "", description: "" }, // Arabic source → English field
+    en: { title: "", description: "" }, // English source → Arabic field
+  };
+  for (const base of ["title", "description"] as const) {
+    const enKey = `${base}_en` as const, arKey = `${base}_ar` as const;
+    // A text in the wrong column with nothing in the right one: put it there.
+    if (!t[arKey] && t[enKey] && isArabic(t[enKey])) t[arKey] = t[enKey];
+    if (!t[enKey] && t[arKey] && !isArabic(t[arKey])) t[enKey] = t[arKey];
+
+    const en = t[enKey], ar = t[arKey];
+    if (!en || isArabic(en)) {
+      const src = en && isArabic(en) ? en : ar;
+      if (src && isArabic(src)) jobs.ar[base] = src;
+    }
+    if (!ar || !isArabic(ar)) {
+      const src = ar && !isArabic(ar) ? ar : en;
+      if (src && !isArabic(src)) jobs.en[base] = src;
+    }
   }
 
-  const before = { ...t };
-  for (const [from, to] of [["en", "ar"], ["ar", "en"]] as [Lang, Lang][]) {
-    const needTitle = !!t[`title_${from}`] && !t[`title_${to}`];
-    const needDesc = !!t[`description_${from}`] && !t[`description_${to}`];
-    if (!needTitle && !needDesc) continue;
-    const out = await translateListing(
-      { title: needTitle ? t[`title_${from}`] : "", description: needDesc ? t[`description_${from}`] : "" },
-      from,
-    );
-    if (needTitle) t[`title_${to}`] = out.title;
-    if (needDesc) t[`description_${to}`] = out.description;
+  for (const from of ["ar", "en"] as Lang[]) {
+    const job = jobs[from];
+    if (!job.title && !job.description) continue;
+    const to = from === "ar" ? "en" : "ar";
+    const out = await translateListing(job, from);
+    if (job.title && out.title) t[`title_${to}`] = out.title;
+    if (job.description && out.description) t[`description_${to}`] = out.description;
   }
 
   const changed = (Object.keys(t) as (keyof typeof t)[]).filter(k => t[k] && t[k] !== before[k]);
