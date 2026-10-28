@@ -266,6 +266,25 @@ Anything that runs Next.js 14 works — Netlify, Render, Fly, a container.
 
 ## 8. Operations
 
+### The admin panel
+`/admin` (app/admin) shows people on the site and app right now, daily views,
+inquiries and sign-ups, the most viewed and most inquired listings, and every
+listing, inquiry, account and report, with the actions on each (status,
+feature, verify, delete; inquiry status; role; report decisions).
+
+It needs `supabase/migrations/0018_admin_analytics.sql` (view and session
+tracking, and the aggregates) and `SUPABASE_SERVICE_ROLE_KEY` on Vercel with
+0017's grants. An account becomes an admin only in the SQL Editor:
+
+```sql
+update public.profiles set role = 'admin'
+where id = (select id from auth.users where email = 'you@example.com');
+```
+
+Every `/api/admin/*` route checks that role on the server; the page itself
+holds no privileged key. Views and "live now" are counted from the website and
+from app version 1.0.2 on.
+
 ### The crawler
 `/api/admin/crawl` refreshes the external listing index. It requires
 `Authorization: Bearer $CRON_SECRET`. To run it on a schedule, add to

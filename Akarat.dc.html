@@ -2009,6 +2009,9 @@ class Component extends DCLogic {
     // the next one already unrolled.
     this.setState({ screen: 'detail', detail: row, detailCover: 0, descOpen: false });
     this.scrollTop();
+    // Counted for the admin panel's "most viewed". Our own listings only:
+    // results from other portals have no row here to count against.
+    if (this.db && this.db.recordView && /^[0-9a-f-]{36}$/i.test(String(row.id))) this.db.recordView(row.id);
     if (push && typeof history !== 'undefined' && history.pushState) {
       const url = `${location.pathname}?property=${encodeURIComponent(row.id)}`;
       if (location.pathname + location.search !== url) history.pushState({ property: row.id }, '', url);
@@ -2131,6 +2134,17 @@ class Component extends DCLogic {
     import('./lib/supabase.js').then(async db => {
       this.db = db;
       this.loadMarket().then(() => this.openFromUrl());
+      // "On Akarat.ai right now" in the admin panel: a ping on arrival and
+      // once a minute while the tab is in front. A hidden tab stops counting.
+      if (db.heartbeat) {
+        db.heartbeat();
+        this._beat = setInterval(() => {
+          if (document.visibilityState === 'visible') db.heartbeat();
+        }, 60000);
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') db.heartbeat();
+        });
+      }
       try {
         const session = await db.getSession();
         this.applySession(session);

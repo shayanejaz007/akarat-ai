@@ -10,6 +10,7 @@ import 'package:akarat/shared/repositories/favorites_repository.dart';
 import 'package:akarat/shared/repositories/listings_repository.dart';
 import 'package:akarat/shared/repositories/media_repository.dart';
 import 'package:akarat/shared/repositories/translation_repository.dart';
+import 'package:akarat/shared/services/activity.dart';
 import 'package:akarat/shared/services/preferences.dart';
 import 'package:akarat/shared/services/supabase_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,8 +36,10 @@ class TestDeps {
     FakeSavedSearchesRepository? savedSearches,
     FakeProfileRepository? profile,
     FakeTranslationRepository? translation,
+    FakeActivity? activity,
     this.speech,
   }) : translation = translation ?? FakeTranslationRepository(),
+       activity = activity ?? FakeActivity(),
        savedSearches = savedSearches ?? FakeSavedSearchesRepository(),
        profile = profile ?? FakeProfileRepository(),
        listings = listings ?? FakeListingsRepository(),
@@ -52,6 +55,7 @@ class TestDeps {
   final FakeSavedSearchesRepository savedSearches;
   final FakeProfileRepository profile;
   final FakeTranslationRepository translation;
+  final FakeActivity activity;
   final FakeSpeechService? speech;
 
   static final client = SupabaseClient(
@@ -98,6 +102,7 @@ class TestDeps {
       savedSearchesRepositoryProvider.overrideWithValue(savedSearches),
       profileRepositoryProvider.overrideWithValue(profile),
       translationRepositoryProvider.overrideWithValue(translation),
+      activityProvider.overrideWithValue(activity),
       if (search != null) searchRepositoryProvider.overrideWithValue(search!),
       speechServiceProvider.overrideWithValue(speech ?? FakeSpeechService()),
       // No tile requests in tests: maps draw their pins on a plain ground.

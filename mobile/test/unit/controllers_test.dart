@@ -210,7 +210,7 @@ void main() {
       expect(s.translating, isFalse);
     });
 
-    test("never overwrites what the owner typed in the other language", () async {
+    test('never overwrites what the owner typed in the other language', () async {
       final (c, ctrl, deps) = await wizard();
       ctrl.update((d) => d.copyWith(titleEn: 'Flat', titleAr: 'شقة مميزة'));
       await ctrl.autoTranslate('en');

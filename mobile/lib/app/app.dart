@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../features/settings/settings_controller.dart';
 import '../features/tour/tour_store.dart';
+import '../shared/services/activity.dart';
 import '../shared/services/refresh.dart';
 import '../shared/services/supabase_providers.dart';
 import 'localization/l10n.dart';
@@ -24,10 +25,21 @@ class _AkaratAppState extends ConsumerState<AkaratApp> with WidgetsBindingObserv
   StreamSubscription<AuthState>? _auth;
   DateTime _pausedAt = DateTime.now();
 
+  /// "On Akarat.ai right now" in the admin panel: a ping on open and once a
+  /// minute while the app is in front. Stopped in the background.
+  Timer? _beat;
+
+  void _startBeat() {
+    _beat?.cancel();
+    unawaited(ref.read(activityProvider).heartbeat());
+    _beat = Timer.periodic(const Duration(minutes: 1), (_) => unawaited(ref.read(activityProvider).heartbeat()));
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _startBeat();
     // A password-reset link signs the reader in with a recovery session; the
     // only sensible next screen is "choose a new password".
     _auth = ref.read(supabaseClientProvider).auth.onAuthStateChange.listen((state) {
@@ -47,6 +59,7 @@ class _AkaratAppState extends ConsumerState<AkaratApp> with WidgetsBindingObserv
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _beat?.cancel();
     unawaited(_auth?.cancel());
     super.dispose();
   }
@@ -60,9 +73,15 @@ class _AkaratAppState extends ConsumerState<AkaratApp> with WidgetsBindingObserv
   /// lists refetch rather than presenting old availability as current.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) _pausedAt = DateTime.now();
-    if (state == AppLifecycleState.resumed && DateTime.now().difference(_pausedAt) > const Duration(minutes: 3)) {
-      ref.read(refreshTickProvider.notifier).bump();
+    if (state == AppLifecycleState.paused) {
+      _pausedAt = DateTime.now();
+      _beat?.cancel();
+    }
+    if (state == AppLifecycleState.resumed) {
+      _startBeat();
+      if (DateTime.now().difference(_pausedAt) > const Duration(minutes: 3)) {
+        ref.read(refreshTickProvider.notifier).bump();
+      }
     }
   }
 

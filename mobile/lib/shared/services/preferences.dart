@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +28,18 @@ class Preferences {
   static const _hiddenOwners = 'akarat.hiddenOwners';
 
   bool get onboarded => _prefs.getBool(_onboarded) ?? false;
+
+  /// A random id for this install, made on first use. Counts the app in the
+  /// admin panel's "on Akarat.ai right now" and de-duplicates listing views;
+  /// it identifies the install, not the person (see Activity).
+  String get sessionId {
+    final existing = _prefs.getString('akarat.sid');
+    if (existing != null && existing.length >= 8) return existing;
+    final r = Random.secure();
+    final id = List.generate(16, (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
+    unawaited(_prefs.setString('akarat.sid', id));
+    return id;
+  }
 
   /// The file name of the profile picture account [userId] chose on this
   /// phone (ProfilePhotos), or null.

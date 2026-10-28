@@ -13,6 +13,7 @@ import 'package:akarat/shared/repositories/favorites_repository.dart';
 import 'package:akarat/shared/repositories/listings_repository.dart';
 import 'package:akarat/shared/repositories/media_repository.dart';
 import 'package:akarat/shared/repositories/translation_repository.dart';
+import 'package:akarat/shared/services/activity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -196,6 +197,18 @@ class FakeMediaRepository extends Fake implements MediaRepository {
 
   @override
   Future<void> remove(List<String> paths) async => removed.addAll(paths);
+}
+
+/// Records what the app would have counted for the admin panel.
+class FakeActivity extends Fake implements Activity {
+  int beats = 0;
+  final views = <String>[];
+
+  @override
+  Future<void> heartbeat() async => beats++;
+
+  @override
+  Future<void> recordView(String propertyId) async => views.add(propertyId);
 }
 
 /// Translates by tagging the text with its target language, so a test can see

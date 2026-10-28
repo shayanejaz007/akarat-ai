@@ -29,6 +29,7 @@ import '../../shared/models/listing.dart';
 import '../../shared/models/search_constraints.dart';
 import '../../shared/reference/market_data.dart';
 import '../../shared/repositories/listings_repository.dart';
+import '../../shared/services/activity.dart';
 import '../../shared/services/refresh.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../../shared/widgets/pickers.dart';
@@ -122,6 +123,8 @@ class _DetailsState extends ConsumerState<_Details> {
   void initState() {
     super.initState();
     _scroll.addListener(_onScroll);
+    // Counted for the admin panel's "most viewed".
+    unawaited(ref.read(activityProvider).recordView(l.id));
     // A listing's own tour, the first time one opens (or from Guides).
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) unawaited(maybeRunTour(context, ref, TourId.property, visible: _inView));
