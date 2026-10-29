@@ -4097,8 +4097,14 @@ abstract class AppLocalizations {
   /// No description provided for @dailyMinStay.
   ///
   /// In en, this message translates to:
-  /// **'{n}-night minimum'**
+  /// **'{n, plural, =1{1-night minimum} other{{n}-night minimum}}'**
   String dailyMinStay(int n);
+
+  /// No description provided for @dailyBedrooms.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 bedroom} other{{n} bedrooms}}'**
+  String dailyBedrooms(int n);
 
   /// No description provided for @dailyTotalFor.
   ///
@@ -4819,12 +4825,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only the owner can do that.'**
   String get dailyErrNotYours;
-
-  /// No description provided for @dailyNotLiveYet.
-  ///
-  /// In en, this message translates to:
-  /// **'Not live yet'**
-  String get dailyNotLiveYet;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

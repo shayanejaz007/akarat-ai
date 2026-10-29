@@ -76,8 +76,10 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
   Future<void> _send() async {
     final t = context.l10n;
     if (ref.read(currentUserProvider) == null) {
+      // The router, not this sheet's context: the sheet is gone once popped.
+      final router = GoRouter.of(context);
       Navigator.pop(context, false);
-      await context.push(Routes.withNext(Routes.signIn, Routes.property(l.id)));
+      await router.push(Routes.withNext(Routes.signIn, Routes.property(l.id)));
       return;
     }
     if (!_pick.complete) {

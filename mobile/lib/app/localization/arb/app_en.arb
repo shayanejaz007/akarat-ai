@@ -725,8 +725,10 @@
   "@dailyNights": {"placeholders":{"n":{"type":"int"}}},
   "dailySleeps": "Sleeps {n}",
   "@dailySleeps": {"placeholders":{"n":{"type":"int"}}},
-  "dailyMinStay": "{n}-night minimum",
+  "dailyMinStay": "{n, plural, =1{1-night minimum} other{{n}-night minimum}}",
   "@dailyMinStay": {"placeholders":{"n":{"type":"int"}}},
+  "dailyBedrooms": "{n, plural, =1{1 bedroom} other{{n} bedrooms}}",
+  "@dailyBedrooms": {"placeholders":{"n":{"type":"int"}}},
   "dailyTotalFor": "{price} for {nights}",
   "@dailyTotalFor": {"placeholders":{"price":{"type":"String"},"nights":{"type":"String"}}},
   "dailyPerNight": "per night",
@@ -867,6 +869,5 @@
   "dailyErrPhoneNeeded": "Enter the phone number to share with the guest.",
   "dailyErrClosed": "This request has already been answered.",
   "dailyErrMissing": "This request no longer exists.",
-  "dailyErrNotYours": "Only the owner can do that.",
-  "dailyNotLiveYet": "Not live yet"
+  "dailyErrNotYours": "Only the owner can do that."
 }

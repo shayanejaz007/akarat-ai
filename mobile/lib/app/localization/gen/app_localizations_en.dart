@@ -2197,7 +2197,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String dailyMinStay(int n) {
-    return '$n-night minimum';
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n-night minimum', one: '1-night minimum');
+    return '$_temp0';
+  }
+
+  @override
+  String dailyBedrooms(int n) {
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n bedrooms', one: '1 bedroom');
+    return '$_temp0';
   }
 
   @override
@@ -2610,7 +2617,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dailyErrNotYours => 'Only the owner can do that.';
-
-  @override
-  String get dailyNotLiveYet => 'Not live yet';
 }

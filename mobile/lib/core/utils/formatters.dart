@@ -35,6 +35,11 @@ class Fmt {
     return DateFormat('EEE d MMM', 'en_GB').format(d);
   }
 
+  /// A stay, check-in to check-out. The arrow points the way the line reads:
+  /// left to right in English, right to left in Arabic.
+  static String stay(DateTime checkIn, DateTime checkOut, {required String lang}) =>
+      '${night(checkIn, lang: lang)} ${lang == 'ar' ? '←' : '→'} ${night(checkOut, lang: lang)}';
+
   /// `Month 2026` for a calendar header.
   static String month(DateTime d, {required String lang}) =>
       lang == 'ar' ? '${_levantineMonths[d.month - 1]} ${d.year}' : DateFormat('MMMM y', 'en_GB').format(d);

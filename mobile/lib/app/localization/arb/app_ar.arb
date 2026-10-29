@@ -713,7 +713,8 @@
   "dailyGuests": "{n, plural, =1{ضيف واحد} =2{ضيفان} few{{n} ضيوف} other{{n} ضيفاً}}",
   "dailyNights": "{n, plural, =1{ليلة واحدة} =2{ليلتان} few{{n} ليالٍ} other{{n} ليلة}}",
   "dailySleeps": "يتسع لـ {n}",
-  "dailyMinStay": "أقل إقامة {n} ليالٍ",
+  "dailyMinStay": "{n, plural, =1{أقل إقامة ليلة واحدة} =2{أقل إقامة ليلتان} few{أقل إقامة {n} ليالٍ} other{أقل إقامة {n} ليلة}}",
+  "dailyBedrooms": "{n, plural, =1{غرفة نوم واحدة} =2{غرفتا نوم} few{{n} غرف نوم} other{{n} غرفة نوم}}",
   "dailyTotalFor": "{price} لـ {nights}",
   "dailyPerNight": "لليلة",
   "badgeDaily": "إيجار يومي",
@@ -833,6 +834,5 @@
   "dailyErrPhoneNeeded": "أدخل رقم الهاتف الذي سيظهر للضيف.",
   "dailyErrClosed": "تمت الإجابة على هذا الطلب.",
   "dailyErrMissing": "هذا الطلب لم يعد موجوداً.",
-  "dailyErrNotYours": "هذا للمالك فقط.",
-  "dailyNotLiveYet": "غير منشور بعد"
+  "dailyErrNotYours": "هذا للمالك فقط."
 }

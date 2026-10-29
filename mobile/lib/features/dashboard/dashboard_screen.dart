@@ -82,8 +82,12 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ];
                 }
-                final live = rows.where((r) => r.status == ListingStatus.active).length;
-                final hidden = rows.where((r) => !r.isClosed && r.status != ListingStatus.active).length;
+                // Live is what the public can see: a daily rental counts only
+                // once it is approved.
+                bool visible(Listing r) =>
+                    r.status == ListingStatus.active && (!r.isDaily || r.dailyReview == DailyReview.approved);
+                final live = rows.where(visible).length;
+                final hidden = rows.where((r) => !r.isClosed && !visible(r)).length;
                 return [
                   SliverPadding(
                     // Room at the end so the last row clears the button.
@@ -316,32 +320,42 @@ class _ListingRowState extends ConsumerState<_ListingRow> {
       ListingStatus.archived => (l.statusArchived, c.inkMuted),
     };
     final review = x.isDaily ? reviewTone(context, x) : null;
-    // Published by its owner, but nobody else sees it until it is approved.
-    final (shown, shownColor) = x.isDaily && x.status == ListingStatus.active && x.dailyReview != DailyReview.approved
-        ? (l.dailyNotLiveYet, c.inkMuted)
-        : (label, color);
+    // A daily rental not yet approved is not live whatever its status says,
+    // so its review is the one badge it shows: room for the whole label.
+    final inReview = x.isDaily && x.dailyReview != DailyReview.approved;
+    final reviewBadge = review == null
+        ? null
+        : Tooltip(
+            message: x.dailyReviewNote ?? review.label,
+            child: ListingBadge(
+              label: review.label,
+              icon: review.icon,
+              background: review.color.withValues(alpha: 0.12),
+              foreground: review.color,
+            ),
+          );
     return PropertyRow(
       listing: x,
       padding: const EdgeInsetsDirectional.fromSTEB(Space.md, Space.sm, Space.xs, Space.xs),
       onTap: () => context.push(Routes.property(x.id), extra: x),
       footer: Row(
         children: [
-          ListingBadge(label: shown, background: shownColor.withValues(alpha: 0.12), foreground: shownColor),
-          if (review != null) ...[
-            const SizedBox(width: Space.xxs),
-            Flexible(
-              child: Tooltip(
-                message: x.dailyReviewNote ?? review.label,
-                child: ListingBadge(
-                  label: review.label,
-                  icon: review.icon,
-                  background: review.color.withValues(alpha: 0.12),
-                  foreground: review.color,
-                ),
-              ),
+          // The badges have all the room up to the buttons; a Spacer beside
+          // a Flexible would take half of it.
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: inReview
+                  ? reviewBadge
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListingBadge(label: label, background: color.withValues(alpha: 0.12), foreground: color),
+                        if (reviewBadge != null) ...[const SizedBox(width: Space.xxs), Flexible(child: reviewBadge)],
+                      ],
+                    ),
             ),
-          ],
-          const Spacer(),
+          ),
           if (_busy)
             const Padding(
               padding: EdgeInsets.all(Space.sm),

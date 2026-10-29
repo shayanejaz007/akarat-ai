@@ -30,8 +30,7 @@ import 'daily_providers.dart';
   };
 }
 
-String _dates(BookingRequest r, String lang) =>
-    '${Fmt.night(r.checkIn, lang: lang)} → ${Fmt.night(r.checkOut, lang: lang)}';
+String _dates(BookingRequest r, String lang) => Fmt.stay(r.checkIn, r.checkOut, lang: lang);
 
 String _facts(BuildContext context, BookingRequest r) {
   final t = context.l10n;
@@ -143,12 +142,15 @@ class RenterRequestCard extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                // The state beside the dates, or under them when there is
+                // not room for both on one line.
+                Wrap(
+                  spacing: Space.xs,
+                  runSpacing: Space.xxs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Expanded(child: Text(_dates(r, lang), style: context.text.titleSmall)),
-                    Flexible(
-                      child: _Pill(label: tone.label, color: tone.color),
-                    ),
+                    Text(_dates(r, lang), style: context.text.titleSmall),
+                    _Pill(label: tone.label, color: tone.color),
                   ],
                 ),
                 const SizedBox(height: Space.hair),
@@ -305,10 +307,15 @@ class OwnerRequestCard extends ConsumerWidget {
               ),
               const SizedBox(width: Space.sm),
               Expanded(
-                child: UserText(who, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.text.titleSmall),
-              ),
-              Flexible(
-                child: _Pill(label: tone.label, color: tone.color),
+                child: Wrap(
+                  spacing: Space.xs,
+                  runSpacing: Space.xxs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    UserText(who, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.text.titleSmall),
+                    _Pill(label: tone.label, color: tone.color),
+                  ],
+                ),
               ),
             ],
           ),

@@ -1,9 +1,12 @@
+import 'package:akarat/app/router/routes.dart';
 import 'package:akarat/features/daily/bookings_screen.dart';
 import 'package:akarat/features/daily/daily_screen.dart';
 import 'package:akarat/features/dashboard/dashboard_screen.dart';
 import 'package:akarat/features/property_details/property_details_screen.dart';
 import 'package:akarat/shared/models/daily_models.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../support/fakes.dart';
 import '../support/harness.dart';
@@ -69,6 +72,36 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Request to book'), findsOneWidget);
     expect(find.text('Sign in to request'), findsOneWidget);
+  });
+
+  testWidgets('a signed-out guest is taken to sign in, and back to the listing after', (tester) async {
+    final l = dailyListing(owner: '99999999-9999-4999-8999-999999999999');
+    final deps = TestDeps(
+      listings: FakeListingsRepository(rows: [l]),
+      daily: FakeDailyRepository(listings: [l]),
+    );
+    final router = await pumpRouted(
+      tester,
+      [
+        GoRoute(
+          path: '/property/:id',
+          builder: (_, state) => PropertyDetailsScreen(id: state.pathParameters['id']!, initial: l),
+        ),
+        GoRoute(
+          path: Routes.signIn,
+          builder: (_, _) => const Scaffold(body: Text('Sign-in page')),
+        ),
+      ],
+      overrides: await deps.overrides(),
+      initial: Routes.property(l.id),
+    );
+    await tester.tap(find.text('Check availability'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sign in to request'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sign-in page'), findsOneWidget);
+    // The page on top, pushed over the listing, carries where to come back to.
+    expect(router.state.uri.queryParameters['next'], Routes.property(l.id));
   });
 
   testWidgets('once the owner approves, the guest sees the number and WhatsApp', (tester) async {

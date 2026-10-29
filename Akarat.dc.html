@@ -2635,10 +2635,12 @@ class Component extends DCLogic {
     const s = this.state;
     const today = isoOf(new Date());
     const start = s.drIn && s.drIn >= today ? s.drIn : today;
+    // Never more guests than the place sleeps: the list offers no more.
+    const guests = Math.min(Number(s.drGuests) || 1, Number(row.max_guests) || 16);
     this.setState({
       bkId: row.id, bkMonth: start.slice(0, 7), bkError: '', bkBusy: false, bkMsg: '',
       bkIn: s.drIn && s.drIn >= today ? s.drIn : '', bkOut: s.drIn && s.drIn >= today ? s.drOut : '',
-      bkGuests: s.drGuests || '1', bkOff: null, bkMine: null
+      bkGuests: String(guests), bkOff: null, bkMine: null
     });
     await this.drRefreshBooking(row.id);
   }
@@ -2651,7 +2653,17 @@ class Component extends DCLogic {
       this.state.signedIn ? this.db.myBookingRequests().catch(() => []) : Promise.resolve([])
     ]);
     if (this.state.bkId !== id) return;
-    this.setState({ bkOff: off, bkMine: mine.find(r => r.property_id === id) || null, drTrips: this.state.signedIn ? mine : null });
+    // Dates carried over from the browse page that run through a taken night
+    // here are dropped, rather than offered and then refused.
+    const s = this.state;
+    let crossed = false;
+    if (s.bkIn && s.bkOut) {
+      for (let d = s.bkIn; d < s.bkOut; d = addDays(d, 1)) if (off.has(d)) { crossed = true; break; }
+    }
+    this.setState({
+      bkOff: off, bkMine: mine.find(r => r.property_id === id) || null, drTrips: this.state.signedIn ? mine : null,
+      ...(crossed ? { bkIn: '', bkOut: '' } : {})
+    });
   }
 
   drPickDay(iso) {
@@ -2682,6 +2694,12 @@ class Component extends DCLogic {
     if (s.bkBusy) return;
     if (!s.bkIn || !s.bkOut) {
       this.setState({ bkError: s.lang === 'ar' ? 'اختر تاريخي الوصول والمغادرة من التقويم.' : 'Pick your check-in and check-out dates on the calendar.' });
+      return;
+    }
+    // Said before sending; the database would refuse it the same way.
+    const min = Number(row.min_nights) || 1;
+    if (nightsBetween(s.bkIn, s.bkOut) < min) {
+      this.setState({ bkError: this.drErrorText({ message: 'daily_min_nights', details: String(min) }) });
       return;
     }
     this.setState({ bkBusy: true, bkError: '' });
@@ -2736,11 +2754,21 @@ class Component extends DCLogic {
   // Live: a new request, an answer, a decision on a listing. Reloads what the
   // dashboard and an open booking panel show; nothing polls.
   async drWatch(user) {
+    // Sign-in can announce the same account several times in a row (the
+    // stored session, then its first event, then each token refresh). One
+    // subscription per account, and a late one from an earlier call closed.
+    if (user && this._drWatchedId === user.id && (this._drUnwatch || this._drWatching)) {
+      this.drLoadDash();
+      return;
+    }
+    const seq = (this._drWatchSeq = (this._drWatchSeq || 0) + 1);
     if (this._drUnwatch) { this._drUnwatch(); this._drUnwatch = null; }
+    this._drWatchedId = user ? user.id : null;
     if (!user || !this.db || !this.db.watchAccount) return;
     this.drLoadDash();
+    this._drWatching = true;
     try {
-      this._drUnwatch = await this.db.watchAccount(user.id, () => {
+      const unwatch = await this.db.watchAccount(user.id, () => {
         clearTimeout(this._drWatchT);
         this._drWatchT = setTimeout(() => {
           this.drLoadDash();
@@ -2748,7 +2776,10 @@ class Component extends DCLogic {
           if (this.state.dashTab === 'listings' || this.state.dashTab === 'overview') this.loadProperties();
         }, 400);
       });
+      if (seq !== this._drWatchSeq) { unwatch(); return; }
+      this._drUnwatch = unwatch;
     } catch { /* realtime unavailable: the dashboard still loads on open */ }
+    finally { if (seq === this._drWatchSeq) this._drWatching = false; }
   }
 
   async drOpenAvail(id) {
@@ -4299,7 +4330,8 @@ class Component extends DCLogic {
     const s = this.state;
     const tab = s.dashTab || 'overview';
     const listings = s.myProps || [];
-    const live = listings.filter(p => p.status === 'active').length;
+    // Live is what the public can see: a daily rental counts once approved.
+    const live = listings.filter(p => p.status === 'active' && (p.deal !== 'daily' || p.daily_review === 'approved')).length;
 
     const HEADS = {
       overview: { t: L.navOverview, sub: ar ? 'كل شيء عن حسابك في مكان واحد.' : 'Everything about your account in one place.' },
@@ -4669,10 +4701,18 @@ class Component extends DCLogic {
     const today = isoOf(new Date());
     const num = n => Number(n || 0).toLocaleString('en-US');
     const jod = n => `${num(n)} ${ar ? 'د.أ' : 'JOD'}`;
-    const nightsWord = n => ar ? `${n} ${n === 1 ? 'ليلة' : n === 2 ? 'ليلتان' : n <= 10 ? 'ليالٍ' : 'ليلة'}` : `${n} ${n === 1 ? 'night' : 'nights'}`;
-    const guestsWord = n => ar ? `${n} ${n === 1 ? 'ضيف' : n === 2 ? 'ضيفان' : n <= 10 ? 'ضيوف' : 'ضيفاً'}` : `${n} ${n === 1 ? 'guest' : 'guests'}`;
+    // Arabic counts one and two with the word alone (ليلتان is "two nights"),
+    // 3 to 10 with the plural, 11 and up with the singular.
+    const nightsWord = n => ar
+      ? (n === 1 ? 'ليلة واحدة' : n === 2 ? 'ليلتان' : `${n} ${n <= 10 ? 'ليالٍ' : 'ليلة'}`)
+      : `${n} ${n === 1 ? 'night' : 'nights'}`;
+    const guestsWord = n => ar
+      ? (n === 1 ? 'ضيف واحد' : n === 2 ? 'ضيفان' : `${n} ${n <= 10 ? 'ضيوف' : 'ضيفاً'}`)
+      : `${n} ${n === 1 ? 'guest' : 'guests'}`;
+    // The arrow points the way the line reads.
+    const arrow = ar ? '←' : '→';
     const titleOf = r => (r ? ((ar ? r.title_ar : r.title_en) || r.title_en || r.title_ar || '') : '');
-    const dates = r => `${fmtDay(r.check_in, ar)} → ${fmtDay(r.check_out, ar)}`;
+    const dates = r => `${fmtDay(r.check_in, ar)} ${arrow} ${fmtDay(r.check_out, ar)}`;
 
     /* ── the browse page ── */
     const rows = s.drRows || [];
@@ -4808,7 +4848,7 @@ class Component extends DCLogic {
       text: this.drAlertText(n, ar),
       when: n.created_at ? new Date(n.created_at).toLocaleString(ar ? 'ar-JO' : 'en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '',
       dot: n.read_at ? 'transparent' : '#CE1126',
-      dates: n.data && n.data.check_in ? `${fmtDay(n.data.check_in, ar)} → ${fmtDay(n.data.check_out, ar)}` : '',
+      dates: n.data && n.data.check_in ? `${fmtDay(n.data.check_in, ar)} ${arrow} ${fmtDay(n.data.check_out, ar)}` : '',
       go: () => this.openDashTab(n.kind === 'booking_new' || (n.kind === 'booking_cancelled' && n.data && n.data.by === 'renter')
         ? 'bookings' : n.kind.startsWith('booking_') ? 'trips' : 'listings')
     }));
@@ -4864,8 +4904,13 @@ class Component extends DCLogic {
       drHasFilters: !!(s.drIn || s.drOut || s.drGuests || s.drCity),
       drClear: () => this.drFilter({ drIn: '', drOut: '', drGuests: '', drCity: '' }),
       drClearLabel: ar ? 'مسح' : 'Clear',
-      drCount: s.drRows ? (ar ? `${rows.length} مكان` : `${rows.length} ${rows.length === 1 ? 'place' : 'places'}`)
-        + (nights ? (ar ? ` · ${nightsWord(nights)}` : ` · ${nightsWord(nights)}`) : '') : '',
+      drCount: s.drRows
+        ? (ar
+          ? (rows.length === 0 ? 'لا أماكن' : rows.length === 1 ? 'مكان واحد' : rows.length === 2 ? 'مكانان'
+            : `${rows.length} ${rows.length <= 10 ? 'أماكن' : 'مكاناً'}`)
+          : `${rows.length} ${rows.length === 1 ? 'place' : 'places'}`)
+          + (nights ? ` · ${nightsWord(nights)}` : '')
+        : '',
       drLoading: !!s.drLoading && !s.drRows,
       drLoadingLabel: ar ? 'جارٍ التحميل…' : 'Loading…',
       drHasError: !!s.drError,

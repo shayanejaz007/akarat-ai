@@ -2209,7 +2209,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String dailyMinStay(int n) {
-    return 'أقل إقامة $n ليالٍ';
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'أقل إقامة $n ليلة',
+      few: 'أقل إقامة $n ليالٍ',
+      two: 'أقل إقامة ليلتان',
+      one: 'أقل إقامة ليلة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dailyBedrooms(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n غرفة نوم',
+      few: '$n غرف نوم',
+      two: 'غرفتا نوم',
+      one: 'غرفة نوم واحدة',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -2615,7 +2636,4 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dailyErrNotYours => 'هذا للمالك فقط.';
-
-  @override
-  String get dailyNotLiveYet => 'غير منشور بعد';
 }

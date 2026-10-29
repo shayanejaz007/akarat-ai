@@ -83,9 +83,7 @@ class DailyScreen extends ConsumerWidget {
     final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3);
     final chipHeight = (38 * scaler.scale(1)).clamp(40.0, 60.0);
 
-    final dates = f.dated
-        ? '${Fmt.night(f.checkIn!, lang: lang)} → ${Fmt.night(f.checkOut!, lang: lang)}'
-        : l.dailyAnyDates;
+    final dates = f.dated ? Fmt.stay(f.checkIn!, f.checkOut!, lang: lang) : l.dailyAnyDates;
     final city = Market.city(f.cityId)?.label(lang);
 
     return Scaffold(
@@ -261,7 +259,7 @@ class DailyCard extends StatelessWidget {
     final place = x.place(lang);
     final facts = [
       if (x.maxGuests != null) l.dailySleeps(x.maxGuests!),
-      if (x.bedrooms != null && x.bedrooms! > 0) '${x.bedrooms} ${l.specBeds}',
+      if (x.bedrooms != null && x.bedrooms! > 0) l.dailyBedrooms(x.bedrooms!),
       if (x.minimumNights > 1) l.dailyMinStay(x.minimumNights),
     ];
     return Semantics(
@@ -362,7 +360,7 @@ class _DatesSheetState extends State<_DatesSheet> {
           const SizedBox(height: Space.xs),
           Text(
             _pick.complete
-                ? '${Fmt.night(_pick.checkIn!, lang: lang)} → ${Fmt.night(_pick.checkOut!, lang: lang)} · ${l.dailyNights(_pick.nights)}'
+                ? '${Fmt.stay(_pick.checkIn!, _pick.checkOut!, lang: lang)} · ${l.dailyNights(_pick.nights)}'
                 : (_pick.checkIn == null ? l.bookingCheckIn : l.bookingCheckOut),
             style: context.text.bodyMedium?.copyWith(color: c.inkMuted),
           ),

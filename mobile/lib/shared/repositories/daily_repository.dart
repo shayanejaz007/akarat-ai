@@ -179,11 +179,14 @@ class DailyRepository {
   Future<BookingRequest> respond(String id, BookingAction action, {String? phone, String? note}) async {
     _requireUid();
     try {
-      final row = await _db.rpc<Map<String, dynamic>>(
+      final out = await _db.rpc<Object?>(
         'booking_respond',
         params: {'p_request': id, 'p_action': action.name, 'p_phone': phone, 'p_note': note},
       );
-      return BookingRequest.fromRow(Map<String, Object?>.from(row));
+      // One row comes back as an object; take the first if it ever arrives
+      // as a list, rather than calling a change that worked a failure.
+      final row = out is List ? out.first : out;
+      return BookingRequest.fromRow(Map<String, Object?>.from(row! as Map));
     } on Object catch (e) {
       throw _fail(e);
     }

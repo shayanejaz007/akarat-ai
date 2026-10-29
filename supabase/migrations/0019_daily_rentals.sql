@@ -285,7 +285,8 @@ grant select, insert on public.booking_requests to authenticated;
 grant all on public.booking_requests to service_role;
 
 -- Free for these nights: none closed by the owner, none in a confirmed stay.
--- check_out is the morning of leaving, so that night is not needed.
+-- check_out is the morning of leaving, so that night is not needed. Only
+-- for a listing the caller may see: the public's approved ones, or their own.
 create or replace function public.daily_is_available(p_property uuid, p_check_in date, p_check_out date)
 returns boolean
 language sql
@@ -294,6 +295,10 @@ security definer
 set search_path = public, pg_temp
 as $$
   select p_check_out > p_check_in
+     and exists (
+       select 1 from properties p
+       where p.id = p_property and p.deal::text = 'daily'
+         and (p.owner_id = auth.uid() or (p.status = 'active' and p.daily_review = 'approved')))
      and not exists (
        select 1 from daily_blocked_days b
        where b.property_id = p_property and b.day >= p_check_in and b.day < p_check_out)

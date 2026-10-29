@@ -133,9 +133,7 @@ class _NotificationRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final lang = context.lang;
-    final dates = n.checkIn != null && n.checkOut != null
-        ? '${Fmt.night(n.checkIn!, lang: lang)} → ${Fmt.night(n.checkOut!, lang: lang)}'
-        : null;
+    final dates = n.checkIn != null && n.checkOut != null ? Fmt.stay(n.checkIn!, n.checkOut!, lang: lang) : null;
     return InkWell(
       onTap: () => unawaited(context.push(notificationTarget(n))),
       child: Padding(
