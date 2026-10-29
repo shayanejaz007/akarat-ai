@@ -13,13 +13,31 @@ class Fmt {
 
   static String number(num n) => _grouped.format(n);
 
-  /// `150,000 JOD`, `500 JOD/mo`; `150,000 دينار`, `500 دينار شهرياً`.
-  static String price(num? amount, {required String lang, bool rent = false}) {
+  /// `150,000 JOD`, `500 JOD/mo`, `60 JOD/night`; `150,000 دينار`,
+  /// `500 دينار شهرياً`, `60 دينار لليلة`.
+  static String price(num? amount, {required String lang, bool rent = false, bool night = false}) {
     if (amount == null) return lang == 'ar' ? 'غير متوفر' : 'Not provided';
     final n = number(amount);
-    if (lang == 'ar') return rent ? '$n دينار شهرياً' : '$n دينار';
-    return rent ? '$n JOD/mo' : '$n JOD';
+    if (lang == 'ar') return night ? '$n دينار لليلة' : (rent ? '$n دينار شهرياً' : '$n دينار');
+    return night ? '$n JOD/night' : (rent ? '$n JOD/mo' : '$n JOD');
   }
+
+  /// A listing's price with the period its deal is priced in.
+  static String listingPrice(num? amount, {required String lang, required bool rent, required bool daily}) =>
+      price(amount, lang: lang, rent: rent, night: daily);
+
+  /// A night as a short date in the reader's language: `Fri 7 Nov` / `الجمعة ٧ تشرين الثاني`.
+  static String night(DateTime d, {required String lang}) {
+    if (lang == 'ar') {
+      const days = ['الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'];
+      return '${days[d.weekday - 1]} ${d.day} ${_levantineMonths[d.month - 1]}';
+    }
+    return DateFormat('EEE d MMM', 'en_GB').format(d);
+  }
+
+  /// `Month 2026` for a calendar header.
+  static String month(DateTime d, {required String lang}) =>
+      lang == 'ar' ? '${_levantineMonths[d.month - 1]} ${d.year}' : DateFormat('MMMM y', 'en_GB').format(d);
 
   /// Compact form for map markers and tight chips: `150K`, `1.2M`.
   static String compactPrice(num amount, {required String lang, bool currency = true}) {

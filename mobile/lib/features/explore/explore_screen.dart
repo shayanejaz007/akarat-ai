@@ -679,9 +679,12 @@ class _MapCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _LegendDot(colour: colour, label: listing.isRent ? l.badgeForRent : l.badgeForSale),
+                        _LegendDot(
+                          colour: colour,
+                          label: listing.isDaily ? l.badgeDaily : (listing.isRent ? l.badgeForRent : l.badgeForSale),
+                        ),
                         Text(
-                          Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent),
+                          Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
                           maxLines: 1,
                           style: context.type.priceSmall.copyWith(
                             decoration: listing.isClosed ? TextDecoration.lineThrough : null,

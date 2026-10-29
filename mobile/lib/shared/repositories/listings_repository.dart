@@ -73,12 +73,19 @@ class ListingsRepository {
     return id;
   }
 
+  /// Buy and Rent, never a daily rental, when no deal is asked for. Daily
+  /// rentals are priced per night and live in their own tab (DailyRepository).
+  /// Named rather than excluded: 'daily' is not a valid deal until 0019 runs.
+  static PostgrestFilterBuilder<List<Map<String, dynamic>>> _deal(
+    PostgrestFilterBuilder<List<Map<String, dynamic>>> q,
+    DealType? deal,
+  ) => deal == null ? q.inFilter('deal', const ['sale', 'rent']) : q.eq('deal', deal.name);
+
   /// One page of the public marketplace, filtered and ordered by Postgres.
   /// Public rows matching [f], before ordering and paging.
   PostgrestFilterBuilder<List<Map<String, dynamic>>> _matching(ListingFilters f) {
     final statuses = f.availableOnly ? ['active'] : ListingStatus.public.map((s) => s.name).toList();
-    var q = _db.from('properties').select().inFilter('status', statuses);
-    if (f.deal case final d?) q = q.eq('deal', d.name);
+    var q = _deal(_db.from('properties').select().inFilter('status', statuses), f.deal);
     if (f.cityId case final c?) q = q.eq('city_id', c);
     if (f.neighborhoodId case final n?) q = q.eq('neighborhood_id', n);
     if (f.type case final t?) q = q.eq('property_type', t);
@@ -123,8 +130,7 @@ class ListingsRepository {
   /// Newest live listings, for Home.
   Future<List<Listing>> recent({DealType? deal, String? cityId, int limit = 10}) async {
     try {
-      var q = _visible(_db.from('properties').select().eq('status', 'active'));
-      if (deal != null) q = q.eq('deal', deal.name);
+      var q = _visible(_deal(_db.from('properties').select().eq('status', 'active'), deal));
       if (cityId != null) q = q.eq('city_id', cityId);
       return _rows(await q.order('created_at', ascending: false).limit(limit));
     } on Object catch (e) {
@@ -136,8 +142,7 @@ class ListingsRepository {
   /// Home hides the section rather than promoting arbitrary listings.
   Future<List<Listing>> featured({DealType? deal, String? cityId, int limit = 8}) async {
     try {
-      var q = _visible(_db.from('properties').select().eq('status', 'active').eq('featured', true));
-      if (deal != null) q = q.eq('deal', deal.name);
+      var q = _visible(_deal(_db.from('properties').select().eq('status', 'active').eq('featured', true), deal));
       if (cityId != null) q = q.eq('city_id', cityId);
       return _rows(await q.order('created_at', ascending: false).limit(limit));
     } on Object catch (e) {

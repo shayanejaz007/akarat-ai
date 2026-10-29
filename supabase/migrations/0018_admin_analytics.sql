@@ -14,7 +14,7 @@
 -- Clients write only through record_view() and heartbeat(), which check their
 -- input and cannot be pointed at anything else. Nobody reads these tables
 -- through the API: the panel's server routes use the service role, and only
--- after checking that the caller's profile has role = 'admin'.
+-- after checking the admin password (ADMIN_PASSWORD, lib/admin.ts).
 --
 -- ADDITIVE ONLY, and safe to run more than once. Works whether or not
 -- 0014 (favorites) and 0015 (listing_reports) have been applied.
@@ -119,6 +119,22 @@ grant execute on function public.record_view(uuid, text, text) to anon, authenti
 grant execute on function public.heartbeat(text, text) to anon, authenticated, service_role;
 
 /* ── 4. Counters that follow their tables ─────────────────────────────── */
+
+-- A counter going up is not the listing changing. Without this, every view,
+-- save and inquiry (and the recount below) moved updated_at, which the site
+-- and the app show as "listed N days ago".
+create or replace function public.touch_updated_at()
+returns trigger language plpgsql as $$
+begin
+  if tg_table_name = 'properties'
+     and to_jsonb(new) - array['views', 'saves', 'inquiries_count', 'updated_at']
+       = to_jsonb(old) - array['views', 'saves', 'inquiries_count', 'updated_at'] then
+    return new;
+  end if;
+  new.updated_at = now();
+  return new;
+end;
+$$;
 
 create or replace function public.count_inquiry()
 returns trigger

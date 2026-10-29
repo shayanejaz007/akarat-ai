@@ -311,6 +311,9 @@
           <div onClick="{{ goDash }}" style="display: flex; align-items: center; gap: 9px; padding: 6px 14px 6px 6px; border-radius: 100px; background: {{ hdrChip }}; border: 1px solid {{ hdrLine }}; color: {{ hdrFg }}; cursor: pointer; transition: background 200ms;" style-hover="background: rgba(0,122,61,0.12);">
             <span style="width: 26px; height: 26px; border-radius: 50%; background: rgba(23,23,15,0.07); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex: none;">RH</span>
             <span style="font-size: 13px; font-weight: 300;">{{ t.dashboard }}</span>
+            <sc-if value="{{ drHasUnread }}" hint-placeholder-val="{{ false }}">
+              <span aria-label="Unread notifications" style="min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #CE1126; color: #FFFFFF; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; font-variant-numeric: tabular-nums;">{{ drUnread }}</span>
+            </sc-if>
           </div>
         </sc-if>
         <div data-deskonly="true" onClick="{{ listProperty }}" style="padding: 10px 20px; border-radius: 100px; border: 1px solid {{ hdrLine }}; color: {{ hdrFg }}; font-size: 13.5px; font-weight: 400; cursor: pointer; transition: background 220ms, border-color 220ms;" style-hover="background: #007A3D; border-color: #007A3D; color: #FFFFFF;">{{ t.listProperty }}</div>
@@ -475,6 +478,23 @@
         </label>
       </div>
 
+      <sc-if value="{{ formIsDaily }}" hint-placeholder-val="{{ false }}">
+      <div data-formgrid="true" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <label style="display: grid; gap: 6px;">
+          <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ lblMaxGuests }}</span>
+          <input value="{{ form.max_guests }}" onChange="{{ onMaxGuests }}" type="text" inputMode="numeric" pattern="[0-9]*" placeholder="4" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 12px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14.5px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        </label>
+        <label style="display: grid; gap: 6px;">
+          <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ lblMinNights }}</span>
+          <input value="{{ form.min_nights }}" onChange="{{ onMinNights }}" type="text" inputMode="numeric" pattern="[0-9]*" placeholder="1" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 12px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14.5px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
+        </label>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: flex-start; padding: 11px 13px; border-radius: 11px; background: rgba(0,122,61,0.06); border: 1px solid rgba(0,122,61,0.2); font-size: 12.5px; font-weight: 300; line-height: 1.55; color: #00693A; margin-bottom: 14px;">
+        <span style="width: 16px; height: 16px; flex: none; margin-top: 1px; background: rgba(23,23,15,0.38); -webkit-mask: url('assets/icons/verified.svg') center/contain no-repeat; mask: url('assets/icons/verified.svg') center/contain no-repeat;"></span>
+        <span>{{ dailyReviewNote }}</span>
+      </div>
+      </sc-if>
+
       <label style="display: grid; gap: 6px; margin-bottom: 22px;">
         <select value="{{ form.neighborhood_id }}" onChange="{{ onHood }}" dir="{{ dir }}" style="width: 100%; box-sizing: border-box; padding: 12px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14.5px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;">
           <sc-for list="{{ hoodOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
@@ -616,11 +636,16 @@
         <sc-if value="{{ hasTranslateNote }}" hint-placeholder-val="{{ false }}">
           <div style="font-size: 12px; font-weight: 300; line-height: 1.5; color: rgba(23,23,15,0.55);">{{ translateNote }}</div>
         </sc-if>
+        <sc-if value="{{ formNotDaily }}" hint-placeholder-val="{{ true }}">
         <label style="display: grid; gap: 6px; margin-top: 4px;">
           <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ lblPhone }}</span>
           <input value="{{ form.contact_phone }}" onChange="{{ onPhone }}" type="tel" inputMode="tel" autoComplete="tel" placeholder="07 9123 4567" dir="ltr" style="width: 100%; box-sizing: border-box; padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 46px;" style-focus="border-color: #007A3D;" />
           <span style="font-size: 11.5px; font-weight: 300; color: rgba(23,23,15,0.46);">{{ lblPhoneHint }}</span>
         </label>
+        </sc-if>
+        <sc-if value="{{ formIsDaily }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 4px; padding: 12px 14px; border-radius: 12px; background: #FBF8F1; border: 1px solid rgba(23,23,15,0.1); font-size: 12.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.66);">{{ dailyPhoneNote }}</div>
+        </sc-if>
       </div>
       </div>
 
@@ -1028,6 +1053,7 @@
         <!-- ── CONTACT CARD ──────────────────────────────────────── -->
         <div data-detailside="true" style="position: sticky; top: 100px;">
           <div style="padding: 28px 28px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); box-shadow: 0 24px 50px -34px rgba(23,23,15,0.4);">
+            <sc-if value="{{ dNotDaily }}" hint-placeholder-val="{{ true }}">
             <div style="font-size: 17px; font-weight: 500; letter-spacing: -0.012em;">{{ lblInterested }}</div>
             <p style="margin: 8px 0 0; font-size: 14px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.6);">{{ lblContactSub }}</p>
 
@@ -1051,6 +1077,100 @@
 
             <sc-if value="{{ dNoPhone }}" hint-placeholder-val="{{ true }}">
               <div onClick="{{ enquire }}" style="display: flex; align-items: center; justify-content: center; margin-top: 20px; padding: 16px; border-radius: 14px; background: #007A3D; color: #FFFFFF; font-size: 15.5px; font-weight: 500; cursor: pointer; min-height: 54px; box-sizing: border-box;" style-hover="background: #CE1126;">{{ lblEnquire }}</div>
+            </sc-if>
+            </sc-if>
+
+            <!-- ── BOOKING (daily rentals) ──
+                 A request, never a reservation: the owner approves, their
+                 number appears with a WhatsApp button, and the stay is
+                 confirmed once the two agree. -->
+            <sc-if value="{{ dIsDaily }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; color: #00693A; font-variant-numeric: tabular-nums;">{{ bkPrice }}</span>
+                <span style="font-size: 14px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ bkPerNight }}</span>
+              </div>
+              <div style="margin-top: 4px; font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.58);">{{ bkRules }}</div>
+
+              <sc-if value="{{ bkOwn }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 18px; padding: 14px 16px; border-radius: 14px; background: #FBF8F1; border: 1px solid rgba(23,23,15,0.1); font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.66);">{{ bkOwnNote }}</div>
+                <div onClick="{{ bkGoDash }}" style="margin-top: 10px; padding: 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); font-size: 13.5px; text-align: center; cursor: pointer; color: rgba(23,23,15,0.72); min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D; color: #007A3D;">{{ bkGoDashLabel }}</div>
+              </sc-if>
+
+              <sc-if value="{{ bkHasMine }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: {{ bkMineBg }}; border: 1px solid {{ bkMineBorder }};">
+                  <div style="font-size: 14.5px; font-weight: 500; color: {{ bkMineFg }};">{{ bkMineTitle }}</div>
+                  <div style="margin-top: 4px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6); font-variant-numeric: tabular-nums;">{{ bkMineDates }}</div>
+                  <p style="margin: 8px 0 0; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.68);">{{ bkMineBody }}</p>
+                  <sc-if value="{{ bkMineHasPhone }}" hint-placeholder-val="{{ false }}">
+                    <div dir="ltr" style="margin-top: 14px; padding: 13px 16px; border-radius: 12px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.09); text-align: center; font-size: 20px; font-weight: 500; letter-spacing: 0.02em; font-variant-numeric: tabular-nums;">{{ bkMinePhone }}</div>
+                    <a href="{{ bkMineWhatsApp }}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; padding: 15px; border-radius: 14px; background: #1FA855; color: #FFFFFF; font-size: 15.5px; font-weight: 500; text-decoration: none; min-height: 52px; box-sizing: border-box;" style-hover="background: #178A45;">
+                      <span style="width: 19px; height: 19px; background: currentColor; -webkit-mask: url('assets/icons/whatsapp.svg') center/contain no-repeat; mask: url('assets/icons/whatsapp.svg') center/contain no-repeat;"></span>
+                      {{ bkLblWhatsApp }}
+                    </a>
+                    <a href="{{ bkMineTel }}" style="display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 8px; padding: 12px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); color: rgba(23,23,15,0.75); font-size: 14px; text-decoration: none; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D; color: #007A3D;">
+                      <span style="width: 16px; height: 16px; background: currentColor; -webkit-mask: url('assets/icons/phone.svg') center/contain no-repeat; mask: url('assets/icons/phone.svg') center/contain no-repeat;"></span>
+                      {{ bkLblCall }}
+                    </a>
+                  </sc-if>
+                  <sc-if value="{{ bkMineCanCancel }}" hint-placeholder-val="{{ false }}">
+                    <div onClick="{{ bkMineCancel }}" style="margin-top: 10px; font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.55); cursor: pointer; text-align: center;" style-hover="color: #B00F20;">{{ bkLblCancel }}</div>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ bkShowForm }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 20px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <span onClick="{{ bkPrev }}" role="button" aria-label="Previous month" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(23,23,15,0.14); display: flex; align-items: center; justify-content: center; cursor: pointer; color: {{ bkPrevFg }}; font-size: 18px;">{{ arrowPrev }}</span>
+                    <span style="font-size: 14.5px; font-weight: 500;">{{ bkMonthLabel }}</span>
+                    <span onClick="{{ bkNext }}" role="button" aria-label="Next month" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(23,23,15,0.14); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px;">{{ arrowNext }}</span>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px 0; margin-top: 12px;">
+                    <sc-for list="{{ bkWeekdays }}" as="wd" hint-placeholder-count="7">
+                      <span style="text-align: center; font-size: 11px; font-weight: 400; color: rgba(23,23,15,0.45); padding-bottom: 4px;">{{ wd.v }}</span>
+                    </sc-for>
+                    <sc-for list="{{ bkDays }}" as="dd" hint-placeholder-count="30">
+                      <div onClick="{{ dd.pick }}" title="{{ dd.title }}" style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: {{ dd.weight }}; border-radius: {{ dd.radius }}; background: {{ dd.bg }}; color: {{ dd.fg }}; text-decoration: {{ dd.strike }}; cursor: {{ dd.cursor }}; visibility: {{ dd.vis }}; font-variant-numeric: tabular-nums; user-select: none;">{{ dd.v }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top: 8px; font-size: 11.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ bkLegend }}</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 14px; border: 1px solid rgba(23,23,15,0.16); border-radius: 12px; overflow: hidden;">
+                  <div style="padding: 10px 12px; border-inline-end: 1px solid rgba(23,23,15,0.16);">
+                    <div style="font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.5);">{{ bkLblIn }}</div>
+                    <div style="margin-top: 3px; font-size: 13.5px; font-weight: 400;">{{ bkInLabel }}</div>
+                  </div>
+                  <div style="padding: 10px 12px;">
+                    <div style="font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.5);">{{ bkLblOut }}</div>
+                    <div style="margin-top: 3px; font-size: 13.5px; font-weight: 400;">{{ bkOutLabel }}</div>
+                  </div>
+                </div>
+
+                <label style="display: grid; gap: 6px; margin-top: 10px;">
+                  <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ bkLblGuests }}</span>
+                  <select value="{{ bkGuests }}" onChange="{{ bkOnGuests }}" dir="{{ dir }}" style="padding: 11px 12px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 44px; cursor: pointer;" style-focus="border-color: #007A3D;">
+                    <sc-for list="{{ bkGuestOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+                  </select>
+                </label>
+                <textarea value="{{ bkMsg }}" onChange="{{ bkOnMsg }}" placeholder="{{ bkMsgPlaceholder }}" rows="3" dir="{{ dir }}" maxLength="2000" style="width: 100%; margin-top: 10px; box-sizing: border-box; padding: 11px 12px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; line-height: 1.55; color: #17170F; outline: none; resize: vertical;" style-focus="border-color: #007A3D;"></textarea>
+
+                <sc-if value="{{ bkHasTotal }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.7); font-variant-numeric: tabular-nums;">
+                    <span>{{ bkNightsLine }}</span><span>{{ bkTotal }}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(23,23,15,0.1); font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums;">
+                    <span>{{ bkLblTotal }}</span><span style="color: #00693A;">{{ bkTotal }}</span>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ bkHasError }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top: 12px; padding: 11px 13px; border-radius: 11px; background: rgba(206,17,38,0.07); border: 1px solid rgba(206,17,38,0.24); font-size: 13px; font-weight: 300; line-height: 1.5; color: #B00F20;">{{ bkError }}</div>
+                </sc-if>
+
+                <div onClick="{{ bkSubmit }}" style="display: flex; align-items: center; justify-content: center; margin-top: 14px; padding: 16px; border-radius: 14px; background: {{ bkSubmitBg }}; color: #FFFFFF; font-size: 15.5px; font-weight: 500; cursor: pointer; min-height: 54px; box-sizing: border-box;" style-hover="background: #CE1126;">{{ bkSubmitLabel }}</div>
+                <p style="margin: 10px 0 0; font-size: 12px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.52); text-align: center;">{{ bkFine }}</p>
+              </sc-if>
             </sc-if>
 
             <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(23,23,15,0.09); display: flex; align-items: center; gap: 11px;">
@@ -1218,6 +1338,94 @@
       <div style="padding: 64px 32px; border-radius: 22px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); text-align: center;">
         <div style="font-size: 18px; font-weight: 400; letter-spacing: -0.015em;">{{ browseEmptyTitle }}</div>
         <p style="margin: 12px auto 24px; font-size: 14.5px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.58); max-width: 46ch; text-wrap: pretty;">{{ browseEmptyBody }}</p>
+        <div onClick="{{ goSell }}" style="display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 100px; background: #007A3D; color: #FFFFFF; font-size: 13.5px; font-weight: 500; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="background: #CE1126; color: #FFFFFF;">{{ t.listProperty }}</div>
+      </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <!-- ══════════════════ DAILY RENTALS ══════════════════
+         Approved short stays only (0019_daily_rentals.sql). With dates
+         chosen, the database returns only places free for every night of
+         them, and each card shows the price for the whole stay. -->
+    <sc-if value="{{ isDaily }}" hint-placeholder-val="{{ false }}">
+    <div style="padding: 117px 6vw 120px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+        <span style="width: 20px; height: 1px; background: #CE1126; display: block;"></span>
+        <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.54);">{{ drKicker }}</span>
+      </div>
+      <h1 style="margin: 0 0 12px; font-size: clamp(2rem, 3.4vw, 2.8rem); font-weight: 300; letter-spacing: -0.032em;">{{ drTitle }}</h1>
+      <p style="margin: 0 0 30px; font-size: 15.5px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.6); max-width: 62ch; text-wrap: pretty;">{{ drBody }}</p>
+
+      <div data-filterbar="true" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 26px; padding: 14px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
+        <label style="display: grid; gap: 5px; flex: 1 1 150px;">
+          <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.5);">{{ drLblCheckIn }}</span>
+          <input type="date" value="{{ drIn }}" min="{{ drToday }}" onChange="{{ drOnIn }}" style="padding: 10px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 44px; box-sizing: border-box; width: 100%;" style-focus="border-color: #007A3D;" />
+        </label>
+        <label style="display: grid; gap: 5px; flex: 1 1 150px;">
+          <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.5);">{{ drLblCheckOut }}</span>
+          <input type="date" value="{{ drOut }}" min="{{ drMinOut }}" onChange="{{ drOnOut }}" style="padding: 10px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 44px; box-sizing: border-box; width: 100%;" style-focus="border-color: #007A3D;" />
+        </label>
+        <label style="display: grid; gap: 5px; flex: 1 1 130px;">
+          <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.5);">{{ drLblGuests }}</span>
+          <select value="{{ drGuests }}" onChange="{{ drOnGuests }}" dir="{{ dir }}" style="padding: 10px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 44px; cursor: pointer; width: 100%;" style-focus="border-color: #007A3D;">
+            <sc-for list="{{ drGuestOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+          </select>
+        </label>
+        <label style="display: grid; gap: 5px; flex: 1 1 140px;">
+          <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.5);">{{ drLblCity }}</span>
+          <select value="{{ drCity }}" onChange="{{ drOnCity }}" dir="{{ dir }}" style="padding: 10px 13px; border-radius: 12px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 44px; cursor: pointer; width: 100%;" style-focus="border-color: #007A3D;">
+            <sc-for list="{{ drCityOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+          </select>
+        </label>
+        <sc-if value="{{ drHasFilters }}" hint-placeholder-val="{{ false }}">
+          <span onClick="{{ drClear }}" style="padding: 10px 16px; border-radius: 12px; border: 1px dashed rgba(23,23,15,0.22); font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.6); cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="border-color: #CE1126; color: #B00F20;">{{ drClearLabel }}</span>
+        </sc-if>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin: -12px 0 14px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.5); font-variant-numeric: tabular-nums;">{{ drCount }}</div>
+
+      <sc-if value="{{ drLoading }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 48px 22px; text-align: center; font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ drLoadingLabel }}</div>
+      </sc-if>
+      <sc-if value="{{ drHasError }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 12px 14px; border-radius: 11px; background: rgba(206,17,38,0.07); border: 1px solid rgba(206,17,38,0.24); font-size: 13px; font-weight: 300; color: #B00F20; margin-bottom: 14px;">{{ drError }}</div>
+      </sc-if>
+
+      <sc-if value="{{ drHasCards }}" hint-placeholder-val="{{ false }}">
+      <div data-browsegrid="true" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; align-items: stretch;">
+        <sc-for list="{{ drCards }}" as="b" hint-placeholder-count="4">
+          <div data-glow="true" onClick="{{ b.open }}" style="position: relative; border-radius: 22px; overflow: hidden; cursor: pointer; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); transition: transform 300ms cubic-bezier(.2,.7,.3,1), border-color 300ms;" style-hover="transform: translateY(-4px); border-color: rgba(23,23,15,0.24);">
+            <div data-media="true" style="position: relative; height: 200px; background-color: #EDE7D9; background-image: repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px);">
+              <sc-if value="{{ b.hasCover }}" hint-placeholder-val="{{ false }}">
+                <img loading="lazy" decoding="async" ref="{{ b.coverRef }}" alt="{{ b.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              </sc-if>
+              <span style="position: absolute; top: 12px; inset-inline-start: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 8px; border-radius: 100px; background: rgba(255,255,255,0.94); color: #00693A; font-size: 11.5px; font-weight: 500;">
+                <span style="width: 14px; height: 14px; background: #007A3D; -webkit-mask: url('assets/icons/verified.svg') center/contain no-repeat; mask: url('assets/icons/verified.svg') center/contain no-repeat;"></span>
+                {{ drVerified }}
+              </span>
+              <span style="position: absolute; bottom: 12px; inset-inline-start: 12px; padding: 7px 13px; border-radius: 100px; background: #17170F; color: #FFFFFF; font-size: 13.5px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ b.price }}</span>
+            </div>
+            <div style="padding: 16px 17px 18px;">
+              <div style="font-size: 15px; font-weight: 400; line-height: 1.4; text-wrap: pretty;">{{ b.title }}</div>
+              <div style="font-size: 11px; color: rgba(23,23,15,0.54); margin-top: 8px; letter-spacing: 0.12em; text-transform: uppercase;">{{ b.place }}</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(23,23,15,0.1); font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.78); font-variant-numeric: tabular-nums;">
+                <span>{{ b.sleeps }}</span>
+                <sc-for list="{{ b.facts }}" as="ft" hint-placeholder-count="2"><span>{{ ft.v }}</span></sc-for>
+                <span>{{ b.minStay }}</span>
+              </div>
+              <sc-if value="{{ b.hasTotal }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 10px; font-size: 13.5px; font-weight: 500; color: #00693A; font-variant-numeric: tabular-nums;">{{ b.total }}</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ drEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 64px 32px; border-radius: 22px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); text-align: center;">
+        <div style="font-size: 18px; font-weight: 400; letter-spacing: -0.015em;">{{ drEmptyTitle }}</div>
+        <p style="margin: 12px auto 24px; font-size: 14.5px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.58); max-width: 46ch; text-wrap: pretty;">{{ drEmptyBody }}</p>
         <div onClick="{{ goSell }}" style="display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 100px; background: #007A3D; color: #FFFFFF; font-size: 13.5px; font-weight: 500; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="background: #CE1126; color: #FFFFFF;">{{ t.listProperty }}</div>
       </div>
       </sc-if>
@@ -1502,6 +1710,149 @@
         </div>
         </sc-if>
 
+        <!-- ── Daily rentals: requests for the owner's places ── -->
+        <sc-if value="{{ drShowInbox }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
+          <sc-for list="{{ drInbox }}" as="bq" hint-placeholder-count="1">
+            <div style="padding: 18px 22px; border-bottom: 1px solid rgba(23,23,15,0.08);">
+              <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+                <span style="font-size: 14.5px; font-weight: 400;">{{ bq.who }}</span>
+                <span style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ bq.about }}</span>
+                <div style="flex: 1;"></div>
+                <span style="padding: 4px 11px; border-radius: 100px; font-size: 11.5px; font-weight: 400; background: {{ bq.pillBg }}; border: 1px solid {{ bq.pillBorder }}; color: {{ bq.pillFg }};">{{ bq.status }}</span>
+              </div>
+              <div style="margin-top: 6px; font-size: 13.5px; font-weight: 400; font-variant-numeric: tabular-nums;">{{ bq.dates }}</div>
+              <div style="margin-top: 2px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6); font-variant-numeric: tabular-nums;">{{ bq.facts }}</div>
+              <sc-if value="{{ bq.hasMessage }}" hint-placeholder-val="{{ false }}">
+                <p style="margin: 9px 0 0; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.68); white-space: pre-wrap; text-wrap: pretty;">“{{ bq.message }}”</p>
+              </sc-if>
+              <sc-if value="{{ bq.hasNote }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 8px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.55);">{{ bq.note }}</div>
+              </sc-if>
+              <sc-if value="{{ bq.hasShared }}" hint-placeholder-val="{{ false }}">
+                <div dir="auto" style="margin-top: 8px; font-size: 12.5px; font-weight: 300; color: #00693A;">{{ bq.sharedPhone }}</div>
+              </sc-if>
+              <sc-if value="{{ bq.canApprove }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
+                  <input value="{{ bq.phone }}" onChange="{{ bq.onPhone }}" type="tel" inputMode="tel" autoComplete="tel" placeholder="{{ drLblPhoneToShare }}" aria-label="{{ drLblPhoneToShare }}" dir="ltr" style="flex: 1 1 180px; min-width: 0; padding: 10px 13px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); background: #FDFBF5; font-family: inherit; font-size: 14px; font-weight: 300; color: #17170F; outline: none; min-height: 42px; box-sizing: border-box;" style-focus="border-color: #007A3D;" />
+                  <span onClick="{{ bq.approve }}" style="padding: 10px 16px; border-radius: 10px; background: #007A3D; color: #FFFFFF; font-size: 13px; font-weight: 500; cursor: pointer; min-height: 42px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="background: #00693A;">{{ drLblApprove }}</span>
+                  <span onClick="{{ bq.reject }}" style="padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(206,17,38,0.3); background: rgba(206,17,38,0.05); color: #B00F20; font-size: 13px; font-weight: 400; cursor: pointer; min-height: 42px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="background: #CE1126; color: #FFFFFF;">{{ drLblReject }}</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 11.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ drApproveHint }}</div>
+              </sc-if>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+                <sc-if value="{{ bq.canConfirm }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ bq.confirm }}" style="padding: 9px 15px; border-radius: 10px; background: #007A3D; color: #FFFFFF; font-size: 12.5px; font-weight: 500; cursor: pointer; min-height: 40px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="background: #00693A;">{{ drLblConfirm }}</span>
+                </sc-if>
+                <sc-if value="{{ bq.canCancel }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ bq.cancel }}" style="padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); color: rgba(23,23,15,0.6); font-size: 12.5px; font-weight: 300; cursor: pointer; min-height: 40px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="border-color: #CE1126; color: #B00F20;">{{ drLblCancelStay }}</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ drInboxEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="padding: 48px 22px; text-align: center; font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ drInboxEmptyLabel }}</div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- ── Daily rentals: the signed-in person's own requests ── -->
+        <sc-if value="{{ drShowTrips }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
+          <sc-for list="{{ drTrips }}" as="tr" hint-placeholder-count="1">
+            <div style="padding: 18px 22px; border-bottom: 1px solid rgba(23,23,15,0.08);">
+              <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+                <span style="font-size: 14.5px; font-weight: 400;">{{ tr.about }}</span>
+                <div style="flex: 1;"></div>
+                <span style="padding: 4px 11px; border-radius: 100px; font-size: 11.5px; font-weight: 400; background: {{ tr.pillBg }}; border: 1px solid {{ tr.pillBorder }}; color: {{ tr.pillFg }};">{{ tr.status }}</span>
+              </div>
+              <div style="margin-top: 6px; font-size: 13.5px; font-weight: 400; font-variant-numeric: tabular-nums;">{{ tr.dates }}</div>
+              <div style="margin-top: 2px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6); font-variant-numeric: tabular-nums;">{{ tr.facts }}</div>
+              <p style="margin: 9px 0 0; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.68); text-wrap: pretty;">{{ tr.body }}</p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
+                <sc-if value="{{ tr.hasPhone }}" hint-placeholder-val="{{ false }}">
+                  <span dir="ltr" style="font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; margin-inline-end: 6px;">{{ tr.phone }}</span>
+                  <a href="{{ tr.whatsApp }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 15px; border-radius: 10px; background: #1FA855; color: #FFFFFF; font-size: 12.5px; font-weight: 500; text-decoration: none; min-height: 40px; box-sizing: border-box;" style-hover="background: #178A45;">
+                    <span style="width: 15px; height: 15px; background: currentColor; -webkit-mask: url('assets/icons/whatsapp.svg') center/contain no-repeat; mask: url('assets/icons/whatsapp.svg') center/contain no-repeat;"></span>
+                    {{ drLblWhatsApp }}
+                  </a>
+                  <a href="{{ tr.tel }}" style="display: inline-flex; align-items: center; padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); color: rgba(23,23,15,0.7); font-size: 12.5px; text-decoration: none; min-height: 40px; box-sizing: border-box;" style-hover="border-color: #007A3D; color: #007A3D;">{{ drLblCall }}</a>
+                </sc-if>
+                <sc-if value="{{ tr.canOpen }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ tr.open }}" style="padding: 9px 14px; border-radius: 10px; border: 1px solid rgba(23,23,15,0.16); color: rgba(23,23,15,0.7); font-size: 12.5px; font-weight: 300; cursor: pointer; min-height: 40px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="border-color: #007A3D; color: #007A3D;">{{ drLblOpen }}</span>
+                </sc-if>
+                <sc-if value="{{ tr.canCancel }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ tr.cancel }}" style="padding: 9px 14px; border-radius: 10px; color: rgba(23,23,15,0.55); font-size: 12.5px; font-weight: 300; cursor: pointer; min-height: 40px; display: inline-flex; align-items: center; box-sizing: border-box;" style-hover="color: #B00F20;">{{ drLblCancelRequest }}</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ drTripsEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="padding: 48px 22px; text-align: center; font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ drTripsEmptyLabel }}</div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- ── Notifications ── -->
+        <sc-if value="{{ drShowAlerts }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
+          <sc-for list="{{ drAlerts }}" as="al" hint-placeholder-count="1">
+            <div onClick="{{ al.go }}" style="display: flex; gap: 12px; align-items: flex-start; padding: 16px 22px; border-bottom: 1px solid rgba(23,23,15,0.08); cursor: pointer;" style-hover="background: #FDFBF5;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ al.dot }}; flex: none; margin-top: 7px;"></span>
+              <div style="min-width: 0; flex: 1;">
+                <div style="font-size: 13.5px; font-weight: 400; line-height: 1.55; text-wrap: pretty;">{{ al.text }}</div>
+                <div style="margin-top: 3px; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ al.dates }}</div>
+              </div>
+              <span style="font-size: 11.5px; font-weight: 300; color: rgba(23,23,15,0.45); white-space: nowrap;">{{ al.when }}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ drAlertsEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="padding: 48px 22px; text-align: center; font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ drAlertsEmptyLabel }}</div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- ── Availability: close and open nights ── -->
+        <sc-if value="{{ drShowAvail }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); padding: 20px 22px;">
+          <sc-if value="{{ avNoListings }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 28px 0; text-align: center; font-size: 13.5px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ avNoListingsLabel }}</div>
+          </sc-if>
+          <sc-if value="{{ avHasListings }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;">
+              <sc-for list="{{ avPicks }}" as="ap" hint-placeholder-count="2">
+                <span onClick="{{ ap.pick }}" style="padding: 9px 15px; border-radius: 100px; cursor: pointer; font-size: 13px; font-weight: 300; background: {{ ap.bg }}; color: {{ ap.fg }}; border: 1px solid {{ ap.border }}; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ ap.label }}</span>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ avHasError }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 11px 13px; border-radius: 11px; background: rgba(206,17,38,0.07); border: 1px solid rgba(206,17,38,0.24); font-size: 13px; font-weight: 300; color: #B00F20; margin-bottom: 12px;">{{ avError }}</div>
+          </sc-if>
+          <sc-if value="{{ avShowCal }}" hint-placeholder-val="{{ false }}">
+            <div style="max-width: 460px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <span onClick="{{ avPrev }}" role="button" aria-label="Previous month" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(23,23,15,0.14); display: flex; align-items: center; justify-content: center; cursor: pointer; color: {{ avPrevFg }}; font-size: 18px;">{{ arrowPrev }}</span>
+                <span style="font-size: 15px; font-weight: 500;">{{ avMonthLabel }}</span>
+                <span onClick="{{ avNext }}" role="button" aria-label="Next month" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(23,23,15,0.14); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px;">{{ arrowNext }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 12px;">
+                <sc-for list="{{ avWeekdays }}" as="wd" hint-placeholder-count="7">
+                  <span style="text-align: center; font-size: 11px; font-weight: 400; color: rgba(23,23,15,0.45); padding-bottom: 4px;">{{ wd.v }}</span>
+                </sc-for>
+                <sc-for list="{{ avDays }}" as="dd" hint-placeholder-count="30">
+                  <div onClick="{{ dd.pick }}" title="{{ dd.title }}" style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: {{ dd.weight }}; border-radius: {{ dd.radius }}; background: {{ dd.bg }}; color: {{ dd.fg }}; text-decoration: {{ dd.strike }}; cursor: {{ dd.cursor }}; visibility: {{ dd.vis }}; border: 1px solid rgba(23,23,15,0.08); font-variant-numeric: tabular-nums; user-select: none;">{{ dd.v }}</div>
+                </sc-for>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.6);">
+                <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 4px; border: 1px solid rgba(23,23,15,0.2);"></span>{{ avLegendOpen }}</span>
+                <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 4px; background: rgba(206,17,38,0.2);"></span>{{ avLegendClosed }}</span>
+                <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 4px; background: #007A3D;"></span>{{ avLegendBooked }}</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
         <sc-if value="{{ showListings }}" hint-placeholder-val="{{ true }}">
         <div style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
           <div style="padding: 15px 22px; border-bottom: 1px solid rgba(23,23,15,0.1); display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
@@ -1586,13 +1937,25 @@
                 <div style="min-width: 0;">
                   <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;">{{ row.title }}</div>
                   <div style="font-size: 11px; color: rgba(23,23,15,0.42); font-family: ui-monospace, monospace; margin-top: 3px;">{{ row.id }}</div>
+                  <sc-if value="{{ row.hasReview }}" hint-placeholder-val="{{ false }}">
+                    <div style="display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; font-size: 11.5px; font-weight: 400; color: {{ row.reviewColor }};">
+                      <span style="width: 14px; height: 14px; flex: none; background: {{ row.reviewColor }}; -webkit-mask: url('assets/icons/verified.svg') center/contain no-repeat; mask: url('assets/icons/verified.svg') center/contain no-repeat;"></span>
+                      {{ row.reviewLabel }}
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ row.hasReviewNote }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top: 3px; font-size: 11.5px; font-weight: 300; color: #B00F20; white-space: normal;">{{ row.reviewNote }}</div>
+                  </sc-if>
                 </div>
               </div>
               <span data-hide-sm="true" style="color: rgba(23,23,15,0.64); font-size: 12.5px;">{{ row.place }}</span>
               <span style="font-weight: 400; font-variant-numeric: tabular-nums;">{{ row.price }}</span>
-              <span style="display: flex; align-items: center; gap: 8px; justify-content: {{ rowActionAlign }};">
+              <span style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; justify-content: {{ rowActionAlign }};">
                 <span style="padding: 5px 13px; border-radius: 100px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; background: {{ row.statusBg }}; border: 1px solid {{ row.statusBorder }}; color: {{ row.statusFg }};">{{ row.status }}</span>
                 <span onClick="{{ row.edit }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.editLabel }}</span>
+                <sc-if value="{{ row.isDaily }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ row.calendar }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.calendarLabel }}</span>
+                </sc-if>
                 <sc-if value="{{ row.canToggle }}" hint-placeholder-val="{{ true }}">
                   <span onClick="{{ row.toggle }}" style="padding: 7px 12px; border-radius: 9px; border: 1px solid rgba(23,23,15,0.14); font-size: 12px; font-weight: 300; cursor: pointer; color: rgba(23,23,15,0.66); white-space: nowrap;" style-hover="border-color: #007A3D; color: #007A3D;">{{ row.toggleLabel }}</span>
                 </sc-if>
@@ -1714,7 +2077,7 @@ const STR = {
     placeholder: 'A four-bedroom villa in Abdoun with a garden',
     searchJordan: 'Search Jordan', search: 'Search',
     refinePlaceholder: 'Change your search. Try “only Abdoun” or “raise the budget to 900,000”',
-    buy: 'Buy', rent: 'Rent', sell: 'Sell', aiSearch: 'Search with AI', dashboard: 'Dashboard',
+    buy: 'Buy', rent: 'Rent', daily: 'Daily rentals', sell: 'Sell', aiSearch: 'Search with AI', dashboard: 'Dashboard',
     featured: 'On the marketplace', featuredSub: 'Verified listings', browseAll: 'Open AI search',
     marketEmpty: 'The marketplace is opening', marketEmptySub: 'First listings',
     inventoryTitle: 'Inventory', inventoryBody: 'Every listing here is verified before it goes live. Nothing is generated, and nothing is shown that a source did not publish.',
@@ -1775,7 +2138,7 @@ const STR = {
     placeholder: 'فيلا بأربع غرف نوم في عبدون مع حديقة',
     searchJordan: 'ابحث في الأردن', search: 'ابحث',
     refinePlaceholder: 'عدّل بحثك: «فقط عبدون» أو «ارفع الميزانية إلى ٩٠٠٬٠٠٠»',
-    buy: 'شراء', rent: 'إيجار', sell: 'بيع', aiSearch: 'البحث الذكي', dashboard: 'لوحة التحكم',
+    buy: 'شراء', rent: 'إيجار', daily: 'إيجار يومي', sell: 'بيع', aiSearch: 'البحث الذكي', dashboard: 'لوحة التحكم',
     featured: 'على المنصة', featuredSub: 'إعلانات موثقة', browseAll: 'افتح البحث الذكي',
     marketEmpty: 'المنصة على وشك الانطلاق', marketEmptySub: 'أول الإعلانات',
     inventoryTitle: 'المعروض', inventoryBody: 'كل إعلان هنا موثق قبل نشره. لا شيء مُولَّد، ولا نعرض ما لم ينشره المصدر.',
@@ -1946,6 +2309,26 @@ function applyLangToDocument(lang) {
   } catch { /* no document: nothing to mirror */ }
 }
 
+/* ── Daily rentals: calendar dates ──
+   Nights are plain calendar dates, 'YYYY-MM-DD', the way the database keeps
+   them; built from local parts so a time zone never moves a day. */
+const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const dayOf = iso => { const [y, m, d] = String(iso).split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (iso, n) => { const d = dayOf(iso); d.setDate(d.getDate() + n); return isoOf(d); };
+const nightsBetween = (a, b) => Math.round((dayOf(b) - dayOf(a)) / 86400000);
+const fmtDay = (iso, ar) => iso
+  ? dayOf(iso).toLocaleDateString(ar ? 'ar-JO' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
+  : '';
+// wa.me wants the full international number in digits: a Jordanian 07… gets
+// its country code, and a leading 00 or + is dropped.
+const waDigits = phone => {
+  let d = String(phone || '').replace(/[^\d+]/g, '');
+  if (d.startsWith('+')) return d.slice(1);
+  if (d.startsWith('00')) return d.slice(2);
+  if (d.startsWith('0')) return '962' + d.slice(1);
+  return d;
+};
+
 class Component extends DCLogic {
   state = {
     ready: false, screen: 'home', lang: initialLang(), scrolled: false,
@@ -1957,6 +2340,14 @@ class Component extends DCLogic {
     customOpen: false, customText: '',
     market: null, marketError: '', rowBusy: null, legalDoc: 'privacy',
     dashTab: 'overview', inquiries: null, inquiriesError: '', stackAt: 0,
+    // Daily rentals. dr…: the browse page and its filters. bk…: the booking
+    // panel on a daily listing's page. The rest: the dashboard's requests,
+    // trips, notifications and availability calendar.
+    drRows: null, drLoading: false, drError: '', drIn: '', drOut: '', drGuests: '', drCity: '',
+    bkId: null, bkMonth: '', bkIn: '', bkOut: '', bkGuests: '1', bkMsg: '', bkBusy: false, bkError: '',
+    bkOff: null, bkMine: null,
+    drInbox: null, drTrips: null, drAlerts: null, drPhones: {}, drShared: '', drBusy: null,
+    avId: null, avMonth: '', avBlocked: null, avError: '',
     narrow: typeof window !== 'undefined' && window.innerWidth < 900,
     detail: null, detailCover: 0, lightbox: null,
     savedIds: [], descOpen: false, copiedPhone: false, copiedLink: false,
@@ -2009,6 +2400,7 @@ class Component extends DCLogic {
     // the next one already unrolled.
     this.setState({ screen: 'detail', detail: row, detailCover: 0, descOpen: false });
     this.scrollTop();
+    if (row.deal === 'daily') this.drOpenBooking(row);
     // Counted for the admin panel's "most viewed". Our own listings only:
     // results from other portals have no row here to count against.
     if (this.db && this.db.recordView && /^[0-9a-f-]{36}$/i.test(String(row.id))) this.db.recordView(row.id);
@@ -2045,7 +2437,8 @@ class Component extends DCLogic {
 
   closeListing(row, { push = true } = {}) {
     this.closeLightbox();
-    this.setState({ screen: row && row.deal === 'rent' ? 'rent' : 'buy', detail: null });
+    this.setState({ screen: row && row.deal === 'rent' ? 'rent' : row && row.deal === 'daily' ? 'daily' : 'buy', detail: null, bkId: null });
+    if (row && row.deal === 'daily' && !this.state.drRows) this.drLoad();
     this.scrollTop();
     if (push && typeof history !== 'undefined' && history.pushState) {
       history.pushState({}, '', location.pathname);
@@ -2167,8 +2560,287 @@ class Component extends DCLogic {
       // the phone, when there is one, is already on the user object.
       this.setState({ accountPhone: user.phone ? ('+' + String(user.phone).replace(/^\+/, '')) : null });
       this.loadIdentities();
+      this.drWatch(user);
     } else {
-      this.setState({ myProps: null, accountPhone: null, phoneLinkOpen: false, identities: null });
+      this.setState({ myProps: null, accountPhone: null, phoneLinkOpen: false, identities: null,
+        drInbox: null, drTrips: null, drAlerts: null, bkMine: null });
+      this.drWatch(null);
+    }
+  }
+
+  /* ──────────────── daily rentals ────────────────
+     See lib/supabase.js and 0019_daily_rentals.sql. The database enforces
+     every rule (approval before anyone sees a listing, the minimum stay, no
+     overlapping confirmed stays, the phone only after approval); this side
+     shows the state and explains refusals in the reader's language. */
+
+  async drLoad() {
+    if (!this.db || !this.db.searchDailyRentals) return;
+    const s = this.state;
+    const n = (this._drSeq = (this._drSeq || 0) + 1);
+    this.setState({ drLoading: true, drError: '' });
+    try {
+      const rows = await this.db.searchDailyRentals({
+        checkIn: s.drIn && s.drOut ? s.drIn : null,
+        checkOut: s.drIn && s.drOut ? s.drOut : null,
+        guests: s.drGuests || null,
+        city: s.drCity || null
+      });
+      if (n === this._drSeq) this.setState({ drRows: rows, drLoading: false });
+    } catch (e) {
+      if (n === this._drSeq) this.setState({ drRows: [], drLoading: false, drError: e.message || String(e) });
+    }
+  }
+
+  drFilter(patch) {
+    const next = { ...patch };
+    // A check-out on or before check-in is cleared rather than searched for.
+    const inDay = next.drIn !== undefined ? next.drIn : this.state.drIn;
+    const outDay = next.drOut !== undefined ? next.drOut : this.state.drOut;
+    if (inDay && outDay && outDay <= inDay) next.drOut = '';
+    this.setState(next, () => this.drLoad());
+  }
+
+  drErrorText(e) {
+    const ar = this.state.lang === 'ar';
+    const msg = String((e && (e.message || e)) || '');
+    const n = e && e.details ? String(e.details) : '';
+    const T = {
+      daily_sign_in: ['Sign in to send a request.', 'سجّل الدخول لإرسال الطلب.'],
+      daily_not_bookable: ['This place is not taking requests right now.', 'هذا المكان لا يستقبل طلبات حالياً.'],
+      daily_own_listing: ['This is your own listing.', 'هذا إعلانك أنت.'],
+      daily_bad_dates: ['Choose a check-out date after check-in.', 'اختر تاريخ مغادرة بعد تاريخ الوصول.'],
+      daily_past_dates: ['Those dates have passed.', 'هذه التواريخ مضت.'],
+      daily_too_far: ['Requests can be made up to a year ahead.', 'يمكن الطلب حتى سنة مقدماً.'],
+      daily_min_nights: [`This place needs a stay of at least ${n} nights.`, `أقل مدة إقامة هنا ${n} ليالٍ.`],
+      daily_max_nights: [`Stays are up to ${n} nights.`, `أطول مدة إقامة ${n} ليلة.`],
+      daily_max_guests: [`This place sleeps up to ${n} guests.`, `يتسع هذا المكان لـ ${n} ضيوف كحد أقصى.`],
+      daily_bad_guests: ['Choose how many guests.', 'اختر عدد الضيوف.'],
+      daily_unavailable: ['Some of those nights are no longer free. Pick other dates.', 'بعض هذه الليالي لم تعد متاحة. اختر تواريخ أخرى.'],
+      daily_open_request: ['You already have an open request for this place.', 'لديك طلب مفتوح لهذا المكان.'],
+      daily_too_many: ['You have sent many requests today. Try again tomorrow.', 'أرسلت طلبات كثيرة اليوم. حاول غداً.'],
+      daily_phone_needed: ['Enter the phone number to share with the guest.', 'أدخل رقم الهاتف الذي سيظهر للضيف.'],
+      daily_request_closed: ['This request has already been answered.', 'تمت الإجابة على هذا الطلب.'],
+      daily_request_missing: ['This request no longer exists.', 'هذا الطلب لم يعد موجوداً.'],
+      daily_not_yours: ['Only the owner can do that.', 'هذا للمالك فقط.']
+    };
+    const key = Object.keys(T).find(k => msg.includes(k));
+    if (key) return T[key][ar ? 1 : 0];
+    return msg || (ar ? 'حدث خطأ. حاول مرة أخرى.' : 'Something went wrong. Try again.');
+  }
+
+  // Opening a daily listing: the calendar starts on the month of the dates
+  // already chosen on the browse page, if any, and carries them over.
+  async drOpenBooking(row) {
+    const s = this.state;
+    const today = isoOf(new Date());
+    const start = s.drIn && s.drIn >= today ? s.drIn : today;
+    this.setState({
+      bkId: row.id, bkMonth: start.slice(0, 7), bkError: '', bkBusy: false, bkMsg: '',
+      bkIn: s.drIn && s.drIn >= today ? s.drIn : '', bkOut: s.drIn && s.drIn >= today ? s.drOut : '',
+      bkGuests: s.drGuests || '1', bkOff: null, bkMine: null
+    });
+    await this.drRefreshBooking(row.id);
+  }
+
+  async drRefreshBooking(id) {
+    if (!this.db || !this.db.dailyUnavailable || this.state.bkId !== id) return;
+    const today = isoOf(new Date());
+    const [off, mine] = await Promise.all([
+      this.db.dailyUnavailable(id, today, addDays(today, 400)).catch(() => new Set()),
+      this.state.signedIn ? this.db.myBookingRequests().catch(() => []) : Promise.resolve([])
+    ]);
+    if (this.state.bkId !== id) return;
+    this.setState({ bkOff: off, bkMine: mine.find(r => r.property_id === id) || null, drTrips: this.state.signedIn ? mine : null });
+  }
+
+  drPickDay(iso) {
+    const s = this.state;
+    const off = s.bkOff || new Set();
+    const today = isoOf(new Date());
+    if (iso < today) return;
+    if (!s.bkIn || s.bkOut || iso <= s.bkIn) {
+      // A night someone already has cannot start a stay.
+      if (off.has(iso)) return;
+      this.setState({ bkIn: iso, bkOut: '', bkError: '' });
+      return;
+    }
+    // Every night from check-in up to (not including) check-out must be free;
+    // the check-out morning itself may be someone else's arrival.
+    for (let d = s.bkIn; d < iso; d = addDays(d, 1)) {
+      if (off.has(d)) {
+        this.setState({ bkIn: off.has(iso) ? '' : iso, bkOut: '', bkError: this.drErrorText('daily_unavailable') });
+        return;
+      }
+    }
+    this.setState({ bkOut: iso, bkError: '' });
+  }
+
+  async drSubmit(row) {
+    const s = this.state;
+    if (!s.signedIn) { this.setState({ authPrompt: true, authMode: 'signin', authMsg: '' }); return; }
+    if (s.bkBusy) return;
+    if (!s.bkIn || !s.bkOut) {
+      this.setState({ bkError: s.lang === 'ar' ? 'اختر تاريخي الوصول والمغادرة من التقويم.' : 'Pick your check-in and check-out dates on the calendar.' });
+      return;
+    }
+    this.setState({ bkBusy: true, bkError: '' });
+    try {
+      await this.db.requestBooking({
+        propertyId: row.id, checkIn: s.bkIn, checkOut: s.bkOut, guests: s.bkGuests, message: s.bkMsg,
+        name: (s.user && s.user.user_metadata && s.user.user_metadata.full_name) || ''
+      });
+      this.setState({ bkBusy: false, bkMsg: '' });
+      await this.drRefreshBooking(row.id);
+    } catch (e) {
+      this.setState({ bkBusy: false, bkError: this.drErrorText(e) });
+      // A refusal for taken nights means the calendar is out of date.
+      if (/daily_unavailable/.test(String(e && e.message))) this.drRefreshBooking(row.id);
+    }
+  }
+
+  async drCancelRequest(id, { asOwner = false } = {}) {
+    const ar = this.state.lang === 'ar';
+    if (!confirm(asOwner
+      ? (ar ? 'إلغاء هذا الحجز؟ يُبلَّغ الضيف وتعود الليالي متاحة.' : 'Cancel this booking? The guest is told and the nights open up again.')
+      : (ar ? 'إلغاء طلبك؟ يُبلَّغ المالك.' : 'Cancel your request? The owner is told.'))) return;
+    await this.drRespond(id, 'cancel');
+  }
+
+  async drRespond(id, action, extra = {}) {
+    const s = this.state;
+    if (!this.db || s.drBusy) return;
+    this.setState({ drBusy: id });
+    try {
+      await this.db.respondBooking(id, action, extra);
+      this.setState({ drBusy: null });
+      await this.drLoadDash();
+      if (s.bkId) this.drRefreshBooking(s.bkId);
+    } catch (e) {
+      this.setState({ drBusy: null });
+      alert(this.drErrorText(e));
+    }
+  }
+
+  async drLoadDash() {
+    if (!this.db || !this.db.incomingBookingRequests || !this.state.signedIn) return;
+    const [inbox, trips, alerts, shared] = await Promise.all([
+      this.db.incomingBookingRequests().catch(() => []),
+      this.db.myBookingRequests().catch(() => []),
+      this.db.listNotifications().catch(() => []),
+      this.state.drShared ? Promise.resolve(this.state.drShared) : this.db.lastSharedPhone().catch(() => '')
+    ]);
+    this.setState({ drInbox: inbox, drTrips: trips, drAlerts: alerts, drShared: shared || '' });
+  }
+
+  // Live: a new request, an answer, a decision on a listing. Reloads what the
+  // dashboard and an open booking panel show; nothing polls.
+  async drWatch(user) {
+    if (this._drUnwatch) { this._drUnwatch(); this._drUnwatch = null; }
+    if (!user || !this.db || !this.db.watchAccount) return;
+    this.drLoadDash();
+    try {
+      this._drUnwatch = await this.db.watchAccount(user.id, () => {
+        clearTimeout(this._drWatchT);
+        this._drWatchT = setTimeout(() => {
+          this.drLoadDash();
+          if (this.state.bkId) this.drRefreshBooking(this.state.bkId);
+          if (this.state.dashTab === 'listings' || this.state.dashTab === 'overview') this.loadProperties();
+        }, 400);
+      });
+    } catch { /* realtime unavailable: the dashboard still loads on open */ }
+  }
+
+  async drOpenAvail(id) {
+    const s = this.state;
+    const today = isoOf(new Date());
+    this.setState({ dashTab: 'availability', avId: id, avMonth: s.avMonth || today.slice(0, 7), avBlocked: null, avError: '' });
+    if (!this.state.drInbox) this.drLoadDash();
+    try {
+      const blocked = await this.db.listBlockedDays(id);
+      if (this.state.avId === id) this.setState({ avBlocked: blocked });
+    } catch (e) {
+      this.setState({ avBlocked: new Set(), avError: e.message || String(e) });
+    }
+  }
+
+  async drToggleBlocked(iso) {
+    const s = this.state;
+    if (!s.avId || !s.avBlocked || iso < isoOf(new Date())) return;
+    const blocked = new Set(s.avBlocked);
+    const on = !blocked.has(iso);
+    if (on) blocked.add(iso); else blocked.delete(iso);
+    this.setState({ avBlocked: blocked, avError: '' });
+    try {
+      await this.db.setDayBlocked(s.avId, iso, on);
+    } catch (e) {
+      const back = new Set(this.state.avBlocked);
+      if (on) back.delete(iso); else back.add(iso);
+      this.setState({ avBlocked: back, avError: e.message || String(e) });
+    }
+  }
+
+  // One month as a 7-column grid, Sunday first, with blank cells before the
+  // 1st. `cell` decorates each real day.
+  drMonthGrid(month, cell) {
+    const [y, m] = month.split('-').map(Number);
+    const lead = new Date(y, m - 1, 1).getDay();
+    const days = new Date(y, m, 0).getDate();
+    const out = [];
+    for (let i = 0; i < lead; i++) {
+      out.push({ v: '', vis: 'hidden', pick: () => {}, bg: 'transparent', fg: 'transparent', strike: 'none',
+        cursor: 'default', radius: '0', title: '', weight: '300' });
+    }
+    for (let d = 1; d <= days; d++) out.push(cell(isoOf(new Date(y, m - 1, d)), d));
+    return out;
+  }
+
+  drShiftMonth(month, by) {
+    const [y, m] = month.split('-').map(Number);
+    return isoOf(new Date(y, m - 1 + by, 1)).slice(0, 7);
+  }
+
+  drMonthLabel(month, ar) {
+    const [y, m] = month.split('-').map(Number);
+    return new Date(y, m - 1, 1).toLocaleDateString(ar ? 'ar-JO' : 'en-GB', { month: 'long', year: 'numeric' });
+  }
+
+  drWeekdays(ar) {
+    // 2023-01-01 was a Sunday.
+    return Array.from({ length: 7 }, (_, i) => ({
+      v: new Date(2023, 0, 1 + i).toLocaleDateString(ar ? 'ar-JO' : 'en-GB', { weekday: ar ? 'narrow' : 'short' }).slice(0, 2)
+    }));
+  }
+
+  drWhatsApp(phone, row, req, ar) {
+    const title = (ar ? row.title_ar : row.title_en) || row.title_en || row.title_ar || '';
+    const name = (this.state.user && this.state.user.user_metadata && this.state.user.user_metadata.full_name) || '';
+    const text = ar
+      ? `مرحباً${name ? '، أنا ' + name : ''}. وافقت على طلب حجزي في «${title}» على عقارات من ${fmtDay(req.check_in, true)} إلى ${fmtDay(req.check_out, true)} (${req.nights} ليالٍ، ${req.guests} ضيوف). هل يمكننا ترتيب التفاصيل؟`
+      : `Hello${name ? ', this is ' + name : ''}. You approved my Akarat.ai booking request for “${title}” from ${fmtDay(req.check_in, false)} to ${fmtDay(req.check_out, false)} (${req.nights} nights, ${req.guests} guests). Can we arrange the details?`;
+    return `https://wa.me/${waDigits(phone)}?text=${encodeURIComponent(text)}`;
+  }
+
+  drAlertText(n, ar) {
+    const d = n.data || {};
+    const title = (ar ? d.title_ar : d.title_en) || d.title_en || d.title_ar || '';
+    const q = ar ? `«${title}»` : `“${title}”`;
+    const note = d.note ? (ar ? ` السبب: ${d.note}` : ` Reason: ${d.note}`) : '';
+    switch (n.kind) {
+      case 'booking_new': return ar ? `طلب حجز جديد من ${d.renter_name || 'ضيف'} في ${q}.` : `New booking request from ${d.renter_name || 'a guest'} for ${q}.`;
+      case 'booking_approved': return ar ? `وافق المالك على طلبك في ${q}. رقمه ظاهر الآن في حجوزاتك.` : `Your request for ${q} was approved. The owner’s number is now in My bookings.`;
+      case 'booking_rejected': return d.reason === 'dates_taken'
+        ? (ar ? `حُجزت التواريخ التي طلبتها في ${q} لضيف آخر.` : `The dates you asked for at ${q} went to another guest.`)
+        : (ar ? `اعتذر المالك عن طلبك في ${q}.` : `Your request for ${q} was declined.`) + note;
+      case 'booking_confirmed': return ar ? `تأكدت إقامتك في ${q}.` : `Your stay at ${q} is confirmed.`;
+      case 'booking_cancelled': return d.by === 'renter'
+        ? (ar ? `ألغى ${d.renter_name || 'الضيف'} طلبه في ${q}.` : `${d.renter_name || 'The guest'} cancelled their request for ${q}.`)
+        : (ar ? `ألغى المالك حجزك في ${q}.` : `The owner cancelled your booking at ${q}.`) + note;
+      case 'listing_approved': return ar ? `تمت الموافقة على ${q} وأصبح ظاهراً في الإيجار اليومي.` : `${q} was approved and is now live in Daily rentals.`;
+      case 'listing_rejected': return (ar ? `لم تتم الموافقة على ${q}. عدّله واحفظه ليُراجع من جديد.` : `${q} was not approved. Edit and save it to send it for review again.`) + note;
+      case 'listing_suspended': return (ar ? `تم إيقاف ${q}.` : `${q} was suspended.`) + note;
+      case 'listing_unapproved': return (ar ? `أُعيد ${q} للمراجعة وهو مخفي حتى الموافقة عليه.` : `${q} is back in review and hidden until it is approved again.`) + note;
+      default: return title;
     }
   }
 
@@ -2685,7 +3357,8 @@ class Component extends DCLogic {
           : 'Title, price and city are required. Everything else is optional and editable later.'),
       dealOpts: [
         { id: 'sale', label: ar ? 'للبيع' : 'For sale' },
-        { id: 'rent', label: ar ? 'للإيجار' : 'For rent' }
+        { id: 'rent', label: ar ? 'للإيجار' : 'For rent' },
+        { id: 'daily', label: ar ? 'إيجار يومي' : 'Daily rental' }
       ].map(o => ({
         label: o.label,
         pick: () => this.setListingField('deal', o.id),
@@ -2782,7 +3455,24 @@ class Component extends DCLogic {
       translateNote: s.translateNote || '',
       priceLabel: f.deal === 'rent'
         ? (ar ? 'الإيجار الشهري بالدينار' : 'Monthly rent in JOD')
+        : f.deal === 'daily'
+        ? (ar ? 'سعر الليلة بالدينار' : 'Price per night in JOD')
         : (ar ? 'السعر بالدينار' : 'Price in JOD'),
+
+      // Daily rentals: who it sleeps and the shortest stay, and the two
+      // things an owner should know before publishing — it waits for review,
+      // and their number stays private until they approve a guest.
+      formIsDaily: f.deal === 'daily',
+      formNotDaily: f.deal !== 'daily',
+      lblMaxGuests: ar ? 'أقصى عدد ضيوف' : 'Sleeps up to (guests)',
+      lblMinNights: ar ? 'أقل مدة إقامة (ليالٍ)' : 'Minimum stay (nights)',
+      onMaxGuests: on('max_guests'), onMinNights: on('min_nights'),
+      dailyReviewNote: ar
+        ? 'يراجع فريق عقارات كل إعلان يومي قبل ظهوره. تظهر علامة رمادية حتى تتم الموافقة، ثم تصبح خضراء ويظهر الإعلان للجميع.'
+        : 'Every daily rental is checked by the Akarat.ai team before it appears. It carries a grey check until approved, then a green one, and goes live.',
+      dailyPhoneNote: ar
+        ? 'رقمك لا يُنشر على الإعلان. عندما توافق على طلب حجز، تختار الرقم الذي يظهر لذلك الضيف وحده مع زر واتساب.'
+        : 'Your number is not published on the listing. When you approve a booking request, you choose the number that guest alone sees, with a WhatsApp button.',
       lblType: ar ? 'نوع العقار' : 'Property type',
       lblCity: ar ? 'المدينة' : 'City',
       lblBeds: ar ? 'غرف النوم' : 'Bedrooms',
@@ -2881,6 +3571,8 @@ class Component extends DCLogic {
       price_jod: '', bedrooms: '', bathrooms: '', area_sqm: '', land_sqm: '', year_built: '',
       title_en: '', title_ar: '', description_en: '', description_ar: '', amenities: [],
       contact_phone: '', photos: [],
+      // Daily rentals only.
+      max_guests: '', min_nights: '1',
       // The pin. `lat`/`lng` are the exact point the owner placed; what gets
       // published is decided by `precision` at save time (lib/geo.js → blur).
       // 'approximate' is the default because the conservative answer is the
@@ -2916,6 +3608,8 @@ class Component extends DCLogic {
       description_ar: p.description_ar || '',
       amenities: Array.isArray(p.amenities) ? [...p.amenities] : [],
       contact_phone: (p.contact && p.contact.phone) || '',
+      max_guests: row.max_guests == null ? '' : String(row.max_guests),
+      min_nights: row.min_nights == null ? '1' : String(row.min_nights),
       // Already in Storage. `existing` marks them so submit knows not to
       // re-upload them and removePhoto knows there is no object URL to revoke.
       photos: (p.images || []).map(img => ({
@@ -3393,6 +4087,19 @@ class Component extends DCLogic {
       this.setState({ formError: ar ? 'السعر يجب أن يكون أكبر من صفر' : 'The price must be greater than zero' });
       return;
     }
+    const daily = f.deal === 'daily';
+    if (daily) {
+      const guests = num(f.max_guests);
+      const nights = num(f.min_nights) || 1;
+      if (!guests || guests > 50) {
+        this.setState({ formError: ar ? 'أدخل أقصى عدد ضيوف (من ١ إلى ٥٠).' : 'Enter how many guests it sleeps (1 to 50).' });
+        return;
+      }
+      if (nights > 30) {
+        this.setState({ formError: ar ? 'أقل مدة إقامة يجب ألا تتجاوز ٣٠ ليلة.' : 'The minimum stay can be at most 30 nights.' });
+        return;
+      }
+    }
 
     this.setState({ formBusy: true, formError: '', uploadNote: '' });
 
@@ -3486,7 +4193,10 @@ class Component extends DCLogic {
         // exact pin. Pairing a precise address with a blurred point would
         // give the blur away for nothing.
         address: publishable && exact ? (f.address || null) : null
-      } : {})
+      } : {}),
+      // Columns from 0019, sent only for a daily rental so that saving a sale
+      // or a rent never names a column an older database does not have.
+      ...(daily ? { max_guests: num(f.max_guests), min_nights: num(f.min_nights) || 1 } : {})
     };
     const payload = {
       amenities: f.amenities,
@@ -3494,7 +4204,9 @@ class Component extends DCLogic {
       description_ar: words.description_ar,
       images: photos,
       contact: {
-        phone: (f.contact_phone || '').trim(),
+        // The payload is public. A daily rental's number is shared with one
+        // guest at a time, when the owner approves them, never here.
+        phone: daily ? '' : (f.contact_phone || '').trim(),
         whatsapp: true, messaging: true
       }
     };
@@ -3540,9 +4252,14 @@ class Component extends DCLogic {
       // Same idea for the columns 0010 adds: without it the update is
       // rejected for a reason that reads like a bug in the app.
       const noGeo = /location_precision|'address'|column .* does not exist/i.test(msg);
+      const noDaily = daily && /deal_type|max_guests|min_nights/i.test(msg);
       this.setState({
         formBusy: false,
-        formError: fk
+        formError: noDaily
+          ? (ar
+            ? 'الإيجار اليومي غير مهيّأ في قاعدة البيانات بعد. شغّل الملف 0019_daily_rentals.sql في Supabase، ثم أعد المحاولة.'
+            : 'Daily rentals are not set up in the database yet. Run 0019_daily_rentals.sql in Supabase, then try again.')
+          : fk
           ? (ar
             ? 'هذه المنطقة غير مضافة في قاعدة البيانات بعد. يلزم تشغيل الملف 0009_locations.sql في Supabase، ثم أعد المحاولة.'
             : 'This area is not set up in the database yet. Run 0009_locations.sql in Supabase, then try again.')
@@ -3557,6 +4274,18 @@ class Component extends DCLogic {
 
   openDashTab(id) {
     this.setState({ dashTab: id });
+    if (id === 'bookings' || id === 'trips' || id === 'alerts') {
+      this.drLoadDash().then(() => {
+        // Opening the list is reading it.
+        if (id === 'alerts' && (this.state.drAlerts || []).some(n => !n.read_at) && this.db.markNotificationsRead) {
+          this.db.markNotificationsRead().then(() => this.drLoadDash());
+        }
+      });
+    }
+    if (id === 'availability' && !this.state.avId) {
+      const first = (this.state.myProps || []).find(p => p.deal === 'daily');
+      if (first) this.drOpenAvail(first.id);
+    }
     if (id === 'inquiries' && !this.state.inquiries && this.db) {
       this.db.listInquiries()
         .then(rows => this.setState({ inquiries: rows || [] }))
@@ -3578,7 +4307,19 @@ class Component extends DCLogic {
       inquiries: { t: L.navInquiries, sub: ar ? 'رسائل الباحثين عن عقاراتك.' : 'Messages from people asking about your properties.' },
       messages: { t: L.navMessages, sub: ar ? 'المحادثات المباشرة.' : 'Direct conversations.' },
       analytics: { t: L.navAnalytics, sub: ar ? 'أداء إعلاناتك بمرور الوقت.' : 'How your listings perform over time.' },
-      saved: { t: L.navSaved, sub: ar ? 'عمليات البحث التي حفظتها للرجوع إليها.' : 'Searches you saved to come back to.' }
+      saved: { t: L.navSaved, sub: ar ? 'عمليات البحث التي حفظتها للرجوع إليها.' : 'Searches you saved to come back to.' },
+      bookings: { t: ar ? 'طلبات الحجز' : 'Booking requests', sub: ar
+        ? 'طلبات الضيوف على إعلاناتك اليومية. وافق ليظهر رقمك للضيف، ثم أكّد الحجز بعد الاتفاق لتُغلق الليالي في التقويم.'
+        : 'Guests asking for your daily rentals. Approve to show them your number, then confirm once you have agreed, and the nights close on your calendar.' },
+      trips: { t: ar ? 'حجوزاتي' : 'My bookings', sub: ar
+        ? 'طلباتك للإقامة اليومية. يظهر رقم المالك وزر واتساب فور موافقته.'
+        : 'Your requests for daily stays. The owner’s number and a WhatsApp button appear as soon as they approve.' },
+      availability: { t: ar ? 'التوفر' : 'Availability', sub: ar
+        ? 'اضغط على يوم لإغلاقه أو فتحه. الليالي المؤكدة مغلقة تلقائياً.'
+        : 'Tap a day to close or open it. Confirmed stays close their nights on their own.' },
+      alerts: { t: ar ? 'الإشعارات' : 'Notifications', sub: ar
+        ? 'كل ما حدث على طلباتك وإعلاناتك.'
+        : 'Everything that happened to your requests and listings.' }
     };
 
     const EMPTY = {
@@ -3640,6 +4381,7 @@ class Component extends DCLogic {
     const cover = media[coverAt] || null;
     const coverIsVideo = isVideo(cover);
     const rent = row.deal === 'rent';
+    const daily = row.deal === 'daily';
     const narrow = s.narrow;
 
     // Arabic content from the database wins over anything the interface could
@@ -3685,7 +4427,9 @@ class Component extends DCLogic {
 
     const spec = [
       { k: ar ? 'نوع العقار' : 'Property type', v: typeName },
-      { k: ar ? 'حالة العرض' : 'Listing', v: rent ? (ar ? 'للإيجار' : 'For rent') : (ar ? 'للبيع' : 'For sale') },
+      { k: ar ? 'حالة العرض' : 'Listing', v: rent ? (ar ? 'للإيجار' : 'For rent') : daily ? (ar ? 'إيجار يومي' : 'Daily rental') : (ar ? 'للبيع' : 'For sale') },
+      daily && row.max_guests ? { k: ar ? 'يتسع لـ' : 'Sleeps', v: `${row.max_guests} ${ar ? 'ضيوف' : row.max_guests === 1 ? 'guest' : 'guests'}` } : null,
+      daily ? { k: ar ? 'أقل مدة إقامة' : 'Minimum stay', v: `${row.min_nights || 1} ${ar ? 'ليلة' : (row.min_nights || 1) === 1 ? 'night' : 'nights'}` } : null,
       row.bedrooms ? { k: ar ? 'عدد غرف النوم' : 'Bedrooms', v: String(row.bedrooms) } : null,
       row.bathrooms ? { k: ar ? 'الحمامات' : 'Bathrooms', v: String(row.bathrooms) } : null,
       row.area_sqm ? { k: ar ? 'المساحة' : 'Area', v: `${num(row.area_sqm)} ${sqm}` } : null,
@@ -3725,7 +4469,7 @@ class Component extends DCLogic {
 
     // Four more listings a buyer would plausibly look at next: same city and
     // same deal first, then anything else in the same deal.
-    const pool = (s.market || []).filter(r => r.id !== row.id);
+    const pool = ((daily ? s.drRows : s.market) || []).filter(r => r.id !== row.id);
     const similar = pool
       .filter(r => r.deal === row.deal && r.city_id === row.city_id)
       .concat(pool.filter(r => r.deal === row.deal && r.city_id !== row.city_id))
@@ -3739,10 +4483,14 @@ class Component extends DCLogic {
 
     return {
       isDetail: true,
+      dIsDaily: daily,
+      dNotDaily: !daily,
       dTitle: title,
       dPlace: place,
       dPrice: rent
         ? `${num(row.price_jod)} ${ar ? 'د.أ / شهرياً' : 'JOD / month'}`
+        : daily
+        ? `${num(row.price_jod)} ${ar ? 'د.أ / ليلة' : 'JOD / night'}`
         : `${num(row.price_jod)} ${ar ? 'د.أ' : 'JOD'}`,
       dHasPricePer: !!perSqm,
       dPricePer: perSqm ? `${num(perSqm)} ${ar ? `د.أ / ${sqm}` : `JOD / ${sqm}`}` : '',
@@ -3750,8 +4498,8 @@ class Component extends DCLogic {
       // old badge said "For sale" on a property that had already sold.
       dBadge: dClosed
         ? (row.status === 'rented' ? (ar ? 'مؤجَّر' : 'Rented') : (ar ? 'مباع' : 'Sold'))
-        : rent ? (ar ? 'للإيجار' : 'For rent') : (ar ? 'للبيع' : 'For sale'),
-      dBadgeBg: dClosed ? '#CE1126' : rent ? '#17170F' : '#007A3D',
+        : rent ? (ar ? 'للإيجار' : 'For rent') : daily ? (ar ? 'إيجار يومي' : 'Daily rental') : (ar ? 'للبيع' : 'For sale'),
+      dBadgeBg: dClosed ? '#CE1126' : rent ? '#17170F' : daily ? '#00693A' : '#007A3D',
       dClosed,
       dNotClosed: !dClosed,
       dClosedFilter: dClosed ? 'grayscale(1) contrast(0.92) brightness(0.9)' : 'none',
@@ -3879,7 +4627,7 @@ class Component extends DCLogic {
       dPhoneHref: phone ? 'tel:' + phone.replace(/[^\d+]/g, '') : '',
       dCopyLabel: s.copiedPhone ? (ar ? 'تم نسخ الرقم' : 'Number copied') : (ar ? 'نسخ الرقم' : 'Copy number'),
       dCopyPhone: () => this.copyText(phone, 'copiedPhone'),
-      dShowMobileBar: narrow && !!phone,
+      dShowMobileBar: narrow && !!phone && !daily,
 
       dListedBy: row.verified
         ? (ar ? 'إعلان موثّق' : 'Verified listing')
@@ -3906,6 +4654,355 @@ class Component extends DCLogic {
       enquire: () => { window.location.href = `mailto:hello@akarat.ai?subject=${encodeURIComponent(title)}`; },
       findSimilar: () => this.setState({ query: title, screen: 'search', detail: null }, () => this.submit(null, { fresh: true }))
     };
+  }
+
+  /**
+   * Everything the daily-rental parts of the page read: the browse page, the
+   * booking panel on a daily listing, and the dashboard's requests, bookings,
+   * availability and notifications. Keys are prefixed dr…/bk…/av… so nothing
+   * here can shadow a key of another section. Every key is always present,
+   * so a template part that is not on screen still has its values.
+   */
+  dailyVals(ar) {
+    const s = this.state;
+    const M = this.M || {};
+    const today = isoOf(new Date());
+    const num = n => Number(n || 0).toLocaleString('en-US');
+    const jod = n => `${num(n)} ${ar ? 'د.أ' : 'JOD'}`;
+    const nightsWord = n => ar ? `${n} ${n === 1 ? 'ليلة' : n === 2 ? 'ليلتان' : n <= 10 ? 'ليالٍ' : 'ليلة'}` : `${n} ${n === 1 ? 'night' : 'nights'}`;
+    const guestsWord = n => ar ? `${n} ${n === 1 ? 'ضيف' : n === 2 ? 'ضيفان' : n <= 10 ? 'ضيوف' : 'ضيفاً'}` : `${n} ${n === 1 ? 'guest' : 'guests'}`;
+    const titleOf = r => (r ? ((ar ? r.title_ar : r.title_en) || r.title_en || r.title_ar || '') : '');
+    const dates = r => `${fmtDay(r.check_in, ar)} → ${fmtDay(r.check_out, ar)}`;
+
+    /* ── the browse page ── */
+    const rows = s.drRows || [];
+    const nights = s.drIn && s.drOut ? nightsBetween(s.drIn, s.drOut) : 0;
+    const drCards = rows.map(r => {
+      const c = this.cardOf(r);
+      return {
+        ...c,
+        sleeps: r.max_guests ? (ar ? `يتسع لـ ${guestsWord(r.max_guests)}` : `Sleeps ${r.max_guests}`) : '',
+        minStay: (r.min_nights || 1) > 1 ? (ar ? `أقل إقامة ${nightsWord(r.min_nights)}` : `${r.min_nights}-night minimum`) : '',
+        hasTotal: nights > 0,
+        total: nights > 0 ? (ar ? `${jod(r.price_jod * nights)} لـ ${nightsWord(nights)}` : `${jod(r.price_jod * nights)} for ${nightsWord(nights)}`) : ''
+      };
+    });
+    const guestOpts = [{ value: '', label: [ar ? 'أي عدد' : 'Any guests'] }]
+      .concat(Array.from({ length: 16 }, (_, i) => ({ value: String(i + 1), label: [guestsWord(i + 1)] })));
+
+    /* ── the booking panel ── */
+    const row = s.detail && s.detail.deal === 'daily' ? s.detail : null;
+    const off = s.bkOff || new Set();
+    const mine = s.bkMine;
+    const own = !!(row && s.user && row.owner_id === s.user.id);
+    const open = mine && (mine.status === 'pending' || mine.status === 'approved');
+    const bkNights = s.bkIn && s.bkOut ? nightsBetween(s.bkIn, s.bkOut) : 0;
+    const month = s.bkMonth || today.slice(0, 7);
+    const inRange = iso => s.bkIn && s.bkOut && iso > s.bkIn && iso < s.bkOut;
+    const bkDays = row ? this.drMonthGrid(month, (iso, d) => {
+      const past = iso < today;
+      const taken = off.has(iso);
+      const edge = iso === s.bkIn || iso === s.bkOut;
+      const mid = inRange(iso);
+      // A taken night can still be the morning someone leaves.
+      const pickable = !past && (!taken || (s.bkIn && !s.bkOut && iso > s.bkIn));
+      return {
+        v: String(d), vis: 'visible',
+        pick: () => pickable && this.drPickDay(iso),
+        bg: edge ? '#007A3D' : mid ? 'rgba(0,122,61,0.12)' : 'transparent',
+        fg: edge ? '#FFFFFF' : past || (taken && !pickable) ? 'rgba(23,23,15,0.28)' : '#17170F',
+        strike: taken && !edge ? 'line-through' : 'none',
+        cursor: pickable ? 'pointer' : 'default',
+        radius: edge ? '50%' : mid ? '0' : '50%',
+        weight: iso === today ? '600' : '300',
+        title: taken ? (ar ? 'محجوز' : 'Not available') : ''
+      };
+    }) : [];
+    const STATUS = {
+      pending: [ar ? 'بانتظار ردّ المالك' : 'Waiting for the owner', '#8A5A00', 'rgba(196,135,0,0.1)', 'rgba(196,135,0,0.3)'],
+      approved: [ar ? 'وافق المالك' : 'The owner approved', '#00693A', 'rgba(0,122,61,0.08)', 'rgba(0,122,61,0.3)'],
+      confirmed: [ar ? 'إقامة مؤكدة' : 'Stay confirmed', '#00693A', 'rgba(0,122,61,0.08)', 'rgba(0,122,61,0.3)'],
+      rejected: [ar ? 'لم تتم الموافقة' : 'Not accepted', '#B00F20', 'rgba(206,17,38,0.06)', 'rgba(206,17,38,0.26)'],
+      cancelled: [ar ? 'ملغى' : 'Cancelled', 'rgba(23,23,15,0.6)', 'rgba(23,23,15,0.04)', 'rgba(23,23,15,0.14)']
+    };
+    const statusBody = r => {
+      if (!r) return '';
+      if (r.status === 'pending') return ar
+        ? 'أرسلنا طلبك للمالك. سيظهر رقمه هنا مع زر واتساب فور موافقته، ونُعلمك بذلك.'
+        : 'Your request is with the owner. Their number appears here, with a WhatsApp button, as soon as they approve. We will let you know.';
+      if (r.status === 'approved') return ar
+        ? 'تواصل مع المالك لترتيب الإقامة. هذا طلب وليس حجزاً مؤكداً حتى تتفقا ويؤكده المالك.'
+        : 'Contact the owner to arrange your stay. It is a request, not a confirmed booking, until you agree and the owner confirms it.';
+      if (r.status === 'confirmed') return ar ? 'أكد المالك إقامتك لهذه الليالي.' : 'The owner confirmed your stay for these nights.';
+      if (r.status === 'rejected') return r.closed_reason === 'dates_taken'
+        ? (ar ? 'حُجزت هذه الليالي لضيف آخر. جرّب تواريخ أخرى.' : 'These nights went to another guest. Try other dates.')
+        : (ar ? 'اعتذر المالك عن هذا الطلب.' : 'The owner declined this request.') + (r.response_note ? ` “${r.response_note}”` : '');
+      if (r.status === 'cancelled') return r.cancelled_by === 'owner'
+        ? (ar ? 'ألغى المالك هذا الحجز.' : 'The owner cancelled this booking.')
+        : (ar ? 'ألغيت هذا الطلب.' : 'You cancelled this request.');
+      return '';
+    };
+    const phoneShown = mine && (mine.status === 'approved' || mine.status === 'confirmed') && mine.owner_phone;
+
+    /* ── the dashboard ── */
+    const inbox = s.drInbox || [];
+    const trips = s.drTrips || [];
+    const alerts = s.drAlerts || [];
+    const pill = st => STATUS[st] || STATUS.cancelled;
+    const drInbox = inbox.map(r => {
+      const p = pill(r.status);
+      const past = r.check_in < today;
+      return {
+        who: r.renter_name || (ar ? 'ضيف' : 'Guest'),
+        about: titleOf(r.properties) || (ar ? 'إعلان محذوف' : 'Deleted listing'),
+        dates: dates(r),
+        facts: `${nightsWord(r.nights)} · ${guestsWord(r.guests)} · ${jod(r.total_price)}`,
+        status: r.status === 'pending' && past ? (ar ? 'انتهت مدته' : 'Expired') : p[0],
+        pillFg: p[1], pillBg: p[2], pillBorder: p[3],
+        hasMessage: !!r.message, message: r.message || '',
+        hasNote: r.status === 'rejected' && r.closed_reason === 'dates_taken',
+        note: ar ? 'أُغلق تلقائياً: أكدت حجزاً آخر لهذه الليالي.' : 'Closed for you: you confirmed another stay for these nights.',
+        sharedPhone: r.owner_phone ? (ar ? `رقمك الظاهر للضيف: ${r.owner_phone}` : `Number shown to the guest: ${r.owner_phone}`) : '',
+        hasShared: !!r.owner_phone,
+        canApprove: r.status === 'pending' && !past,
+        canConfirm: r.status === 'approved',
+        canCancel: r.status === 'approved' || r.status === 'confirmed',
+        busy: s.drBusy === r.id,
+        phone: s.drPhones[r.id] != null ? s.drPhones[r.id] : s.drShared,
+        onPhone: e => this.setState({ drPhones: { ...this.state.drPhones, [r.id]: e.target.value } }),
+        approve: () => this.drRespond(r.id, 'approve', { phone: (s.drPhones[r.id] != null ? s.drPhones[r.id] : s.drShared) || '' }),
+        reject: () => {
+          const note = prompt(ar ? 'سبب الاعتذار (اختياري، يراه الضيف):' : 'A reason for the guest (optional):', '');
+          if (note !== null) this.drRespond(r.id, 'reject', { note: note.trim() || null });
+        },
+        confirm: () => {
+          if (confirm(ar
+            ? 'تأكيد هذه الإقامة؟ تُغلق لياليها في تقويمك، ويُعتذر تلقائياً عن الطلبات الأخرى لنفس الليالي.'
+            : 'Confirm this stay? Its nights close on your calendar, and other requests for the same nights are declined for you.')) this.drRespond(r.id, 'confirm');
+        },
+        cancel: () => this.drCancelRequest(r.id, { asOwner: true })
+      };
+    });
+    const drTrips = trips.map(r => {
+      const p = pill(r.status);
+      const prop = r.properties;
+      const shown = (r.status === 'approved' || r.status === 'confirmed') && r.owner_phone;
+      return {
+        about: titleOf(prop) || (ar ? 'إعلان لم يعد متاحاً' : 'Listing no longer available'),
+        dates: dates(r),
+        facts: `${nightsWord(r.nights)} · ${guestsWord(r.guests)} · ${jod(r.total_price)}`,
+        status: p[0], pillFg: p[1], pillBg: p[2], pillBorder: p[3],
+        body: statusBody(r),
+        hasPhone: !!shown,
+        phone: r.owner_phone || '',
+        tel: shown ? 'tel:' + r.owner_phone.replace(/[^\d+]/g, '') : '',
+        whatsApp: shown && prop ? this.drWhatsApp(r.owner_phone, prop, r, ar) : (shown ? `https://wa.me/${waDigits(r.owner_phone)}` : ''),
+        canCancel: r.status === 'pending' || r.status === 'approved' || r.status === 'confirmed',
+        cancel: () => this.drCancelRequest(r.id),
+        canOpen: !!prop,
+        open: () => { if (prop) this.openFromId(prop.id); }
+      };
+    });
+    const unread = alerts.filter(n => !n.read_at).length;
+    const drAlerts = alerts.map(n => ({
+      text: this.drAlertText(n, ar),
+      when: n.created_at ? new Date(n.created_at).toLocaleString(ar ? 'ar-JO' : 'en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '',
+      dot: n.read_at ? 'transparent' : '#CE1126',
+      dates: n.data && n.data.check_in ? `${fmtDay(n.data.check_in, ar)} → ${fmtDay(n.data.check_out, ar)}` : '',
+      go: () => this.openDashTab(n.kind === 'booking_new' || (n.kind === 'booking_cancelled' && n.data && n.data.by === 'renter')
+        ? 'bookings' : n.kind.startsWith('booking_') ? 'trips' : 'listings')
+    }));
+
+    // Availability: one of the owner's daily rentals, a month at a time.
+    const myDaily = (s.myProps || []).filter(p => p.deal === 'daily');
+    const avMonth = s.avMonth || today.slice(0, 7);
+    const booked = new Set();
+    for (const r of inbox) {
+      if (r.status !== 'confirmed' || r.property_id !== s.avId) continue;
+      for (let d = r.check_in; d < r.check_out; d = addDays(d, 1)) booked.add(d);
+    }
+    const blocked = s.avBlocked || new Set();
+    const avDays = s.avId ? this.drMonthGrid(avMonth, (iso, d) => {
+      const past = iso < today;
+      const isBooked = booked.has(iso);
+      const isBlocked = blocked.has(iso);
+      return {
+        v: String(d), vis: 'visible',
+        pick: () => { if (!past && !isBooked) this.drToggleBlocked(iso); },
+        bg: isBooked ? '#007A3D' : isBlocked ? 'rgba(206,17,38,0.12)' : 'transparent',
+        fg: isBooked ? '#FFFFFF' : past ? 'rgba(23,23,15,0.28)' : isBlocked ? '#B00F20' : '#17170F',
+        strike: isBlocked ? 'line-through' : 'none',
+        cursor: past || isBooked ? 'default' : 'pointer',
+        radius: '10px',
+        weight: iso === today ? '600' : '300',
+        title: isBooked ? (ar ? 'إقامة مؤكدة' : 'Confirmed stay') : isBlocked ? (ar ? 'مغلق' : 'Closed') : (ar ? 'متاح' : 'Open')
+      };
+    }) : [];
+
+    return {
+      /* browse */
+      isDaily: s.screen === 'daily',
+      drKicker: ar ? 'إقامات قصيرة' : 'Short stays',
+      drTitle: ar ? 'الإيجار اليومي' : 'Daily rentals',
+      drBody: ar
+        ? 'شقق وبيوت وشاليهات لليلة أو أكثر في أنحاء الأردن. كل إعلان هنا تمت مراجعته قبل نشره. اختر تواريخك لترى المتاح فقط والسعر الكامل.'
+        : 'Flats, houses and chalets for a night or more across Jordan. Every listing here was checked before it went live. Pick your dates to see only what is free, and the full price.',
+      drLblCheckIn: ar ? 'الوصول' : 'Check-in',
+      drLblCheckOut: ar ? 'المغادرة' : 'Check-out',
+      drLblGuests: ar ? 'الضيوف' : 'Guests',
+      drLblCity: ar ? 'المدينة' : 'City',
+      drToday: today,
+      drIn: s.drIn, drOut: s.drOut, drGuests: s.drGuests, drCity: s.drCity,
+      drMinOut: s.drIn ? addDays(s.drIn, 1) : addDays(today, 1),
+      drOnIn: e => this.drFilter({ drIn: e.target.value }),
+      drOnOut: e => this.drFilter({ drOut: e.target.value }),
+      drOnGuests: e => this.drFilter({ drGuests: e.target.value }),
+      drOnCity: e => this.drFilter({ drCity: e.target.value }),
+      drGuestOpts: guestOpts,
+      drCityOpts: [{ value: '', label: [ar ? 'كل المدن' : 'All cities'] }]
+        .concat((M.CITIES || []).map(c => ({ value: c.id, label: [this.loc(c)] }))),
+      drHasFilters: !!(s.drIn || s.drOut || s.drGuests || s.drCity),
+      drClear: () => this.drFilter({ drIn: '', drOut: '', drGuests: '', drCity: '' }),
+      drClearLabel: ar ? 'مسح' : 'Clear',
+      drCount: s.drRows ? (ar ? `${rows.length} مكان` : `${rows.length} ${rows.length === 1 ? 'place' : 'places'}`)
+        + (nights ? (ar ? ` · ${nightsWord(nights)}` : ` · ${nightsWord(nights)}`) : '') : '',
+      drLoading: !!s.drLoading && !s.drRows,
+      drLoadingLabel: ar ? 'جارٍ التحميل…' : 'Loading…',
+      drHasError: !!s.drError,
+      drError: s.drError || '',
+      drCards,
+      drHasCards: drCards.length > 0,
+      drEmpty: !!s.drRows && !drCards.length && !s.drLoading,
+      drEmptyTitle: s.drIn || s.drGuests || s.drCity
+        ? (ar ? 'لا شيء متاح بهذه الشروط' : 'Nothing free for that')
+        : (ar ? 'لا إعلانات يومية بعد' : 'No daily rentals yet'),
+      drEmptyBody: s.drIn || s.drGuests || s.drCity
+        ? (ar ? 'جرّب تواريخ أخرى أو عدداً أقل من الضيوف أو مدينة أخرى.' : 'Try other dates, fewer guests, or another city.')
+        : (ar ? 'أول الإعلانات في الطريق. لديك مكان تؤجره بالليلة؟ اعرضه هنا.' : 'The first places are on their way. Have one to let by the night? List it here.'),
+      drVerified: ar ? 'موثّق' : 'Verified',
+
+      /* booking panel */
+      bkPrice: row ? jod(row.price_jod) : '',
+      bkPerNight: ar ? '/ ليلة' : '/ night',
+      bkRules: row ? [row.max_guests ? (ar ? `يتسع لـ ${guestsWord(row.max_guests)}` : `Sleeps ${row.max_guests}`) : '',
+        (row.min_nights || 1) > 1 ? (ar ? `أقل إقامة ${nightsWord(row.min_nights)}` : `${row.min_nights}-night minimum`) : ''].filter(Boolean).join(' · ') : '',
+      bkOwn: own,
+      bkOwnNote: ar ? 'هذا إعلانك. تصلك طلبات الحجز في لوحة التحكم.' : 'This is your listing. Booking requests arrive in your dashboard.',
+      bkGoDash: () => { this.setState({ screen: 'dash' }); this.openDashTab('bookings'); this.scrollTop(); },
+      bkGoDashLabel: ar ? 'طلبات الحجز' : 'Booking requests',
+      bkHasMine: !!mine && !own,
+      bkMineTitle: mine ? pill(mine.status)[0] : '',
+      bkMineFg: mine ? pill(mine.status)[1] : '#17170F',
+      bkMineBg: mine ? pill(mine.status)[2] : 'transparent',
+      bkMineBorder: mine ? pill(mine.status)[3] : 'transparent',
+      bkMineDates: mine ? `${dates(mine)} · ${nightsWord(mine.nights)} · ${guestsWord(mine.guests)} · ${jod(mine.total_price)}` : '',
+      bkMineBody: statusBody(mine),
+      bkMineHasPhone: !!phoneShown,
+      bkMinePhone: phoneShown ? mine.owner_phone : '',
+      bkMineTel: phoneShown ? 'tel:' + mine.owner_phone.replace(/[^\d+]/g, '') : '',
+      bkMineWhatsApp: phoneShown && row ? this.drWhatsApp(mine.owner_phone, row, mine, ar) : '',
+      bkMineCanCancel: !!mine && ['pending', 'approved', 'confirmed'].includes(mine.status),
+      bkMineCancel: () => mine && this.drCancelRequest(mine.id),
+      bkLblWhatsApp: ar ? 'تواصل عبر واتساب' : 'Contact on WhatsApp',
+      bkLblCall: ar ? 'اتصال' : 'Call',
+      bkLblCancel: ar ? 'إلغاء الطلب' : 'Cancel request',
+      bkShowForm: !!row && !own && !open,
+      bkMonthLabel: this.drMonthLabel(month, ar),
+      bkCanPrev: month > today.slice(0, 7),
+      bkPrev: () => { if (month > today.slice(0, 7)) this.setState({ bkMonth: this.drShiftMonth(month, -1) }); },
+      bkNext: () => this.setState({ bkMonth: this.drShiftMonth(month, 1) }),
+      bkPrevFg: month > today.slice(0, 7) ? '#17170F' : 'rgba(23,23,15,0.2)',
+      bkWeekdays: this.drWeekdays(ar),
+      bkDays,
+      bkLegend: ar ? 'الأيام المشطوبة غير متاحة.' : 'Crossed-out days are taken.',
+      bkLblIn: ar ? 'الوصول' : 'Check-in',
+      bkLblOut: ar ? 'المغادرة' : 'Check-out',
+      bkInLabel: s.bkIn ? fmtDay(s.bkIn, ar) : (ar ? 'اختر يوماً' : 'Pick a day'),
+      bkOutLabel: s.bkOut ? fmtDay(s.bkOut, ar) : (ar ? 'اختر يوماً' : 'Pick a day'),
+      bkLblGuests: ar ? 'عدد الضيوف' : 'Guests',
+      bkGuests: s.bkGuests,
+      bkGuestOpts: Array.from({ length: Math.min(row && row.max_guests ? row.max_guests : 16, 50) }, (_, i) => ({ value: String(i + 1), label: [guestsWord(i + 1)] })),
+      bkOnGuests: e => this.setState({ bkGuests: e.target.value }),
+      bkMsg: s.bkMsg,
+      bkOnMsg: e => this.setState({ bkMsg: e.target.value }),
+      bkMsgPlaceholder: ar ? 'رسالة للمالك (اختياري): من أنتم وسبب الزيارة' : 'A note for the owner (optional): who is coming, and why',
+      bkHasTotal: bkNights > 0,
+      bkNightsLine: row && bkNights ? `${jod(row.price_jod)} × ${nightsWord(bkNights)}` : '',
+      bkTotal: row && bkNights ? jod(row.price_jod * bkNights) : '',
+      bkLblTotal: ar ? 'المجموع التقديري' : 'Estimated total',
+      bkHasError: !!s.bkError,
+      bkError: s.bkError || '',
+      bkSubmit: () => row && this.drSubmit(row),
+      bkSubmitLabel: !s.signedIn ? (ar ? 'سجّل الدخول لطلب الحجز' : 'Sign in to request')
+        : s.bkBusy ? (ar ? 'جارٍ الإرسال…' : 'Sending…')
+        : (ar ? 'اطلب الحجز' : 'Request to book'),
+      bkSubmitBg: s.bkBusy ? 'rgba(23,23,15,0.4)' : '#007A3D',
+      bkFine: ar
+        ? 'لن تدفع شيئاً الآن. هذا طلب للمالك، ويظهر رقمه وزر واتساب فور موافقته.'
+        : 'Nothing is charged. This sends a request to the owner; their number and a WhatsApp button appear once they approve.',
+
+      /* dashboard */
+      drShowInbox: s.dashTab === 'bookings',
+      drInbox,
+      drInboxEmpty: !drInbox.length,
+      drInboxEmptyLabel: s.drInbox == null ? (ar ? 'جارٍ التحميل…' : 'Loading…')
+        : (ar ? 'لا طلبات حجز بعد. تصل هنا فور طلب أحدهم إعلاناً يومياً لك.' : 'No booking requests yet. They arrive here the moment someone asks for one of your daily rentals.'),
+      drLblPhoneToShare: ar ? 'رقمك للضيف' : 'Your number for the guest',
+      drApproveHint: ar ? 'يظهر هذا الرقم لهذا الضيف وحده، مع زر واتساب.' : 'This number is shown to this guest only, with a WhatsApp button.',
+      drLblApprove: ar ? 'موافقة وإظهار رقمي' : 'Approve and share my number',
+      drLblReject: ar ? 'اعتذار' : 'Decline',
+      drLblConfirm: ar ? 'تأكيد الإقامة' : 'Confirm stay',
+      drLblCancelStay: ar ? 'إلغاء' : 'Cancel',
+      drShowTrips: s.dashTab === 'trips',
+      drTrips,
+      drTripsEmpty: !drTrips.length,
+      drTripsEmptyLabel: s.drTrips == null ? (ar ? 'جارٍ التحميل…' : 'Loading…')
+        : (ar ? 'لم تطلب أي إقامة بعد. تصفح الإيجار اليومي واختر تواريخك.' : 'You have not asked for a stay yet. Browse Daily rentals and pick your dates.'),
+      drLblWhatsApp: ar ? 'واتساب' : 'WhatsApp',
+      drLblCall: ar ? 'اتصال' : 'Call',
+      drLblCancelRequest: ar ? 'إلغاء الطلب' : 'Cancel request',
+      drLblOpen: ar ? 'عرض الإعلان' : 'View listing',
+      drShowAlerts: s.dashTab === 'alerts',
+      drAlerts,
+      drAlertsEmpty: !drAlerts.length,
+      drAlertsEmptyLabel: ar ? 'لا إشعارات بعد.' : 'No notifications yet.',
+      drUnread: String(unread),
+      drHasUnread: unread > 0,
+
+      drShowAvail: s.dashTab === 'availability',
+      avNoListings: !myDaily.length,
+      avNoListingsLabel: ar ? 'ليس لديك إعلانات يومية بعد. أضف إعلاناً واختر «إيجار يومي».' : 'You have no daily rentals yet. Add a property and choose “Daily rental”.',
+      avHasListings: myDaily.length > 0,
+      avPicks: myDaily.map(p => ({
+        label: (ar && p.title_ar) ? p.title_ar : p.title_en,
+        pick: () => this.drOpenAvail(p.id),
+        bg: s.avId === p.id ? '#007A3D' : '#FFFFFF',
+        fg: s.avId === p.id ? '#FFFFFF' : 'rgba(23,23,15,0.7)',
+        border: s.avId === p.id ? '#007A3D' : 'rgba(23,23,15,0.16)'
+      })),
+      avShowCal: !!s.avId && !!s.avBlocked,
+      avMonthLabel: this.drMonthLabel(avMonth, ar),
+      avPrev: () => { if (avMonth > today.slice(0, 7)) this.setState({ avMonth: this.drShiftMonth(avMonth, -1) }); },
+      avNext: () => this.setState({ avMonth: this.drShiftMonth(avMonth, 1) }),
+      avPrevFg: avMonth > today.slice(0, 7) ? '#17170F' : 'rgba(23,23,15,0.2)',
+      avWeekdays: this.drWeekdays(ar),
+      avDays,
+      avLegendOpen: ar ? 'متاح' : 'Open',
+      avLegendClosed: ar ? 'أغلقته أنت' : 'Closed by you',
+      avLegendBooked: ar ? 'إقامة مؤكدة' : 'Confirmed stay',
+      avHasError: !!s.avError,
+      avError: s.avError || ''
+    };
+  }
+
+  // A listing by id, from whatever is loaded or the database.
+  async openFromId(id) {
+    const known = [...(this.state.market || []), ...(this.state.drRows || [])].find(r => r.id === id);
+    if (known) return this.openListing(known);
+    try {
+      const row = await this.db.getPropertyById(id);
+      if (row) this.openListing(row);
+    } catch { /* gone: nothing to open */ }
   }
 
   /** Clipboard with a fallback, and a label that reverts on its own. */
@@ -4042,6 +5139,12 @@ class Component extends DCLogic {
       this.scrollTop();
       return;
     }
+    if (id === 'daily') {
+      this.setState({ ...patch, screen: 'daily' });
+      this.scrollTop();
+      this.drLoad();
+      return;
+    }
     const screen = id === 'ai' ? 'search' : id === 'buy' ? 'buy' : id === 'rent' ? 'rent' : 'home';
     // Moving between buying and renting clears the filters. A 250,000 JOD
     // ceiling is a sensible cap on a purchase and hides the entire rental
@@ -4112,8 +5215,12 @@ class Component extends DCLogic {
       place: this.placeOfIds(row.city_id, row.neighborhood_id) || (ar ? 'الأردن' : 'Jordan'),
       price: row.deal === 'rent'
         ? `${Number(row.price_jod).toLocaleString('en-US')} ${ar ? 'د.أ/شهر' : 'JOD/mo'}`
+        : row.deal === 'daily'
+        ? `${Number(row.price_jod).toLocaleString('en-US')} ${ar ? 'د.أ/ليلة' : 'JOD/night'}`
         : `${Number(row.price_jod).toLocaleString('en-US')} ${ar ? 'د.أ' : 'JOD'}`,
-      badge: row.deal === 'rent' ? (ar ? 'للإيجار' : 'For rent') : (ar ? 'للبيع' : 'For sale'),
+      badge: row.deal === 'rent' ? (ar ? 'للإيجار' : 'For rent')
+        : row.deal === 'daily' ? (ar ? 'إيجار يومي' : 'Daily rental')
+        : (ar ? 'للبيع' : 'For sale'),
 
       /* ── sold and rented ──
          A closed listing stays on the marketplace (0011_sold_visible.sql)
@@ -4183,6 +5290,8 @@ class Component extends DCLogic {
     try { document.body.style.overflow = ''; } catch (e) {}
     if (this._outside) document.removeEventListener('pointerdown', this._outside, true);
     if (this._unsubAuth) this._unsubAuth();
+    if (this._drUnwatch) this._drUnwatch();
+    clearTimeout(this._drWatchT);
     if (this._pinTick && window.gsap) window.gsap.ticker.remove(this._pinTick);
     if (this._remeasure) window.removeEventListener('resize', this._remeasure);
     if (this.smoother) { this.smoother.kill(); this.smoother = null; }
@@ -4829,6 +5938,7 @@ class Component extends DCLogic {
       isBrowse: s.screen === 'buy' || s.screen === 'rent',
       isLegal: s.screen === 'legal',
       ...this.detailVals(ar, this.M),
+      ...this.dailyVals(ar),
       goSell: () => this.navTo('sell', false),
       ...this.footerVals(ar, L),
       isDash: s.screen === 'dash' && !!s.signedIn,
@@ -4986,7 +6096,7 @@ class Component extends DCLogic {
       bar2: s.menuOpen ? 'rotate(-45deg)' : 'translateY(3px)',
       menuLabel: L.menu,
       fabItems: [
-        { id: 'buy', label: L.buy }, { id: 'rent', label: L.rent },
+        { id: 'buy', label: L.buy }, { id: 'rent', label: L.rent }, { id: 'daily', label: L.daily },
         { id: 'sell', label: L.sell }, { id: 'ai', label: L.aiSearch }
       ].map((n, i) => {
         const rolling = s.rollId === n.id;
@@ -5006,9 +6116,10 @@ class Component extends DCLogic {
           })),
           enter: () => this.setState({ rollId: n.id }),
           leave: () => this.setState(st => (st.rollId === n.id ? { rollId: null } : null)),
+          // The same destinations as the header links.
           go: () => {
-            this.setState({ screen: n.id === 'ai' ? 'search' : 'home', menuOpen: false, rollId: null });
-            this.scrollTop();
+            this.setState({ rollId: null });
+            this.navTo(n.id, true);
           }
         };
       }),
@@ -5024,12 +6135,13 @@ class Component extends DCLogic {
       runSearch: () => this.submit(),
       resetSearch: () => this.setState({ constraints: null, turns: [], results: [], expanded: {}, lastParsed: null, searched: false }),
       nav: [
-        { id: 'buy', label: L.buy }, { id: 'rent', label: L.rent }, { id: 'sell', label: L.sell },
-        { id: 'ai', label: L.aiSearch }
+        { id: 'buy', label: L.buy }, { id: 'rent', label: L.rent }, { id: 'daily', label: L.daily },
+        { id: 'sell', label: L.sell }, { id: 'ai', label: L.aiSearch }
       ].map(n => {
         const on = (n.id === 'ai' && s.screen === 'search')
           || (n.id === 'buy' && s.screen === 'buy')
-          || (n.id === 'rent' && s.screen === 'rent');
+          || (n.id === 'rent' && s.screen === 'rent')
+          || (n.id === 'daily' && (s.screen === 'daily' || (s.screen === 'detail' && s.detail && s.detail.deal === 'daily')));
         return {
           label: n.label,
           color: on ? (onHero ? '#FFFFFF' : '#007A3D') : (onHero ? 'rgba(255,255,255,0.8)' : 'rgba(23,23,15,0.68)'),
@@ -5608,6 +6720,12 @@ class Component extends DCLogic {
         { id: 'overview', label: L.navOverview },
         { id: 'listings', label: L.navListings },
         { id: 'inquiries', label: L.navInquiries },
+        { id: 'bookings', label: (ar ? 'طلبات الحجز' : 'Booking requests')
+          + ((s.drInbox || []).filter(r => r.status === 'pending').length ? ` (${(s.drInbox || []).filter(r => r.status === 'pending').length})` : '') },
+        { id: 'trips', label: ar ? 'حجوزاتي' : 'My bookings' },
+        { id: 'availability', label: ar ? 'التوفر' : 'Availability' },
+        { id: 'alerts', label: (ar ? 'الإشعارات' : 'Notifications')
+          + ((s.drAlerts || []).filter(n => !n.read_at).length ? ` (${(s.drAlerts || []).filter(n => !n.read_at).length})` : '') },
         { id: 'messages', label: L.navMessages },
         { id: 'analytics', label: L.navAnalytics },
         { id: 'saved', label: L.navSaved }
@@ -5646,17 +6764,39 @@ class Component extends DCLogic {
           rented:   ar ? 'مؤجر'    : 'Rented',
           archived: ar ? 'مؤرشف'   : 'Archived'
         };
+        // A daily rental carries its review: a grey check while it waits, a
+        // green one once approved, red with the admin's reason otherwise.
+        const daily = p.deal === 'daily';
+        const REVIEW = {
+          pending: [ar ? 'بانتظار المراجعة' : 'Waiting for review', 'rgba(23,23,15,0.38)'],
+          approved: [ar ? 'موثّق' : 'Verified', '#007A3D'],
+          rejected: [ar ? 'مرفوض' : 'Not approved', '#B00F20'],
+          suspended: [ar ? 'موقوف' : 'Suspended', '#B00F20']
+        };
+        const review = daily ? (REVIEW[p.daily_review] || REVIEW.pending) : null;
+        // Published by its owner but not yet visible to anyone else.
+        const awaiting = daily && live && p.daily_review !== 'approved';
         return {
           title: (ar && p.title_ar) ? p.title_ar : p.title_en,
           id: p.id.slice(0, 8),
           place: this.placeOfIds(p.city_id, p.neighborhood_id),
-          price: this.money(p.price_jod, p.deal === 'rent' ? 'rent' : 'sale'),
-          status: STATUS_LABEL[p.status] || p.status,
+          price: daily
+            ? `${Number(p.price_jod).toLocaleString('en-US')} ${ar ? 'د.أ/ليلة' : 'JOD/night'}`
+            : this.money(p.price_jod, p.deal === 'rent' ? 'rent' : 'sale'),
+          isDaily: daily,
+          hasReview: daily,
+          reviewLabel: review ? review[0] : '',
+          reviewColor: review ? review[1] : 'transparent',
+          hasReviewNote: daily && !!p.daily_review_note && p.daily_review !== 'approved',
+          reviewNote: p.daily_review_note || '',
+          calendarLabel: ar ? 'التوفر' : 'Availability',
+          calendar: () => this.drOpenAvail(p.id),
+          status: awaiting ? (ar ? 'غير منشور بعد' : 'Not live yet') : (STATUS_LABEL[p.status] || p.status),
           // Sold reads as a result, not as a fault, so it gets its own colour
           // rather than the grey every other non-live state shares.
-          statusBg: closed ? 'rgba(206,17,38,0.08)' : live ? 'rgba(0,122,61,0.1)' : 'rgba(23,23,15,0.06)',
-          statusBorder: closed ? 'rgba(206,17,38,0.32)' : live ? 'rgba(0,122,61,0.3)' : 'rgba(23,23,15,0.16)',
-          statusFg: closed ? '#B00F20' : live ? '#00693A' : 'rgba(23,23,15,0.5)',
+          statusBg: closed ? 'rgba(206,17,38,0.08)' : live && !awaiting ? 'rgba(0,122,61,0.1)' : 'rgba(23,23,15,0.06)',
+          statusBorder: closed ? 'rgba(206,17,38,0.32)' : live && !awaiting ? 'rgba(0,122,61,0.3)' : 'rgba(23,23,15,0.16)',
+          statusFg: closed ? '#B00F20' : live && !awaiting ? '#00693A' : 'rgba(23,23,15,0.5)',
           toggleLabel: live ? (ar ? 'إخفاء' : 'Hide') : (ar ? 'نشر' : 'Publish'),
           // 'paused' is the enum's word for this. 'hidden' was never one of
           // its values, so Postgres rejected every attempt to hide a listing.
@@ -5675,7 +6815,8 @@ class Component extends DCLogic {
             ? (ar ? 'تم التأجير' : 'Mark rented')
             : (ar ? 'تم البيع' : 'Mark sold'),
           closeRow: () => this.setRowStatus(p.id, p.deal === 'rent' ? 'rented' : 'sold'),
-          canClose: !closed,
+          // A daily rental is never sold or let; it is paused or deleted.
+          canClose: !closed && !daily,
           // Marking something sold by accident has to be undoable in one
           // click; there is nothing destructive about it to justify a prompt.
           relistLabel: ar ? 'أعد النشر' : 'Relist',

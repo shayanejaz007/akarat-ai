@@ -52,6 +52,7 @@ function priceOf(row: Listing, lang: Lang) {
   const n = new Intl.NumberFormat(lang === "ar" ? "ar-JO" : "en-JO").format(row.price_jod);
   const jod = lang === "ar" ? "دينار" : "JOD";
   if (row.deal === "rent") return `${n} ${jod}${lang === "ar" ? " / شهرياً" : " / month"}`;
+  if (row.deal === "daily") return `${n} ${jod}${lang === "ar" ? " / ليلة" : " / night"}`;
   return `${n} ${jod}`;
 }
 
@@ -195,7 +196,7 @@ export default async function PropertyPage(
       priceCurrency: "JOD",
       availability: "https://schema.org/InStock",
       businessFunction:
-        row.deal === "rent"
+        row.deal === "rent" || row.deal === "daily"
           ? "http://purl.org/goodrelations/v1#LeaseOut"
           : "http://purl.org/goodrelations/v1#Sell",
     },

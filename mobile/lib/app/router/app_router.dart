@@ -9,6 +9,10 @@ import '../../features/authentication/presentation/phone_auth_screen.dart';
 import '../../features/authentication/presentation/reset_password_screen.dart';
 import '../../features/authentication/presentation/sign_in_screen.dart';
 import '../../features/authentication/presentation/sign_up_screen.dart';
+import '../../features/daily/availability_screen.dart';
+import '../../features/daily/bookings_screen.dart';
+import '../../features/daily/daily_screen.dart';
+import '../../features/daily/notifications_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/explore/explore_screen.dart';
 import '../../features/favorites/saved_screen.dart';
@@ -102,6 +106,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
           StatefulShellBranch(
+            routes: [GoRoute(path: Routes.daily, builder: (context, state) => const DailyScreen())],
+          ),
+          StatefulShellBranch(
             routes: [
               GoRoute(
                 path: Routes.aiSearch,
@@ -186,6 +193,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/listing/:id/edit',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => ListingWizardScreen(editId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: '/listing/:id/availability',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => AvailabilityScreen(listingId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: Routes.bookings,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => BookingsScreen(initialTab: state.uri.queryParameters['tab']),
+      ),
+      GoRoute(
+        path: Routes.notifications,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const NotificationsScreen(),
       ),
       GoRoute(
         path: Routes.dashboard,

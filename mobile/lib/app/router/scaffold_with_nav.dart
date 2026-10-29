@@ -7,13 +7,14 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/networking/connectivity.dart';
+import '../../features/daily/daily_providers.dart';
 import '../../features/tour/tour.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../localization/l10n.dart';
 import '../theme/tokens.dart';
 import 'routes.dart';
 
-/// The five-tab shell. Each tab keeps its own navigation stack and scroll
+/// The six-tab shell. Each tab keeps its own navigation stack and scroll
 /// position (IndexedStack under StatefulShellRoute); tapping the active tab
 /// again returns it to its first screen.
 class ScaffoldWithNav extends ConsumerWidget {
@@ -27,6 +28,10 @@ class ScaffoldWithNav extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final offline = ref.watch(isOfflineProvider);
     final signedIn = ref.watch(isSignedInProvider);
+    // Daily-rental requests and notifications stay live while the app is
+    // open; the profile tab carries a dot when something new arrived.
+    ref.watch(dailyLiveProvider);
+    final unread = signedIn && (ref.watch(unreadNotificationsProvider) > 0 || ref.watch(pendingRequestsProvider) > 0);
     final l = context.l10n;
     final t = ref.watch(tourTargetsProvider);
     final mq = MediaQuery.of(context);
@@ -70,7 +75,8 @@ class ScaffoldWithNav extends ConsumerWidget {
                 child: AkaratNavBar(
                   index: shell.currentIndex,
                   signedIn: signedIn,
-                  tabKeys: [null, t.navExplore, t.navAi, t.navSaved, t.navProfile],
+                  attention: unread,
+                  tabKeys: [null, t.navExplore, null, t.navAi, t.navSaved, t.navProfile],
                   onSelect: (i) {
                     unawaited(HapticFeedback.selectionClick());
                     shell.goBranch(i, initialLocation: i == shell.currentIndex);
@@ -128,11 +134,15 @@ class AkaratNavBar extends StatelessWidget {
     this.signedIn = true,
     this.onSignIn,
     this.tabKeys = const [],
+    this.attention = false,
   });
   final int index;
   final ValueChanged<int> onSelect;
   final bool signedIn;
   final VoidCallback? onSignIn;
+
+  /// A dot on the profile tab: an unread notification or a request waiting.
+  final bool attention;
 
   /// Anchors for the guided tour, by tab.
   final List<Key?> tabKeys;
@@ -145,10 +155,13 @@ class AkaratNavBar extends StatelessWidget {
     final items = [
       (Icons.home_outlined, Icons.home_rounded, l.tabHome),
       (Icons.explore_outlined, Icons.explore_rounded, l.tabExplore),
+      (Icons.bed_outlined, Icons.bed_rounded, l.tabDaily),
       (Icons.auto_awesome_outlined, Icons.auto_awesome, l.tabAiSearch),
       (Icons.favorite_border_rounded, Icons.favorite_rounded, l.tabSaved),
       (Icons.person_outline_rounded, Icons.person_rounded, l.tabProfile),
     ];
+    // The last place is the profile, or "Log in" when signed out.
+    final last = items.length - 1;
     return MediaQuery(
       // Labels grow a little with Dynamic Type, not enough to break the bar.
       data: MediaQuery.of(context).copyWith(textScaler: MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.15)),
@@ -196,13 +209,25 @@ class AkaratNavBar extends StatelessWidget {
                 }
 
                 final login = signedIn ? 0.0 : _LoginPill.widthFor(textWidth(l.navLogIn));
-                final room = box.maxWidth - (signedIn ? 4 : 3) * _NavItem.iconWidth - login;
-                final named = index < items.length && _NavItem.widthFor(textWidth(items[index].$3)) <= room;
+                // The tabs shown as bare icons: all but the chosen one and
+                // the Log in button.
+                final icons = signedIn ? last : last - 1;
+                // Icons give up a little width, never below the minimum, to
+                // fit the chosen tab's name; failing that, to fit at all.
+                final nameWidth = index < items.length
+                    ? _NavItem.widthFor(textWidth(items[index].$3))
+                    : double.infinity;
+                final slotWithName = (box.maxWidth - login - nameWidth) / icons;
+                final named = slotWithName >= _NavItem.minWidth;
+                final slot = math.min(
+                  _NavItem.iconWidth,
+                  named ? slotWithName : (box.maxWidth - login - _NavItem.chosenIconWidth) / icons,
+                );
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     for (var i = 0; i < items.length; i++)
-                      if (i == 4 && !signedIn)
+                      if (i == last && !signedIn)
                         _LoginPill(key: i < tabKeys.length ? tabKeys[i] : null, label: l.navLogIn, onTap: onSignIn)
                       else
                         _NavItem(
@@ -212,6 +237,8 @@ class AkaratNavBar extends StatelessWidget {
                           label: items[i].$3,
                           selected: index == i,
                           named: named,
+                          slot: slot,
+                          dot: i == last && attention,
                           onTap: () => onSelect(i),
                         ),
                   ],
@@ -255,6 +282,8 @@ class _NavItem extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.named = true,
+    this.dot = false,
+    this.slot = iconWidth,
   });
 
   final IconData icon;
@@ -266,7 +295,19 @@ class _NavItem extends StatelessWidget {
   /// Chosen, with its name beside the icon (when there is room for it).
   final bool named;
 
+  /// Something new behind this tab.
+  final bool dot;
+
+  /// The width of this tab when it is not the chosen one.
+  final double slot;
+
   static const double iconWidth = 44;
+
+  /// The narrowest an icon tab gets on a small phone.
+  static const double minWidth = 38;
+
+  /// The chosen tab's pill when it shows only its icon.
+  static const double chosenIconWidth = 2 * _padding + _icon;
   static const double _padding = Space.sm;
   static const double _icon = 23;
   static const double _gap = 6;
@@ -300,7 +341,12 @@ class _NavItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(selected ? activeIcon : icon, size: _icon, color: selected ? c.onForest : c.ink),
+              Badge(
+                isLabelVisible: dot,
+                smallSize: 8,
+                backgroundColor: c.red,
+                child: Icon(selected ? activeIcon : icon, size: _icon, color: selected ? c.onForest : c.ink),
+              ),
               // The name slides out of the pill when it is chosen.
               Flexible(
                 child: AnimatedSize(
@@ -324,7 +370,7 @@ class _NavItem extends StatelessWidget {
         ),
       ),
     );
-    return selected ? Flexible(child: pill) : SizedBox(width: iconWidth, child: pill);
+    return selected ? Flexible(child: pill) : SizedBox(width: slot, child: pill);
   }
 }
 

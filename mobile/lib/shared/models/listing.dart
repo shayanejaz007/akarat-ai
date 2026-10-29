@@ -6,12 +6,36 @@ import '../reference/market_data.dart';
 /// text belongs must not take a whole page of results down with it.
 String? _str(Object? v) => v is String ? v : null;
 
-/// `deal_type` in Postgres.
+/// `deal_type` in Postgres. `daily` is a short stay priced per night
+/// (0019_daily_rentals.sql); it has its own tab and never appears in Buy or
+/// Rent.
 enum DealType {
   sale,
-  rent;
+  rent,
+  daily;
 
-  static DealType parse(Object? v) => v == 'rent' ? DealType.rent : DealType.sale;
+  static DealType parse(Object? v) => switch (v) {
+    'rent' => DealType.rent,
+    'daily' => DealType.daily,
+    _ => DealType.sale,
+  };
+}
+
+/// Where a daily rental stands with the admins. Only `approved` is public;
+/// the owner sees the rest on their own listing, with the admin's note.
+enum DailyReview {
+  pending,
+  approved,
+  rejected,
+  suspended;
+
+  static DailyReview? parse(Object? v) => switch (v) {
+    'pending' => pending,
+    'approved' => approved,
+    'rejected' => rejected,
+    'suspended' => suspended,
+    _ => null,
+  };
 }
 
 /// `listing_status` in Postgres. Must match the enum exactly: an unknown value
@@ -171,6 +195,10 @@ class Listing {
     this.publishedAt,
     this.locationPrecision,
     this.address,
+    this.maxGuests,
+    this.minNights,
+    this.dailyReview,
+    this.dailyReviewNote,
   });
 
   final String id;
@@ -204,8 +232,19 @@ class Listing {
   /// Published only alongside an exact pin.
   final String? address;
 
+  /// Daily rentals only: how many it sleeps, the shortest stay, and the
+  /// admins' review with the reason they gave.
+  final int? maxGuests;
+  final int? minNights;
+  final DailyReview? dailyReview;
+  final String? dailyReviewNote;
+
   bool get isClosed => status.isClosed;
   bool get isRent => deal == DealType.rent;
+  bool get isDaily => deal == DealType.daily;
+
+  /// The shortest stay a daily rental takes; one night when unstated.
+  int get minimumNights => (minNights ?? 1).clamp(1, 30);
   bool get hasCoordinates => lat != null && lng != null;
   bool get isExactLocation => locationPrecision == LocationPrecision.exact;
 
@@ -285,6 +324,10 @@ class Listing {
       publishedAt: _date(row['published_at']),
       locationPrecision: LocationPrecision.parse(row['location_precision']),
       address: _str(row['address']),
+      maxGuests: _int(row['max_guests']),
+      minNights: _int(row['min_nights']),
+      dailyReview: DailyReview.parse(row['daily_review']),
+      dailyReviewNote: _str(row['daily_review_note']),
     );
   }
 
@@ -314,5 +357,9 @@ class Listing {
     publishedAt: publishedAt,
     locationPrecision: locationPrecision,
     address: address,
+    maxGuests: maxGuests,
+    minNights: minNights,
+    dailyReview: dailyReview,
+    dailyReviewNote: dailyReviewNote,
   );
 }

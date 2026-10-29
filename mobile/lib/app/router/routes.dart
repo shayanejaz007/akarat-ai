@@ -9,6 +9,7 @@ class Routes {
 
   static const home = '/home';
   static const explore = '/explore';
+  static const daily = '/daily';
   static const aiSearch = '/ai';
   static const saved = '/saved';
   static const profile = '/profile';
@@ -35,8 +36,15 @@ class Routes {
   static String legal(String doc) => '/legal/$doc';
   static String property(String id) => '/property/$id';
 
+  /// Daily-rental requests: `requests` for the owner's places, `mine` for
+  /// the reader's own.
+  static const bookings = '/bookings';
+  static String bookingsFor(String tab) => '$bookings?tab=$tab';
+  static const notifications = '/notifications';
+  static String availability(String id) => '/listing/$id/availability';
+
   /// Screens that need a session. Browsing, searching and saving never do.
-  static const protectedPrefixes = ['/listing', '/dashboard', '/inquiries', '/account'];
+  static const protectedPrefixes = ['/listing', '/dashboard', '/inquiries', '/account', '/bookings', '/notifications'];
 
   static bool isProtected(String path) => protectedPrefixes.any(path.startsWith);
 

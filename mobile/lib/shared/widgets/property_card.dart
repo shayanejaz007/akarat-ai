@@ -106,7 +106,15 @@ class ListingBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[Icon(icon, size: 13, color: foreground), const SizedBox(width: Space.xxs)],
-          Text(label, style: context.type.badge.copyWith(color: foreground)),
+          // Shortened, never overflowing, when a row gives it little room.
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.type.badge.copyWith(color: foreground),
+            ),
+          ),
         ],
       ),
     );
@@ -122,7 +130,7 @@ class ListingBadge extends StatelessWidget {
       return ListingBadge(label: t.badgeRented, background: c.red, foreground: Colors.white);
     }
     return ListingBadge(
-      label: l.isRent ? t.badgeForRent : t.badgeForSale,
+      label: l.isDaily ? t.badgeDaily : (l.isRent ? t.badgeForRent : t.badgeForSale),
       background: Colors.white.withValues(alpha: 0.94),
       foreground: const Color(0xFF123C34),
     );
@@ -214,7 +222,8 @@ class PropertyCard extends StatelessWidget {
         child: Semantics(
           container: true,
           button: true,
-          label: '${listing.title(lang)}, ${Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent)}, $place',
+          label:
+              '${listing.title(lang)}, ${Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily)}, $place',
           child: Pressable(
             onTap: onTap,
             borderRadius: BorderRadius.circular(Radii.xl),
@@ -240,7 +249,11 @@ class PropertyCard extends StatelessWidget {
                                 ? ListingBadge.forListing(context, listing)
                                 : InfoPill(
                                     icon: propertyTypeIcon(listing.propertyType),
-                                    label: type?.label(lang) ?? (listing.isRent ? t.badgeForRent : t.badgeForSale),
+                                    label:
+                                        type?.label(lang) ??
+                                        (listing.isDaily
+                                            ? t.badgeDaily
+                                            : (listing.isRent ? t.badgeForRent : t.badgeForSale)),
                                   ),
                           ),
                           PositionedDirectional(
@@ -320,7 +333,7 @@ class PropertyCard extends StatelessWidget {
                                 fit: BoxFit.scaleDown,
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: Text(
-                                  Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent),
+                                  Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
                                   style: context.type.price.copyWith(
                                     color: listing.isClosed ? c.inkMuted : c.ink,
                                     decoration: listing.isClosed ? TextDecoration.lineThrough : null,
@@ -415,7 +428,7 @@ class PropertyCardCompact extends StatelessWidget {
     final t = context.l10n;
     final place = listing.place(lang);
     final type = Market.type(listing.propertyType);
-    final price = Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent);
+    final price = Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily);
     final image = ListingImage(
       url: listing.coverUrl,
       greyscale: listing.isClosed,
@@ -451,7 +464,11 @@ class PropertyCardCompact extends StatelessWidget {
                             ? ListingBadge.forListing(context, listing)
                             : InfoPill(
                                 icon: propertyTypeIcon(listing.propertyType),
-                                label: type?.label(lang) ?? (listing.isRent ? t.badgeForRent : t.badgeForSale),
+                                label:
+                                    type?.label(lang) ??
+                                    (listing.isDaily
+                                        ? t.badgeDaily
+                                        : (listing.isRent ? t.badgeForRent : t.badgeForSale)),
                                 dense: true,
                               ),
                       ),
@@ -563,7 +580,7 @@ class PropertyRow extends StatelessWidget {
                       ),
                       const SizedBox(height: Space.hair),
                       Text(
-                        Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent),
+                        Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
                         style: context.type.priceSmall,
                       ),
                       if (listing.place(lang).isNotEmpty)

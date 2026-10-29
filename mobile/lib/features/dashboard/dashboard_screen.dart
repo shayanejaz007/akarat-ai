@@ -16,6 +16,8 @@ import '../../shared/repositories/listings_repository.dart';
 import '../../shared/repositories/media_repository.dart';
 import '../../shared/services/refresh.dart';
 import '../../shared/widgets/property_card.dart';
+import '../daily/daily_providers.dart';
+import '../daily/review_notice.dart';
 import '../inquiries/inquiries_providers.dart';
 import 'dashboard_providers.dart';
 
@@ -49,6 +51,15 @@ class DashboardScreen extends ConsumerWidget {
             LargeTitleBar(
               title: l.dashboardTitle,
               actions: [
+                IconButton(
+                  tooltip: l.profileBookings,
+                  onPressed: () => context.push(Routes.bookingsFor('requests')),
+                  icon: Badge(
+                    isLabelVisible: ref.watch(pendingRequestsProvider) > 0,
+                    label: Text('${ref.watch(pendingRequestsProvider)}'),
+                    child: const Icon(Icons.event_available_outlined),
+                  ),
+                ),
                 IconButton(
                   tooltip: l.profileInquiries,
                   onPressed: () => context.push(Routes.inquiries),
@@ -254,7 +265,10 @@ class _ListingRowState extends ConsumerState<_ListingRow> {
             label: live ? l.actionHide : l.actionPublish,
             icon: live ? Icons.visibility_off_outlined : Icons.publish_rounded,
           ),
-        if (!x.isClosed)
+        // A daily rental is never sold or let: it has a calendar instead.
+        if (x.isDaily)
+          SheetAction(value: _RowAction.availability, label: l.actionAvailability, icon: Icons.calendar_month_outlined)
+        else if (!x.isClosed)
           SheetAction(
             value: _RowAction.close,
             label: x.isRent ? l.actionMarkRented : l.actionMarkSold,
@@ -279,6 +293,8 @@ class _ListingRowState extends ConsumerState<_ListingRow> {
         await _setStatus(ListingStatus.active);
       case _RowAction.close:
         await _setStatus(x.isRent ? ListingStatus.rented : ListingStatus.sold);
+      case _RowAction.availability:
+        await context.push(Routes.availability(x.id));
       case _RowAction.delete:
         await _delete();
     }
@@ -299,13 +315,32 @@ class _ListingRowState extends ConsumerState<_ListingRow> {
       ListingStatus.paused => (l.statusPaused, c.inkMuted),
       ListingStatus.archived => (l.statusArchived, c.inkMuted),
     };
+    final review = x.isDaily ? reviewTone(context, x) : null;
+    // Published by its owner, but nobody else sees it until it is approved.
+    final (shown, shownColor) = x.isDaily && x.status == ListingStatus.active && x.dailyReview != DailyReview.approved
+        ? (l.dailyNotLiveYet, c.inkMuted)
+        : (label, color);
     return PropertyRow(
       listing: x,
       padding: const EdgeInsetsDirectional.fromSTEB(Space.md, Space.sm, Space.xs, Space.xs),
       onTap: () => context.push(Routes.property(x.id), extra: x),
       footer: Row(
         children: [
-          ListingBadge(label: label, background: color.withValues(alpha: 0.12), foreground: color),
+          ListingBadge(label: shown, background: shownColor.withValues(alpha: 0.12), foreground: shownColor),
+          if (review != null) ...[
+            const SizedBox(width: Space.xxs),
+            Flexible(
+              child: Tooltip(
+                message: x.dailyReviewNote ?? review.label,
+                child: ListingBadge(
+                  label: review.label,
+                  icon: review.icon,
+                  background: review.color.withValues(alpha: 0.12),
+                  foreground: review.color,
+                ),
+              ),
+            ),
+          ],
           const Spacer(),
           if (_busy)
             const Padding(
@@ -331,4 +366,4 @@ class _ListingRowState extends ConsumerState<_ListingRow> {
   }
 }
 
-enum _RowAction { hide, publish, close, relist, delete }
+enum _RowAction { hide, publish, close, availability, relist, delete }

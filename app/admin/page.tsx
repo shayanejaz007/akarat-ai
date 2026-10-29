@@ -75,10 +75,12 @@ function useApi(onSignedOut: () => void): Api {
 
 /* ── Page ────────────────────────────────────────────────────────────── */
 
-type Tab = "overview" | "listings" | "inquiries" | "users" | "reports";
+type Tab = "overview" | "listings" | "daily" | "bookings" | "inquiries" | "users" | "reports";
 const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "listings", label: "Listings" },
+  { id: "daily", label: "Daily rentals" },
+  { id: "bookings", label: "Bookings" },
   { id: "inquiries", label: "Inquiries" },
   { id: "users", label: "Users" },
   { id: "reports", label: "Reports" },
@@ -154,6 +156,11 @@ type Overview = {
   topInquired: { id: string; title_en: string; title_ar: string | null; status: string; n: number }[];
   byCity: { city: string; n: number }[];
   generatedAt: string;
+  // Null until 0019_daily_rentals.sql has been run.
+  dailyRentals: {
+    review: { pending: number; approved: number; rejected: number; suspended: number; changed: number; live: number };
+    requests: { total: number; pending: number; approved: number; confirmed: number; week: number; nightsConfirmed: number };
+  } | null;
 };
 
 function Panel({ onSignedOut }: { onSignedOut: () => void }) {
@@ -166,6 +173,7 @@ function Panel({ onSignedOut }: { onSignedOut: () => void }) {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState<{ message: string; status?: number } | null>(null);
   const [inquiryFilter, setInquiryFilter] = useState<string | null>(null);
+  const [bookingFilter, setBookingFilter] = useState<string | null>(null);
 
   const go = (t: Tab) => {
     setTab(t);
@@ -200,6 +208,7 @@ function Panel({ onSignedOut }: { onSignedOut: () => void }) {
           {TABS.map(t => (
             <button key={t.id} role="tab" aria-selected={tab === t.id} className="adm-tab" onClick={() => go(t.id)}>
               {t.label}
+              {t.id === "daily" && !!overview?.dailyRentals?.review.pending && <span className="adm-count">{overview.dailyRentals.review.pending}</span>}
               {t.id === "inquiries" && !!overview?.inquiries.new && <span className="adm-count">{overview.inquiries.new}</span>}
               {t.id === "reports" && !!overview?.openReports && <span className="adm-count">{overview.openReports}</span>}
             </button>
@@ -220,6 +229,13 @@ function Panel({ onSignedOut }: { onSignedOut: () => void }) {
         {!denied && tab === "listings" && (
           <ListingsView api={api} onInquiries={id => { setInquiryFilter(id); go("inquiries"); }} />
         )}
+        {!denied && tab === "daily" && (
+          <DailyView api={api} counts={overview?.dailyRentals?.review ?? null} onChange={loadOverview}
+            onBookings={id => { setBookingFilter(id); go("bookings"); }} />
+        )}
+        {!denied && tab === "bookings" && (
+          <BookingsView api={api} property={bookingFilter} clearProperty={() => setBookingFilter(null)} />
+        )}
         {!denied && tab === "inquiries" && (
           <InquiriesView api={api} property={inquiryFilter} clearProperty={() => setInquiryFilter(null)} onChange={loadOverview} />
         )}
@@ -236,6 +252,8 @@ const STATUS_LABEL: Record<string, string> = {
   active: "Active", draft: "Draft", pending: "Pending review", paused: "Paused", sold: "Sold",
   rented: "Rented", rejected: "Rejected", archived: "Archived",
 };
+
+const DEAL_LABEL: Record<string, string> = { sale: "Sale", rent: "Rent", daily: "Daily rental" };
 
 function OverviewView({ data, onOpen }: { data: Overview | null; onOpen: (t: Tab) => void }) {
   if (!data) return <p className="adm-muted">Loading figures…</p>;
@@ -272,6 +290,22 @@ function OverviewView({ data, onOpen }: { data: Overview | null; onOpen: (t: Tab
         <Tile label="Saved by users" value={data.saves} note="hearts across all listings" />
         <Tile label="Open reports" value={data.openReports} note={data.openReports ? "need a decision" : "nothing waiting"} onClick={() => onOpen("reports")} />
       </div>
+
+      {data.dailyRentals && (
+        <>
+          <h2 className="adm-section">Daily rentals</h2>
+          <div className="adm-grid tiles">
+            <Tile label="Waiting for review" value={data.dailyRentals.review.pending}
+              note={data.dailyRentals.review.pending ? "hidden until you approve" : "queue is empty"} onClick={() => onOpen("daily")} />
+            <Tile label="Live daily rentals" value={data.dailyRentals.review.live}
+              note={`${full(data.dailyRentals.review.approved)} approved · ${full(data.dailyRentals.review.changed)} changed since`} onClick={() => onOpen("daily")} />
+            <Tile label="Booking requests" value={data.dailyRentals.requests.total}
+              note={`${full(data.dailyRentals.requests.week)} this week · ${full(data.dailyRentals.requests.pending)} waiting on owners`} onClick={() => onOpen("bookings")} />
+            <Tile label="Confirmed stays" value={data.dailyRentals.requests.confirmed}
+              note={`${full(data.dailyRentals.requests.nightsConfirmed)} nights · ${full(data.dailyRentals.requests.approved)} approved, not yet confirmed`} onClick={() => onOpen("bookings")} />
+          </div>
+        </>
+      )}
 
       <div className="adm-grid three">
         <ChartCard title="Listing views" caption="Per day, last 30 days" data={data.daily} field="views" />
@@ -552,7 +586,7 @@ function ListingsView({ api, onInquiries }: { api: Api; onInquiries: (id: string
                     <div className="adm-title"><a href={listingUrl(r.id)} target="_blank" rel="noreferrer">{title(r)}</a></div>
                     {r.title_ar && r.title_ar !== r.title_en && <div className="adm-muted" dir="rtl">{r.title_ar}</div>}
                     <div className="adm-muted">
-                      {r.deal === "rent" ? "Rent" : "Sale"} · {r.property_type}{r.city_id ? ` · ${r.city_id}` : ""}
+                      {DEAL_LABEL[r.deal] ?? r.deal} · {r.property_type}{r.city_id ? ` · ${r.city_id}` : ""}
                       {r.bedrooms ? ` · ${r.bedrooms} bd` : ""}{r.area_sqm ? ` · ${r.area_sqm} m²` : ""} · {r.media} media · listed {ago(r.created_at)}
                     </div>
                   </td>
@@ -565,7 +599,10 @@ function ListingsView({ api, onInquiries }: { api: Api; onInquiries: (id: string
                     {r.featured && <> <span className="adm-pill good">Featured</span></>}
                     {r.verified && <> <span className="adm-pill good">Verified</span></>}
                   </td>
-                  <td className="num">{jod(r.price_jod)}{r.deal === "rent" ? <div className="adm-muted">/ month</div> : null}</td>
+                  <td className="num">
+                    {jod(r.price_jod)}
+                    {r.deal === "rent" ? <div className="adm-muted">/ month</div> : r.deal === "daily" ? <div className="adm-muted">/ night</div> : null}
+                  </td>
                   <td className="num">{full(r.views7d)} / {full(r.views)}</td>
                   <td className="num">
                     {r.inquiries_count ? <a href="#inquiries" onClick={e => { e.preventDefault(); onInquiries(r.id); }}>{full(r.inquiries_count)}</a> : 0}
@@ -581,15 +618,323 @@ function ListingsView({ api, onInquiries }: { api: Api; onInquiries: (id: string
                       <button className="adm-btn" disabled={busy === r.id} onClick={() => change(r.id, { featured: !r.featured })}>
                         {r.featured ? "Unfeature" : "Feature"}
                       </button>
-                      <button className="adm-btn" disabled={busy === r.id} onClick={() => change(r.id, { verified: !r.verified })}>
-                        {r.verified ? "Unverify" : "Verify"}
-                      </button>
+                      {/* A daily rental's badge follows its review, in the Daily rentals tab. */}
+                      {r.deal !== "daily" && (
+                        <button className="adm-btn" disabled={busy === r.id} onClick={() => change(r.id, { verified: !r.verified })}>
+                          {r.verified ? "Unverify" : "Verify"}
+                        </button>
+                      )}
                       <button className="adm-btn danger" disabled={busy === r.id} onClick={() => remove(r)}>Delete</button>
                     </div>
                   </td>
                 </tr>
               ))}
               {rows.length === 0 && <tr><td colSpan={9} className="adm-empty">No listings match.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <Pager page={page} setPage={setPage} total={total} pageSize={pageSize} />
+    </>
+  );
+}
+
+/* ── Daily rentals ───────────────────────────────────────────────────── */
+
+type Person = { id: string; name: string | null; email: string | null; phone: string | null; verified: boolean; joined: string | null };
+
+type Review = "pending" | "approved" | "rejected" | "suspended";
+
+type DailyRow = {
+  id: string; status: string; property_type: string; city_id: string | null; neighborhood_id: string | null;
+  lat: number | null; lng: number | null; location_precision: string | null; address: string | null;
+  price_jod: number; max_guests: number | null; min_nights: number | null;
+  bedrooms: number | null; bathrooms: number | null; area_sqm: number | null;
+  title_en: string; title_ar: string | null; views: number; saves: number; created_at: string; updated_at: string | null;
+  daily_review: Review; daily_review_note: string | null; daily_reviewed_at: string | null; daily_changed_at: string | null;
+  media: { url: string; video: boolean }[]; description_en: string; description_ar: string; amenities: string[];
+  publicPhone: string | null; owner: Person | null; requests: Record<string, number>;
+};
+
+const REVIEW_TABS: { id: string; label: string; count?: keyof NonNullable<Overview["dailyRentals"]>["review"] }[] = [
+  { id: "pending", label: "Waiting for review", count: "pending" },
+  { id: "changed", label: "Changed since approval", count: "changed" },
+  { id: "approved", label: "Approved", count: "approved" },
+  { id: "rejected", label: "Rejected", count: "rejected" },
+  { id: "suspended", label: "Suspended", count: "suspended" },
+];
+
+function ReviewPill({ review }: { review: Review }) {
+  const [tone, label] = {
+    pending: ["warn", "Pending review"],
+    approved: ["good", "Approved · verified"],
+    rejected: ["bad", "Rejected"],
+    suspended: ["bad", "Suspended"],
+  }[review] ?? ["", review];
+  return <span className={`adm-pill ${tone}`}>{label}</span>;
+}
+
+function PersonCell({ p, fallback }: { p: Person | null; fallback?: string | null }) {
+  if (!p) return <span className="adm-muted">{fallback || "—"}</span>;
+  return (
+    <>
+      <div>{p.name || fallback || "—"} {p.verified && <span className="adm-pill good">Verified</span>}</div>
+      {p.email && <div><a href={`mailto:${p.email}`}>{p.email}</a></div>}
+      {p.phone && <div className="adm-muted" dir="ltr">{p.phone}</div>}
+    </>
+  );
+}
+
+function DailyView({ api, counts, onChange, onBookings }: {
+  api: Api;
+  counts: NonNullable<Overview["dailyRentals"]>["review"] | null;
+  onChange: () => void;
+  onBookings: (propertyId: string) => void;
+}) {
+  const [review, setReview] = useState("pending");
+  const [q, setQ] = useState("");
+  const [page, setPage] = useState(0);
+  const dq = useDebounced(q);
+  const params = useMemo(() => ({ review, q: dq, page }), [review, dq, page]);
+  const { rows, total, pageSize, error, reload } = useList<DailyRow>(api, "/api/admin/daily", params);
+  const [busy, setBusy] = useState<string | null>(null);
+  useEffect(() => setPage(0), [review, dq]);
+
+  async function act(r: DailyRow, action: string) {
+    let note: string | undefined;
+    if (action === "reject" || action === "suspend") {
+      const v = prompt(action === "reject"
+        ? `Why is "${title(r)}" rejected? The owner sees this, and saving a fix sends it back for review.`
+        : `Why is "${title(r)}" suspended? The owner sees this. It stays hidden until you reinstate it.`);
+      if (v === null) return;
+      if (!v.trim()) { alert("A reason is needed."); return; }
+      note = v.trim();
+    } else if (action === "revoke") {
+      const v = prompt(`Take back the approval of "${title(r)}"? It is hidden and goes back in the queue. A note for the owner (optional):`, "");
+      if (v === null) return;
+      note = v.trim();
+    }
+    setBusy(r.id);
+    try {
+      await api("/api/admin/daily", { method: "PATCH", body: { id: r.id, action, note } });
+      await reload();
+      onChange();
+    } catch (e) { alert((e as Error).message); }
+    setBusy(null);
+  }
+
+  return (
+    <>
+      <ListHeader heading="Daily rentals" sub="A daily rental is hidden until it is approved here. Approving makes it public everywhere and gives it the verified badge; the owner is told about every decision.">
+        <input className="adm-input" placeholder="Search titles, or paste a listing id" value={q} onChange={e => setQ(e.target.value)} />
+      </ListHeader>
+      <div className="adm-chips" role="tablist">
+        {REVIEW_TABS.map(t => (
+          <button key={t.id} role="tab" aria-selected={review === t.id} className="adm-chip" onClick={() => setReview(t.id)}>
+            {t.label}{counts && t.count ? <span className="adm-chip-n">{full(counts[t.count])}</span> : null}
+          </button>
+        ))}
+      </div>
+      {error && <div className="adm-error">{error}</div>}
+      {!rows ? <p className="adm-muted">Loading…</p> : rows.length === 0 ? (
+        <div className="adm-card adm-empty">{review === "pending" ? "Nothing waiting for review." : "Nothing here."}</div>
+      ) : (
+        <div className="adm-reviews">
+          {rows.map(r => {
+            const live = r.daily_review === "approved" && r.status === "active";
+            const asked = Object.values(r.requests).reduce((a, b) => a + b, 0);
+            return (
+              <article className="adm-card adm-review" key={r.id}>
+                <div className="adm-gallery">
+                  {r.media.length === 0 && <div className="adm-gallery-empty">No photos</div>}
+                  {r.media.map((m, i) => (
+                    <a key={m.url + i} href={m.url} target="_blank" rel="noreferrer" title={m.video ? "Video" : `Photo ${i + 1}`}>
+                      {m.video ? <video src={m.url} muted preload="metadata" /> : <img src={m.url} alt="" loading="lazy" />}
+                    </a>
+                  ))}
+                </div>
+                <div className="adm-review-body">
+                  <div className="adm-review-head">
+                    <div>
+                      <div className="adm-title">
+                        {live ? <a href={listingUrl(r.id)} target="_blank" rel="noreferrer">{title(r)}</a> : title(r)}
+                      </div>
+                      {r.title_ar && r.title_ar !== r.title_en && <div className="adm-muted" dir="rtl">{r.title_ar}</div>}
+                    </div>
+                    <div className="adm-actions">
+                      <ReviewPill review={r.daily_review} />
+                      {live ? <span className="adm-pill good">Live</span> : <StatusPill status={r.status} />}
+                    </div>
+                  </div>
+
+                  <dl className="adm-facts">
+                    <div><dt>Per night</dt><dd>{jod(r.price_jod)}</dd></div>
+                    <div><dt>Guests</dt><dd>up to {r.max_guests ?? "—"}</dd></div>
+                    <div><dt>Minimum stay</dt><dd>{r.min_nights ?? 1} {(r.min_nights ?? 1) === 1 ? "night" : "nights"}</dd></div>
+                    <div><dt>Type</dt><dd>{r.property_type}</dd></div>
+                    <div><dt>Rooms</dt><dd>{r.bedrooms ?? "—"} bd · {r.bathrooms ?? "—"} ba{r.area_sqm ? ` · ${r.area_sqm} m²` : ""}</dd></div>
+                    <div>
+                      <dt>Place</dt>
+                      <dd>
+                        {[r.city_id, r.neighborhood_id].filter(Boolean).join(" · ") || "—"}
+                        {r.lat != null && r.lng != null && (
+                          <> · <a href={`https://www.google.com/maps?q=${r.lat},${r.lng}`} target="_blank" rel="noreferrer">map</a>
+                            <span className="adm-muted"> ({r.location_precision === "exact" ? "exact" : "approximate"})</span></>
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <details className="adm-desc" open={review === "pending"}>
+                    <summary>Descriptions{r.amenities.length ? ` and ${r.amenities.length} amenities` : ""}</summary>
+                    {r.description_en && <p>{r.description_en}</p>}
+                    {r.description_ar && <p dir="rtl">{r.description_ar}</p>}
+                    {!r.description_en && !r.description_ar && <p className="adm-muted">No description.</p>}
+                    {r.amenities.length > 0 && (
+                      <div className="adm-actions">{r.amenities.map(a => <span className="adm-pill" key={a}>{a}</span>)}</div>
+                    )}
+                  </details>
+
+                  <div className="adm-review-meta">
+                    <div>
+                      <div className="adm-label">Owner</div>
+                      <PersonCell p={r.owner} />
+                      {r.owner?.joined && <div className="adm-muted">joined {ago(r.owner.joined)}</div>}
+                    </div>
+                    <div>
+                      <div className="adm-label">Submitted</div>
+                      <div>{when(r.created_at)}</div>
+                      {r.daily_reviewed_at && <div className="adm-muted">last decision {ago(r.daily_reviewed_at)}</div>}
+                      {r.daily_changed_at && <div className="adm-muted">edited by the owner {ago(r.daily_changed_at)}</div>}
+                    </div>
+                    <div>
+                      <div className="adm-label">Booking requests</div>
+                      {asked ? (
+                        <a href="#bookings" onClick={e => { e.preventDefault(); onBookings(r.id); }}>
+                          {full(asked)} · {full(r.requests.confirmed ?? 0)} confirmed
+                        </a>
+                      ) : <div className="adm-muted">none yet</div>}
+                      <div className="adm-muted">{full(r.views)} views · {full(r.saves)} saves</div>
+                    </div>
+                  </div>
+
+                  {r.publicPhone && (
+                    <div className="adm-note-box">This listing shows a phone number publicly ({r.publicPhone}); daily rentals should share it only after approving a request.</div>
+                  )}
+                  {r.daily_review_note && (
+                    <div className="adm-note-box">Note to the owner: {r.daily_review_note}</div>
+                  )}
+
+                  <div className="adm-actions">
+                    {(r.daily_review === "pending" || r.daily_review === "rejected") && (
+                      <button className="adm-btn primary" disabled={busy === r.id} onClick={() => act(r, "approve")}>Approve</button>
+                    )}
+                    {r.daily_review === "pending" && (
+                      <button className="adm-btn danger" disabled={busy === r.id} onClick={() => act(r, "reject")}>Reject…</button>
+                    )}
+                    {r.daily_review === "approved" && r.daily_changed_at && (
+                      <button className="adm-btn primary" disabled={busy === r.id} onClick={() => act(r, "reviewed")}>Changes look fine</button>
+                    )}
+                    {r.daily_review === "approved" && (
+                      <button className="adm-btn" disabled={busy === r.id} onClick={() => act(r, "revoke")}>Revoke approval…</button>
+                    )}
+                    {r.daily_review !== "suspended" && (
+                      <button className="adm-btn danger" disabled={busy === r.id} onClick={() => act(r, "suspend")}>Suspend…</button>
+                    )}
+                    {r.daily_review === "suspended" && (
+                      <button className="adm-btn primary" disabled={busy === r.id} onClick={() => act(r, "reinstate")}>Reinstate</button>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+      <Pager page={page} setPage={setPage} total={total} pageSize={pageSize} />
+    </>
+  );
+}
+
+/* ── Bookings ────────────────────────────────────────────────────────── */
+
+type BookingRow = {
+  id: string; property_id: string; renter_name: string; check_in: string; check_out: string; nights: number; guests: number;
+  message: string | null; nightly_price: number; total_price: number; status: string; owner_phone: string | null;
+  response_note: string | null; closed_reason: string | null; cancelled_by: string | null; responded_at: string | null; created_at: string;
+  properties: { title_en: string; title_ar: string | null; city_id: string | null; status: string; daily_review: string | null } | null;
+  owner: Person | null; renter: Person | null;
+};
+
+const BOOKING_STATUS: Record<string, [string, string]> = {
+  pending: ["warn", "Waiting for the owner"],
+  approved: ["good", "Approved · number shared"],
+  confirmed: ["good", "Confirmed stay"],
+  rejected: ["bad", "Rejected"],
+  cancelled: ["", "Cancelled"],
+};
+
+const day = (d: string) => new Date(`${d}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+function BookingsView({ api, property, clearProperty }: { api: Api; property: string | null; clearProperty: () => void }) {
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState("");
+  const [page, setPage] = useState(0);
+  const dq = useDebounced(q);
+  const params = useMemo(() => ({ q: dq, status, property, page }), [dq, status, property, page]);
+  const { rows, total, pageSize, error } = useList<BookingRow>(api, "/api/admin/bookings", params);
+  useEffect(() => setPage(0), [dq, status, property]);
+
+  return (
+    <>
+      <ListHeader heading="Bookings" sub="Every daily-rental booking request. The owner approves (their number is then shown to the renter), and confirms once the stay is agreed; confirmed nights close on the calendar.">
+        <input className="adm-input" placeholder="Search renter name or message" value={q} onChange={e => setQ(e.target.value)} />
+        <select className="adm-select" value={status} onChange={e => setStatus(e.target.value)} aria-label="Status">
+          <option value="">All requests</option>
+          {Object.entries(BOOKING_STATUS).map(([k, [, v]]) => <option key={k} value={k}>{v}</option>)}
+        </select>
+        {property && <button className="adm-btn" onClick={clearProperty}>Showing one listing · show all</button>}
+      </ListHeader>
+      {error && <div className="adm-error">{error}</div>}
+      {!rows ? <p className="adm-muted">Loading…</p> : (
+        <div className="adm-tablewrap">
+          <table className="adm-table">
+            <thead>
+              <tr>
+                <th>Listing</th><th>Renter</th><th>Owner</th><th>Dates</th><th className="num">Guests</th>
+                <th className="num">Total</th><th>Status</th><th>Asked</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(b => {
+                const [tone, label] = BOOKING_STATUS[b.status] ?? ["", b.status];
+                return (
+                  <tr key={b.id}>
+                    <td>
+                      <div className="adm-title">{b.properties ? title(b.properties) : "Deleted listing"}</div>
+                      {b.properties?.city_id && <div className="adm-muted">{b.properties.city_id}</div>}
+                      {b.message && <div className="adm-muted adm-msg">“{b.message}”</div>}
+                    </td>
+                    <td><PersonCell p={b.renter} fallback={b.renter_name} /></td>
+                    <td><PersonCell p={b.owner} /></td>
+                    <td style={{ whiteSpace: "nowrap" }}>
+                      {day(b.check_in)} → {day(b.check_out)}
+                      <div className="adm-muted">{b.nights} {b.nights === 1 ? "night" : "nights"}</div>
+                    </td>
+                    <td className="num">{b.guests}</td>
+                    <td className="num">{jod(b.total_price)}<div className="adm-muted">{jod(b.nightly_price)} / night</div></td>
+                    <td>
+                      <span className={`adm-pill ${tone}`}>{label}</span>
+                      {b.closed_reason === "dates_taken" && <div className="adm-muted">dates went to another guest</div>}
+                      {b.cancelled_by && <div className="adm-muted">by the {b.cancelled_by}</div>}
+                      {b.response_note && <div className="adm-muted adm-msg">“{b.response_note}”</div>}
+                      {b.responded_at && <div className="adm-muted">answered {ago(b.responded_at)}</div>}
+                    </td>
+                    <td style={{ whiteSpace: "nowrap" }}>{ago(b.created_at)}</td>
+                  </tr>
+                );
+              })}
+              {rows.length === 0 && <tr><td colSpan={8} className="adm-empty">No booking requests yet.</td></tr>}
             </tbody>
           </table>
         </div>

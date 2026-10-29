@@ -35,6 +35,10 @@ import '../../shared/services/supabase_providers.dart';
 import '../../shared/widgets/pickers.dart';
 import '../../shared/widgets/property_card.dart';
 import '../ai_search/presentation/ai_search_controller.dart';
+import '../daily/booking_sheet.dart';
+import '../daily/daily_providers.dart';
+import '../daily/request_cards.dart';
+import '../daily/review_notice.dart';
 import '../inquiries/inquiry_sheet.dart';
 import '../moderation/listing_actions.dart';
 import '../tour/tour.dart';
@@ -199,6 +203,14 @@ class _DetailsState extends ConsumerState<_Details> {
     if (sent && mounted) showSuccess(context, text);
   }
 
+  /// A daily rental: ask for dates. The owner's number comes later, on
+  /// approval, never from the listing.
+  Future<void> _book() async {
+    final text = context.l10n.bookingSent;
+    final sent = await showBookingSheet(context, l);
+    if (sent && mounted) showSuccess(context, text);
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.l10n;
@@ -206,14 +218,20 @@ class _DetailsState extends ConsumerState<_Details> {
     final lang = context.lang;
     final media = l.media;
     final mine = ref.watch(currentUserProvider)?.id == l.ownerId;
-    final phone = l.payload.contact.phone;
-    final canContact = !l.isClosed && !mine;
+    final daily = l.isDaily;
+    final phone = daily ? '' : l.payload.contact.phone;
+    final canContact = !l.isClosed && !mine && !daily;
     final onCall = phone.isEmpty ? null : () => _call(phone);
     final onEnquire = l.status == ListingStatus.active ? _enquire : null;
     final description = l.description(lang);
     final type = Market.type(l.propertyType)?.label(lang) ?? l.propertyType;
     final inset = Layout.inset(context);
-    final hasBar = canContact && (onCall != null || onEnquire != null);
+    // The renter's latest request for this place, open or not.
+    final myRequest = daily && !mine
+        ? ref.watch(myBookingsProvider).value?.where((r) => r.propertyId == l.id).firstOrNull
+        : null;
+    final canBook = daily && !mine && l.status == ListingStatus.active;
+    final hasBar = canBook || (canContact && (onCall != null || onEnquire != null));
     final targets = ref.watch(tourTargetsProvider);
 
     void openViewer(int i) => MediaViewer.open(
@@ -331,7 +349,7 @@ class _DetailsState extends ConsumerState<_Details> {
                       else
                         _SoftBadge(
                           dot: l.isRent ? const Color(0xFFD9B25E) : c.emerald,
-                          label: l.isRent ? t.badgeForRent : t.badgeForSale,
+                          label: l.isDaily ? t.badgeDaily : (l.isRent ? t.badgeForRent : t.badgeForSale),
                         ),
                     ],
                   ),
@@ -352,7 +370,7 @@ class _DetailsState extends ConsumerState<_Details> {
                   if (!hasBar) ...[
                     const SizedBox(height: Space.md),
                     Text(
-                      Fmt.price(l.priceJod, lang: lang, rent: l.isRent),
+                      Fmt.price(l.priceJod, lang: lang, rent: l.isRent, night: l.isDaily),
                       style: context.type.priceLarge.copyWith(
                         color: l.isClosed ? c.inkMuted : c.ink,
                         decoration: l.isClosed ? TextDecoration.lineThrough : null,
@@ -368,6 +386,13 @@ class _DetailsState extends ConsumerState<_Details> {
                     ),
                   ],
                   if (mine) ...[const SizedBox(height: Space.md), _OwnerBanner(listing: l)],
+                  if (mine && daily) ...[const SizedBox(height: Space.sm), DailyReviewNotice(listing: l)],
+                  if (myRequest != null) ...[
+                    const SizedBox(height: Space.md),
+                    Text(t.bookingYourRequest, style: context.text.titleMedium),
+                    const SizedBox(height: Space.xs),
+                    RenterRequestCard(request: myRequest, showListing: false),
+                  ],
                   if (_Facilities.hasAny(l)) ...[
                     _divider(),
                     _Title(t.detailsFacilities, action: t.actionSeeAll, onAction: () => _reveal(_specsKey)),
@@ -431,9 +456,18 @@ class _DetailsState extends ConsumerState<_Details> {
           const SliverToBoxAdapter(child: SizedBox(height: Space.xxl)),
         ],
       ),
-      bottomNavigationBar: hasBar
-          ? _StickyBar(listing: l, onCall: onCall, onEnquire: onEnquire, actionKey: targets.propertyContact)
-          : null,
+      bottomNavigationBar: !hasBar
+          ? null
+          : daily
+          ? _StickyBar(
+              listing: l,
+              // An open request is answered first; a closed one can ask again.
+              action: myRequest != null && myRequest.isOpen
+                  ? (t.bookingYourRequest, () => context.push(Routes.bookingsFor('mine')))
+                  : (t.bookingCheckAvailability, _book),
+              actionKey: targets.propertyContact,
+            )
+          : _StickyBar(listing: l, onCall: onCall, onEnquire: onEnquire, actionKey: targets.propertyContact),
     );
   }
 
@@ -532,7 +566,9 @@ class _SoftBadge extends StatelessWidget {
           else if (icon != null)
             Icon(icon, size: 17, color: tint ?? c.ink),
           const SizedBox(width: Space.iconGap),
-          Text(label, style: context.text.labelLarge),
+          Flexible(
+            child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.text.labelLarge),
+          ),
         ],
       ),
     );
@@ -809,7 +845,11 @@ class _Specs extends StatelessWidget {
         t.specType,
         Market.type(listing.propertyType)?.label(lang) ?? listing.propertyType,
       ),
-      (Icons.sell_outlined, t.specDeal, listing.isRent ? t.badgeForRent : t.badgeForSale),
+      (
+        Icons.sell_outlined,
+        t.specDeal,
+        listing.isDaily ? t.badgeDaily : (listing.isRent ? t.badgeForRent : t.badgeForSale),
+      ),
       // Bedrooms, bathrooms and size are the tiles above; zero counts and
       // land beside a built area are said here.
       if (listing.bedrooms == 0) (Icons.bed_outlined, t.specBeds, '0'),
@@ -1053,10 +1093,13 @@ class _RoundAction extends StatelessWidget {
 
 /// The price, and the one thing to do next.
 class _StickyBar extends StatelessWidget {
-  const _StickyBar({required this.listing, this.onCall, this.onEnquire, this.actionKey});
+  const _StickyBar({required this.listing, this.onCall, this.onEnquire, this.action, this.actionKey});
   final Listing listing;
   final VoidCallback? onCall;
   final VoidCallback? onEnquire;
+
+  /// In place of call and enquire, for a daily rental: its own label and tap.
+  final (String, VoidCallback)? action;
 
   /// The button, for the listing's tour.
   final Key? actionKey;
@@ -1066,7 +1109,8 @@ class _StickyBar extends StatelessWidget {
     final t = context.l10n;
     final c = context.colors;
     final lang = context.lang;
-    final (label, action) = onEnquire != null ? (t.detailsEnquire, onEnquire!) : (t.detailsCall, onCall!);
+    final (label, action) =
+        this.action ?? (onEnquire != null ? (t.detailsEnquire, onEnquire!) : (t.detailsCall, onCall!));
     return Container(
       decoration: BoxDecoration(
         color: c.surface,
@@ -1083,12 +1127,12 @@ class _StickyBar extends StatelessWidget {
           children: [
             Expanded(
               child: Semantics(
-                label: listing.isRent ? t.badgeForRent : t.badgeForSale,
+                label: listing.isDaily ? t.badgeDaily : (listing.isRent ? t.badgeForRent : t.badgeForSale),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
-                    Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent),
+                    Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
                     style: context.type.priceLarge,
                   ),
                 ),

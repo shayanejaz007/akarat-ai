@@ -4003,6 +4003,828 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Akarat is a search and listing tool, not a broker or an agent. View the property and verify ownership before any payment. Any agreement stays between you and the other party.'**
   String get termsP4;
+
+  /// No description provided for @tabDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get tabDaily;
+
+  /// No description provided for @dailyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily rentals'**
+  String get dailyTitle;
+
+  /// No description provided for @dailySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Places checked by our team, for a night or more. Pick dates to see only what is free, with the full price.'**
+  String get dailySubtitle;
+
+  /// No description provided for @dailyDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get dailyDates;
+
+  /// No description provided for @dailyAnyDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Any dates'**
+  String get dailyAnyDates;
+
+  /// No description provided for @dailyAnyGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Any guests'**
+  String get dailyAnyGuests;
+
+  /// No description provided for @dailyAllCities.
+  ///
+  /// In en, this message translates to:
+  /// **'All cities'**
+  String get dailyAllCities;
+
+  /// No description provided for @dailyClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get dailyClear;
+
+  /// No description provided for @dailyEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No daily rentals yet'**
+  String get dailyEmptyTitle;
+
+  /// No description provided for @dailyEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The first places are on their way. Have one to let by the night? List it.'**
+  String get dailyEmptyBody;
+
+  /// No description provided for @dailyNoMatchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing free for that'**
+  String get dailyNoMatchTitle;
+
+  /// No description provided for @dailyNoMatchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Try other dates, fewer guests or another city.'**
+  String get dailyNoMatchBody;
+
+  /// No description provided for @dailyGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 guest} other{{n} guests}}'**
+  String dailyGuests(int n);
+
+  /// No description provided for @dailyNights.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 night} other{{n} nights}}'**
+  String dailyNights(int n);
+
+  /// No description provided for @dailySleeps.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleeps {n}'**
+  String dailySleeps(int n);
+
+  /// No description provided for @dailyMinStay.
+  ///
+  /// In en, this message translates to:
+  /// **'{n}-night minimum'**
+  String dailyMinStay(int n);
+
+  /// No description provided for @dailyTotalFor.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} for {nights}'**
+  String dailyTotalFor(String price, String nights);
+
+  /// No description provided for @dailyPerNight.
+  ///
+  /// In en, this message translates to:
+  /// **'per night'**
+  String get dailyPerNight;
+
+  /// No description provided for @badgeDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily rental'**
+  String get badgeDaily;
+
+  /// No description provided for @bookingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request to book'**
+  String get bookingTitle;
+
+  /// No description provided for @bookingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is charged. The owner approves your request, then their number and a WhatsApp button appear here.'**
+  String get bookingBody;
+
+  /// No description provided for @bookingCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get bookingCheckIn;
+
+  /// No description provided for @bookingCheckOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get bookingCheckOut;
+
+  /// No description provided for @bookingPickDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a day'**
+  String get bookingPickDay;
+
+  /// No description provided for @bookingTakenLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Crossed-out days are taken.'**
+  String get bookingTakenLegend;
+
+  /// No description provided for @bookingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A note for the owner (optional)'**
+  String get bookingMessage;
+
+  /// No description provided for @bookingMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is coming, and why'**
+  String get bookingMessageHint;
+
+  /// No description provided for @bookingTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated total'**
+  String get bookingTotal;
+
+  /// No description provided for @bookingSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Request to book'**
+  String get bookingSend;
+
+  /// No description provided for @bookingSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get bookingSending;
+
+  /// No description provided for @bookingSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to request'**
+  String get bookingSignIn;
+
+  /// No description provided for @bookingSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent. We will let you know when the owner answers.'**
+  String get bookingSent;
+
+  /// No description provided for @bookingCheckAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Check availability'**
+  String get bookingCheckAvailability;
+
+  /// No description provided for @bookingYourRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request'**
+  String get bookingYourRequest;
+
+  /// No description provided for @bookingOwnListing.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your listing. Booking requests arrive in Bookings.'**
+  String get bookingOwnListing;
+
+  /// No description provided for @bookingPickDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick your check-in and check-out on the calendar.'**
+  String get bookingPickDates;
+
+  /// No description provided for @bookingRangeTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Some nights in between are taken. Pick other dates.'**
+  String get bookingRangeTaken;
+
+  /// No description provided for @bookingStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the owner'**
+  String get bookingStatusPending;
+
+  /// No description provided for @bookingStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get bookingStatusApproved;
+
+  /// No description provided for @bookingStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay confirmed'**
+  String get bookingStatusConfirmed;
+
+  /// No description provided for @bookingStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted'**
+  String get bookingStatusRejected;
+
+  /// No description provided for @bookingStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get bookingStatusCancelled;
+
+  /// No description provided for @bookingStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get bookingStatusExpired;
+
+  /// No description provided for @bookingPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request is with the owner. Their number appears here, with a WhatsApp button, as soon as they approve.'**
+  String get bookingPendingBody;
+
+  /// No description provided for @bookingApprovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact the owner to arrange your stay. It is a request, not a confirmed booking, until you agree and the owner confirms it.'**
+  String get bookingApprovedBody;
+
+  /// No description provided for @bookingConfirmedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner confirmed your stay for these nights.'**
+  String get bookingConfirmedBody;
+
+  /// No description provided for @bookingRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner declined this request.'**
+  String get bookingRejectedBody;
+
+  /// No description provided for @bookingDatesTakenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'These nights went to another guest. Try other dates.'**
+  String get bookingDatesTakenBody;
+
+  /// No description provided for @bookingCancelledByOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner cancelled this booking.'**
+  String get bookingCancelledByOwner;
+
+  /// No description provided for @bookingCancelledByYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled this request.'**
+  String get bookingCancelledByYou;
+
+  /// No description provided for @bookingWhatsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact on WhatsApp'**
+  String get bookingWhatsApp;
+
+  /// No description provided for @bookingCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel request'**
+  String get bookingCancel;
+
+  /// No description provided for @bookingCancelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this request?'**
+  String get bookingCancelTitle;
+
+  /// No description provided for @bookingCancelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner is told.'**
+  String get bookingCancelBody;
+
+  /// No description provided for @bookingKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get bookingKeep;
+
+  /// No description provided for @bookingWhatsAppText.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, this is {name}. You approved my Akarat.ai booking request for “{title}” from {from} to {to} ({nights}, {guests}). Can we arrange the details?'**
+  String bookingWhatsAppText(String name, String title, String from, String to, String nights, String guests);
+
+  /// No description provided for @bookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookingsTitle;
+
+  /// No description provided for @bookingsRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'For my places'**
+  String get bookingsRequests;
+
+  /// No description provided for @bookingsMine.
+  ///
+  /// In en, this message translates to:
+  /// **'My bookings'**
+  String get bookingsMine;
+
+  /// No description provided for @bookingsRequestsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No booking requests yet. They arrive here the moment someone asks for one of your daily rentals.'**
+  String get bookingsRequestsEmpty;
+
+  /// No description provided for @bookingsMineEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not asked for a stay yet. Pick dates on a place in Daily rentals.'**
+  String get bookingsMineEmpty;
+
+  /// No description provided for @bookingApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get bookingApprove;
+
+  /// No description provided for @bookingApproveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve and share your number'**
+  String get bookingApproveTitle;
+
+  /// No description provided for @bookingApproveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} alone sees this number, with a WhatsApp button.'**
+  String bookingApproveBody(String name);
+
+  /// No description provided for @bookingPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your WhatsApp number'**
+  String get bookingPhoneLabel;
+
+  /// No description provided for @bookingReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get bookingReject;
+
+  /// No description provided for @bookingRejectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline this request?'**
+  String get bookingRejectTitle;
+
+  /// No description provided for @bookingRejectNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A reason for the guest (optional)'**
+  String get bookingRejectNote;
+
+  /// No description provided for @bookingConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm stay'**
+  String get bookingConfirm;
+
+  /// No description provided for @bookingConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm this stay?'**
+  String get bookingConfirmTitle;
+
+  /// No description provided for @bookingConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Its nights close on your calendar, and other requests for the same nights are declined for you.'**
+  String get bookingConfirmBody;
+
+  /// No description provided for @bookingOwnerCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel booking'**
+  String get bookingOwnerCancel;
+
+  /// No description provided for @bookingOwnerCancelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The guest is told and the nights open again.'**
+  String get bookingOwnerCancelBody;
+
+  /// No description provided for @bookingSharedPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown to the guest: {phone}'**
+  String bookingSharedPhone(String phone);
+
+  /// No description provided for @bookingAutoClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed for you: you confirmed another stay for these nights.'**
+  String get bookingAutoClosed;
+
+  /// No description provided for @bookingUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated.'**
+  String get bookingUpdated;
+
+  /// No description provided for @availabilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availabilityTitle;
+
+  /// No description provided for @availabilityBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a day to close it or open it again. Confirmed stays close their nights on their own.'**
+  String get availabilityBody;
+
+  /// No description provided for @availabilityOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get availabilityOpen;
+
+  /// No description provided for @availabilityClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed by you'**
+  String get availabilityClosed;
+
+  /// No description provided for @availabilityBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed stay'**
+  String get availabilityBooked;
+
+  /// No description provided for @actionAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get actionAvailability;
+
+  /// No description provided for @previousMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get previousMonth;
+
+  /// No description provided for @nextMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get nextMonth;
+
+  /// No description provided for @reviewPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for review'**
+  String get reviewPending;
+
+  /// No description provided for @reviewApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get reviewApproved;
+
+  /// No description provided for @reviewRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved'**
+  String get reviewRejected;
+
+  /// No description provided for @reviewSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get reviewSuspended;
+
+  /// No description provided for @reviewPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Our team checks every daily rental before it appears. It stays hidden until approved, and we will let you know.'**
+  String get reviewPendingBody;
+
+  /// No description provided for @reviewRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved: {note}. Edit and save it to send it for review again.'**
+  String reviewRejectedBody(String note);
+
+  /// No description provided for @reviewSuspendedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended: {note}.'**
+  String reviewSuspendedBody(String note);
+
+  /// No description provided for @purposeDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily rental'**
+  String get purposeDaily;
+
+  /// No description provided for @purposeDailyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Let it by the night: a chalet, a flat, a farm.'**
+  String get purposeDailyBody;
+
+  /// No description provided for @fieldPriceNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per night (JOD)'**
+  String get fieldPriceNight;
+
+  /// No description provided for @fieldMaxGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleeps up to (guests)'**
+  String get fieldMaxGuests;
+
+  /// No description provided for @fieldMinNights.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum stay (nights)'**
+  String get fieldMinNights;
+
+  /// No description provided for @dailyPhonePrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your number is not published on a daily rental. When you approve a booking request, you choose the number that guest alone sees, with a WhatsApp button.'**
+  String get dailyPhonePrivate;
+
+  /// No description provided for @dailyReviewNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily rentals are checked by our team before they appear. Yours carries a grey check until it is approved, then a green one.'**
+  String get dailyReviewNotice;
+
+  /// No description provided for @listingMissingGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter how many guests it sleeps (1 to 50).'**
+  String get listingMissingGuests;
+
+  /// No description provided for @listingMinNightsRange.
+  ///
+  /// In en, this message translates to:
+  /// **'The minimum stay can be 1 to 30 nights.'**
+  String get listingMinNightsRange;
+
+  /// No description provided for @publishSuccessDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent for review. We will let you know when it is approved.'**
+  String get publishSuccessDaily;
+
+  /// No description provided for @errorDailyNotSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily rentals are not set up on the server yet.'**
+  String get errorDailyNotSetUp;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet.'**
+  String get notificationsEmpty;
+
+  /// No description provided for @notifBookingNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New booking request from {name} for “{title}”.'**
+  String notifBookingNew(String name, String title);
+
+  /// No description provided for @notifBookingApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request for “{title}” was approved. The owner’s number is in My bookings.'**
+  String notifBookingApproved(String title);
+
+  /// No description provided for @notifBookingRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request for “{title}” was declined.'**
+  String notifBookingRejected(String title);
+
+  /// No description provided for @notifBookingDatesTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'The dates you asked for at “{title}” went to another guest.'**
+  String notifBookingDatesTaken(String title);
+
+  /// No description provided for @notifBookingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your stay at “{title}” is confirmed.'**
+  String notifBookingConfirmed(String title);
+
+  /// No description provided for @notifBookingCancelledByRenter.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} cancelled their request for “{title}”.'**
+  String notifBookingCancelledByRenter(String name, String title);
+
+  /// No description provided for @notifBookingCancelledByOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner cancelled your booking at “{title}”.'**
+  String notifBookingCancelledByOwner(String title);
+
+  /// No description provided for @notifListingApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” was approved and is live in Daily rentals.'**
+  String notifListingApproved(String title);
+
+  /// No description provided for @notifListingRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” was not approved. Edit and save it to send it for review again.'**
+  String notifListingRejected(String title);
+
+  /// No description provided for @notifListingSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” was suspended.'**
+  String notifListingSuspended(String title);
+
+  /// No description provided for @notifListingUnapproved.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” is back in review and hidden until it is approved again.'**
+  String notifListingUnapproved(String title);
+
+  /// No description provided for @notifReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason: {note}'**
+  String notifReason(String note);
+
+  /// No description provided for @notifGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'A guest'**
+  String get notifGuest;
+
+  /// No description provided for @profileBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get profileBookings;
+
+  /// No description provided for @profileNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get profileNotifications;
+
+  /// No description provided for @dailyErrSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to send a request.'**
+  String get dailyErrSignIn;
+
+  /// No description provided for @dailyErrNotBookable.
+  ///
+  /// In en, this message translates to:
+  /// **'This place is not taking requests right now.'**
+  String get dailyErrNotBookable;
+
+  /// No description provided for @dailyErrOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your own listing.'**
+  String get dailyErrOwn;
+
+  /// No description provided for @dailyErrBadDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a check-out date after check-in.'**
+  String get dailyErrBadDates;
+
+  /// No description provided for @dailyErrPast.
+  ///
+  /// In en, this message translates to:
+  /// **'Those dates have passed.'**
+  String get dailyErrPast;
+
+  /// No description provided for @dailyErrTooFar.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests can be made up to a year ahead.'**
+  String get dailyErrTooFar;
+
+  /// No description provided for @dailyErrMinNights.
+  ///
+  /// In en, this message translates to:
+  /// **'This place needs a stay of at least {n} nights.'**
+  String dailyErrMinNights(int n);
+
+  /// No description provided for @dailyErrMaxNights.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays are up to {n} nights.'**
+  String dailyErrMaxNights(int n);
+
+  /// No description provided for @dailyErrMaxGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'This place sleeps up to {n} guests.'**
+  String dailyErrMaxGuests(int n);
+
+  /// No description provided for @dailyErrBadGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how many guests.'**
+  String get dailyErrBadGuests;
+
+  /// No description provided for @dailyErrUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of those nights are no longer free. Pick other dates.'**
+  String get dailyErrUnavailable;
+
+  /// No description provided for @dailyErrOpenRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an open request for this place.'**
+  String get dailyErrOpenRequest;
+
+  /// No description provided for @dailyErrTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'You have sent many requests today. Try again tomorrow.'**
+  String get dailyErrTooMany;
+
+  /// No description provided for @dailyErrPhoneNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the phone number to share with the guest.'**
+  String get dailyErrPhoneNeeded;
+
+  /// No description provided for @dailyErrClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This request has already been answered.'**
+  String get dailyErrClosed;
+
+  /// No description provided for @dailyErrMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This request no longer exists.'**
+  String get dailyErrMissing;
+
+  /// No description provided for @dailyErrNotYours.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the owner can do that.'**
+  String get dailyErrNotYours;
+
+  /// No description provided for @dailyNotLiveYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not live yet'**
+  String get dailyNotLiveYet;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

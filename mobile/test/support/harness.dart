@@ -6,6 +6,7 @@ import 'package:akarat/features/ai_search/data/search_repository.dart';
 import 'package:akarat/features/ai_search/voice/speech_service.dart';
 import 'package:akarat/features/authentication/auth_service.dart';
 import 'package:akarat/shared/repositories/account_repositories.dart';
+import 'package:akarat/shared/repositories/daily_repository.dart';
 import 'package:akarat/shared/repositories/favorites_repository.dart';
 import 'package:akarat/shared/repositories/listings_repository.dart';
 import 'package:akarat/shared/repositories/media_repository.dart';
@@ -37,8 +38,10 @@ class TestDeps {
     FakeProfileRepository? profile,
     FakeTranslationRepository? translation,
     FakeActivity? activity,
+    FakeDailyRepository? daily,
     this.speech,
-  }) : translation = translation ?? FakeTranslationRepository(),
+  }) : daily = daily ?? FakeDailyRepository(),
+       translation = translation ?? FakeTranslationRepository(),
        activity = activity ?? FakeActivity(),
        savedSearches = savedSearches ?? FakeSavedSearchesRepository(),
        profile = profile ?? FakeProfileRepository(),
@@ -56,6 +59,7 @@ class TestDeps {
   final FakeProfileRepository profile;
   final FakeTranslationRepository translation;
   final FakeActivity activity;
+  final FakeDailyRepository daily;
   final FakeSpeechService? speech;
 
   static final client = SupabaseClient(
@@ -103,6 +107,7 @@ class TestDeps {
       profileRepositoryProvider.overrideWithValue(profile),
       translationRepositoryProvider.overrideWithValue(translation),
       activityProvider.overrideWithValue(activity),
+      dailyRepositoryProvider.overrideWithValue(daily),
       if (search != null) searchRepositoryProvider.overrideWithValue(search!),
       speechServiceProvider.overrideWithValue(speech ?? FakeSpeechService()),
       // No tile requests in tests: maps draw their pins on a plain ground.

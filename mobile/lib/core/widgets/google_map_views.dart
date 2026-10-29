@@ -266,7 +266,8 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
         zIndexInt: chosen ? 2 : 1,
         // Read out by screen readers; never shown, as taps are taken here.
         infoWindow: InfoWindow(
-          title: '${Fmt.price(l.priceJod, lang: widget.lang, rent: l.isRent)}, ${l.title(widget.lang)}',
+          title:
+              '${Fmt.price(l.priceJod, lang: widget.lang, rent: l.isRent, night: l.isDaily)}, ${l.title(widget.lang)}',
         ),
         onTap: () => widget.onSelect(l),
       );

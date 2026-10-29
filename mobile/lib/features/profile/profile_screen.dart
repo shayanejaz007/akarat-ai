@@ -27,6 +27,7 @@ import '../../shared/services/profile_photos.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../authentication/auth_service.dart';
 import '../authentication/presentation/auth_scaffold.dart' show AppleMark, FacebookMark;
+import '../daily/daily_providers.dart';
 import '../property_details/property_details_screen.dart';
 import '../settings/settings_controller.dart';
 import '../tour/tour.dart';
@@ -60,6 +61,8 @@ class ProfileScreen extends ConsumerWidget {
     final facebookOnly = facebook != null && ways <= 1;
     final appleOnly = apple != null && ways <= 1;
     final hidden = ref.watch(hiddenOwnersProvider);
+    final unread = user == null ? 0 : ref.watch(unreadNotificationsProvider);
+    final pendingRequests = user == null ? 0 : ref.watch(pendingRequestsProvider);
     final inset = Layout.inset(context);
     const gap = SizedBox(height: Space.lg);
     final external = Icon(Icons.open_in_new_rounded, size: 18, color: c.inkFaint);
@@ -81,6 +84,18 @@ class ProfileScreen extends ConsumerWidget {
                         icon: Icons.home_work_outlined,
                         title: l.profileMyListings,
                         onTap: () => context.push(Routes.dashboard),
+                      ),
+                      GroupedTile(
+                        icon: Icons.event_available_outlined,
+                        title: l.profileBookings,
+                        value: pendingRequests > 0 ? '$pendingRequests' : null,
+                        onTap: () => context.push(Routes.bookingsFor(pendingRequests > 0 ? 'requests' : 'mine')),
+                      ),
+                      GroupedTile(
+                        icon: Icons.notifications_none_rounded,
+                        title: l.profileNotifications,
+                        value: unread > 0 ? '$unread' : null,
+                        onTap: () => context.push(Routes.notifications),
                       ),
                       GroupedTile(
                         icon: Icons.mark_email_unread_outlined,

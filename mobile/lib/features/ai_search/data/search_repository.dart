@@ -162,7 +162,7 @@ class SearchRepository {
   Future<_InternalResult> _direct(SearchConstraints c) async {
     try {
       var q = _db.from('properties').select().eq('status', 'active');
-      if (c.deal != null) q = q.eq('deal', c.deal!);
+      q = c.deal != null ? q.eq('deal', c.deal!) : q.inFilter('deal', const ['sale', 'rent']);
       if (c.city != null) q = q.eq('city_id', c.city!);
       if (c.type != null) q = q.eq('property_type', c.type!);
       if (c.budgetMax case final max? when max != 0) q = q.lte('price_jod', _int32((max * 1.15).round()));
@@ -186,6 +186,8 @@ class SearchRepository {
   /// the marketplace but is never offered as a match.
   static List<Listing> _filterInternal(List<Listing> rows, SearchConstraints c) => rows.where((p) {
     if (p.isClosed) return false;
+    // Priced per night, with its own tab: never a match for a buy or a let.
+    if (p.isDaily) return false;
     if (c.deal != null && p.deal.name != c.deal) return false;
     if (c.type != null && p.propertyType != c.type) return false;
     if (c.city != null && p.cityId != c.city) return false;

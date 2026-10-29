@@ -468,6 +468,9 @@ void main() {
         initial: Routes.profile,
       );
       await tester.scrollUntilVisible(find.text('Finding a property'), 200);
+      // Whole, not just its top edge, so the tap lands on it.
+      await tester.ensureVisible(find.text('Finding a property'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Finding a property'));
       // On to Home first; the tour waits for the page to settle.
       await tester.pumpAndSettle();

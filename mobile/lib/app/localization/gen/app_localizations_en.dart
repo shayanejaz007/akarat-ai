@@ -2140,4 +2140,477 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get termsP4 =>
       'Akarat is a search and listing tool, not a broker or an agent. View the property and verify ownership before any payment. Any agreement stays between you and the other party.';
+
+  @override
+  String get tabDaily => 'Daily';
+
+  @override
+  String get dailyTitle => 'Daily rentals';
+
+  @override
+  String get dailySubtitle =>
+      'Places checked by our team, for a night or more. Pick dates to see only what is free, with the full price.';
+
+  @override
+  String get dailyDates => 'Dates';
+
+  @override
+  String get dailyAnyDates => 'Any dates';
+
+  @override
+  String get dailyAnyGuests => 'Any guests';
+
+  @override
+  String get dailyAllCities => 'All cities';
+
+  @override
+  String get dailyClear => 'Clear';
+
+  @override
+  String get dailyEmptyTitle => 'No daily rentals yet';
+
+  @override
+  String get dailyEmptyBody => 'The first places are on their way. Have one to let by the night? List it.';
+
+  @override
+  String get dailyNoMatchTitle => 'Nothing free for that';
+
+  @override
+  String get dailyNoMatchBody => 'Try other dates, fewer guests or another city.';
+
+  @override
+  String dailyGuests(int n) {
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n guests', one: '1 guest');
+    return '$_temp0';
+  }
+
+  @override
+  String dailyNights(int n) {
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n nights', one: '1 night');
+    return '$_temp0';
+  }
+
+  @override
+  String dailySleeps(int n) {
+    return 'Sleeps $n';
+  }
+
+  @override
+  String dailyMinStay(int n) {
+    return '$n-night minimum';
+  }
+
+  @override
+  String dailyTotalFor(String price, String nights) {
+    return '$price for $nights';
+  }
+
+  @override
+  String get dailyPerNight => 'per night';
+
+  @override
+  String get badgeDaily => 'Daily rental';
+
+  @override
+  String get bookingTitle => 'Request to book';
+
+  @override
+  String get bookingBody =>
+      'Nothing is charged. The owner approves your request, then their number and a WhatsApp button appear here.';
+
+  @override
+  String get bookingCheckIn => 'Check-in';
+
+  @override
+  String get bookingCheckOut => 'Check-out';
+
+  @override
+  String get bookingPickDay => 'Pick a day';
+
+  @override
+  String get bookingTakenLegend => 'Crossed-out days are taken.';
+
+  @override
+  String get bookingMessage => 'A note for the owner (optional)';
+
+  @override
+  String get bookingMessageHint => 'Who is coming, and why';
+
+  @override
+  String get bookingTotal => 'Estimated total';
+
+  @override
+  String get bookingSend => 'Request to book';
+
+  @override
+  String get bookingSending => 'Sending…';
+
+  @override
+  String get bookingSignIn => 'Sign in to request';
+
+  @override
+  String get bookingSent => 'Request sent. We will let you know when the owner answers.';
+
+  @override
+  String get bookingCheckAvailability => 'Check availability';
+
+  @override
+  String get bookingYourRequest => 'Your request';
+
+  @override
+  String get bookingOwnListing => 'This is your listing. Booking requests arrive in Bookings.';
+
+  @override
+  String get bookingPickDates => 'Pick your check-in and check-out on the calendar.';
+
+  @override
+  String get bookingRangeTaken => 'Some nights in between are taken. Pick other dates.';
+
+  @override
+  String get bookingStatusPending => 'Waiting for the owner';
+
+  @override
+  String get bookingStatusApproved => 'Approved';
+
+  @override
+  String get bookingStatusConfirmed => 'Stay confirmed';
+
+  @override
+  String get bookingStatusRejected => 'Not accepted';
+
+  @override
+  String get bookingStatusCancelled => 'Cancelled';
+
+  @override
+  String get bookingStatusExpired => 'Expired';
+
+  @override
+  String get bookingPendingBody =>
+      'Your request is with the owner. Their number appears here, with a WhatsApp button, as soon as they approve.';
+
+  @override
+  String get bookingApprovedBody =>
+      'Contact the owner to arrange your stay. It is a request, not a confirmed booking, until you agree and the owner confirms it.';
+
+  @override
+  String get bookingConfirmedBody => 'The owner confirmed your stay for these nights.';
+
+  @override
+  String get bookingRejectedBody => 'The owner declined this request.';
+
+  @override
+  String get bookingDatesTakenBody => 'These nights went to another guest. Try other dates.';
+
+  @override
+  String get bookingCancelledByOwner => 'The owner cancelled this booking.';
+
+  @override
+  String get bookingCancelledByYou => 'You cancelled this request.';
+
+  @override
+  String get bookingWhatsApp => 'Contact on WhatsApp';
+
+  @override
+  String get bookingCancel => 'Cancel request';
+
+  @override
+  String get bookingCancelTitle => 'Cancel this request?';
+
+  @override
+  String get bookingCancelBody => 'The owner is told.';
+
+  @override
+  String get bookingKeep => 'Keep it';
+
+  @override
+  String bookingWhatsAppText(String name, String title, String from, String to, String nights, String guests) {
+    return 'Hello, this is $name. You approved my Akarat.ai booking request for “$title” from $from to $to ($nights, $guests). Can we arrange the details?';
+  }
+
+  @override
+  String get bookingsTitle => 'Bookings';
+
+  @override
+  String get bookingsRequests => 'For my places';
+
+  @override
+  String get bookingsMine => 'My bookings';
+
+  @override
+  String get bookingsRequestsEmpty =>
+      'No booking requests yet. They arrive here the moment someone asks for one of your daily rentals.';
+
+  @override
+  String get bookingsMineEmpty => 'You have not asked for a stay yet. Pick dates on a place in Daily rentals.';
+
+  @override
+  String get bookingApprove => 'Approve';
+
+  @override
+  String get bookingApproveTitle => 'Approve and share your number';
+
+  @override
+  String bookingApproveBody(String name) {
+    return '$name alone sees this number, with a WhatsApp button.';
+  }
+
+  @override
+  String get bookingPhoneLabel => 'Your WhatsApp number';
+
+  @override
+  String get bookingReject => 'Decline';
+
+  @override
+  String get bookingRejectTitle => 'Decline this request?';
+
+  @override
+  String get bookingRejectNote => 'A reason for the guest (optional)';
+
+  @override
+  String get bookingConfirm => 'Confirm stay';
+
+  @override
+  String get bookingConfirmTitle => 'Confirm this stay?';
+
+  @override
+  String get bookingConfirmBody =>
+      'Its nights close on your calendar, and other requests for the same nights are declined for you.';
+
+  @override
+  String get bookingOwnerCancel => 'Cancel booking';
+
+  @override
+  String get bookingOwnerCancelBody => 'The guest is told and the nights open again.';
+
+  @override
+  String bookingSharedPhone(String phone) {
+    return 'Shown to the guest: $phone';
+  }
+
+  @override
+  String get bookingAutoClosed => 'Closed for you: you confirmed another stay for these nights.';
+
+  @override
+  String get bookingUpdated => 'Updated.';
+
+  @override
+  String get availabilityTitle => 'Availability';
+
+  @override
+  String get availabilityBody =>
+      'Tap a day to close it or open it again. Confirmed stays close their nights on their own.';
+
+  @override
+  String get availabilityOpen => 'Open';
+
+  @override
+  String get availabilityClosed => 'Closed by you';
+
+  @override
+  String get availabilityBooked => 'Confirmed stay';
+
+  @override
+  String get actionAvailability => 'Availability';
+
+  @override
+  String get previousMonth => 'Previous month';
+
+  @override
+  String get nextMonth => 'Next month';
+
+  @override
+  String get reviewPending => 'Waiting for review';
+
+  @override
+  String get reviewApproved => 'Verified';
+
+  @override
+  String get reviewRejected => 'Not approved';
+
+  @override
+  String get reviewSuspended => 'Suspended';
+
+  @override
+  String get reviewPendingBody =>
+      'Our team checks every daily rental before it appears. It stays hidden until approved, and we will let you know.';
+
+  @override
+  String reviewRejectedBody(String note) {
+    return 'Not approved: $note. Edit and save it to send it for review again.';
+  }
+
+  @override
+  String reviewSuspendedBody(String note) {
+    return 'Suspended: $note.';
+  }
+
+  @override
+  String get purposeDaily => 'Daily rental';
+
+  @override
+  String get purposeDailyBody => 'Let it by the night: a chalet, a flat, a farm.';
+
+  @override
+  String get fieldPriceNight => 'Price per night (JOD)';
+
+  @override
+  String get fieldMaxGuests => 'Sleeps up to (guests)';
+
+  @override
+  String get fieldMinNights => 'Minimum stay (nights)';
+
+  @override
+  String get dailyPhonePrivate =>
+      'Your number is not published on a daily rental. When you approve a booking request, you choose the number that guest alone sees, with a WhatsApp button.';
+
+  @override
+  String get dailyReviewNotice =>
+      'Daily rentals are checked by our team before they appear. Yours carries a grey check until it is approved, then a green one.';
+
+  @override
+  String get listingMissingGuests => 'Enter how many guests it sleeps (1 to 50).';
+
+  @override
+  String get listingMinNightsRange => 'The minimum stay can be 1 to 30 nights.';
+
+  @override
+  String get publishSuccessDaily => 'Sent for review. We will let you know when it is approved.';
+
+  @override
+  String get errorDailyNotSetUp => 'Daily rentals are not set up on the server yet.';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsEmpty => 'No notifications yet.';
+
+  @override
+  String notifBookingNew(String name, String title) {
+    return 'New booking request from $name for “$title”.';
+  }
+
+  @override
+  String notifBookingApproved(String title) {
+    return 'Your request for “$title” was approved. The owner’s number is in My bookings.';
+  }
+
+  @override
+  String notifBookingRejected(String title) {
+    return 'Your request for “$title” was declined.';
+  }
+
+  @override
+  String notifBookingDatesTaken(String title) {
+    return 'The dates you asked for at “$title” went to another guest.';
+  }
+
+  @override
+  String notifBookingConfirmed(String title) {
+    return 'Your stay at “$title” is confirmed.';
+  }
+
+  @override
+  String notifBookingCancelledByRenter(String name, String title) {
+    return '$name cancelled their request for “$title”.';
+  }
+
+  @override
+  String notifBookingCancelledByOwner(String title) {
+    return 'The owner cancelled your booking at “$title”.';
+  }
+
+  @override
+  String notifListingApproved(String title) {
+    return '“$title” was approved and is live in Daily rentals.';
+  }
+
+  @override
+  String notifListingRejected(String title) {
+    return '“$title” was not approved. Edit and save it to send it for review again.';
+  }
+
+  @override
+  String notifListingSuspended(String title) {
+    return '“$title” was suspended.';
+  }
+
+  @override
+  String notifListingUnapproved(String title) {
+    return '“$title” is back in review and hidden until it is approved again.';
+  }
+
+  @override
+  String notifReason(String note) {
+    return 'Reason: $note';
+  }
+
+  @override
+  String get notifGuest => 'A guest';
+
+  @override
+  String get profileBookings => 'Bookings';
+
+  @override
+  String get profileNotifications => 'Notifications';
+
+  @override
+  String get dailyErrSignIn => 'Sign in to send a request.';
+
+  @override
+  String get dailyErrNotBookable => 'This place is not taking requests right now.';
+
+  @override
+  String get dailyErrOwn => 'This is your own listing.';
+
+  @override
+  String get dailyErrBadDates => 'Choose a check-out date after check-in.';
+
+  @override
+  String get dailyErrPast => 'Those dates have passed.';
+
+  @override
+  String get dailyErrTooFar => 'Requests can be made up to a year ahead.';
+
+  @override
+  String dailyErrMinNights(int n) {
+    return 'This place needs a stay of at least $n nights.';
+  }
+
+  @override
+  String dailyErrMaxNights(int n) {
+    return 'Stays are up to $n nights.';
+  }
+
+  @override
+  String dailyErrMaxGuests(int n) {
+    return 'This place sleeps up to $n guests.';
+  }
+
+  @override
+  String get dailyErrBadGuests => 'Choose how many guests.';
+
+  @override
+  String get dailyErrUnavailable => 'Some of those nights are no longer free. Pick other dates.';
+
+  @override
+  String get dailyErrOpenRequest => 'You already have an open request for this place.';
+
+  @override
+  String get dailyErrTooMany => 'You have sent many requests today. Try again tomorrow.';
+
+  @override
+  String get dailyErrPhoneNeeded => 'Enter the phone number to share with the guest.';
+
+  @override
+  String get dailyErrClosed => 'This request has already been answered.';
+
+  @override
+  String get dailyErrMissing => 'This request no longer exists.';
+
+  @override
+  String get dailyErrNotYours => 'Only the owner can do that.';
+
+  @override
+  String get dailyNotLiveYet => 'Not live yet';
 }

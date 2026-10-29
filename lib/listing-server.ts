@@ -29,7 +29,7 @@ export type Payload = {
 export type Listing = {
   id: string;
   status: string;
-  deal: "sale" | "rent";
+  deal: "sale" | "rent" | "daily";
   property_type: string;
   city_id: string | null;
   neighborhood_id: string | null;

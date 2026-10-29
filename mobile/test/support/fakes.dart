@@ -5,10 +5,12 @@ import 'package:akarat/core/utils/payload_codec.dart';
 import 'package:akarat/features/ai_search/data/search_repository.dart';
 import 'package:akarat/features/ai_search/voice/speech_service.dart';
 import 'package:akarat/shared/models/account_models.dart';
+import 'package:akarat/shared/models/daily_models.dart';
 import 'package:akarat/shared/models/listing.dart';
 import 'package:akarat/shared/models/listing_filters.dart';
 import 'package:akarat/shared/models/search_constraints.dart';
 import 'package:akarat/shared/repositories/account_repositories.dart';
+import 'package:akarat/shared/repositories/daily_repository.dart';
 import 'package:akarat/shared/repositories/favorites_repository.dart';
 import 'package:akarat/shared/repositories/listings_repository.dart';
 import 'package:akarat/shared/repositories/media_repository.dart';
@@ -197,6 +199,181 @@ class FakeMediaRepository extends Fake implements MediaRepository {
 
   @override
   Future<void> remove(List<String> paths) async => removed.addAll(paths);
+}
+
+/// Daily rentals without a database. Requests are kept in [requests];
+/// [respond] applies the same transitions as booking_respond() for the
+/// cases the tests walk through.
+class FakeDailyRepository extends Fake implements DailyRepository {
+  FakeDailyRepository({
+    this.listings = const [],
+    List<BookingRequest>? requests,
+    this.taken = const {},
+    this.alerts = const [],
+    this.me = '44444444-4444-4444-8444-444444444444',
+  }) : requests = requests ?? [];
+
+  List<Listing> listings;
+  final List<BookingRequest> requests;
+  Set<DateTime> taken;
+  List<AppNotification> alerts;
+  final String me;
+  final searches = <({DateTime? checkIn, DateTime? checkOut, int? guests, String? cityId})>[];
+  final blocked = <String, Set<DateTime>>{};
+  final responses = <(String, BookingAction, String?)>[];
+  int markedRead = 0;
+
+  @override
+  Future<List<Listing>> search({
+    DateTime? checkIn,
+    DateTime? checkOut,
+    int? guests,
+    String? cityId,
+    int limit = 60,
+  }) async {
+    searches.add((checkIn: checkIn, checkOut: checkOut, guests: guests, cityId: cityId));
+    return listings
+        .where((l) => l.isDaily && l.dailyReview == DailyReview.approved)
+        .where((l) => guests == null || (l.maxGuests ?? 50) >= guests)
+        .toList();
+  }
+
+  @override
+  Future<Set<DateTime>> unavailable(String propertyId, DateTime from, DateTime to) async => taken;
+
+  @override
+  Future<BookingRequest> request({
+    required String propertyId,
+    required DateTime checkIn,
+    required DateTime checkOut,
+    required int guests,
+    String? message,
+    String? name,
+  }) async {
+    final l = listings.firstWhere((x) => x.id == propertyId);
+    final nights = nightsBetween(checkIn, checkOut);
+    final r = BookingRequest(
+      id: 'req-${requests.length + 1}',
+      propertyId: propertyId,
+      ownerId: l.ownerId,
+      renterId: me,
+      renterName: name ?? 'Rana',
+      checkIn: checkIn,
+      checkOut: checkOut,
+      nights: nights,
+      guests: guests,
+      nightlyPrice: l.priceJod,
+      totalPrice: l.priceJod * nights,
+      status: BookingStatus.pending,
+      createdAt: DateTime(2026, 10, 29),
+      message: message,
+      titleEn: l.titleEn,
+    );
+    requests.insert(0, r);
+    return r;
+  }
+
+  @override
+  Future<List<BookingRequest>> mine() async => requests.where((r) => r.renterId == me).toList();
+
+  @override
+  Future<List<BookingRequest>> incoming() async => requests.where((r) => r.ownerId == me).toList();
+
+  @override
+  Future<BookingRequest> respond(String id, BookingAction action, {String? phone, String? note}) async {
+    responses.add((id, action, phone));
+    final i = requests.indexWhere((r) => r.id == id);
+    final r = requests[i];
+    final next = switch (action) {
+      BookingAction.approve => BookingStatus.approved,
+      BookingAction.reject => BookingStatus.rejected,
+      BookingAction.confirm => BookingStatus.confirmed,
+      BookingAction.cancel => BookingStatus.cancelled,
+    };
+    final updated = BookingRequest(
+      id: r.id,
+      propertyId: r.propertyId,
+      ownerId: r.ownerId,
+      renterId: r.renterId,
+      renterName: r.renterName,
+      checkIn: r.checkIn,
+      checkOut: r.checkOut,
+      nights: r.nights,
+      guests: r.guests,
+      nightlyPrice: r.nightlyPrice,
+      totalPrice: r.totalPrice,
+      status: next,
+      createdAt: r.createdAt,
+      message: r.message,
+      ownerPhone: action == BookingAction.approve ? phone : (next == BookingStatus.confirmed ? r.ownerPhone : null),
+      responseNote: note,
+      cancelledBy: action == BookingAction.cancel ? (r.renterId == me ? 'renter' : 'owner') : null,
+      titleEn: r.titleEn,
+    );
+    requests[i] = updated;
+    return updated;
+  }
+
+  @override
+  Future<String> lastSharedPhone() async => '0791112222';
+
+  @override
+  Future<Set<DateTime>> blockedDays(String propertyId) async => blocked[propertyId] ?? {};
+
+  @override
+  Future<void> setBlocked(String propertyId, DateTime day, {required bool blocked}) async {
+    final set = this.blocked.putIfAbsent(propertyId, () => {});
+    blocked ? set.add(day) : set.remove(day);
+  }
+
+  @override
+  Future<List<AppNotification>> notifications() async => alerts;
+
+  @override
+  Future<void> markAllRead() async => markedRead++;
+
+  @override
+  Stream<void> changes(String userId) => const Stream.empty();
+}
+
+/// A daily rental, approved unless said otherwise.
+Listing dailyListing({
+  String id = '55555555-5555-4555-8555-555555555555',
+  String owner = '22222222-2222-4222-8222-222222222222',
+  String review = 'approved',
+  int price = 60,
+  int maxGuests = 4,
+  int minNights = 2,
+  String? note,
+  String titleEn = 'Sea-view chalet in Aqaba',
+}) {
+  final packed = PayloadCodec.pack({
+    'amenities': ['pool'],
+    'description_en': 'Two bedrooms, a terrace over the sea.',
+    'description_ar': 'غرفتا نوم وشرفة على البحر.',
+    'images': <Object>[],
+    'contact': {'phone': '', 'whatsapp': true, 'messaging': true},
+  });
+  return Listing.fromRow({
+    'id': id,
+    'owner_id': owner,
+    'status': 'active',
+    'deal': 'daily',
+    'property_type': 'chalet',
+    'city_id': 'aqaba',
+    'price_jod': price,
+    'bedrooms': 2,
+    'bathrooms': 1,
+    'title_en': titleEn,
+    'title_ar': 'شاليه مطل على البحر',
+    'verified': review == 'approved',
+    'payload_gz': packed.payloadGz,
+    'created_at': '2026-10-20T10:00:00Z',
+    'max_guests': maxGuests,
+    'min_nights': minNights,
+    'daily_review': review,
+    'daily_review_note': note,
+  });
 }
 
 /// Records what the app would have counted for the admin panel.

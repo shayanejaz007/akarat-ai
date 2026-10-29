@@ -363,7 +363,7 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
       child: Semantics(
         button: true,
         selected: selected,
-        label: '${Fmt.price(l.priceJod, lang: widget.lang, rent: l.isRent)}, ${l.title(widget.lang)}',
+        label: '${Fmt.price(l.priceJod, lang: widget.lang, rent: l.isRent, night: l.isDaily)}, ${l.title(widget.lang)}',
         excludeSemantics: true,
         child: GestureDetector(
           onTap: () => widget.onSelect(l),

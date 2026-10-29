@@ -155,6 +155,36 @@
 .adm-error { background: var(--danger-wash); color: var(--danger); padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; }
 .adm-note-box { background: var(--warn-wash); color: var(--warn); padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; }
 
+/* ── Daily rentals review ───────────────────────────────────────────── */
+.adm-section { font-size: 15px; font-weight: 600; margin: 8px 0 10px; }
+.adm-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.adm-chip {
+  border: 1px solid var(--line-strong); background: var(--surface); padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  color: var(--ink-2); display: inline-flex; gap: 6px; align-items: center; min-height: 34px;
+}
+.adm-chip[aria-selected="true"] { background: var(--accent-wash); color: var(--accent); border-color: transparent; font-weight: 600; }
+.adm-chip-n { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.adm-chip[aria-selected="true"] .adm-chip-n { color: var(--accent); }
+.adm-reviews { display: grid; gap: 16px; }
+.adm-review { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; }
+.adm-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-content: start; }
+.adm-gallery a:first-child { grid-column: 1 / -1; }
+.adm-gallery img, .adm-gallery video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; background: var(--surface-2); }
+.adm-gallery-empty { grid-column: 1 / -1; aspect-ratio: 4 / 3; border-radius: 8px; background: var(--surface-2); color: var(--ink-3); display: grid; place-items: center; }
+.adm-review-body { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.adm-review-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.adm-review-head .adm-title { font-size: 16px; max-width: none; }
+.adm-review-head .adm-actions { align-items: flex-start; }
+.adm-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px 16px; margin: 0; }
+.adm-facts dt { color: var(--ink-3); font-size: 12px; }
+.adm-facts dd { margin: 0; }
+.adm-desc summary { cursor: pointer; color: var(--ink-2); }
+.adm-desc p { white-space: pre-wrap; margin: 8px 0; max-width: 72ch; }
+.adm-review-meta { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.adm-review-meta .adm-label { color: var(--ink-3); font-size: 12px; }
+.adm-review .adm-note-box { margin: 0; }
+@media (max-width: 760px) { .adm-review { grid-template-columns: 1fr; } }
+
 /* ── Sign-in ───────────────────────────────────────────────────────── */
 .adm-gate { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
 .adm-gate form { width: 100%; max-width: 360px; display: grid; gap: 12px; }

@@ -60,6 +60,8 @@ class ListingDraft {
     this.descriptionAr = '',
     this.amenities = const [],
     this.contactPhone = '',
+    this.maxGuests = '',
+    this.minNights = '1',
     this.media = const [],
     this.lat,
     this.lng,
@@ -85,6 +87,10 @@ class ListingDraft {
   final String descriptionAr;
   final List<String> amenities;
   final String contactPhone;
+
+  /// Daily rentals only: how many it sleeps, and the shortest stay.
+  final String maxGuests;
+  final String minNights;
   final List<DraftMedia> media;
 
   /// The EXACT pin the owner placed. What gets published is decided by
@@ -120,6 +126,8 @@ class ListingDraft {
     String? descriptionAr,
     List<String>? amenities,
     String? contactPhone,
+    String? maxGuests,
+    String? minNights,
     List<DraftMedia>? media,
     double? lat,
     double? lng,
@@ -143,6 +151,8 @@ class ListingDraft {
     descriptionAr: descriptionAr ?? this.descriptionAr,
     amenities: amenities ?? this.amenities,
     contactPhone: contactPhone ?? this.contactPhone,
+    maxGuests: maxGuests ?? this.maxGuests,
+    minNights: minNights ?? this.minNights,
     media: media ?? this.media,
     lat: clearPin ? null : (lat ?? this.lat),
     lng: clearPin ? null : (lng ?? this.lng),
@@ -168,6 +178,8 @@ class ListingDraft {
     descriptionAr: l.payload.descriptionAr,
     amenities: [...l.payload.amenities],
     contactPhone: l.payload.contact.phone,
+    maxGuests: l.maxGuests?.toString() ?? '',
+    minNights: '${l.minNights ?? 1}',
     media: [for (final m in l.media) DraftMedia(existing: m, kind: m.kind)],
     lat: l.lat,
     lng: l.lng,
@@ -193,6 +205,8 @@ class ListingDraft {
     'descriptionAr': descriptionAr,
     'amenities': amenities,
     'contactPhone': contactPhone,
+    'maxGuests': maxGuests,
+    'minNights': minNights,
     'media': [for (final m in media) m.toJson()],
     'lat': lat,
     'lng': lng,
@@ -222,6 +236,8 @@ class ListingDraft {
       descriptionAr: s('descriptionAr'),
       amenities: amenities is List ? amenities.whereType<String>().toList() : const [],
       contactPhone: s('contactPhone'),
+      maxGuests: s('maxGuests'),
+      minNights: s('minNights').isEmpty ? '1' : s('minNights'),
       media: media is List ? media.map(DraftMedia.fromJson).whereType<DraftMedia>().toList() : const [],
       lat: (j['lat'] as num?)?.toDouble(),
       lng: (j['lng'] as num?)?.toDouble(),

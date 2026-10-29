@@ -40,7 +40,14 @@ String? stepProblem(BuildContext context, WidgetRef ref, String? editId, int ste
       if (year != null && (year < 1900 || year > max)) return l.validationYear(max);
     case 4:
       if ((ListingDraft.number(d.price) ?? 0) <= 0) return l.listingMissingPrice;
-      if (d.contactPhone.trim().isNotEmpty && Phone.dialable(d.contactPhone) == null) return l.validationPhone;
+      if (d.deal == DealType.daily) {
+        final guests = ListingDraft.number(d.maxGuests) ?? 0;
+        if (guests < 1 || guests > 50) return l.listingMissingGuests;
+        final nights = ListingDraft.number(d.minNights) ?? 1;
+        if (nights < 1 || nights > 30) return l.listingMinNightsRange;
+      } else if (d.contactPhone.trim().isNotEmpty && Phone.dialable(d.contactPhone) == null) {
+        return l.validationPhone;
+      }
     case 6:
       if (d.titleEn.trim().isEmpty && d.titleAr.trim().isEmpty) return l.listingMissingTitle;
   }
@@ -222,6 +229,14 @@ class PurposeStep extends ConsumerWidget {
           body: l.purposeRentBody,
           selected: d == DealType.rent,
           onTap: () => ctrl.update((x) => x.copyWith(deal: DealType.rent)),
+        ),
+        const SizedBox(height: Space.sm),
+        _ChoiceCard(
+          icon: Icons.bed_outlined,
+          title: l.purposeDaily,
+          body: l.purposeDailyBody,
+          selected: d == DealType.daily,
+          onTap: () => ctrl.update((x) => x.copyWith(deal: DealType.daily)),
         ),
       ],
     );
@@ -569,28 +584,55 @@ class PriceStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
     final d = ref.read(listingWizardProvider(editId)).draft;
-    final rent = ref.watch(listingWizardProvider(editId).select((s) => s.draft.deal == DealType.rent));
+    final deal = ref.watch(listingWizardProvider(editId).select((s) => s.draft.deal));
     final ctrl = ref.read(listingWizardProvider(editId).notifier);
+    final c = context.colors;
     return Column(
       children: [
         DraftTextField(
           value: d.price,
-          label: rent ? l.fieldPriceRent : l.fieldPrice,
+          label: switch (deal) {
+            DealType.rent => l.fieldPriceRent,
+            DealType.daily => l.fieldPriceNight,
+            DealType.sale => l.fieldPrice,
+          },
           numeric: true,
           prefixIcon: Icons.payments_outlined,
           onChanged: (v) => ctrl.update((x) => x.copyWith(price: v)),
         ),
         const SizedBox(height: Space.lg),
-        DraftTextField(
-          value: d.contactPhone,
-          label: l.fieldContactPhone,
-          helper: l.fieldContactPhoneHelp,
-          keyboardType: TextInputType.phone,
-          maxLength: 24,
-          textDirection: TextDirection.ltr,
-          prefixIcon: Icons.call_outlined,
-          onChanged: (v) => ctrl.update((x) => x.copyWith(contactPhone: v)),
-        ),
+        if (deal == DealType.daily) ...[
+          // Who it sleeps and the shortest stay; the number stays private.
+          DraftTextField(
+            value: d.maxGuests,
+            label: l.fieldMaxGuests,
+            numeric: true,
+            prefixIcon: Icons.group_outlined,
+            onChanged: (v) => ctrl.update((x) => x.copyWith(maxGuests: v)),
+          ),
+          const SizedBox(height: Space.lg),
+          DraftTextField(
+            value: d.minNights,
+            label: l.fieldMinNights,
+            numeric: true,
+            prefixIcon: Icons.nights_stay_outlined,
+            onChanged: (v) => ctrl.update((x) => x.copyWith(minNights: v)),
+          ),
+          const SizedBox(height: Space.lg),
+          NoticeLine(icon: Icons.lock_outline_rounded, text: l.dailyPhonePrivate),
+          const SizedBox(height: Space.sm),
+          NoticeLine(icon: Icons.verified_outlined, text: l.dailyReviewNotice, tone: c.inkFaint),
+        ] else
+          DraftTextField(
+            value: d.contactPhone,
+            label: l.fieldContactPhone,
+            helper: l.fieldContactPhoneHelp,
+            keyboardType: TextInputType.phone,
+            maxLength: 24,
+            textDirection: TextDirection.ltr,
+            prefixIcon: Icons.call_outlined,
+            onChanged: (v) => ctrl.update((x) => x.copyWith(contactPhone: v)),
+          ),
       ],
     );
   }
@@ -704,6 +746,8 @@ class PreviewStep extends ConsumerWidget {
       FailureKind.unknownArea => l.errorUnknownArea,
       FailureKind.storageMissing => l.errorStorageMissing,
       FailureKind.schemaMissing when (f.detail ?? '').contains('location') => l.errorGeoColumns,
+      // 'daily' is not a deal, or max_guests not a column, before 0019 runs.
+      _ when RegExp('deal_type|max_guests|min_nights').hasMatch(f.detail ?? '') => l.errorDailyNotSetUp,
       FailureKind.network || FailureKind.timeout => l.mediaUploadFailed,
       _ => context.failureMessage(error),
     };
@@ -729,7 +773,17 @@ class PreviewStep extends ConsumerWidget {
       final saved = await ctrl.save(publish: publish);
       if (saved == null || !context.mounted) return;
       // On the root overlay, so it stays through the move to the dashboard.
-      showSuccess(context, s.editing ? l.editSuccess : (publish ? l.publishSuccess : l.draftSuccess));
+      // A new daily rental is not live yet: it waits for an admin.
+      showSuccess(
+        context,
+        s.editing
+            ? l.editSuccess
+            : !publish
+            ? l.draftSuccess
+            : d.deal == DealType.daily
+            ? l.publishSuccessDaily
+            : l.publishSuccess,
+      );
       if (s.editing) {
         router.pop();
       } else {
@@ -741,6 +795,7 @@ class PreviewStep extends ConsumerWidget {
       DraftProblem.title => l.listingMissingTitle,
       DraftProblem.price => l.listingMissingPrice,
       DraftProblem.city => l.listingMissingCity,
+      DraftProblem.guests => l.listingMissingGuests,
     };
 
     return Column(
@@ -766,7 +821,14 @@ class PreviewStep extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      price == null ? '—' : Fmt.price(price, lang: lang, rent: d.deal == DealType.rent),
+                      price == null
+                          ? '—'
+                          : Fmt.price(
+                              price,
+                              lang: lang,
+                              rent: d.deal == DealType.rent,
+                              night: d.deal == DealType.daily,
+                            ),
                       style: context.type.price,
                     ),
                     const SizedBox(height: Space.hair),

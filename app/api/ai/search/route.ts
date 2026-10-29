@@ -245,7 +245,11 @@ export async function POST(request: NextRequest) {
 
   // 1. Our own inventory. RLS keeps this to active listings.
   let internalQuery = supabase.from("properties").select("*").eq("status", "active");
-  if (constraints.deal) internalQuery = internalQuery.eq("deal", constraints.deal);
+  // Buy and Rent only: a daily rental's price is per night, and it has its
+  // own page. Named rather than excluded, so this works before 0019 runs.
+  internalQuery = constraints.deal
+    ? internalQuery.eq("deal", constraints.deal)
+    : internalQuery.in("deal", ["sale", "rent"]);
   if (constraints.city) internalQuery = internalQuery.eq("city_id", constraints.city);
   if (constraints.type) internalQuery = internalQuery.eq("property_type", constraints.type);
   if (constraints.budgetMax) internalQuery = internalQuery.lte("price_jod", Math.round(constraints.budgetMax * 1.15));

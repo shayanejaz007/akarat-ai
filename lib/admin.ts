@@ -95,3 +95,38 @@ export function searchTerm(url: URL): string | null {
 export function fail(message: string, status = 500) {
   return NextResponse.json({ error: message }, { status });
 }
+
+export type Person = {
+  id: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  verified: boolean;
+  joined: string | null;
+};
+
+/** Name, email and phone for each account id, from the profile and the auth
+ *  record. For one page of rows at a time: one auth lookup per distinct id. */
+export async function people(db: SupabaseClient, ids: (string | null | undefined)[]): Promise<Map<string, Person>> {
+  const unique = [...new Set(ids.filter((v): v is string => !!v))].slice(0, 200);
+  if (!unique.length) return new Map();
+  const [profiles, users] = await Promise.all([
+    db.from("profiles").select("id,full_name,phone,verified").in("id", unique),
+    Promise.all(unique.map(id => db.auth.admin.getUserById(id).then(r => r.data.user).catch(() => null))),
+  ]);
+  const byId = new Map(((profiles.data ?? []) as Record<string, unknown>[]).map(p => [p.id as string, p]));
+  const out = new Map<string, Person>();
+  unique.forEach((id, i) => {
+    const p = byId.get(id);
+    const u = users[i];
+    out.set(id, {
+      id,
+      name: (p?.full_name as string) || (u?.user_metadata?.full_name as string) || null,
+      email: u?.email ?? null,
+      phone: (p?.phone as string) || u?.phone || null,
+      verified: p?.verified === true,
+      joined: u?.created_at ?? null,
+    });
+  });
+  return out;
+}

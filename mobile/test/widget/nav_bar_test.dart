@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../support/harness.dart';
 
-const _names = ['Home', 'Explore', 'AI Search', 'Saved'];
+const _names = ['Home', 'Explore', 'Daily', 'AI Search', 'Saved'];
 
 void main() {
   for (final width in [360.0, 390.0, 430.0]) {
@@ -13,7 +13,7 @@ void main() {
       testWidgets('${width.toInt()} px, ${signedIn ? 'signed in' : 'signed out'}: no tab name is cut short', (
         tester,
       ) async {
-        for (var index = 0; index < 4; index++) {
+        for (var index = 0; index < _names.length; index++) {
           await pumpScreen(
             tester,
             Scaffold(

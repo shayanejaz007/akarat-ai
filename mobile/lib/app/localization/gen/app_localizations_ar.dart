@@ -2139,4 +2139,483 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get termsP4 =>
       'أكارات أداة بحث وعرض، لا وسيط ولا وكيل عقاري. عاين العقار ووثّق الملكية قبل أي دفعة. أي اتفاق يبقى بينك وبين الطرف الآخر.';
+
+  @override
+  String get tabDaily => 'يومي';
+
+  @override
+  String get dailyTitle => 'الإيجار اليومي';
+
+  @override
+  String get dailySubtitle => 'أماكن راجعها فريقنا، لليلة أو أكثر. اختر تواريخك لترى المتاح فقط مع السعر الكامل.';
+
+  @override
+  String get dailyDates => 'التواريخ';
+
+  @override
+  String get dailyAnyDates => 'أي تواريخ';
+
+  @override
+  String get dailyAnyGuests => 'أي عدد';
+
+  @override
+  String get dailyAllCities => 'كل المدن';
+
+  @override
+  String get dailyClear => 'مسح';
+
+  @override
+  String get dailyEmptyTitle => 'لا إعلانات يومية بعد';
+
+  @override
+  String get dailyEmptyBody => 'أول الأماكن في الطريق. لديك مكان تؤجره بالليلة؟ اعرضه هنا.';
+
+  @override
+  String get dailyNoMatchTitle => 'لا شيء متاح بهذه الشروط';
+
+  @override
+  String get dailyNoMatchBody => 'جرّب تواريخ أخرى أو عدداً أقل من الضيوف أو مدينة أخرى.';
+
+  @override
+  String dailyGuests(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ضيفاً',
+      few: '$n ضيوف',
+      two: 'ضيفان',
+      one: 'ضيف واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dailyNights(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ليلة',
+      few: '$n ليالٍ',
+      two: 'ليلتان',
+      one: 'ليلة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dailySleeps(int n) {
+    return 'يتسع لـ $n';
+  }
+
+  @override
+  String dailyMinStay(int n) {
+    return 'أقل إقامة $n ليالٍ';
+  }
+
+  @override
+  String dailyTotalFor(String price, String nights) {
+    return '$price لـ $nights';
+  }
+
+  @override
+  String get dailyPerNight => 'لليلة';
+
+  @override
+  String get badgeDaily => 'إيجار يومي';
+
+  @override
+  String get bookingTitle => 'اطلب الحجز';
+
+  @override
+  String get bookingBody => 'لن تدفع شيئاً. يوافق المالك على طلبك، ثم يظهر رقمه وزر واتساب هنا.';
+
+  @override
+  String get bookingCheckIn => 'الوصول';
+
+  @override
+  String get bookingCheckOut => 'المغادرة';
+
+  @override
+  String get bookingPickDay => 'اختر يوماً';
+
+  @override
+  String get bookingTakenLegend => 'الأيام المشطوبة محجوزة.';
+
+  @override
+  String get bookingMessage => 'رسالة للمالك (اختياري)';
+
+  @override
+  String get bookingMessageHint => 'من القادمون وسبب الزيارة';
+
+  @override
+  String get bookingTotal => 'المجموع التقديري';
+
+  @override
+  String get bookingSend => 'اطلب الحجز';
+
+  @override
+  String get bookingSending => 'جارٍ الإرسال…';
+
+  @override
+  String get bookingSignIn => 'سجّل الدخول لطلب الحجز';
+
+  @override
+  String get bookingSent => 'أُرسل الطلب. سنُعلمك عندما يرد المالك.';
+
+  @override
+  String get bookingCheckAvailability => 'اطّلع على التوفر';
+
+  @override
+  String get bookingYourRequest => 'طلبك';
+
+  @override
+  String get bookingOwnListing => 'هذا إعلانك. تصل طلبات الحجز في الحجوزات.';
+
+  @override
+  String get bookingPickDates => 'اختر يومي الوصول والمغادرة من التقويم.';
+
+  @override
+  String get bookingRangeTaken => 'بعض الليالي بينهما محجوزة. اختر تواريخ أخرى.';
+
+  @override
+  String get bookingStatusPending => 'بانتظار ردّ المالك';
+
+  @override
+  String get bookingStatusApproved => 'تمت الموافقة';
+
+  @override
+  String get bookingStatusConfirmed => 'إقامة مؤكدة';
+
+  @override
+  String get bookingStatusRejected => 'لم يُقبل';
+
+  @override
+  String get bookingStatusCancelled => 'ملغى';
+
+  @override
+  String get bookingStatusExpired => 'انتهت مدته';
+
+  @override
+  String get bookingPendingBody => 'طلبك عند المالك. يظهر رقمه هنا مع زر واتساب فور موافقته.';
+
+  @override
+  String get bookingApprovedBody => 'تواصل مع المالك لترتيب إقامتك. هذا طلب وليس حجزاً مؤكداً حتى تتفقا ويؤكده المالك.';
+
+  @override
+  String get bookingConfirmedBody => 'أكد المالك إقامتك لهذه الليالي.';
+
+  @override
+  String get bookingRejectedBody => 'اعتذر المالك عن هذا الطلب.';
+
+  @override
+  String get bookingDatesTakenBody => 'حُجزت هذه الليالي لضيف آخر. جرّب تواريخ أخرى.';
+
+  @override
+  String get bookingCancelledByOwner => 'ألغى المالك هذا الحجز.';
+
+  @override
+  String get bookingCancelledByYou => 'ألغيت هذا الطلب.';
+
+  @override
+  String get bookingWhatsApp => 'تواصل عبر واتساب';
+
+  @override
+  String get bookingCancel => 'إلغاء الطلب';
+
+  @override
+  String get bookingCancelTitle => 'إلغاء هذا الطلب؟';
+
+  @override
+  String get bookingCancelBody => 'سيُبلَّغ المالك.';
+
+  @override
+  String get bookingKeep => 'أبقِه';
+
+  @override
+  String bookingWhatsAppText(String name, String title, String from, String to, String nights, String guests) {
+    return 'مرحباً، أنا $name. وافقت على طلب حجزي في «$title» على عقارات من $from إلى $to ($nights، $guests). هل يمكننا ترتيب التفاصيل؟';
+  }
+
+  @override
+  String get bookingsTitle => 'الحجوزات';
+
+  @override
+  String get bookingsRequests => 'على أماكني';
+
+  @override
+  String get bookingsMine => 'حجوزاتي';
+
+  @override
+  String get bookingsRequestsEmpty => 'لا طلبات حجز بعد. تصل هنا فور طلب أحدهم أحد أماكنك.';
+
+  @override
+  String get bookingsMineEmpty => 'لم تطلب أي إقامة بعد. اختر تواريخك على مكان في الإيجار اليومي.';
+
+  @override
+  String get bookingApprove => 'موافقة';
+
+  @override
+  String get bookingApproveTitle => 'وافق وأظهر رقمك';
+
+  @override
+  String bookingApproveBody(String name) {
+    return 'يرى $name وحده هذا الرقم مع زر واتساب.';
+  }
+
+  @override
+  String get bookingPhoneLabel => 'رقم واتساب الخاص بك';
+
+  @override
+  String get bookingReject => 'اعتذار';
+
+  @override
+  String get bookingRejectTitle => 'الاعتذار عن هذا الطلب؟';
+
+  @override
+  String get bookingRejectNote => 'سبب للضيف (اختياري)';
+
+  @override
+  String get bookingConfirm => 'تأكيد الإقامة';
+
+  @override
+  String get bookingConfirmTitle => 'تأكيد هذه الإقامة؟';
+
+  @override
+  String get bookingConfirmBody => 'تُغلق لياليها في تقويمك، ويُعتذر تلقائياً عن الطلبات الأخرى لنفس الليالي.';
+
+  @override
+  String get bookingOwnerCancel => 'إلغاء الحجز';
+
+  @override
+  String get bookingOwnerCancelBody => 'سيُبلَّغ الضيف وتعود الليالي متاحة.';
+
+  @override
+  String bookingSharedPhone(String phone) {
+    return 'ظاهر للضيف: $phone';
+  }
+
+  @override
+  String get bookingAutoClosed => 'أُغلق تلقائياً: أكدت إقامة أخرى لهذه الليالي.';
+
+  @override
+  String get bookingUpdated => 'تم التحديث.';
+
+  @override
+  String get availabilityTitle => 'التوفر';
+
+  @override
+  String get availabilityBody => 'اضغط على يوم لإغلاقه أو فتحه. الإقامات المؤكدة تُغلق لياليها تلقائياً.';
+
+  @override
+  String get availabilityOpen => 'متاح';
+
+  @override
+  String get availabilityClosed => 'أغلقته أنت';
+
+  @override
+  String get availabilityBooked => 'إقامة مؤكدة';
+
+  @override
+  String get actionAvailability => 'التوفر';
+
+  @override
+  String get previousMonth => 'الشهر السابق';
+
+  @override
+  String get nextMonth => 'الشهر التالي';
+
+  @override
+  String get reviewPending => 'بانتظار المراجعة';
+
+  @override
+  String get reviewApproved => 'موثّق';
+
+  @override
+  String get reviewRejected => 'لم تتم الموافقة';
+
+  @override
+  String get reviewSuspended => 'موقوف';
+
+  @override
+  String get reviewPendingBody => 'يراجع فريقنا كل إعلان يومي قبل ظهوره. يبقى مخفياً حتى الموافقة، وسنُعلمك.';
+
+  @override
+  String reviewRejectedBody(String note) {
+    return 'لم تتم الموافقة: $note. عدّله واحفظه ليُراجع من جديد.';
+  }
+
+  @override
+  String reviewSuspendedBody(String note) {
+    return 'موقوف: $note.';
+  }
+
+  @override
+  String get purposeDaily => 'إيجار يومي';
+
+  @override
+  String get purposeDailyBody => 'أجّره بالليلة: شاليه أو شقة أو مزرعة.';
+
+  @override
+  String get fieldPriceNight => 'سعر الليلة (دينار)';
+
+  @override
+  String get fieldMaxGuests => 'أقصى عدد ضيوف';
+
+  @override
+  String get fieldMinNights => 'أقل مدة إقامة (ليالٍ)';
+
+  @override
+  String get dailyPhonePrivate =>
+      'رقمك لا يُنشر على الإعلان اليومي. عندما توافق على طلب حجز، تختار الرقم الذي يراه ذلك الضيف وحده مع زر واتساب.';
+
+  @override
+  String get dailyReviewNotice =>
+      'يراجع فريقنا الإعلانات اليومية قبل ظهورها. يحمل إعلانك علامة رمادية حتى الموافقة، ثم خضراء.';
+
+  @override
+  String get listingMissingGuests => 'أدخل أقصى عدد ضيوف (من ١ إلى ٥٠).';
+
+  @override
+  String get listingMinNightsRange => 'أقل مدة إقامة من ١ إلى ٣٠ ليلة.';
+
+  @override
+  String get publishSuccessDaily => 'أُرسل للمراجعة. سنُعلمك عند الموافقة عليه.';
+
+  @override
+  String get errorDailyNotSetUp => 'الإيجار اليومي غير مهيّأ على الخادم بعد.';
+
+  @override
+  String get notificationsTitle => 'الإشعارات';
+
+  @override
+  String get notificationsEmpty => 'لا إشعارات بعد.';
+
+  @override
+  String notifBookingNew(String name, String title) {
+    return 'طلب حجز جديد من $name في «$title».';
+  }
+
+  @override
+  String notifBookingApproved(String title) {
+    return 'تمت الموافقة على طلبك في «$title». رقم المالك في حجوزاتي.';
+  }
+
+  @override
+  String notifBookingRejected(String title) {
+    return 'اعتذر المالك عن طلبك في «$title».';
+  }
+
+  @override
+  String notifBookingDatesTaken(String title) {
+    return 'حُجزت التواريخ التي طلبتها في «$title» لضيف آخر.';
+  }
+
+  @override
+  String notifBookingConfirmed(String title) {
+    return 'تأكدت إقامتك في «$title».';
+  }
+
+  @override
+  String notifBookingCancelledByRenter(String name, String title) {
+    return 'ألغى $name طلبه في «$title».';
+  }
+
+  @override
+  String notifBookingCancelledByOwner(String title) {
+    return 'ألغى المالك حجزك في «$title».';
+  }
+
+  @override
+  String notifListingApproved(String title) {
+    return 'تمت الموافقة على «$title» وأصبح ظاهراً في الإيجار اليومي.';
+  }
+
+  @override
+  String notifListingRejected(String title) {
+    return 'لم تتم الموافقة على «$title». عدّله واحفظه ليُراجع من جديد.';
+  }
+
+  @override
+  String notifListingSuspended(String title) {
+    return 'تم إيقاف «$title».';
+  }
+
+  @override
+  String notifListingUnapproved(String title) {
+    return 'أُعيد «$title» للمراجعة وهو مخفي حتى الموافقة عليه.';
+  }
+
+  @override
+  String notifReason(String note) {
+    return 'السبب: $note';
+  }
+
+  @override
+  String get notifGuest => 'ضيف';
+
+  @override
+  String get profileBookings => 'الحجوزات';
+
+  @override
+  String get profileNotifications => 'الإشعارات';
+
+  @override
+  String get dailyErrSignIn => 'سجّل الدخول لإرسال الطلب.';
+
+  @override
+  String get dailyErrNotBookable => 'هذا المكان لا يستقبل طلبات حالياً.';
+
+  @override
+  String get dailyErrOwn => 'هذا إعلانك أنت.';
+
+  @override
+  String get dailyErrBadDates => 'اختر تاريخ مغادرة بعد تاريخ الوصول.';
+
+  @override
+  String get dailyErrPast => 'هذه التواريخ مضت.';
+
+  @override
+  String get dailyErrTooFar => 'يمكن الطلب حتى سنة مقدماً.';
+
+  @override
+  String dailyErrMinNights(int n) {
+    return 'أقل مدة إقامة هنا $n ليالٍ.';
+  }
+
+  @override
+  String dailyErrMaxNights(int n) {
+    return 'أطول مدة إقامة $n ليلة.';
+  }
+
+  @override
+  String dailyErrMaxGuests(int n) {
+    return 'يتسع هذا المكان لـ $n ضيوف كحد أقصى.';
+  }
+
+  @override
+  String get dailyErrBadGuests => 'اختر عدد الضيوف.';
+
+  @override
+  String get dailyErrUnavailable => 'بعض هذه الليالي لم تعد متاحة. اختر تواريخ أخرى.';
+
+  @override
+  String get dailyErrOpenRequest => 'لديك طلب مفتوح لهذا المكان.';
+
+  @override
+  String get dailyErrTooMany => 'أرسلت طلبات كثيرة اليوم. حاول غداً.';
+
+  @override
+  String get dailyErrPhoneNeeded => 'أدخل رقم الهاتف الذي سيظهر للضيف.';
+
+  @override
+  String get dailyErrClosed => 'تمت الإجابة على هذا الطلب.';
+
+  @override
+  String get dailyErrMissing => 'هذا الطلب لم يعد موجوداً.';
+
+  @override
+  String get dailyErrNotYours => 'هذا للمالك فقط.';
+
+  @override
+  String get dailyNotLiveYet => 'غير منشور بعد';
 }

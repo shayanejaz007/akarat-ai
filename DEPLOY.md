@@ -285,6 +285,34 @@ Every `/api/admin/*` route checks that cookie on the server; the page itself
 holds no privileged key. Views and "live now" are counted from the website and
 from app version 1.0.2 on.
 
+### Daily rentals
+Short stays priced per night, in their own tab on the website (Daily rentals)
+and in the app (Daily, next to Explore). Run
+`supabase/migrations/0019_daily_rentals.sql` after 0018. Until it runs, the
+tab is empty and choosing "Daily rental" in the listing form says so; nothing
+else changes.
+
+- **Listing.** An owner chooses "Daily rental" in the listing form and gives
+  a price per night, how many it sleeps and a minimum stay. The listing's
+  phone is never published; it carries a grey check and is visible only to
+  its owner until approved.
+- **Review.** `/admin` → Daily rentals: approve, reject (with a reason the
+  owner sees), suspend, revoke or reinstate. Approval makes it public on the
+  website and the app and turns its check green. Edits to an approved
+  listing keep it live and appear under "Changed since approval".
+- **Requests.** A signed-in renter picks dates on the listing's calendar
+  (taken nights are crossed out) and sends a request with the number of
+  guests. The owner approves it from their dashboard (website) or Bookings
+  (app), choosing the number to share; only then does that renter see it,
+  with a WhatsApp button. The owner confirms once the stay is agreed, which
+  closes those nights and declines overlapping requests. The database refuses
+  two confirmed stays on the same night, whoever writes them.
+- **Notifications.** New requests, answers and review decisions arrive in
+  the dashboard (website) and under Profile → Notifications (app), live.
+  There are no push notifications or emails yet.
+- **Admin.** `/admin` → Bookings lists every request with renter, owner,
+  dates, total and status.
+
 ### The crawler
 `/api/admin/crawl` refreshes the external listing index. It requires
 `Authorization: Bearer $CRON_SECRET`. To run it on a schedule, add to

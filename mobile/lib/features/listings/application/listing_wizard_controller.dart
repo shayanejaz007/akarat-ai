@@ -15,7 +15,7 @@ import '../../dashboard/dashboard_providers.dart';
 import '../domain/listing_draft.dart';
 
 /// Why a save could not start. Shown inline on the step that needs fixing.
-enum DraftProblem { title, price, city }
+enum DraftProblem { title, price, city, guests }
 
 class WizardState {
   const WizardState({
@@ -291,7 +291,16 @@ class ListingWizardController extends Notifier<WizardState> {
       if (d.titleEn.trim().isEmpty && d.titleAr.trim().isEmpty) DraftProblem.title,
       if ((ListingDraft.number(d.price) ?? 0) <= 0) DraftProblem.price,
       if (d.cityId == null || d.cityId!.isEmpty) DraftProblem.city,
+      if (d.deal == DealType.daily && !_guestsValid(d)) DraftProblem.guests,
     ];
+  }
+
+  /// A daily rental says who it sleeps (1 to 50) and a shortest stay of 1
+  /// to 30 nights, the ranges 0019_daily_rentals.sql enforces.
+  static bool _guestsValid(ListingDraft d) {
+    final guests = ListingDraft.number(d.maxGuests) ?? 0;
+    final nights = ListingDraft.number(d.minNights) ?? 1;
+    return guests >= 1 && guests <= 50 && nights >= 1 && nights <= 30;
   }
 
   /// Saves the listing. Mirrors the website's submitListing step for step:
@@ -333,6 +342,7 @@ class ListingWizardController extends Notifier<WizardState> {
       }
 
       final d = state.draft;
+      final daily = d.deal == DealType.daily;
       // 2. The publishable point.
       final exact = d.precision == LocationPrecision.exact;
       final pub = !d.hasPin ? null : (exact ? LatLngPoint(d.lat!, d.lng!) : Geo.blur(d.lat!, d.lng!));
@@ -363,13 +373,21 @@ class ListingWizardController extends Notifier<WizardState> {
           // blurred point it would give the blur away.
           'address': d.hasPin && exact && d.address.trim().isNotEmpty ? d.address.trim() : null,
         },
+        // Columns from 0019, sent only for a daily rental so that saving a
+        // sale or a rent never names a column an older database lacks.
+        if (daily) ...{
+          'max_guests': ListingDraft.number(d.maxGuests),
+          'min_nights': ListingDraft.number(d.minNights) ?? 1,
+        },
       };
       final payload = ListingPayload(
         amenities: d.amenities,
         descriptionEn: words.descEn,
         descriptionAr: words.descAr,
         media: [for (final m in d.media) m.stored!],
-        contact: ListingContact(phone: d.contactPhone.trim(), whatsapp: true, messaging: true),
+        // The payload is public. A daily rental's number goes to one guest
+        // at a time, when the owner approves them, never here.
+        contact: ListingContact(phone: daily ? '' : d.contactPhone.trim(), whatsapp: true, messaging: true),
       );
 
       // 3. The row. Editing never touches status: a hidden listing stays
