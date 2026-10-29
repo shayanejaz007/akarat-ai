@@ -97,8 +97,6 @@ export async function PATCH(request: NextRequest) {
   const changes: Record<string, unknown> = {};
   if (typeof b.role === "string") {
     if (!ROLES.includes(b.role)) return fail("Unknown role", 400);
-    // An admin removing their own role would lock themselves out mid-session.
-    if (b.id === admin.user.id && b.role !== "admin") return fail("You cannot remove your own admin role.", 400);
     changes.role = b.role;
   }
   if (typeof b.verified === "boolean") changes.verified = b.verified;

@@ -120,6 +120,7 @@ your host's dashboard for production.
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | **Bypasses RLS.** Never expose to the browser, never commit |
 | `CRON_SECRET` | Server only | Bearer token guarding `/api/admin/crawl` |
 | `ANTHROPIC_API_KEY` | Server only | Listing translation, English ⇄ Arabic (`/api/translate`). Optional: unset, the forms leave the other language to the owner |
+| `ADMIN_PASSWORD` | Server only | The password for the admin panel at `/admin`. Change it here and redeploy to sign every admin out |
 | `BACKFILL_SECRET` | Server only | Any long random string. Guards `/api/admin/backfill-translations`, which translates listings saved before translation existed: `BACKFILL_SECRET=… npm run backfill:translations` (dry run), then again with `-- --apply` |
 
 If the two `NEXT_PUBLIC_*` variables are unset, the app falls back to literals
@@ -273,15 +274,14 @@ listing, inquiry, account and report, with the actions on each (status,
 feature, verify, delete; inquiry status; role; report decisions).
 
 It needs `supabase/migrations/0018_admin_analytics.sql` (view and session
-tracking, and the aggregates) and `SUPABASE_SERVICE_ROLE_KEY` on Vercel with
-0017's grants. An account becomes an admin only in the SQL Editor:
+tracking, and the aggregates), `SUPABASE_SERVICE_ROLE_KEY` on Vercel with
+0017's grants, and `ADMIN_PASSWORD`: the panel's one password. To change it,
+edit `ADMIN_PASSWORD` in Vercel → Settings → Environment Variables and
+redeploy; every open admin session ends, since the session cookie is signed
+with the password. Sessions otherwise last 12 hours, and sign-in allows five
+attempts a minute per IP address.
 
-```sql
-update public.profiles set role = 'admin'
-where id = (select id from auth.users where email = 'you@example.com');
-```
-
-Every `/api/admin/*` route checks that role on the server; the page itself
+Every `/api/admin/*` route checks that cookie on the server; the page itself
 holds no privileged key. Views and "live now" are counted from the website and
 from app version 1.0.2 on.
 

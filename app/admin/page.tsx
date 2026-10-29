@@ -3,30 +3,14 @@
 /**
  * akarat.ai/admin — the admin panel.
  *
- * Signs in with the same Supabase session the website keeps (storage key
- * 'akarat.auth'), so an admin already signed in on the site lands straight
- * in. Every figure comes from /api/admin/*, which verifies the session and
- * the account's admin role server-side before reading anything; this page
- * holds no privileged key and decides nothing about access.
+ * Signs in with the one admin password, ADMIN_PASSWORD in Vercel's
+ * environment variables. /api/admin/session checks it and sets an httpOnly
+ * cookie; every figure comes from /api/admin/*, which checks that cookie
+ * server-side before reading anything. This page holds no privileged key and
+ * decides nothing about access.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js";
-
-// Same project and publishable key as the website (lib/supabase.js), which
-// falls back to these literals when the env vars are absent.
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ppqftdcdpshfokjqnuhq.supabase.co";
-const SUPABASE_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-  "sb_publishable_Xrp8dp25j0fk4-XNpbS5eQ_hXZnIfrH";
-
-let client: SupabaseClient | null = null;
-function supabase(): SupabaseClient {
-  return (client ??= createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, storageKey: "akarat.auth" },
-  }));
-}
 
 /* ── Formatting ──────────────────────────────────────────────────────── */
 
@@ -60,26 +44,32 @@ const listingUrl = (id: string) => `/en/property/${id}`;
 
 type Api = <T>(path: string, init?: { method?: string; body?: unknown }) => Promise<T>;
 
-function useApi(session: Session | null): Api {
+/** Calls /api/admin/*; the session cookie goes along on its own. A 401 means
+ *  the session ran out or the password was changed, so it signs out. */
+async function call<T>(path: string, init?: { method?: string; body?: unknown }): Promise<T> {
+  const res = await fetch(path, {
+    method: init?.method ?? "GET",
+    headers: init?.body !== undefined ? { "Content-Type": "application/json" } : {},
+    body: init?.body !== undefined ? JSON.stringify(init.body) : undefined,
+    cache: "no-store",
+    credentials: "same-origin",
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw Object.assign(new Error(body.error || `Request failed (${res.status})`), { status: res.status });
+  return body as T;
+}
+
+function useApi(onSignedOut: () => void): Api {
   return useCallback(
     async <T,>(path: string, init?: { method?: string; body?: unknown }): Promise<T> => {
-      // Always the current token: supabase-js refreshes it in the background.
-      const { data } = await supabase().auth.getSession();
-      const token = data.session?.access_token ?? session?.access_token;
-      const res = await fetch(path, {
-        method: init?.method ?? "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          ...(init?.body !== undefined ? { "Content-Type": "application/json" } : {}),
-        },
-        body: init?.body !== undefined ? JSON.stringify(init.body) : undefined,
-        cache: "no-store",
-      });
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw Object.assign(new Error(body.error || `Request failed (${res.status})`), { status: res.status });
-      return body as T;
+      try {
+        return await call<T>(path, init);
+      } catch (e) {
+        if ((e as { status?: number }).status === 401) onSignedOut();
+        throw e;
+      }
     },
-    [session],
+    [onSignedOut],
   );
 }
 
@@ -95,37 +85,42 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export default function AdminPage() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [ready, setReady] = useState(false);
+  // null while checking whether the cookie from an earlier sign-in still holds.
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    const sb = supabase();
-    sb.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setReady(true);
-    });
-    const { data } = sb.auth.onAuthStateChange((_e, s) => setSession(s));
-    return () => data.subscription.unsubscribe();
+    call("/api/admin/session")
+      .then(() => setSignedIn(true))
+      .catch(e => {
+        if ((e as { status?: number }).status !== 401) setNotice((e as Error).message);
+        setSignedIn(false);
+      });
   }, []);
 
-  if (!ready) return <div className="adm adm-gate"><p className="adm-muted">Loading…</p></div>;
-  if (!session) return <SignIn />;
-  return <Panel session={session} />;
+  const signOut = useCallback(() => setSignedIn(false), []);
+
+  if (signedIn === null) return <div className="adm adm-gate"><p className="adm-muted">Loading…</p></div>;
+  if (!signedIn) return <SignIn notice={notice} onSignedIn={() => { setNotice(""); setSignedIn(true); }} />;
+  return <Panel onSignedOut={signOut} />;
 }
 
-function SignIn() {
-  const [email, setEmail] = useState("");
+function SignIn({ notice, onSignedIn }: { notice: string; onSignedIn: () => void }) {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(notice);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError("");
-    const { error } = await supabase().auth.signInWithPassword({ email: email.trim(), password });
-    setBusy(false);
-    if (error) setError(error.message);
+    try {
+      await call("/api/admin/session", { method: "POST", body: { password } });
+      onSignedIn();
+    } catch (err) {
+      setError((err as Error).message);
+      setBusy(false);
+    }
   }
 
   return (
@@ -133,15 +128,13 @@ function SignIn() {
       <form onSubmit={submit} className="adm-card">
         <div>
           <div className="adm-brand">Akarat.ai <span>admin</span></div>
-          <p className="adm-sub" style={{ margin: "4px 0 0" }}>Sign in with an admin account.</p>
+          <p className="adm-sub" style={{ margin: "4px 0 0" }}>Enter the admin password.</p>
         </div>
         {error && <div className="adm-error" style={{ margin: 0 }}>{error}</div>}
-        <input className="adm-input" type="email" autoComplete="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input className="adm-input" type="password" autoComplete="current-password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+        <input type="text" name="username" autoComplete="username" value="admin" readOnly hidden />
+        <input className="adm-input" type="password" autoComplete="current-password" placeholder="Password" autoFocus
+          value={password} onChange={e => setPassword(e.target.value)} required />
         <button className="adm-btn primary" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
-        <p className="adm-muted" style={{ margin: 0 }}>
-          Signed in on akarat.ai with Google or a phone number? Open the site, sign in there, then come back to /admin.
-        </p>
       </form>
     </div>
   );
@@ -163,8 +156,8 @@ type Overview = {
   generatedAt: string;
 };
 
-function Panel({ session }: { session: Session }) {
-  const api = useApi(session);
+function Panel({ onSignedOut }: { onSignedOut: () => void }) {
+  const api = useApi(onSignedOut);
   const [tab, setTab] = useState<Tab>(() => {
     if (typeof window === "undefined") return "overview";
     const h = window.location.hash.slice(1) as Tab;
@@ -213,16 +206,14 @@ function Panel({ session }: { session: Session }) {
           ))}
         </nav>
         <div className="adm-me">
-          <span>{session.user.email ?? session.user.phone}</span>
           <a href="/">Site</a>
-          <button className="adm-btn" onClick={() => supabase().auth.signOut()}>Sign out</button>
+          <button className="adm-btn" onClick={() => call("/api/admin/session", { method: "DELETE" }).finally(onSignedOut)}>Sign out</button>
         </div>
       </header>
       <main className="adm-main">
         {error && (
           <div className="adm-error">
             {error.message}
-            {denied && " Ask an existing admin to give this account the admin role (see supabase/migrations/0018_admin_analytics.sql)."}
           </div>
         )}
         {!denied && tab === "overview" && <OverviewView data={overview} onOpen={go} />}
@@ -232,7 +223,7 @@ function Panel({ session }: { session: Session }) {
         {!denied && tab === "inquiries" && (
           <InquiriesView api={api} property={inquiryFilter} clearProperty={() => setInquiryFilter(null)} onChange={loadOverview} />
         )}
-        {!denied && tab === "users" && <UsersView api={api} me={session.user.id} />}
+        {!denied && tab === "users" && <UsersView api={api} />}
         {!denied && tab === "reports" && <ReportsView api={api} onChange={loadOverview} />}
       </main>
     </div>
@@ -696,7 +687,7 @@ type UserRow = {
 const ROLES: Record<string, string> = { user: "User", property_owner: "Owner", agent: "Agent", admin: "Admin" };
 const PLATFORM: Record<string, string> = { web: "website", android: "Android", ios: "iPhone" };
 
-function UsersView({ api, me }: { api: Api; me: string }) {
+function UsersView({ api }: { api: Api }) {
   const [q, setQ] = useState("");
   const [role, setRole] = useState("");
   const [page, setPage] = useState(0);
@@ -706,7 +697,7 @@ function UsersView({ api, me }: { api: Api; me: string }) {
   useEffect(() => setPage(0), [dq, role]);
 
   async function change(id: string, body: Record<string, unknown>) {
-    if (body.role === "admin" && !confirm("Give this account full admin access, including this panel?")) return;
+    if (body.role === "admin" && !confirm("Give this account the admin role on the website and app? (This panel still needs the admin password.)")) return;
     try { await api("/api/admin/users", { method: "PATCH", body: { id, ...body } }); await reload(); }
     catch (e) { alert((e as Error).message); }
   }
@@ -744,7 +735,7 @@ function UsersView({ api, me }: { api: Api; me: string }) {
                       {u.lastPlatform && <div className="adm-muted">on {PLATFORM[u.lastPlatform] ?? u.lastPlatform}</div>}
                     </td>
                     <td>
-                      <select className="adm-select" style={{ minHeight: 32, padding: "4px 8px" }} value={u.role} disabled={u.id === me}
+                      <select className="adm-select" style={{ minHeight: 32, padding: "4px 8px" }} value={u.role}
                         onChange={e => change(u.id, { role: e.target.value })} aria-label="Role">
                         {Object.entries(ROLES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                       </select>

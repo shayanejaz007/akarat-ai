@@ -326,10 +326,5 @@ grant execute on function public.admin_last_seen(uuid[]) to service_role;
 
 notify pgrst, 'reload schema';
 
-/* ── Making someone an admin ───────────────────────────────────────────
-   Nobody can make themselves one through the API (0013 keeps `role` as it
-   was). In the SQL Editor, with the account's email:
-
-     update public.profiles set role = 'admin'
-     where id = (select id from auth.users where email = 'you@example.com');
-*/
+-- The panel at /admin signs in with ADMIN_PASSWORD (Vercel), not an account
+-- role; its routes call these functions with the service role.
