@@ -4,6 +4,7 @@
  * GENERATED from data/market.js by scripts/gen-reference.mjs — do not edit.
  */
 export type Ref = { id: string; en: string; ar: string };
+export type Hood = Ref & { city: string };
 
 export const CITIES: Ref[] = [
   {
@@ -118,266 +119,318 @@ export const CITIES: Ref[] = [
   }
 ];
 
-export const NEIGHBORHOODS: Ref[] = [
+export const NEIGHBORHOODS: Hood[] = [
   {
     "id": "abdoun",
     "en": "Abdoun",
-    "ar": "عبدون"
+    "ar": "عبدون",
+    "city": "amman"
   },
   {
     "id": "sweifieh",
     "en": "Sweifieh",
-    "ar": "الصويفية"
+    "ar": "الصويفية",
+    "city": "amman"
   },
   {
     "id": "khalda",
     "en": "Khalda",
-    "ar": "خلدا"
+    "ar": "خلدا",
+    "city": "amman"
   },
   {
     "id": "dabouq",
     "en": "Dabouq",
-    "ar": "دابوق"
+    "ar": "دابوق",
+    "city": "amman"
   },
   {
     "id": "jabalamman",
     "en": "Jabal Amman",
-    "ar": "جبل عمان"
+    "ar": "جبل عمان",
+    "city": "amman"
   },
   {
     "id": "deirghbar",
     "en": "Deir Ghbar",
-    "ar": "دير غبار"
+    "ar": "دير غبار",
+    "city": "amman"
   },
   {
     "id": "umuthaina",
     "en": "Um Uthaina",
-    "ar": "أم أذينة"
+    "ar": "أم أذينة",
+    "city": "amman"
   },
   {
     "id": "shmeisani",
     "en": "Shmeisani",
-    "ar": "الشميساني"
+    "ar": "الشميساني",
+    "city": "amman"
   },
   {
     "id": "abdali",
     "en": "Abdali",
-    "ar": "العبدلي"
+    "ar": "العبدلي",
+    "city": "amman"
   },
   {
     "id": "airportrd",
     "en": "Airport Road",
-    "ar": "طريق المطار"
+    "ar": "طريق المطار",
+    "city": "amman"
   },
   {
     "id": "tlaalali",
     "en": "Tla’ Al Ali",
-    "ar": "تلاع العلي"
+    "ar": "تلاع العلي",
+    "city": "amman"
   },
   {
     "id": "jubaiha",
     "en": "Al Jubaiha",
-    "ar": "الجبيهة"
+    "ar": "الجبيهة",
+    "city": "amman"
   },
   {
     "id": "marj",
     "en": "Marj Al Hamam",
-    "ar": "مرج الحمام"
+    "ar": "مرج الحمام",
+    "city": "amman"
   },
   {
     "id": "rabieh",
     "en": "Al Rabieh",
-    "ar": "الرابية"
+    "ar": "الرابية",
+    "city": "amman"
   },
   {
     "id": "jabalhussein",
     "en": "Jabal Al Hussein",
-    "ar": "جبل الحسين"
+    "ar": "جبل الحسين",
+    "city": "amman"
   },
   {
     "id": "weibdeh",
     "en": "Jabal Al Weibdeh",
-    "ar": "جبل اللويبدة"
+    "ar": "جبل اللويبدة",
+    "city": "amman"
   },
   {
     "id": "wadisaqra",
     "en": "Wadi Saqra",
-    "ar": "وادي صقرة"
+    "ar": "وادي صقرة",
+    "city": "amman"
   },
   {
     "id": "gardens",
     "en": "Gardens Street",
-    "ar": "شارع الجاردنز"
+    "ar": "شارع الجاردنز",
+    "city": "amman"
   },
   {
     "id": "meccast",
     "en": "Mecca Street",
-    "ar": "شارع مكة"
+    "ar": "شارع مكة",
+    "city": "amman"
   },
   {
     "id": "umsummaq",
     "en": "Um Al Summaq",
-    "ar": "أم السماق"
+    "ar": "أم السماق",
+    "city": "amman"
   },
   {
     "id": "sportcity",
     "en": "Sports City",
-    "ar": "المدينة الرياضية"
+    "ar": "المدينة الرياضية",
+    "city": "amman"
   },
   {
     "id": "shafabadran",
     "en": "Shafa Badran",
-    "ar": "شفا بدران"
+    "ar": "شفا بدران",
+    "city": "amman"
   },
   {
     "id": "sweileh",
     "en": "Sweileh",
-    "ar": "صويلح"
+    "ar": "صويلح",
+    "city": "amman"
   },
   {
     "id": "abunsair",
     "en": "Abu Nsair",
-    "ar": "أبو نصير"
+    "ar": "أبو نصير",
+    "city": "amman"
   },
   {
     "id": "tabarbour",
     "en": "Tabarbour",
-    "ar": "طبربور"
+    "ar": "طبربور",
+    "city": "amman"
   },
   {
     "id": "wadiseer",
     "en": "Wadi Al Seer",
-    "ar": "وادي السير"
+    "ar": "وادي السير",
+    "city": "amman"
   },
   {
     "id": "bayader",
     "en": "Bayader Wadi Seer",
-    "ar": "بيادر وادي السير"
+    "ar": "بيادر وادي السير",
+    "city": "amman"
   },
   {
     "id": "kursi",
     "en": "Al Kursi",
-    "ar": "الكرسي"
+    "ar": "الكرسي",
+    "city": "amman"
   },
   {
     "id": "dahiyatrashid",
     "en": "Dahiyat Al Rashid",
-    "ar": "ضاحية الرشيد"
+    "ar": "ضاحية الرشيد",
+    "city": "amman"
   },
   {
     "id": "dahiyathussein",
     "en": "Dahiyat Al Hussein",
-    "ar": "ضاحية الحسين"
+    "ar": "ضاحية الحسين",
+    "city": "amman"
   },
   {
     "id": "qweismeh",
     "en": "Al Qweismeh",
-    "ar": "القويسمة"
+    "ar": "القويسمة",
+    "city": "amman"
   },
   {
     "id": "muqablain",
     "en": "Al Muqablain",
-    "ar": "المقابلين"
+    "ar": "المقابلين",
+    "city": "amman"
   },
   {
     "id": "naour",
     "en": "Naour",
-    "ar": "ناعور"
+    "ar": "ناعور",
+    "city": "amman"
   },
   {
     "id": "marka",
     "en": "Marka",
-    "ar": "ماركا"
+    "ar": "ماركا",
+    "city": "amman"
   },
   {
     "id": "hashmi",
     "en": "Al Hashmi",
-    "ar": "الهاشمي"
+    "ar": "الهاشمي",
+    "city": "amman"
   },
   {
     "id": "nazzal",
     "en": "Al Nazzal",
-    "ar": "النزهة"
+    "ar": "النزهة",
+    "city": "amman"
   },
   {
     "id": "downtown",
     "en": "Downtown",
-    "ar": "وسط البلد"
+    "ar": "وسط البلد",
+    "city": "amman"
   },
   {
     "id": "jandaweel",
     "en": "Jandaweel",
-    "ar": "الجندويل"
+    "ar": "الجندويل",
+    "city": "amman"
   },
   {
     "id": "khreibetsouq",
     "en": "Khreibet Al Souq",
-    "ar": "خريبة السوق"
+    "ar": "خريبة السوق",
+    "city": "amman"
   },
   {
     "id": "yadudeh",
     "en": "Al Yadudeh",
-    "ar": "اليادودة"
+    "ar": "اليادودة",
+    "city": "amman"
   },
   {
     "id": "southbeach",
     "en": "South Beach",
-    "ar": "الشاطئ الجنوبي"
+    "ar": "الشاطئ الجنوبي",
+    "city": "aqaba"
   },
   {
     "id": "talabay",
     "en": "Tala Bay",
-    "ar": "تالا باي"
+    "ar": "تالا باي",
+    "city": "aqaba"
   },
   {
     "id": "ayla",
     "en": "Ayla",
-    "ar": "أيلة"
+    "ar": "أيلة",
+    "city": "aqaba"
   },
   {
     "id": "aqabacentre",
     "en": "Aqaba Town",
-    "ar": "وسط العقبة"
+    "ar": "وسط العقبة",
+    "city": "aqaba"
   },
   {
     "id": "irbidcentre",
     "en": "Irbid Centre",
-    "ar": "وسط إربد"
+    "ar": "وسط إربد",
+    "city": "irbid"
   },
   {
     "id": "hayjameaa",
     "en": "University Area",
-    "ar": "حي الجامعة"
+    "ar": "حي الجامعة",
+    "city": "irbid"
   },
   {
     "id": "aidoun",
     "en": "Aidoun",
-    "ar": "عيدون"
+    "ar": "عيدون",
+    "city": "irbid"
   },
   {
     "id": "zarqacentre",
     "en": "Zarqa Centre",
-    "ar": "وسط الزرقاء"
+    "ar": "وسط الزرقاء",
+    "city": "zarqa"
   },
   {
     "id": "jabaltaj",
     "en": "Jabal Tareq",
-    "ar": "جبل طارق"
+    "ar": "جبل طارق",
+    "city": "zarqa"
   },
   {
     "id": "sweimeh",
     "en": "Sweimeh",
-    "ar": "سويمة"
+    "ar": "سويمة",
+    "city": "deadsea"
   },
   {
     "id": "madabacentre",
     "en": "Madaba Centre",
-    "ar": "وسط مأدبا"
+    "ar": "وسط مأدبا",
+    "city": "madaba"
   },
   {
     "id": "safut",
     "en": "Safut",
-    "ar": "صافوط"
+    "ar": "صافوط",
+    "city": "salt"
   }
 ];
 

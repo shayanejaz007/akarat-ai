@@ -119,7 +119,13 @@ your host's dashboard for production.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser + server | Publishable key. Safe to expose — RLS decides what it can reach |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | **Bypasses RLS.** Never expose to the browser, never commit |
 | `CRON_SECRET` | Server only | Bearer token guarding `/api/admin/crawl` |
-| `ANTHROPIC_API_KEY` | Server only | Listing translation, English ⇄ Arabic (`/api/translate`). Optional: unset, the forms leave the other language to the owner |
+| `ANTHROPIC_API_KEY` | Server only | The AI advisor (`/api/ai/advisor`) and listing translation (`/api/translate`). Unset, the advisor says it is unavailable and the page falls back to its plain search, and the forms leave the other language to the owner |
+| `AI_ADVISOR_DAILY_TOTAL` | Server only | Optional. Questions per day for everyone together, the ceiling on what a day can cost. Default 600 |
+| `AI_ADVISOR_DAILY_PER_IP` / `AI_ADVISOR_DAILY_PER_USER` | Server only | Optional. Questions per day for one signed-out visitor / one signed-in account. Defaults 30 and 80 |
+| `AI_ADVISOR_PER_MINUTE_IP` / `AI_ADVISOR_PER_MINUTE_USER` | Server only | Optional. Per minute, the same two. Defaults 5 and 8 |
+| `AI_ADVISOR_MODEL` / `AI_ADVISOR_EFFORT` | Server only | Optional. Default `claude-opus-5-5` at `low` effort. `claude-sonnet-5-5` costs half as much per token |
+| `AI_ADVISOR_PORTALS` / `AI_ADVISOR_RESEARCH_DOMAINS` | Server only | Optional. Extra sites the advisor may search and read: `example.jo=Example` pairs for listing portals, plain hosts for research. Add only sites whose terms allow it |
+| `AI_ADVISOR_SECRET` | Server only | Optional. Signs the conversation the browser holds. Defaults to a key derived from `ANTHROPIC_API_KEY`; set it only to rotate conversations independently of the API key |
 | `ADMIN_PASSWORD` | Server only | The password for the admin panel at `/admin`. Change it here and redeploy to sign every admin out |
 | `BACKFILL_SECRET` | Server only | Any long random string. Guards `/api/admin/backfill-translations`, which translates listings saved before translation existed: `BACKFILL_SECRET=… npm run backfill:translations` (dry run), then again with `-- --apply` |
 
@@ -147,6 +153,17 @@ re-running a migration you have already applied is safe.
 0007_listing_video.sql      ← required before video upload works
 0008_hardening.sql          ← required for the shared rate limiter
 0009_locations.sql          ← required: every city and area the form offers
+0010_location.sql
+0011_sold_visible.sql
+0012_storage_no_listing.sql
+0013_protect_trust_fields.sql
+0014_favorites.sql
+0015_listing_reports.sql
+0016_revoke_stray_anon_reads.sql
+0017_service_role_grants.sql
+0018_admin_analytics.sql    ← the admin panel
+0019_daily_rentals.sql      ← daily rentals
+0020_ai_advisor.sql         ← the AI advisor's daily limits and usage figures
 ```
 
 If the project is already live, run **0007, 0008 and 0009** in that order.
@@ -313,6 +330,44 @@ else changes.
 - **Admin.** `/admin` → Bookings lists every request with renter, owner,
   dates, total and status.
 
+### The AI advisor
+The "Search with AI" page is a conversation with a property advisor built on
+Claude (`/api/ai/advisor`, code in `lib/advisor/`). It searches Akarat.ai's
+listings first, then two Jordanian portals and a fixed list of official, news
+and research sites, and answers in English or Jordanian Arabic with listing
+cards, comparisons, cited sources and follow-up questions. Voice input uses
+the browser's own speech recognition.
+
+- **Turn it on.** `ANTHROPIC_API_KEY` in Vercel (already set if listing
+  translation works), then run `0020_ai_advisor.sql`. Without 0020 the
+  advisor works, but its daily limits are counted per server instance, which
+  is weaker, and the admin panel has no AI figures.
+- **Anthropic Console.** Web search and web fetch must be enabled for the
+  organisation (Settings → Capabilities). They are on unless someone turned
+  them off; if they are off, every question fails with "isn't available".
+- **What it costs.** On Claude Opus 5.5, a question answered from Akarat.ai's
+  listings is typically 3 to 8 US cents; one that also searches the web and
+  reads a page or two, 10 to 30 cents (each web search is a cent on top of
+  tokens). `AI_ADVISOR_DAILY_TOTAL` caps the number of questions a day; at the
+  default of 600 the worst day is roughly $60-180. Raise it as traffic grows,
+  or set `AI_ADVISOR_MODEL=claude-sonnet-5-5` to halve the per-token price.
+  Past the cap, visitors get the plain search and a note to come back later.
+  `/admin` → Overview → AI advisor shows each day's questions and an estimated
+  cost; the Anthropic Console has the invoice.
+- **What it will not do.** It reads only public listings (Row Level Security,
+  as a visitor), never owners' contact details, and never a site outside its
+  list. An outside listing is shown only if its exact link came back from a
+  search, and with only the figures found on the page itself. Details in
+  SECURITY-AUDIT.md → AI advisor.
+- **Check it with the real model** after deploying (spends about $1-4):
+  `SITE_URL=https://www.akarat.ai node scripts/advisor-live-check.mts`. It
+  asks in English, Jordanian Arabic, formal Arabic and a mix, asks an
+  investment question, and tries the attacks the advisor must refuse.
+- **Tests without the model:** `npm run test:advisor`.
+- **The app** still uses its own on-device search (`/api/ai/search`, which is
+  unchanged). The advisor's API takes the same bearer token the app already
+  sends, so the app can move to it later without server changes.
+
 ### The crawler
 `/api/admin/crawl` refreshes the external listing index. It requires
 `Authorization: Bearer $CRON_SECRET`. To run it on a schedule, add to
@@ -376,6 +431,29 @@ down during a database hiccup is worse than the abuse it prevents.
 **One size limit per bucket.** Storage cannot express separate image and video
 caps, so the bucket allows 50 MB for both. The 6 MB image limit is enforced by
 the listing form and by `lib/supabase.js`, which is a courtesy, not a control.
+
+**Outside listings come from search, not from feeds.** No Jordanian portal
+offers a public listings API, and crawling them without permission is not an
+option (SEARCH-ARCHITECTURE.md). The advisor uses Anthropic's web search over
+an index, and reads individual pages with Anthropic's fetcher, which honours
+each site's robots.txt. So outside results are whatever those portals let a
+search engine see: some ads will be missing, and an ad can disappear between
+the search and the click. Outside listings never show the portal's photos;
+the card names the site and links to the ad instead. A licensed feed slots in
+through the adapter in `app/api/ai/search/route.ts`.
+
+**Voice needs a browser with speech recognition.** Chrome, Edge, Safari and
+Samsung Internet have it; Firefox and most in-app browsers (Instagram,
+Facebook) do not, and there the microphone is simply not shown. Recognition
+runs in the browser's own speech service (Google's in Chrome, Apple's in
+Safari); no audio reaches our server. A server-side transcriber would cover
+the rest, but needs a second provider account and key.
+
+**The advisor has 60 seconds.** That is the function limit on every Vercel
+plan. It stops researching at about 38 seconds and finishes the answer with
+what it has; at 54 it ends the reply and says so. On a Pro plan the limit can
+be raised in `app/api/ai/advisor/route.ts` together with `TURN` in
+`lib/advisor/config.ts`.
 
 ---
 

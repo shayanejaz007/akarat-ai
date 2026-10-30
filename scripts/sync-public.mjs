@@ -48,11 +48,21 @@ async function copyFile(src, dest) {
   await writeFile(dest, await readFile(src));
 }
 
+// TypeScript under lib/ is server code: route handlers, the admin gate, the
+// AI advisor's prompt and tools. The browser never loads a .ts file, and
+// anything in public/ is downloadable by anyone, so none of it is copied, and
+// a copy left behind by an older version of this script is removed.
+const serverOnly = name => /\.(ts|tsx|mts)$/.test(name);
+
 async function copyTree(src, dest) {
   const info = await stat(src);
   if (info.isDirectory()) {
     await mkdir(dest, { recursive: true });
     for (const entry of await readdir(src)) {
+      if (serverOnly(entry)) {
+        await rm(join(dest, entry), { force: true, recursive: true });
+        continue;
+      }
       await copyTree(join(src, entry), join(dest, entry));
     }
   } else {

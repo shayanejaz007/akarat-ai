@@ -161,6 +161,15 @@ type Overview = {
     review: { pending: number; approved: number; rejected: number; suspended: number; changed: number; live: number };
     requests: { total: number; pending: number; approved: number; confirmed: number; week: number; nightsConfirmed: number };
   } | null;
+  // Null until 0020_ai_advisor.sql has been run. Costs are estimates in USD.
+  advisor: {
+    model: string;
+    limits: { perDaySignedIn: number; perDayAnonymous: number; perDayTotal: number };
+    today: { turns: number; people: number; searches: number; fetches: number; flagged: number; cost: number | null };
+    month: { turns: number; cost: number };
+    days: { day: string; turns: number; cost: number | null }[];
+    flags: { kind: string; count: number }[];
+  } | null;
 };
 
 function Panel({ onSignedOut }: { onSignedOut: () => void }) {
@@ -307,6 +316,8 @@ function OverviewView({ data, onOpen }: { data: Overview | null; onOpen: (t: Tab
         </>
       )}
 
+      {data.advisor && <AdvisorSection ai={data.advisor} />}
+
       <div className="adm-grid three">
         <ChartCard title="Listing views" caption="Per day, last 30 days" data={data.daily} field="views" />
         <ChartCard title="Inquiries" caption="Per day, last 30 days" data={data.daily} field="inquiries" />
@@ -326,11 +337,49 @@ function OverviewView({ data, onOpen }: { data: Overview | null; onOpen: (t: Tab
   );
 }
 
-function Tile({ label, value, note, onClick }: { label: string; value: number; note?: string; onClick?: () => void }) {
+/* What the AI advisor (POST /api/ai/advisor) is doing and costing. The cost
+   is an estimate from token counts and list prices; the Anthropic Console
+   has the invoice. Flags are things worth a look, never anyone's words. */
+const FLAG_LABEL: Record<string, string> = {
+  prompt_leak: "Reply withdrawn: recited its instructions",
+  refusal: "Request declined by the model",
+  unverified_link: "External link not backed by a search",
+  unknown_listing: "Listing not returned by a search",
+  invalid_tool_input: "Tool input refused",
+  unknown_tool: "Unknown tool called",
+};
+
+const usd = (n: number | null) => (n == null ? "n/a" : n < 0.01 && n > 0 ? "< $0.01" : "$" + n.toFixed(2));
+
+function AdvisorSection({ ai }: { ai: NonNullable<Overview["advisor"]> }) {
+  const flagged = ai.flags.reduce((n, f) => n + f.count, 0);
+  return (
+    <>
+      <h2 className="adm-section">AI advisor</h2>
+      <div className="adm-grid tiles">
+        <Tile label="Questions today" value={ai.today.turns}
+          note={`${full(ai.today.people)} people · daily cap ${full(ai.limits.perDayTotal)}`} />
+        <Tile label="Estimated cost today" display={usd(ai.today.cost)}
+          note={`${usd(ai.month.cost)} over 30 days · ${ai.model}`} />
+        <Tile label="Web research today" value={ai.today.searches}
+          note={`searches · ${full(ai.today.fetches)} pages read`} />
+        <Tile label="Flagged this week" value={flagged}
+          note={flagged ? "see the list below" : "nothing flagged"} />
+      </div>
+      <div className="adm-grid two">
+        <ChartCard title="AI advisor questions" caption="Per day, last 30 days" data={ai.days} field="turns" />
+        <RankCard title="Flagged events" caption="Last 7 days"
+          rows={ai.flags.map(f => ({ key: f.kind, label: FLAG_LABEL[f.kind] ?? f.kind, n: f.count }))} />
+      </div>
+    </>
+  );
+}
+
+function Tile({ label, value, display, note, onClick }: { label: string; value?: number; display?: string; note?: string; onClick?: () => void }) {
   const body = (
     <>
       <div className="adm-label">{label}</div>
-      <div className="adm-value">{fmt(value)}</div>
+      <div className="adm-value">{display ?? fmt(value ?? 0)}</div>
       {note && <div className="adm-note">{note}</div>}
     </>
   );
@@ -344,7 +393,7 @@ function Tile({ label, value, note, onClick }: { label: string; value: number; n
 /** One series, one hue: columns per day, value on hover, the table one click
  *  away for exact numbers. No legend: the card's title names the series. */
 function ChartCard({ title: heading, caption, data, field }: {
-  title: string; caption: string; data: Overview["daily"]; field: "views" | "inquiries" | "signups";
+  title: string; caption: string; data: ({ day: string } & Record<string, unknown>)[]; field: string;
 }) {
   const [hover, setHover] = useState<number | null>(null);
   const W = 600, H = 170, padL = 34, padB = 22, padT = 8;

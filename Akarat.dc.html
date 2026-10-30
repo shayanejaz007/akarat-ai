@@ -79,7 +79,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollSmoother.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
 <style>
   /* The fixed star watermark sits deliberately off the right edge, and on a
      phone that is enough to open a horizontal scroll the whole page rides on.
@@ -272,6 +271,50 @@
      attribute on every render, which wiped the transform GSAP had just
      written and made the star jump. An animation property survives that. */
   @keyframes akStarSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ── AI advisor ──
+     A reply's text is drawn by lib/advisor-client.js as plain elements; these
+     give it the page's type. Citations are small green counters, and the
+     reply being written ends in a caret. Cards sit two across in the thread
+     and one across on a phone. */
+  [data-reply] > p, [data-reply] > ul, [data-reply] > ol { margin: 0 0 12px; }
+  [data-reply] > :last-child { margin-bottom: 0; }
+  [data-reply] ul, [data-reply] ol { padding-inline-start: 22px; }
+  [data-reply] li { margin: 5px 0; padding-inline-start: 2px; }
+  [data-reply] li::marker { color: rgba(23,23,15,0.4); }
+  [data-reply] strong { font-weight: 500; color: #17170F; }
+  [data-reply] [data-md="h"] { margin-top: 18px; }
+  [data-reply] a { color: #007A3D; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  [data-reply] code { font-family: ui-monospace, monospace; font-size: 0.9em; padding: 1px 5px; border-radius: 6px; background: rgba(23,23,15,0.05); }
+  [data-reply] [data-md="tablewrap"] { overflow-x: auto; margin: 6px 0 16px; border: 1px solid rgba(23,23,15,0.1); border-radius: 14px; background: #FFFFFF; }
+  [data-reply] table { border-collapse: collapse; width: 100%; font-size: 13.5px; line-height: 1.5; }
+  [data-reply] th, [data-reply] td { padding: 9px 13px; text-align: start; vertical-align: top; border-bottom: 1px solid rgba(23,23,15,0.07); }
+  [data-reply] thead th { font-weight: 500; background: rgba(23,23,15,0.03); white-space: nowrap; }
+  [data-reply] tbody tr:last-child td { border-bottom: none; }
+  [data-reply] sup[data-md="cite"] { display: inline-flex; gap: 3px; margin-inline-start: 3px; vertical-align: 2px; line-height: 1; }
+  [data-reply] sup[data-md="cite"] > * { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; box-sizing: border-box; border-radius: 9px; background: rgba(0,122,61,0.1); color: #00693A; font-size: 10.5px; font-weight: 500; text-decoration: none; }
+  [data-reply] sup[data-md="cite"] > a:hover { background: #007A3D; color: #FFFFFF; }
+  [data-reply][data-streaming="true"] > :last-child::after { content: ''; display: inline-block; width: 7px; height: 1.05em; margin-inline-start: 3px; vertical-align: -0.15em; background: #007A3D; border-radius: 1px; animation: akCaret 1s steps(2) infinite; }
+  @keyframes akCaret { 0% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes akDots { 0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); } 40% { opacity: 1; transform: none; } }
+  @keyframes akFadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes akMicPulse { 0% { box-shadow: 0 0 0 0 rgba(206,17,38,0.42); } 70% { box-shadow: 0 0 0 12px rgba(206,17,38,0); } 100% { box-shadow: 0 0 0 0 rgba(206,17,38,0); } }
+  [data-aicards] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-aichips]::-webkit-scrollbar { display: none; }
+  @media (max-width: 1080px) {
+    /* The floating menu shrinks to a round button at the inline end while
+       the dock is up; the dock takes the rest of the row beside it. */
+    [data-aidock] { width: auto !important; margin: 0 !important; inset-inline-start: 12px !important; inset-inline-end: 72px !important; }
+  }
+  @media (max-width: 640px) {
+    [data-aicards] { grid-template-columns: 1fr !important; }
+    [data-aiprompts] { grid-template-columns: 1fr !important; }
+    [data-advisor] { padding-left: 16px !important; padding-right: 16px !important; }
+    /* no room beside the input on a phone; the voice language follows the
+       interface language there, and the hero composer still offers it */
+    [data-aimiclang] { display: none !important; }
+  }
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </helmet>
@@ -357,6 +400,61 @@
       </div>
     </div>
   </div>
+
+  <!-- The advisor's composer once a conversation is under way: docked to the
+       bottom of the screen, outside the smoothed content so position: fixed
+       holds. Below 1080px it leaves room at the inline end for the floating
+       menu, which shrinks to a round button while this is up. -->
+  <sc-if value="{{ aiDock }}" hint-placeholder-val="{{ false }}">
+  <div aria-hidden="true" style="position: fixed; left: 0; right: 0; bottom: 0; height: 150px; z-index: 50; pointer-events: none; background: linear-gradient(180deg, rgba(247,242,231,0) 0%, rgba(247,242,231,0.92) 58%, #F3EDE0 100%);"></div>
+  <div data-aidock="true" style="position: fixed; z-index: 55; bottom: calc(18px + env(safe-area-inset-bottom)); left: 0; right: 0; margin: 0 auto; width: min(820px, calc(100% - 48px));">
+    <sc-if value="{{ aiHasNote }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="margin: 0 6px 8px; padding: 9px 14px; border-radius: 14px; background: #17170F; color: #F7F2E7; font-size: 12.5px; font-weight: 300; line-height: 1.5; box-shadow: 0 10px 30px rgba(23,23,15,0.2);">{{ aiNote }}</div>
+    </sc-if>
+    <div style="border-radius: 22px; background: #FFFFFF; border: 1px solid {{ aiComposerEdge }}; box-shadow: 0 20px 50px rgba(70,58,32,0.18), 0 2px 8px rgba(70,58,32,0.06); overflow: hidden; transition: border-color 220ms;">
+      <sc-if value="{{ aiHasCriteria }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px 8px 14px; border-bottom: 1px solid rgba(23,23,15,0.07); background: rgba(247,242,231,0.55); font-size: 12.5px; font-weight: 300; min-width: 0;">
+          <span style="width: 13px; height: 13px; flex: none; background: rgba(23,23,15,0.5); -webkit-mask: url('assets/icons/search.svg') center/contain no-repeat; mask: url('assets/icons/search.svg') center/contain no-repeat;"></span>
+          <sc-if value="{{ aiCriteriaOpen }}" hint-placeholder-val="{{ false }}">
+            <div data-aichips="true" style="display: flex; gap: 6px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none;">
+              <sc-for list="{{ aiChips }}" as="ch" hint-placeholder-count="3">
+                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 10px; border-radius: 100px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.1); white-space: nowrap; color: rgba(23,23,15,0.8); flex: none;">
+                  <span>{{ ch.label }}</span>
+                  <span onClick="{{ ch.remove }}" aria-label="{{ ch.removeLabel }}" title="{{ ch.removeLabel }}" style="width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(23,23,15,0.5);" style-hover="background: rgba(206,17,38,0.08); color: #B00F20;">
+                    <span style="width: 10px; height: 10px; background: currentColor; -webkit-mask: url('assets/icons/close.svg') center/contain no-repeat; mask: url('assets/icons/close.svg') center/contain no-repeat;"></span>
+                  </span>
+                </span>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ aiCriteriaClosed }}" hint-placeholder-val="{{ true }}">
+            <span dir="auto" style="flex: 1; min-width: 0; color: rgba(23,23,15,0.66); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ aiCriteriaLine }}</span>
+          </sc-if>
+          <span onClick="{{ aiCriteriaToggle }}" aria-expanded="{{ aiCriteriaOpen }}" aria-label="{{ aiCriteriaToggleLabel }}" title="{{ aiCriteriaToggleLabel }}" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 100px; font-size: 12px; color: rgba(23,23,15,0.6); cursor: pointer; flex: none;" style-hover="background: rgba(23,23,15,0.06);">
+            <span>{{ aiCriteriaToggleText }}</span>
+            <span style="width: 10px; height: 10px; background: currentColor; transform: {{ aiCriteriaChevron }}; transition: transform 200ms; -webkit-mask: url('assets/icons/chevron.svg') center/contain no-repeat; mask: url('assets/icons/chevron.svg') center/contain no-repeat;"></span>
+          </span>
+        </div>
+      </sc-if>
+      <div style="display: flex; align-items: flex-end; gap: 8px; padding: 9px 9px 9px 16px;">
+        <textarea ref="{{ aiTaRef }}" value="{{ aiInput }}" onChange="{{ onAiInput }}" onKeyDown="{{ onAiKey }}" placeholder="{{ t.aiPlaceholderMore }}" aria-label="{{ t.aiInputLabel }}" rows="1" dir="auto" maxLength="2000" style="flex: 1; min-width: 0; align-self: center; box-sizing: border-box; resize: none; border: none; outline: none; background: transparent; font-family: inherit; font-size: 16px; font-weight: 300; line-height: 1.55; color: #17170F; padding: 6px 0; min-height: 36px; max-height: 160px; overflow-y: auto;"></textarea>
+        <sc-if value="{{ aiMicShown }}" hint-placeholder-val="{{ true }}">
+          <div data-aimiclang="true" onClick="{{ aiMicLangToggle }}" aria-label="{{ aiMicLangLabel }}" title="{{ aiMicLangLabel }}" style="height: 30px; margin-bottom: 4px; padding: 0 10px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.12); display: flex; align-items: center; font-size: 12px; font-weight: 400; color: rgba(23,23,15,0.62); cursor: pointer; flex: none;" style-hover="border-color: rgba(23,23,15,0.3);">{{ aiMicLangShort }}</div>
+          <div onClick="{{ aiMicToggle }}" aria-label="{{ aiMicLabel }}" title="{{ aiMicLabel }}" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none; border: 1px solid {{ aiMicEdge }}; background: {{ aiMicBg }}; color: {{ aiMicFg }}; animation: {{ aiMicAnim }}; transition: background 200ms, border-color 200ms, color 200ms;" style-hover="border-color: #007A3D;">
+            <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('assets/icons/mic.svg') center/contain no-repeat; mask: url('assets/icons/mic.svg') center/contain no-repeat;"></span>
+          </div>
+        </sc-if>
+        <div onClick="{{ aiSendOrStop }}" aria-label="{{ aiSendLabel }}" title="{{ aiSendLabel }}" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; cursor: pointer; background: {{ aiSendBg }}; color: #FFFFFF; transition: background 200ms;" style-hover="background: {{ aiSendHover }};">
+          <span style="width: 17px; height: 17px; background: currentColor; -webkit-mask: url('{{ aiSendIcon }}') center/contain no-repeat; mask: url('{{ aiSendIcon }}') center/contain no-repeat;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ aiCopied }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: fixed; z-index: 80; top: 92px; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100% - 32px); padding: 10px 18px; border-radius: 100px; background: #17170F; color: #F7F2E7; font-size: 13px; font-weight: 300; box-shadow: 0 12px 30px rgba(23,23,15,0.25);">{{ t.aiLinkCopied }}</div>
+  </sc-if>
 
   <sc-if value="{{ authPrompt }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closeAuthPrompt }}" style="position: fixed; inset: 0; z-index: 70; background: rgba(23,23,15,0.42); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 24px;">
@@ -1432,214 +1530,277 @@
     </div>
     </sc-if>
 
-    <!-- ══════════════════ AI SEARCH WORKSPACE ══════════════════ -->
+    <!-- ══════════════════ AI ADVISOR ══════════════════
+         A conversation with the property advisor (POST /api/ai/advisor).
+         Empty, it is a hero with the composer and suggested prompts. Once a
+         conversation starts, the thread fills the column and the composer
+         docks to the bottom of the screen (outside the smoothed content, near
+         the floating menu). Listing cards, comparisons, sources and follow-up
+         prompts all come from the advisor's tool calls, already checked by
+         the server; the reply text is drawn by lib/advisor-client.js. -->
     <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
-    <div data-workspace="true" style="padding: 117px 6vw 130px;">
+    <div data-workspace="true" data-advisor="true" style="padding: 112px 6vw 0; box-sizing: border-box;">
 
-      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px;">
-        <div>
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-            <span style="width: 20px; height: 1px; background: #CE1126; display: block;"></span>
-            <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.54);">{{ t.workspaceKicker }}</span>
-          </div>
-          <h1 style="margin: 0; font-size: clamp(1.9rem, 3.2vw, 2.7rem); font-weight: 300; letter-spacing: -0.032em;">{{ t.workspaceTitle }}</h1>
+      <sc-if value="{{ aiEmpty }}" hint-placeholder-val="{{ true }}">
+      <div data-anim="panel" style="max-width: 780px; margin: 0 auto; padding: 6vh 0 110px; text-align: center;">
+        <div style="display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 100px; background: rgba(255,255,255,0.72); border: 1px solid rgba(23,23,15,0.1); font-size: 12px; font-weight: 400; color: rgba(23,23,15,0.66);">
+          <span style="width: 22px; height: 22px; border-radius: 7px; background: #17170F; display: flex; align-items: center; justify-content: center; flex: none;"><img src="assets/akarat-mark.png" alt="" style="width: 13px; height: 13px; object-fit: contain; display: block;" /></span>
+          <span>{{ t.aiKicker }}</span>
         </div>
-        <sc-if value="{{ hasTurns }}" hint-placeholder-val="{{ false }}">
-          <div onClick="{{ resetSearch }}" style="padding: 11px 22px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.15); font-size: 13px; font-weight: 300; cursor: pointer; transition: background 220ms;" style-hover="background: rgba(23,23,15,0.05);">{{ t.startOver }}</div>
-        </sc-if>
-      </div>
+        <h1 style="margin: 24px 0 14px; font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 300; letter-spacing: -0.035em; line-height: 1.08; text-wrap: balance;">{{ t.aiHeroTitle }}</h1>
+        <p style="margin: 0 auto; max-width: 52ch; font-size: 16px; font-weight: 300; line-height: 1.65; color: rgba(23,23,15,0.62); text-wrap: pretty;">{{ t.aiHeroSub }}</p>
 
-      <div data-anim="panel" data-searchbar="true" style="display: flex; align-items: center; gap: 0; padding: 8px; border-radius: 18px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.13); box-shadow: 0 16px 40px rgba(70,58,32,0.12);">
-        <img src="assets/akarat-mark.png" alt="" style="height: 24px; width: 24px; object-fit: contain; display: block; flex: none; margin-inline-start: 6px; margin-inline-end: 9px;" />
-        <textarea value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="{{ t.refinePlaceholder }}" rows="1" dir="{{ dir }}" style="flex: 1; min-width: 0; resize: none; border: none; outline: none; background: transparent; font-family: inherit; font-size: 16px; font-weight: 300; line-height: 26px; color: #17170F; padding: 0; height: 26px; overflow: hidden; align-self: center;"></textarea>
-        <span data-searchdiv="true" style="width: 1px; height: 26px; background: rgba(23,23,15,0.08); display: block; margin: 0 14px; flex: none;"></span>
-        <div data-searchbtn="true" onClick="{{ runSearch }}" style="padding: 13px 26px; border-radius: 11px; background: #007A3D; color: #FFFFFF; font-size: 13.5px; font-weight: 500; cursor: pointer; flex: none; transition: background 220ms;" style-hover="background: #CE1126; color: #FFFFFF;">{{ t.search }}</div>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
-        <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(23,23,15,0.42);">{{ t.tryLabel }}</span>
-        <sc-for list="{{ quickPrompts }}" as="qp" hint-placeholder-count="3">
-          <div onClick="{{ qp.go }}" style="padding: 8px 15px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.14); background: #FFFFFF; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.74); cursor: pointer; transition: border-color 200ms, color 200ms;" style-hover="border-color: #007A3D; color: #007A3D;">{{ qp.label }}</div>
-        </sc-for>
-      </div>
-
-      <div data-grid="workspace" style="display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 22px; align-items: start; margin-top: 22px;">
-
-        <div data-sticky="true" style="position: sticky; top: 92px; display: grid; gap: 16px;">
-
-          <div style="border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); overflow: hidden;">
-            <div style="padding: 15px 20px; border-bottom: 1px solid rgba(23,23,15,0.1); display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.6);">{{ t.brief }}</span>
-              <span style="font-size: 11px; color: rgba(23,23,15,0.44); font-family: ui-monospace, monospace;">{{ langNote }}</span>
+        <div data-composer="hero" style="margin-top: 34px; text-align: start; border-radius: 24px; background: #FFFFFF; border: 1px solid {{ aiComposerEdge }}; box-shadow: 0 22px 60px rgba(70,58,32,0.13), 0 2px 6px rgba(70,58,32,0.05); padding: 16px 14px 12px 20px; transition: border-color 220ms;">
+          <textarea ref="{{ aiTaRef }}" value="{{ aiInput }}" onChange="{{ onAiInput }}" onKeyDown="{{ onAiKey }}" placeholder="{{ t.aiPlaceholder }}" aria-label="{{ t.aiInputLabel }}" rows="2" dir="auto" maxLength="2000" style="display: block; width: 100%; box-sizing: border-box; resize: none; border: none; outline: none; background: transparent; font-family: inherit; font-size: 16.5px; font-weight: 300; line-height: 1.6; color: #17170F; padding: 2px 0; min-height: 54px; max-height: 200px; overflow-y: auto;"></textarea>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+            <sc-if value="{{ aiMicShown }}" hint-placeholder-val="{{ true }}">
+              <div onClick="{{ aiMicToggle }}" aria-label="{{ aiMicLabel }}" title="{{ aiMicLabel }}" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none; border: 1px solid {{ aiMicEdge }}; background: {{ aiMicBg }}; color: {{ aiMicFg }}; animation: {{ aiMicAnim }}; transition: background 200ms, border-color 200ms, color 200ms;" style-hover="border-color: #007A3D;">
+                <span style="width: 18px; height: 18px; background: currentColor; -webkit-mask: url('assets/icons/mic.svg') center/contain no-repeat; mask: url('assets/icons/mic.svg') center/contain no-repeat;"></span>
+              </div>
+              <div onClick="{{ aiMicLangToggle }}" aria-label="{{ aiMicLangLabel }}" title="{{ aiMicLangLabel }}" style="height: 30px; padding: 0 11px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.12); display: flex; align-items: center; font-size: 12px; font-weight: 400; color: rgba(23,23,15,0.62); cursor: pointer; flex: none;" style-hover="border-color: rgba(23,23,15,0.3);">{{ aiMicLangShort }}</div>
+            </sc-if>
+            <span aria-live="polite" style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 300; color: {{ aiHintFg }}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ aiHint }}</span>
+            <div onClick="{{ aiSendOrStop }}" aria-label="{{ aiSendLabel }}" title="{{ aiSendLabel }}" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; cursor: pointer; background: {{ aiSendBg }}; color: #FFFFFF; transition: background 200ms, transform 160ms;" style-hover="background: {{ aiSendHover }};">
+              <span style="width: 18px; height: 18px; background: currentColor; -webkit-mask: url('{{ aiSendIcon }}') center/contain no-repeat; mask: url('{{ aiSendIcon }}') center/contain no-repeat;"></span>
             </div>
-            <div style="padding: 16px 20px 18px;">
-              <sc-if value="{{ hasConstraints }}" hint-placeholder-val="{{ false }}">
-                <div style="display: grid; gap: 1px; background: rgba(23,23,15,0.05); border-radius: 12px; overflow: hidden;">
-                  <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
-                    <div data-anim="chip" data-flip-id="{{ c.fid }}" style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; background: #FFFFFF;">
-                      <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(23,23,15,0.46); width: 84px; flex: none;">{{ c.key }}</span>
-                      <span style="flex: 1; font-size: 14px; font-weight: 400;">{{ c.value }}</span>
-                      <span onClick="{{ c.remove }}" style="font-size: 15px; line-height: 1; color: rgba(23,23,15,0.38); cursor: pointer;" style-hover="color: #B00F20;">×</span>
+          </div>
+        </div>
+
+        <div data-aiprompts="true" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; text-align: start;">
+          <sc-for list="{{ aiPrompts }}" as="pr" hint-placeholder-count="4">
+            <div onClick="{{ pr.go }}" style="display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border-radius: 16px; background: rgba(255,255,255,0.66); border: 1px solid rgba(23,23,15,0.09); cursor: pointer; transition: border-color 200ms, background 200ms, transform 200ms;" style-hover="border-color: rgba(0,122,61,0.4); background: #FFFFFF; transform: translateY(-1px);">
+              <span style="width: 30px; height: 30px; border-radius: 10px; background: {{ pr.tint }}; display: flex; align-items: center; justify-content: center; flex: none;"><span style="width: 16px; height: 16px; background: {{ pr.ink }}; -webkit-mask: url('{{ pr.icon }}') center/contain no-repeat; mask: url('{{ pr.icon }}') center/contain no-repeat;"></span></span>
+              <span dir="{{ pr.dir }}" style="flex: 1; padding-top: 5px; font-size: 13.5px; font-weight: 300; line-height: 1.5; color: rgba(23,23,15,0.8); text-align: start;">{{ pr.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; justify-content: center; gap: 8px; margin: 26px auto 0; max-width: 60ch; font-size: 12.5px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.52);">
+          <span style="width: 15px; height: 15px; margin-top: 2px; flex: none; background: #007A3D; -webkit-mask: url('assets/icons/verified.svg') center/contain no-repeat; mask: url('assets/icons/verified.svg') center/contain no-repeat;"></span>
+          <span>{{ t.aiTrust }}</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ aiHasThread }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width: 860px; margin: 0 auto;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 16px; border-bottom: 1px solid rgba(23,23,15,0.08);">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+            <span style="width: 20px; height: 1px; background: #CE1126; display: block; flex: none;"></span>
+            <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.56); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.aiName }}</span>
+          </div>
+          <div onClick="{{ aiNewChat }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.14); background: rgba(255,255,255,0.6); font-size: 13px; font-weight: 400; cursor: pointer; flex: none; min-height: 40px; box-sizing: border-box;" style-hover="background: #FFFFFF; border-color: rgba(23,23,15,0.26);">
+            <span style="width: 14px; height: 14px; background: currentColor; -webkit-mask: url('assets/icons/plus.svg') center/contain no-repeat; mask: url('assets/icons/plus.svg') center/contain no-repeat;"></span>
+            <span>{{ t.aiNewChat }}</span>
+          </div>
+        </div>
+
+        <sc-for list="{{ aiMessages }}" as="m" hint-placeholder-count="2">
+          <div>
+          <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; justify-content: flex-end; margin: 26px 0 6px;">
+              <div dir="auto" style="max-width: min(84%, 620px); padding: 12px 17px; border-radius: 20px; border-end-end-radius: 6px; background: rgba(23,23,15,0.065); color: #17170F; font-size: 15.5px; font-weight: 300; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere;">{{ m.text }}</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ m.isAssistant }}" hint-placeholder-val="{{ false }}">
+            <div data-msg="assistant" aria-busy="{{ m.busy }}" style="margin: 18px 0 8px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                <span style="width: 28px; height: 28px; border-radius: 9px; background: #17170F; display: flex; align-items: center; justify-content: center; flex: none;"><img src="assets/akarat-mark.png" alt="" style="width: 16px; height: 16px; object-fit: contain; display: block;" /></span>
+                <span style="font-size: 13px; font-weight: 500;">{{ t.aiName }}</span>
+                <sc-if value="{{ m.isWorking }}" hint-placeholder-val="{{ false }}">
+                  <span role="status" style="display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6);">
+                    <span aria-hidden="true" style="display: inline-flex; gap: 3px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #007A3D; animation: akDots 1.2s infinite;"></span><span style="width: 5px; height: 5px; border-radius: 50%; background: #007A3D; animation: akDots 1.2s 0.2s infinite;"></span><span style="width: 5px; height: 5px; border-radius: 50%; background: #007A3D; animation: akDots 1.2s 0.4s infinite;"></span></span>
+                    <span dir="auto" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52ch;">{{ m.statusText }}</span>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ m.hasSummary }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ m.toggleSteps }}" aria-expanded="{{ m.stepsOpen }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 100px; background: rgba(23,23,15,0.045); font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.6); cursor: pointer;" style-hover="background: rgba(23,23,15,0.08);">
+                    <span>{{ m.summary }}</span>
+                    <span style="width: 11px; height: 11px; background: currentColor; transform: {{ m.chevron }}; transition: transform 200ms; -webkit-mask: url('assets/icons/chevron.svg') center/contain no-repeat; mask: url('assets/icons/chevron.svg') center/contain no-repeat;"></span>
+                  </span>
+                </sc-if>
+              </div>
+
+              <sc-if value="{{ m.stepsOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; gap: 7px; margin: -2px 0 14px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.6); border: 1px solid rgba(23,23,15,0.07);">
+                  <sc-for list="{{ m.steps }}" as="st" hint-placeholder-count="2">
+                    <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.68);">
+                      <span style="width: 14px; height: 14px; flex: none; background: #007A3D; -webkit-mask: url('{{ st.icon }}') center/contain no-repeat; mask: url('{{ st.icon }}') center/contain no-repeat;"></span>
+                      <span dir="auto" style="min-width: 0; overflow-wrap: anywhere;">{{ st.text }}</span>
                     </div>
                   </sc-for>
                 </div>
               </sc-if>
-              <sc-if value="{{ noBrief }}" hint-placeholder-val="{{ true }}">
-                <div style="font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.54);">{{ t.briefEmpty }}</div>
+
+              <sc-if value="{{ m.hasError }}" hint-placeholder-val="{{ false }}">
+                <div role="alert" style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin: 0 0 12px; padding: 12px 14px; border-radius: 14px; background: rgba(206,17,38,0.05); border: 1px solid rgba(206,17,38,0.18); font-size: 13.5px; font-weight: 300; line-height: 1.55; color: #8A0D1A;">
+                  <span style="flex: 1; min-width: 200px;">{{ m.errorText }}</span>
+                  <sc-if value="{{ m.canRetry }}" hint-placeholder-val="{{ false }}">
+                    <div onClick="{{ m.retry }}" style="padding: 8px 16px; border-radius: 100px; background: #FFFFFF; border: 1px solid rgba(206,17,38,0.3); color: #8A0D1A; font-size: 12.5px; font-weight: 500; cursor: pointer;" style-hover="background: rgba(206,17,38,0.06);">{{ t.aiRetry }}</div>
+                  </sc-if>
+                </div>
               </sc-if>
-              <sc-if value="{{ hasMissing }}" hint-placeholder-val="{{ false }}">
-                <div style="margin-top: 14px; padding: 13px 15px; border-radius: 12px; background: rgba(180,120,20,0.08); border: 1px solid rgba(180,120,20,0.24); font-size: 13px; font-weight: 300; color: #7A5418;">
-                  <div style="margin-bottom: 11px; line-height: 1.5;">{{ clarify }}</div>
-                  <div style="display: flex; gap: 8px;">
-                    <sc-for list="{{ clarifyActions }}" as="ca" hint-placeholder-count="2">
-                      <span onClick="{{ ca.go }}" style="padding: 7px 16px; border-radius: 100px; background: #007A3D; color: #FFFFFF; font-size: 12px; font-weight: 500; cursor: pointer;">{{ ca.label }}</span>
+
+              <sc-for list="{{ m.leadNotices }}" as="n" hint-placeholder-count="0">
+                <div style="display: flex; gap: 8px; align-items: flex-start; margin: 0 0 12px; font-size: 13px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.62);">
+                  <span style="width: 14px; height: 14px; margin-top: 3px; flex: none; background: rgba(23,23,15,0.42); -webkit-mask: url('assets/icons/info.svg') center/contain no-repeat; mask: url('assets/icons/info.svg') center/contain no-repeat;"></span>
+                  <span dir="{{ n.dir }}">{{ n.text }}</span>
+                </div>
+              </sc-for>
+
+              <sc-for list="{{ m.parts }}" as="p" hint-placeholder-count="1">
+                <div>
+                <sc-if value="{{ p.isText }}" hint-placeholder-val="{{ true }}">
+                  <div data-reply="true" data-streaming="{{ p.streaming }}" ref="{{ p.mdRef }}" style="font-size: 15.5px; font-weight: 300; line-height: 1.72; color: rgba(23,23,15,0.9); overflow-wrap: anywhere;"></div>
+                </sc-if>
+
+                <sc-if value="{{ p.isCards }}" hint-placeholder-val="{{ false }}">
+                  <div data-aicards="true" style="display: grid; gap: 14px; margin: 16px 0 18px;">
+                    <sc-for list="{{ p.cards }}" as="c" hint-placeholder-count="2">
+                      <div data-aicard="true" style="display: flex; flex-direction: column; min-width: 0; border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.1); box-shadow: 0 1px 2px rgba(23,23,15,0.04); animation: akFadeUp 420ms both; transition: box-shadow 240ms, transform 240ms, border-color 240ms;" style-hover="box-shadow: 0 18px 44px rgba(70,58,32,0.14); transform: translateY(-2px); border-color: rgba(23,23,15,0.16);">
+                        <a href="{{ c.href }}" target="{{ c.target }}" rel="noopener noreferrer nofollow" onClick="{{ c.open }}" aria-label="{{ c.openAria }}" style="position: relative; display: block; aspect-ratio: {{ c.mediaRatio }}; background: {{ c.mediaBg }}; overflow: hidden; color: inherit;">
+                          <sc-if value="{{ c.hasImage }}" hint-placeholder-val="{{ false }}">
+                            <img loading="lazy" decoding="async" ref="{{ c.imgRef }}" alt="{{ c.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;" />
+                          </sc-if>
+                          <sc-if value="{{ c.noImage }}" hint-placeholder-val="{{ true }}">
+                            <span style="position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; padding: 14px 16px;">
+                              <span style="display: inline-flex; align-items: center; gap: 8px; min-width: 0;">
+                                <span style="width: 16px; height: 16px; flex: none; background: rgba(23,23,15,0.42); -webkit-mask: url('{{ c.placeholderIcon }}') center/contain no-repeat; mask: url('{{ c.placeholderIcon }}') center/contain no-repeat;"></span>
+                                <span style="font-size: 15px; font-weight: 400; letter-spacing: -0.01em; color: rgba(23,23,15,0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ c.placeholderTitle }}</span>
+                              </span>
+                              <span style="font-size: 11.5px; font-weight: 300; color: rgba(23,23,15,0.46); flex: none;">{{ c.placeholderSub }}</span>
+                            </span>
+                          </sc-if>
+                          <span style="position: absolute; top: 12px; inset-inline-start: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 100px; background: {{ c.badgeBg }}; color: {{ c.badgeFg }}; font-size: 11.5px; font-weight: 500; backdrop-filter: blur(8px);">
+                            <sc-if value="{{ c.verified }}" hint-placeholder-val="{{ false }}"><span style="width: 13px; height: 13px; background: currentColor; -webkit-mask: url('assets/icons/verified.svg') center/contain no-repeat; mask: url('assets/icons/verified.svg') center/contain no-repeat;"></span></sc-if>
+                            <span>{{ c.badge }}</span>
+                          </span>
+                          <sc-if value="{{ c.hasDeal }}" hint-placeholder-val="{{ true }}">
+                            <span style="position: absolute; top: 12px; inset-inline-end: 12px; padding: 5px 10px; border-radius: 100px; background: rgba(255,255,255,0.88); color: #17170F; font-size: 11.5px; font-weight: 400;">{{ c.dealLabel }}</span>
+                          </sc-if>
+                        </a>
+                        <div style="display: flex; flex-direction: column; gap: 8px; padding: 15px 17px 15px; flex: 1;">
+                          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px;">
+                            <span dir="ltr" style="font-size: {{ c.priceSize }}; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: {{ c.priceFg }};">{{ c.price }}</span>
+                            <span style="font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5);">{{ c.basis }}</span>
+                          </div>
+                          <div style="unicode-bidi: plaintext; text-align: start; font-size: 14.5px; font-weight: 400; line-height: 1.42; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ c.title }}</div>
+                          <sc-if value="{{ c.hasMeta }}" hint-placeholder-val="{{ true }}">
+                            <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.58); min-width: 0;">
+                              <sc-if value="{{ c.hasLocation }}" hint-placeholder-val="{{ true }}">
+                                <span style="width: 13px; height: 13px; flex: none; background: currentColor; -webkit-mask: url('assets/icons/pin.svg') center/contain no-repeat; mask: url('assets/icons/pin.svg') center/contain no-repeat;"></span>
+                                <span style="unicode-bidi: plaintext; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;">{{ c.location }}</span>
+                              </sc-if>
+                              <sc-if value="{{ c.hasAge }}" hint-placeholder-val="{{ true }}">
+                                <span style="flex: none; color: rgba(23,23,15,0.42);">{{ c.ageLead }}{{ c.age }}</span>
+                              </sc-if>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{ c.hasFacts }}" hint-placeholder-val="{{ true }}">
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.74); font-variant-numeric: tabular-nums;">
+                              <sc-for list="{{ c.facts }}" as="f" hint-placeholder-count="3">
+                                <span style="display: inline-flex; align-items: center; gap: 6px;" title="{{ f.label }}">
+                                  <span style="width: 14px; height: 14px; flex: none; background: rgba(23,23,15,0.5); -webkit-mask: url('{{ f.icon }}') center/contain no-repeat; mask: url('{{ f.icon }}') center/contain no-repeat;"></span>
+                                  <span>{{ f.v }}</span>
+                                </span>
+                              </sc-for>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{ c.hasWhy }}" hint-placeholder-val="{{ true }}">
+                            <div style="display: flex; gap: 9px; align-items: flex-start; margin-top: 2px; padding: 10px 12px; border-radius: 12px; background: rgba(0,122,61,0.06); font-size: 13px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.84);">
+                              <span title="{{ c.whyLabel }}" style="width: 14px; height: 14px; margin-top: 3px; flex: none; background: #007A3D; -webkit-mask: url('assets/icons/sparkle.svg') center/contain no-repeat; mask: url('assets/icons/sparkle.svg') center/contain no-repeat;"></span>
+                              <span style="unicode-bidi: plaintext; text-align: start;">{{ c.why }}</span>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{ c.hasNote }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size: 11.5px; font-weight: 300; line-height: 1.5; color: rgba(23,23,15,0.5);">{{ c.note }}</div>
+                          </sc-if>
+                          <div style="display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 6px;">
+                            <a href="{{ c.href }}" target="{{ c.target }}" rel="noopener noreferrer nofollow" onClick="{{ c.open }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 15px; border-radius: 100px; background: {{ c.ctaBg }}; color: {{ c.ctaFg }}; border: 1px solid {{ c.ctaEdge }}; font-size: 12.5px; font-weight: 500; min-height: 38px; box-sizing: border-box; min-width: 0;" style-hover="background: {{ c.ctaHover }}; color: {{ c.ctaHoverFg }};">
+                              <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ c.openLabel }}</span>
+                              <sc-if value="{{ c.isExternal }}" hint-placeholder-val="{{ false }}"><span style="width: 13px; height: 13px; flex: none; background: currentColor; -webkit-mask: url('assets/icons/external.svg') center/contain no-repeat; mask: url('assets/icons/external.svg') center/contain no-repeat;"></span></sc-if>
+                            </a>
+                            <span style="flex: 1;"></span>
+                            <div onClick="{{ c.toggleSave }}" aria-label="{{ c.saveLabel }}" aria-pressed="{{ c.saved }}" title="{{ c.saveLabel }}" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; cursor: pointer; border: 1px solid {{ c.saveEdge }}; background: {{ c.saveBg }}; color: {{ c.saveFg }}; transition: background 200ms, color 200ms;">
+                              <span style="width: 16px; height: 16px; background: currentColor; -webkit-mask: url('assets/icons/heart.svg') center/contain no-repeat; mask: url('assets/icons/heart.svg') center/contain no-repeat;"></span>
+                            </div>
+                            <div onClick="{{ c.share }}" aria-label="{{ c.shareLabel }}" title="{{ c.shareLabel }}" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; cursor: pointer; border: 1px solid rgba(23,23,15,0.12); color: rgba(23,23,15,0.7);" style-hover="border-color: rgba(23,23,15,0.3);">
+                              <span style="width: 16px; height: 16px; background: currentColor; -webkit-mask: url('assets/icons/share.svg') center/contain no-repeat; mask: url('assets/icons/share.svg') center/contain no-repeat;"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ p.isCompare }}" hint-placeholder-val="{{ false }}">
+                  <div data-aicompare="true" role="table" aria-label="{{ p.caption }}" style="margin: 14px 0 18px; border-radius: 16px; border: 1px solid rgba(23,23,15,0.1); background: #FFFFFF; overflow-x: auto;">
+                    <div style="display: grid; grid-template-columns: {{ p.gridCols }}; min-width: {{ p.minWidth }};">
+                      <div role="columnheader" style="padding: 12px 14px; border-bottom: 1px solid rgba(23,23,15,0.08); background: rgba(23,23,15,0.025);"></div>
+                      <sc-for list="{{ p.cols }}" as="col" hint-placeholder-count="2">
+                        <div role="columnheader" style="padding: 12px 14px; border-bottom: 1px solid rgba(23,23,15,0.08); background: rgba(23,23,15,0.025); min-width: 0;">
+                          <div dir="auto" style="font-size: 13px; font-weight: 500; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ col.title }}</div>
+                          <div style="font-size: 11px; font-weight: 300; color: rgba(23,23,15,0.5); margin-top: 3px;">{{ col.source }}</div>
+                        </div>
+                      </sc-for>
+                      <sc-for list="{{ p.cells }}" as="cell" hint-placeholder-count="6">
+                        <div role="{{ cell.role }}" style="padding: 10px 14px; border-bottom: 1px solid rgba(23,23,15,0.06); font-size: {{ cell.size }}; font-weight: {{ cell.weight }}; color: {{ cell.fg }}; font-variant-numeric: tabular-nums; min-width: 0; overflow-wrap: anywhere;" dir="auto">{{ cell.v }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                </div>
+              </sc-for>
+
+              <sc-if value="{{ m.isRedacted }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: rgba(23,23,15,0.04); font-size: 14px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.78);">
+                  <span style="width: 16px; height: 16px; margin-top: 3px; flex: none; background: rgba(23,23,15,0.5); -webkit-mask: url('assets/icons/info.svg') center/contain no-repeat; mask: url('assets/icons/info.svg') center/contain no-repeat;"></span>
+                  <span>{{ m.redactedText }}</span>
+                </div>
+              </sc-if>
+
+              <sc-for list="{{ m.notices }}" as="n" hint-placeholder-count="0">
+                <div style="display: flex; gap: 8px; align-items: flex-start; margin-top: 12px; font-size: 12.5px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.56);">
+                  <span style="width: 14px; height: 14px; margin-top: 2px; flex: none; background: rgba(23,23,15,0.42); -webkit-mask: url('assets/icons/info.svg') center/contain no-repeat; mask: url('assets/icons/info.svg') center/contain no-repeat;"></span>
+                  <span dir="{{ n.dir }}">{{ n.text }}</span>
+                </div>
+              </sc-for>
+
+              <sc-if value="{{ m.hasSources }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 18px;">
+                  <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(23,23,15,0.5); margin-bottom: 9px;">{{ t.aiSources }}</div>
+                  <div style="display: grid; gap: 6px;">
+                    <sc-for list="{{ m.sources }}" as="sr" hint-placeholder-count="2">
+                      <a href="{{ sr.url }}" target="_blank" rel="noopener noreferrer nofollow" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,0.72); border: 1px solid rgba(23,23,15,0.08); color: #17170F; font-size: 13px; font-weight: 300; min-width: 0;" style-hover="border-color: rgba(0,122,61,0.35); color: #17170F;">
+                        <span style="min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box; border-radius: 10px; background: rgba(0,122,61,0.1); color: #00693A; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; flex: none;">{{ sr.n }}</span>
+                        <span style="unicode-bidi: plaintext; text-align: start; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ sr.title }}</span>
+                        <span style="font-size: 11.5px; color: rgba(23,23,15,0.48); flex: none; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ sr.meta }}</span>
+                      </a>
                     </sc-for>
                   </div>
                 </div>
               </sc-if>
-            </div>
-          </div>
 
-          <div style="border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); overflow: hidden;">
-            <div style="padding: 15px 20px; border-bottom: 1px solid rgba(23,23,15,0.1); font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.6);">{{ t.trace }}</div>
-            <div style="padding: 16px 20px 18px; display: grid; gap: 11px;">
-              <sc-for list="{{ stages }}" as="s" hint-placeholder-count="8">
-                <div style="display: flex; align-items: center; gap: 12px; opacity: {{ s.opacity }};">
-                  <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ s.dot }}; flex: none; display: block;"></span>
-                  <span style="font-size: 13px; font-weight: 300; color: {{ s.color }};">{{ s.label }}</span>
-                  <span style="flex: 1; height: 1px; background: rgba(23,23,15,0.05);"></span>
-                  <span style="font-size: 11px; color: rgba(23,23,15,0.46); font-family: ui-monospace, monospace;">{{ s.detail }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </div>
-
-          <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
-            <div style="border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); padding: 20px; display: grid; gap: 14px;">
-              <sc-for list="{{ searchedTally }}" as="ty" hint-placeholder-count="2">
-                <div style="display: flex; align-items: baseline; gap: 12px;">
-                  <span style="font-size: 26px; font-weight: 400; letter-spacing: -0.03em; color: {{ ty.color }}; font-variant-numeric: tabular-nums; min-width: 34px;">{{ ty.n }}</span>
-                  <span style="flex: 1; min-width: 0;">
-                    <span style="display: block; font-size: 13.5px; font-weight: 400;">{{ ty.label }}</span>
-                    <span style="display: block; font-size: 11.5px; font-weight: 300; color: rgba(23,23,15,0.5); margin-top: 2px; line-height: 1.45;">{{ ty.sub }}</span>
-                  </span>
-                </div>
-              </sc-for>
-            </div>
-          </sc-if>
-        </div>
-
-        <div>
-          <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
-            <div style="padding: 40px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.1); font-size: 14px; font-weight: 300; color: rgba(23,23,15,0.66);">{{ t.workingSearch }}</div>
-          </sc-if>
-
-          <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
-          <div>
-            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 14px;">
-              <div style="font-size: 14.5px; font-weight: 300; color: rgba(23,23,15,0.86);">{{ resultSummary }}</div>
-              <div style="font-size: 11px; color: rgba(23,23,15,0.46); letter-spacing: 0.16em; text-transform: uppercase;">{{ t.rankedBy }}</div>
-            </div>
-
-            <div style="display: grid; gap: 16px;">
-              <sc-for list="{{ results }}" as="r" hint-placeholder-count="1">
-                <div data-anim="card" data-flip-id="{{ r.fid }}" onMouseEnter="{{ r.hover }}" onMouseLeave="{{ r.unhover }}" style="border-radius: 20px; overflow: hidden; background: #FFFFFF; border: 1px solid {{ r.cardEdge }}; transition: border-color 240ms;">
-                  <div data-cols="true" style="display: grid; grid-template-columns: 220px minmax(0, 1fr);">
-                    <div data-media="true" style="position: relative; background-color: #EDE7D9; background-image: repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px); min-height: 210px;">
-                      <sc-if value="{{ r.hasCover }}" hint-placeholder-val="{{ false }}">
-                        <img loading="lazy" decoding="async" ref="{{ r.coverRef }}" alt="{{ r.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;" />
-                      </sc-if>
-                      <span style="position: absolute; top: 12px; left: 12px; padding: 5px 12px; border-radius: 100px; background: {{ r.srcBg }}; backdrop-filter: blur(10px); border: 1px solid rgba(23,23,15,0.15); font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase;">{{ r.srcLabel }}</span>
-                      <span style="position: absolute; bottom: 12px; left: 12px; font-family: ui-monospace, monospace; font-size: 11px; color: rgba(23,23,15,0.42);">{{ r.imgLabel }}</span>
+              <sc-if value="{{ m.hasFollowups }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px;">
+                  <sc-for list="{{ m.followups }}" as="fu" hint-placeholder-count="3">
+                    <div onClick="{{ fu.go }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.13); background: rgba(255,255,255,0.8); font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.82); cursor: pointer; max-width: 100%; box-sizing: border-box; transition: border-color 200ms, color 200ms;" style-hover="border-color: #007A3D; color: #007A3D;">
+                      <span style="width: 12px; height: 12px; flex: none; background: currentColor; -webkit-mask: url('assets/icons/sparkle.svg') center/contain no-repeat; mask: url('assets/icons/sparkle.svg') center/contain no-repeat;"></span>
+                      <span style="unicode-bidi: plaintext; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ fu.label }}</span>
                     </div>
-                    <div style="padding: 20px 22px; min-width: 0;">
-                      <div style="display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;">
-                        <div style="flex: 1; min-width: 180px;">
-                          <sc-if value="{{ r.verified }}" hint-placeholder-val="{{ false }}">
-                            <span style="display: inline-block; padding: 4px 11px; border-radius: 100px; background: rgba(0,122,61,0.1); border: 1px solid rgba(0,122,61,0.28); font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: #00693A;">{{ t.verified }}</span>
-                          </sc-if>
-                          <div style="font-size: 19px; font-weight: 400; letter-spacing: -0.018em; margin-top: 11px; line-height: 1.32;">{{ r.title }}</div>
-                          <div style="font-size: 11px; color: rgba(23,23,15,0.54); margin-top: 8px; letter-spacing: 0.14em; text-transform: uppercase;">{{ r.place }}</div>
-                        </div>
-                        <div style="text-align: {{ endAlign }}; flex: none;">
-                          <div style="font-size: 21px; font-weight: 500; letter-spacing: -0.025em; font-variant-numeric: tabular-nums;">{{ r.price }}</div>
-                          <div style="margin-top: 9px; padding: 5px 12px; border-radius: 100px; background: {{ r.scoreBg }}; border: 1px solid {{ r.scoreBorder }}; color: {{ r.scoreFg }}; font-size: 11.5px; font-weight: 400; display: inline-block;">{{ r.score }}</div>
-                        </div>
-                      </div>
-
-                      <div style="display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(23,23,15,0.1); font-size: 13px; font-weight: 300; font-variant-numeric: tabular-nums;">
-                        <sc-for list="{{ r.facts }}" as="ft" hint-placeholder-count="4">
-                          <span style="color: {{ ft.color }};">{{ ft.v }}</span>
-                        </sc-for>
-                      </div>
-
-                      <sc-if value="{{ r.expanded }}" hint-placeholder-val="{{ false }}">
-                        <div style="margin-top: 15px; padding: 16px 18px; border-radius: 14px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.1);">
-                          <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.5); margin-bottom: 12px;">{{ t.whyMatches }}</div>
-                          <div style="display: grid; gap: 9px;">
-                            <sc-for list="{{ r.reasons }}" as="rs" hint-placeholder-count="4">
-                              <div style="display: flex; gap: 11px; align-items: flex-start; font-size: 13px; font-weight: 300; line-height: 1.5; color: {{ rs.color }};">
-                                <span style="width: 5px; height: 5px; border-radius: 50%; background: {{ rs.dot }}; margin-top: 7px; flex: none; display: block;"></span>
-                                <span>{{ rs.text }}</span>
-                              </div>
-                            </sc-for>
-                          </div>
-                          <div style="margin-top: 13px; padding-top: 12px; border-top: 1px solid rgba(23,23,15,0.09); font-size: 11px; color: rgba(23,23,15,0.42); font-family: ui-monospace, monospace; word-break: break-all;">{{ r.provenance }}</div>
-                        </div>
-                      </sc-if>
-
-                      <div style="display: flex; align-items: center; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
-                        <a href="{{ r.href }}" target="{{ r.target }}" rel="noopener noreferrer" onClick="{{ r.click }}" style="padding: 10px 20px; border-radius: 100px; background: {{ r.ctaBg }}; color: {{ r.ctaFg }}; border: 1px solid {{ r.ctaBorder }}; font-size: 12.5px; font-weight: 500;">{{ r.cta }}</a>
-                        <div onClick="{{ r.toggleWhy }}" style="padding: 10px 17px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.14); font-size: 12.5px; font-weight: 300; cursor: pointer; transition: background 200ms;" style-hover="background: rgba(23,23,15,0.05);">{{ r.whyLabel }}</div>
-                        <div onClick="{{ r.toggleSave }}" style="padding: 10px 17px; border-radius: 100px; border: 1px solid {{ r.saveBorder }}; background: {{ r.saveBg }}; color: {{ r.saveFg }}; font-size: 12.5px; font-weight: 300; cursor: pointer;">{{ r.saveLabel }}</div>
-                        <div style="flex: 1;"></div>
-                        <span style="font-size: 11px; font-weight: 300; color: rgba(23,23,15,0.44);">{{ r.freshness }}</span>
-                      </div>
-                    </div>
-                  </div>
+                  </sc-for>
                 </div>
-              </sc-for>
+              </sc-if>
             </div>
+          </sc-if>
           </div>
-          </sc-if>
+        </sc-for>
 
-          <sc-if value="{{ showExternalGap }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top: 16px; border-radius: 18px; border: 1px solid rgba(23,23,15,0.11); background: #FFFFFF; overflow: hidden;">
-              <div style="padding: 16px 22px; border-bottom: 1px solid rgba(23,23,15,0.08); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.54);">{{ t.externalTitle }}</span>
-                <span style="padding: 3px 10px; border-radius: 100px; background: rgba(206,17,38,0.07); color: #B00F20; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;">{{ t.offsite }}</span>
-              </div>
-              <p style="margin: 0; padding: 14px 22px 4px; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.62); max-width: 68ch; text-wrap: pretty;">{{ t.externalBody }}</p>
-              <sc-for list="{{ externalSearches }}" as="x" hint-placeholder-count="3">
-                <a href="{{ x.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ x.track }}" style="display: flex; align-items: center; gap: 16px; padding: 15px 22px; border-top: 1px solid rgba(23,23,15,0.07); color: inherit; text-decoration: none;" style-hover="background: #FBF9F3;">
-                  <span style="width: 8px; height: 8px; border-radius: 2px; background: {{ x.dot }}; flex: none; display: block;"></span>
-                  <span style="flex: 1; min-width: 0;">
-                    <span style="display: block; font-size: 14.5px; font-weight: 400;">{{ x.name }}</span>
-                    <span style="display: block; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.5); margin-top: 3px;">{{ x.note }}</span>
-                  </span>
-                  <span style="font-size: 11px; font-family: ui-monospace, monospace; color: rgba(23,23,15,0.42); flex: none;">{{ x.coverage }}</span>
-                  <span style="font-size: 13px; color: #007A3D; flex: none;">{{ x.cta }}</span>
-                </a>
-              </sc-for>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
-            <div style="padding: 40px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.1); text-align: center;">
-              <div style="font-size: 15px; font-weight: 300; color: rgba(23,23,15,0.78);">{{ t.noMatch }}</div>
-              <div style="font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.5); margin-top: 10px; line-height: 1.6;">{{ t.noMatchSub }}</div>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
-            <div style="padding: 46px 40px; border-radius: 20px; background: #FDFBF5; border: 1px solid rgba(23,23,15,0.1);">
-              <img src="assets/akarat-mark.png" alt="" style="height: 34px; width: auto; display: block; opacity: 0.85;" />
-              <div style="font-size: 19px; font-weight: 300; margin-top: 20px; letter-spacing: -0.02em;">{{ t.idleTitle }}</div>
-              <p style="margin: 12px 0 0; font-size: 14px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.6); max-width: 56ch; text-wrap: pretty;">{{ t.idleBody }}</p>
-            </div>
-          </sc-if>
-        </div>
+        <div ref="{{ aiEndRef }}" data-aiend="true" style="height: 190px;"></div>
       </div>
+      </sc-if>
     </div>
     </sc-if>
 
@@ -1992,6 +2153,7 @@
     </div>
     </sc-if>
 
+    <sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
     <footer style="margin-top: auto; border-top: 1px solid rgba(23,23,15,0.1); background: #FDFBF5;">
       <div data-footgrid="true" style="padding: 76px 6vw 46px; display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 44px;">
 
@@ -2033,6 +2195,7 @@
         <span style="font-family: ui-monospace, monospace; letter-spacing: 0.06em;">{{ t.footerNote }}</span>
       </div>
     </footer>
+    </sc-if>
   </div>
   </div>
   </div>
@@ -2075,8 +2238,7 @@ const STR = {
     pill: 'Our listings and the wider Jordanian market',
     heroSub: 'Search the usual way, or just say what you are looking for in English or Arabic. We read it, look through our listings and the wider market, then show you why each one fits.',
     placeholder: 'A four-bedroom villa in Abdoun with a garden',
-    searchJordan: 'Search Jordan', search: 'Search',
-    refinePlaceholder: 'Change your search. Try “only Abdoun” or “raise the budget to 900,000”',
+    searchJordan: 'Search Jordan',
     buy: 'Buy', rent: 'Rent', daily: 'Daily rentals', sell: 'Sell', aiSearch: 'Search with AI', dashboard: 'Dashboard',
     featured: 'On the marketplace', featuredSub: 'Verified listings', browseAll: 'Open AI search',
     marketEmpty: 'The marketplace is opening', marketEmptySub: 'First listings',
@@ -2114,20 +2276,19 @@ const STR = {
     vocabExampleLabel: 'Example', vocabExample: '“A four-bedroom villa in Abdoun with a garden, under 900,000 JOD.”',
     ownersSub: 'For owners and agents', ownersTitle: 'List once. Manage everything in one place.',
     ownersBody: 'One guided flow takes the location, details, features, price and both descriptions. We review it, then it goes live. Your inquiries, viewing requests and performance all sit in one dashboard.',
-    workspaceKicker: 'Property intelligence', workspaceTitle: 'Search with AI',
-    startOver: 'Clear search',
-    brief: 'Search brief', briefEmpty: 'What you asked for shows up here as soon as we read it. You can edit any of it, and we never change it without saying so.',
-    trace: 'Execution trace',
-    workingSearch: 'Working through your request…',
-    rankedBy: 'Deterministic match score', whyMatches: 'Why this matches', verified: 'Verified',
-    externalTitle: 'Wider Jordanian market', offsite: 'leaves this site',
-    externalBody: 'We turn your brief into a real search on each Jordanian portal. These open their own filtered results in a new tab, so the listings you see are theirs and current. Nothing here is copied or invented.',
-    openOn: 'Search →',
-    noMatch: 'Nothing in our inventory matches that yet.', noMatchSub: 'Try widening the area or raising the budget, or search the wider Jordanian market below.',
-    idleTitle: 'Tell us what you are looking for.', idleBody: 'Write it the way you would say it out loud. We pick out whether you are buying or renting, where, your budget, bedrooms, bathrooms and features, recognise Jordanian place names in either language, and search straight away.',
     dashTitle: 'Owner dashboard', welcome: 'Welcome back', addProperty: '+ Add property',
     yourListings: 'Your listings',
     navOverview: 'Overview', navListings: 'Listings', navInquiries: 'Inquiries', navMessages: 'Messages', navAnalytics: 'Analytics', navSaved: 'Saved searches',
+    // The AI advisor
+    aiKicker: 'Akarat AI · Property advisor',
+    aiHeroTitle: 'Find your next property with AI.',
+    aiHeroSub: 'Search, explore, and invest in Jordanian real estate with an intelligent local advisor.',
+    aiPlaceholder: 'Ask about a home, an area or an investment in Jordan…',
+    aiPlaceholderMore: 'Ask a follow-up…',
+    aiInputLabel: 'Message the Akarat AI advisor',
+    aiTrust: 'Searches Akarat.ai’s own listings first, then trusted Jordanian sources. Every result links to where it came from.',
+    aiName: 'Akarat AI', aiNewChat: 'New conversation', aiSources: 'Sources', aiRetry: 'Try again',
+    aiLinkCopied: 'Link copied',
     footer: 'Akarat.ai. Property search across Jordan.',
     footerNote: 'Amman, Jordan'
   },
@@ -2136,8 +2297,7 @@ const STR = {
     pill: 'منصتنا والسوق العقاري الأردني',
     heroSub: 'ابحث بالطريقة المعتادة، أو اكتب ما تريده بالعربية أو الإنجليزية. نقرأ ما كتبته، ونبحث في معروضنا وفي السوق الأوسع، ثم نوضح لك سبب مناسبة كل نتيجة.',
     placeholder: 'فيلا بأربع غرف نوم في عبدون مع حديقة',
-    searchJordan: 'ابحث في الأردن', search: 'ابحث',
-    refinePlaceholder: 'عدّل بحثك: «فقط عبدون» أو «ارفع الميزانية إلى ٩٠٠٬٠٠٠»',
+    searchJordan: 'ابحث في الأردن',
     buy: 'شراء', rent: 'إيجار', daily: 'إيجار يومي', sell: 'بيع', aiSearch: 'البحث الذكي', dashboard: 'لوحة التحكم',
     featured: 'على المنصة', featuredSub: 'إعلانات موثقة', browseAll: 'افتح البحث الذكي',
     marketEmpty: 'المنصة على وشك الانطلاق', marketEmptySub: 'أول الإعلانات',
@@ -2175,24 +2335,241 @@ const STR = {
     vocabExampleLabel: 'مثال', vocabExample: '«فيلا بأربع غرف نوم في عبدون مع حديقة، بأقل من ٩٠٠٬٠٠٠ دينار.»',
     ownersSub: 'للمالكين والوكلاء', ownersTitle: 'أضف عقارك مرة، وأدر كل شيء من مكان واحد.',
     ownersBody: 'مسار واحد موجّه يجمع الموقع والمواصفات والمزايا والسعر والوصف بالعربية والإنجليزية. نراجعه ثم يُنشر. وتبقى الاستفسارات وطلبات المعاينة والأداء في لوحة تحكمك.',
-    workspaceKicker: 'ذكاء عقاري', workspaceTitle: 'ابحث بالذكاء الاصطناعي',
-    startOver: 'مسح البحث',
-    brief: 'ملخص الطلب', briefEmpty: 'تظهر متطلباتك هنا فور قراءتها، ويمكنك تعديل أي منها. ولا نغيّر شيئاً دون أن نخبرك.',
-    trace: 'سجل التنفيذ',
-    workingSearch: 'جارٍ تنفيذ طلبك…',
-    rankedBy: 'درجة تطابق محسوبة', whyMatches: 'لماذا يطابق طلبك', verified: 'موثق',
-    externalTitle: 'السوق الأردني الأوسع', offsite: 'يفتح موقعاً آخر',
-    externalBody: 'نحوّل طلبك إلى بحث حقيقي على كل منصة أردنية. تفتح هذه الروابط نتائجها المفلترة في تبويب جديد، فالإعلانات التي تراها منها وحديثة. لا شيء هنا منسوخ أو مُختلق.',
-    openOn: 'ابحث ←',
-    noMatch: 'لا يوجد في معروضنا ما يطابق ذلك بعد.', noMatchSub: 'جرّب توسيع المنطقة أو رفع الميزانية، أو ابحث في السوق الأردني الأوسع أدناه.',
-    idleTitle: 'صف العقار الذي تريده.', idleBody: 'اكتبه كما تقوله. نلتقط نوع العملية والمنطقة والسعر وعدد الغرف والحمامات والمزايا، ونعرف أسماء المناطق الأردنية بأي من اللغتين. كل ذلك ظاهر أمامك وقابل للتعديل.',
     dashTitle: 'لوحة تحكم المالك', welcome: 'أهلاً وسهلاً', addProperty: '+ أضف عقاراً',
     yourListings: 'إعلاناتك',
     navOverview: 'نظرة عامة', navListings: 'الإعلانات', navInquiries: 'الاستفسارات', navMessages: 'الرسائل', navAnalytics: 'التحليلات', navSaved: 'عمليات البحث المحفوظة',
+    // المستشار العقاري
+    aiKicker: 'أكارات AI · مستشارك العقاري',
+    aiHeroTitle: 'اعثر على عقارك القادم بالذكاء الاصطناعي.',
+    aiHeroSub: 'ابحث واستكشف واستثمر في عقارات الأردن مع مستشار محلي ذكي.',
+    aiPlaceholder: 'اسأل عن بيت أو منطقة أو استثمار في الأردن…',
+    aiPlaceholderMore: 'اسأل سؤالاً آخر…',
+    aiInputLabel: 'اكتب رسالتك لمستشار أكارات',
+    aiTrust: 'نبحث أولاً في إعلانات أكارات، ثم في مصادر أردنية موثوقة. ومع كل نتيجة رابط مصدرها.',
+    aiName: 'أكارات AI', aiNewChat: 'محادثة جديدة', aiSources: 'المصادر', aiRetry: 'حاول مرة أخرى',
+    aiLinkCopied: 'تم نسخ الرابط',
     footer: 'أكارات. البحث العقاري في جميع أنحاء الأردن.',
     footerNote: 'عمّان، الأردن'
   }
 };
+
+/* ── The AI advisor's wording ──
+   Kept apart from STR because much of it is built from values (a search
+   query, a host, a count) and because the disclaimer follows the language of
+   the reply rather than the interface. The disclaimer sentences are the ones
+   the advisor's brief specifies, in both languages. */
+const plural = (n, one, two, few, many) => (n === 1 ? one : n === 2 ? two : n <= 10 ? few(n) : many(n));
+
+const AI_TEXT = {
+  en: {
+    send: 'Send', stop: 'Stop', mic: 'Speak instead of typing', micStop: 'Stop listening',
+    micLang: l => `Voice language: ${l === 'ar' ? 'Arabic' : 'English'}. Tap to switch.`,
+    listening: 'Listening… tap the microphone when you’re done.',
+    review: 'Check the text, then send.',
+    voice: {
+      unsupported: 'Voice input isn’t available in this browser. Try Chrome, Edge or Safari, or type instead.',
+      'not-allowed': 'Microphone access is blocked. Allow it for this site in your browser settings, then try again.',
+      'no-speech': 'I didn’t catch anything. Tap the microphone and try again.',
+      'audio-capture': 'No microphone was found.',
+      network: 'Your browser’s speech service couldn’t be reached. Check your connection.',
+      'language-not-supported': 'This browser can’t recognise that language. Switch the voice language, or type instead.',
+      other: 'Voice input stopped. Try again.'
+    },
+    thinking: 'Thinking…', writing: 'Writing…',
+    doing: st => ({
+      akarat_search: 'Searching Akarat.ai listings…',
+      akarat_listing: 'Opening a listing…',
+      akarat_stats: 'Checking asking prices on Akarat.ai…',
+      web_search: st.q ? `Searching trusted sources for “${st.q}”…` : 'Searching trusted sources…',
+      web_fetch: `Reading ${st.host || 'a page'}…`,
+      calc: 'Running the numbers…',
+      compare: 'Comparing listings…'
+    })[st.s] || 'Working…',
+    did: st => ({
+      akarat_search: 'Searched Akarat.ai listings',
+      akarat_listing: 'Opened a listing',
+      akarat_stats: 'Checked asking prices on Akarat.ai',
+      web_search: st.q ? `Searched trusted sources for “${st.q}”` : 'Searched trusted sources',
+      web_fetch: `Read a page on ${st.host || 'the web'}`,
+      calc: 'Ran the numbers',
+      compare: 'Compared listings'
+    })[st.s] || st.s,
+    summary: steps => {
+      const count = k => steps.filter(x => x.s === k).length;
+      const bits = [];
+      if (count('akarat_search') || count('akarat_listing') || count('akarat_stats')) bits.push('Akarat.ai');
+      const w = count('web_search');
+      if (w) bits.push(w === 1 ? '1 web search' : `${w} web searches`);
+      const f = count('web_fetch');
+      if (f) bits.push(f === 1 ? '1 page read' : `${f} pages read`);
+      if (count('calc')) bits.push('calculations');
+      if (count('compare')) bits.push('comparison');
+      return bits.join(' · ') || 'Steps';
+    },
+    leak: 'I can’t share how this service is set up. Ask me anything about property in Jordan.',
+    refused: 'I can’t help with that. I can help you find, compare or evaluate property in Jordan.',
+    disclaimer: 'Property markets involve risk. Please conduct your own research and verify all information before making an investment decision.',
+    notice: {
+      partial: 'I ran out of time before finishing. Ask me to continue, or narrow the question.',
+      memory_reset: 'Our earlier conversation had expired, so I answered this one fresh.',
+      fallback: 'The AI advisor couldn’t answer just now, so here is a plain search of Akarat.ai listings for your words.',
+      stopped: 'Stopped. Send another message to carry on.'
+    },
+    error: (code, signedIn) => ({
+      rate_limited: 'You’re sending messages quickly. Wait a few seconds and try again.',
+      quota: signedIn
+        ? 'You’ve reached today’s limit for the AI advisor. It resets tomorrow, and every listing is still open to browse.'
+        : 'You’ve reached today’s limit for the AI advisor. Sign in for a higher limit, or browse the listings directly.',
+      quota_total: 'The AI advisor has answered all it can for today. Every listing is still open to browse, and it will be back tomorrow.',
+      busy: 'The advisor is busy right now. Try again in a moment.',
+      not_configured: 'The AI advisor isn’t available right now.',
+      too_long: 'That message is too long. Keep it under 2,000 characters.',
+      offline: 'You seem to be offline. Check your connection and try again.',
+      interrupted: 'The reply was cut off on its way here. Try again.'
+    })[code] || 'Something went wrong reaching the advisor. Try again.',
+    prompts: [
+      { text: 'Find a 3-bedroom apartment in Abdoun under 150,000 JOD.', icon: 'search' },
+      { text: 'Where should I invest 50,000 JOD in Jordan?', icon: 'calc' },
+      { text: 'Compare property investments in Amman and Aqaba.', icon: 'compare' },
+      { text: 'شو أفضل منطقة أشتري فيها شقة بعمان؟', icon: 'pin' }
+    ],
+    removeCriterion: l => `Remove “${l}” from the search`,
+    criteria: n => `Search criteria (${n})`, hide: 'Hide',
+    showCriteria: 'Show the search criteria', hideCriteria: 'Hide the search criteria',
+    bedsMin: n => `${n}+ beds`, bathsMin: n => `${n}+ baths`,
+    jod: 'JOD',
+    deal: { sale: 'For sale', rent: 'For rent', daily: 'Daily rental' },
+    basis: { month: '/ month', night: '/ night', total: '' },
+    beds: 'Bedrooms', baths: 'Bathrooms', size: 'Size', land: 'Land', type: 'Type',
+    source: 'Source', why: 'Why it fits',
+    view: 'View property', viewOn: s => `View on ${s}`, openAria: t => `Open ${t}`,
+    priceOn: s => `Price on ${s}`,
+    verifiedOn: 'Akarat.ai · Verified', noPhotos: 'No photos yet', externalListing: 'Listing on another site',
+    extChecked: s => `Details as published on ${s}, read by the advisor. Confirm them on the listing.`,
+    extUnchecked: s => `Not opened by the advisor: see ${s} for the price and details.`,
+    updated: d => (d <= 0 ? 'Updated today' : d === 1 ? 'Updated yesterday' : `Updated ${d} days ago`),
+    seen: d => `Seen ${d}`,
+    save: 'Save', saved: 'Saved', share: 'Share',
+    rows: {
+      price: 'Price', per_sqm: 'Price per m²', beds: 'Bedrooms', baths: 'Bathrooms', size: 'Size', land: 'Land',
+      type: 'Type', location: 'Location', verified: 'Verified on Akarat.ai', age: 'Listed for'
+    },
+    days: d => (d === 1 ? '1 day' : `${d} days`),
+    compareCaption: 'Listings compared side by side'
+  },
+  ar: {
+    send: 'إرسال', stop: 'إيقاف', mic: 'تحدّث بدل الكتابة', micStop: 'إيقاف الاستماع',
+    micLang: l => `لغة الصوت: ${l === 'ar' ? 'العربية' : 'الإنجليزية'}. اضغط للتبديل.`,
+    listening: 'أستمع إليك… اضغط الميكروفون لما تخلص.',
+    review: 'راجع النص ثم أرسله.',
+    voice: {
+      unsupported: 'الإدخال الصوتي غير متاح في هذا المتصفح. جرّب Chrome أو Edge أو Safari، أو اكتب سؤالك.',
+      'not-allowed': 'الوصول للميكروفون مرفوض. اسمح به لهذا الموقع من إعدادات المتصفح ثم حاول مرة ثانية.',
+      'no-speech': 'ما سمعت شي. اضغط الميكروفون وجرّب مرة ثانية.',
+      'audio-capture': 'ما في ميكروفون متصل.',
+      network: 'تعذّر الوصول لخدمة التعرّف على الصوت في المتصفح. تأكد من الاتصال.',
+      'language-not-supported': 'المتصفح لا يتعرّف على هذه اللغة. غيّر لغة الصوت أو اكتب سؤالك.',
+      other: 'توقف الإدخال الصوتي. حاول مرة ثانية.'
+    },
+    thinking: 'أفكّر…', writing: 'أكتب الرد…',
+    doing: st => ({
+      akarat_search: 'أبحث في إعلانات أكارات…',
+      akarat_listing: 'أفتح تفاصيل الإعلان…',
+      akarat_stats: 'أراجع أسعار العرض على أكارات…',
+      web_search: st.q ? `أبحث في مصادر موثوقة عن «${st.q}»…` : 'أبحث في مصادر موثوقة…',
+      web_fetch: `أقرأ صفحة على ${st.host || 'الويب'}…`,
+      calc: 'أحسب الأرقام…',
+      compare: 'أقارن الإعلانات…'
+    })[st.s] || 'أعمل على طلبك…',
+    did: st => ({
+      akarat_search: 'بحثت في إعلانات أكارات',
+      akarat_listing: 'فتحت تفاصيل إعلان',
+      akarat_stats: 'راجعت أسعار العرض على أكارات',
+      web_search: st.q ? `بحثت في مصادر موثوقة عن «${st.q}»` : 'بحثت في مصادر موثوقة',
+      web_fetch: `قرأت صفحة على ${st.host || 'الويب'}`,
+      calc: 'حسبت الأرقام',
+      compare: 'قارنت الإعلانات'
+    })[st.s] || st.s,
+    summary: steps => {
+      const count = k => steps.filter(x => x.s === k).length;
+      const bits = [];
+      if (count('akarat_search') || count('akarat_listing') || count('akarat_stats')) bits.push('أكارات');
+      const w = count('web_search');
+      if (w) bits.push(plural(w, 'بحث واحد على الويب', 'بحثان على الويب', n => `${n} عمليات بحث على الويب`, n => `${n} عملية بحث على الويب`));
+      const f = count('web_fetch');
+      if (f) bits.push(plural(f, 'قراءة صفحة واحدة', 'قراءة صفحتين', n => `قراءة ${n} صفحات`, n => `قراءة ${n} صفحة`));
+      if (count('calc')) bits.push('حسابات');
+      if (count('compare')) bits.push('مقارنة');
+      return bits.join(' · ') || 'الخطوات';
+    },
+    leak: 'ما بقدر أشارك تفاصيل إعدادات الخدمة. اسألني أي شي عن العقارات بالأردن.',
+    refused: 'ما بقدر أساعد بهذا الطلب. بقدر أساعدك تلاقي عقار أو تقارن أو تقيّم عقارات بالأردن.',
+    disclaimer: 'الاستثمار بالعقار فيه مخاطر. تأكّد من المعلومات واعمل بحثك الخاص قبل ما تاخد أي قرار استثماري.',
+    notice: {
+      partial: 'انتهى الوقت قبل ما أكمل. اطلب مني أكمل، أو ضيّق السؤال.',
+      memory_reset: 'انتهت صلاحية محادثتنا السابقة، فجاوبت على هذا السؤال من جديد.',
+      fallback: 'المستشار ما قدر يجاوب هلأ، فهاي نتائج بحث عادي في إعلانات أكارات حسب كلماتك.',
+      stopped: 'تم الإيقاف. أرسل رسالة جديدة للمتابعة.'
+    },
+    error: (code, signedIn) => ({
+      rate_limited: 'عم ترسل رسائل بسرعة. استنى ثواني وحاول مرة ثانية.',
+      quota: signedIn
+        ? 'وصلت حد اليوم للمستشار الذكي. بيتجدد بكرة، وكل الإعلانات متاحة للتصفح.'
+        : 'وصلت حد اليوم للمستشار الذكي. سجّل الدخول لحد أعلى، أو تصفح الإعلانات مباشرة.',
+      quota_total: 'المستشار الذكي وصل حدّه لليوم. كل الإعلانات متاحة للتصفح، وبيرجع بكرة.',
+      busy: 'المستشار مشغول هلأ. جرّب بعد شوي.',
+      not_configured: 'المستشار الذكي غير متاح حالياً.',
+      too_long: 'الرسالة طويلة. خليها أقل من 2,000 حرف.',
+      offline: 'يبدو إنك غير متصل بالإنترنت. تأكد من الاتصال وحاول مرة ثانية.',
+      interrupted: 'انقطع الرد بالطريق. حاول مرة ثانية.'
+    })[code] || 'صار خطأ بالوصول للمستشار. حاول مرة ثانية.',
+    prompts: [
+      { text: 'بدي شقة 3 غرف نوم بعبدون بأقل من 150 ألف دينار.', icon: 'search' },
+      { text: 'وين أستثمر 50 ألف دينار بالعقار بالأردن؟', icon: 'calc' },
+      { text: 'قارنلي بين الاستثمار العقاري بعمّان والعقبة.', icon: 'compare' },
+      { text: 'Find a 3-bedroom apartment in Abdoun under 150,000 JOD.', icon: 'pin' }
+    ],
+    removeCriterion: l => `احذف «${l}» من البحث`,
+    criteria: n => `شروط البحث (${n})`, hide: 'إخفاء',
+    showCriteria: 'اعرض شروط البحث', hideCriteria: 'أخفِ شروط البحث',
+    bedsMin: n => `${n}+ غرف`, bathsMin: n => `${n}+ حمامات`,
+    jod: 'د.أ',
+    deal: { sale: 'للبيع', rent: 'للإيجار', daily: 'إيجار يومي' },
+    basis: { month: 'شهرياً', night: 'لليلة', total: '' },
+    beds: 'غرف النوم', baths: 'الحمامات', size: 'المساحة', land: 'الأرض', type: 'النوع',
+    source: 'المصدر', why: 'ليش يناسبك',
+    view: 'عرض العقار', viewOn: s => `افتح على ${s}`, openAria: t => `افتح ${t}`,
+    priceOn: s => `السعر على ${s}`,
+    verifiedOn: 'أكارات · موثّق', noPhotos: 'لا صور بعد', externalListing: 'إعلان على موقع آخر',
+    extChecked: s => `التفاصيل كما نشرها ${s} وقرأها المستشار. تأكّد منها على الإعلان.`,
+    extUnchecked: s => `ما فتحه المستشار: السعر والتفاصيل على ${s}.`,
+    updated: d => (d <= 0 ? 'محدّث اليوم' : d === 1 ? 'محدّث أمس' : `محدّث قبل ${d} يوم`),
+    seen: d => `شوهد ${d}`,
+    save: 'حفظ', saved: 'محفوظ', share: 'مشاركة',
+    rows: {
+      price: 'السعر', per_sqm: 'سعر المتر', beds: 'غرف النوم', baths: 'الحمامات', size: 'المساحة', land: 'الأرض',
+      type: 'النوع', location: 'الموقع', verified: 'موثّق على أكارات', age: 'معروض منذ'
+    },
+    days: d => (d === 1 ? 'يوم واحد' : d === 2 ? 'يومين' : `${d} يوم`),
+    compareCaption: 'مقارنة الإعلانات جنباً إلى جنب'
+  }
+};
+
+const AI_STEP_ICON = {
+  akarat_search: 'assets/icons/search.svg',
+  akarat_listing: 'assets/icons/page.svg',
+  akarat_stats: 'assets/icons/grid.svg',
+  web_search: 'assets/icons/globe.svg',
+  web_fetch: 'assets/icons/page.svg',
+  calc: 'assets/icons/calc.svg',
+  compare: 'assets/icons/compare.svg'
+};
+
+// When the advisor cannot answer at all, the page falls back to its plain
+// search for these; a per-minute limit or an overlong message just says so.
+const AI_FALLBACK_ON = ['not_configured', 'unavailable', 'busy', 'quota', 'quota_total', 'offline'];
+const AI_LEAD_NOTICES = ['fallback', 'memory_reset'];
+const AI_RETRYABLE = ['busy', 'unavailable', 'offline', 'interrupted', 'rate_limited'];
 
 // Listing media is a mixed list of photos and video clips. Anywhere a single
 // still is needed — a card, a thumbnail, an <img> — this picks the first entry
@@ -2205,17 +2582,6 @@ function firstStill(media) {
     && !/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(m.url));
   return hit ? hit.url : '';
 }
-
-const STAGE_DEFS = [
-  { id: 'lang',  en: 'Language detection',        ar: 'تحديد اللغة' },
-  { id: 'parse', en: 'Requirement extraction',    ar: 'استخراج المتطلبات' },
-  { id: 'loc',   en: 'Location resolution',       ar: 'تحديد الموقع' },
-  { id: 'int',   en: 'Marketplace search',        ar: 'البحث في المنصة' },
-  { id: 'ext',   en: 'External market search',    ar: 'البحث في السوق الخارجي' },
-  { id: 'norm',  en: 'Normalisation',             ar: 'توحيد البيانات' },
-  { id: 'dedup', en: 'Duplicate detection',       ar: 'كشف التكرار' },
-  { id: 'rank',  en: 'Deterministic ranking',     ar: 'الترتيب المحسوب' }
-];
 
 /* ──────────────── language ────────────────
    Arabic is the default. This is a Jordanian marketplace, and most of the
@@ -2332,9 +2698,12 @@ const waDigits = phone => {
 class Component extends DCLogic {
   state = {
     ready: false, screen: 'home', lang: initialLang(), scrolled: false,
-    query: '', constraints: null, turns: [], results: [], running: false,
-    stageIdx: -1, stageInfo: {}, expanded: {}, saved: {},
-    hoverId: null, searched: false, signedIn: false,
+    query: '', signedIn: false,
+    // The AI advisor: the conversation as shown, the signed transcript the
+    // server remembers it by, and the composer, criteria and microphone.
+    // aiMicLang null means "the interface language".
+    aiThread: [], aiTranscript: null, aiBusy: false, aiInput: '', aiCriteria: null,
+    aiCriteriaOpen: true, aiStepsOpen: {}, aiMic: 'idle', aiMicLang: null, aiNote: '', aiCopied: false,
     menuOpen: false, authPrompt: false, rollId: null,
     listOpen: false, form: null, formError: '', formBusy: false, uploadNote: '',
     customOpen: false, customText: '',
@@ -2437,6 +2806,18 @@ class Component extends DCLogic {
 
   closeListing(row, { push = true } = {}) {
     this.closeLightbox();
+    // Opened from the advisor: back to the conversation, scrolled to where
+    // the card was, rather than to the Buy or Rent page.
+    if (this._aiReturn) {
+      const { y } = this._aiReturn;
+      this._aiReturn = null;
+      this.setState({ screen: 'search', detail: null, bkId: null }, () => requestAnimationFrame(() => {
+        if (this.smoother) this.smoother.scrollTo(y, false);
+        else window.scrollTo(0, y);
+      }));
+      if (push && typeof history !== 'undefined' && history.pushState) history.pushState({}, '', location.pathname);
+      return;
+    }
     this.setState({ screen: row && row.deal === 'rent' ? 'rent' : row && row.deal === 'daily' ? 'daily' : 'buy', detail: null, bkId: null });
     if (row && row.deal === 'daily' && !this.state.drRows) this.drLoad();
     this.scrollTop();
@@ -2502,9 +2883,6 @@ class Component extends DCLogic {
     document.addEventListener('pointerdown', this._outside, true);
     this.initSmoother();
 
-    // Supabase: restore any existing session, then follow sign in/out.
-    import('./lib/providers.js').then(p => { this.PV = p; this.forceUpdate(); }).catch(() => {});
-
     // Location services. The module itself is tiny and loads either way; the
     // Google script behind it is only fetched when a key is configured and
     // the owner actually opens the listing form.
@@ -2517,12 +2895,22 @@ class Component extends DCLogic {
     // Privacy policy and terms. Small, and only the legal screen reads it.
     import('./lib/legal.js').then(m => { this.LEGAL = m; this.forceUpdate(); }).catch(() => {});
 
-    // Is the crawler's index live, and how much is in it? Stated plainly in the
-    // coverage panel so nobody has to guess whether external results are real.
-    import('./lib/supabase.js')
-      .then(db => db.indexStatus())
-      .then(st => this.setState({ indexState: st }))
-      .catch(() => this.setState({ indexState: { ready: false, count: 0, sources: [] } }));
+    // The AI advisor's browser half: the reply stream, the renderer, voice
+    // and the tab's saved conversation. A conversation left in this tab (say,
+    // before opening a listing and coming back) is picked up where it was.
+    import('./lib/advisor-client.js').then(m => {
+      this.ADV = m;
+      const saved = m.loadThread();
+      if (saved && !this.state.aiThread.length) {
+        this.setState({
+          aiThread: saved.thread.map(x => (x.state === 'streaming' ? { ...x, state: 'stopped' } : x)),
+          aiTranscript: saved.transcript || null,
+          aiCriteria: saved.criteria || null
+        });
+      } else {
+        this.forceUpdate();
+      }
+    }).catch(() => {});
 
     import('./lib/supabase.js').then(async db => {
       this.db = db;
@@ -3316,34 +3704,6 @@ class Component extends DCLogic {
   scrollTop() {
     if (this.smoother) this.smoother.scrollTo(0, false);
     else window.scrollTo(0, 0);
-  }
-
-  // ── Flip ──────────────────────────────────────────────────────────
-  // Record where things are before a state change so they can glide to
-  // their new places instead of snapping.
-  flipCapture(selector) {
-    if (!window.Flip || this.reduced) return;
-    const els = this.q(selector);
-    if (!els.length) return;
-    // React rebuilds these nodes rather than moving them, so match on
-    // data-flip-id: without it Flip compares against detached elements
-    this._flipState = window.Flip.getState(els, { props: 'opacity' });
-  }
-
-  flipPlay() {
-    if (!this._flipState || !window.Flip) return false;
-    const state = this._flipState;
-    this._flipState = null;
-    window.gsap.killTweensOf(this.q('[data-anim="chip"], [data-anim="card"]'));
-    window.Flip.from(state, {
-      duration: 0.55,
-      ease: 'power2.inOut',
-      absolute: true,
-      stagger: 0.025,
-      onEnter: els => window.gsap.fromTo(els, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' }),
-      onLeave: els => window.gsap.to(els, { opacity: 0, scale: 0.92, duration: 0.28, ease: 'power2.in' })
-    });
-    return true;
   }
 
   placeOfIds(cityId, hoodId) {
@@ -5154,7 +5514,10 @@ class Component extends DCLogic {
             { label: ar ? 'الدعم' : 'Support', go: () => { window.location.href = 'mailto:support@akarat.ai'; } }
           ]
         }
-      ]
+      // The template shows a link as either an <a> (isLink) or a clickable
+      // span (notLink), and shows nothing when neither is set: every entry
+      // without an href was missing from the footer until this default.
+      ].map(col => ({ ...col, links: col.links.map(l => ({ isLink: false, notLink: true, ...l })) }))
     };
   }
 
@@ -5162,6 +5525,7 @@ class Component extends DCLogic {
   // menu can never drift apart.
   navTo(id, closeMenu) {
     const patch = closeMenu ? { menuOpen: false } : {};
+    this._aiReturn = null;
     if (id === 'sell') {
       // Selling starts with an account. Signed out, that means sign-up.
       if (!this.state.signedIn) {
@@ -5347,16 +5711,14 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     const s = this.state;
+    const turns = (s.aiThread || []).length;
     try {
       // a language switch rebuilds the headline into different spans, so it
       // needs the same replay a screen change gets
-      // Flip owns this frame when it runs: animateResults would otherwise
-      // fromTo the very chips and cards Flip is mid-tween on, and win.
-      const flipped = this.flipPlay();
       if (this._lastScreen !== s.screen || this._lastLang !== s.lang) this.animateScreen(true);
-      if (!flipped && this._lastResults !== s.results && s.results.length) this.animateResults();
-      // layout changed: re-measure the rails and let ScrollTrigger recalculate
-      if (this._lastScreen !== s.screen || this._lastResults !== s.results) {
+      // Layout changed: re-measure the rails and let ScrollTrigger recalculate.
+      // A new message in the advisor counts; each streamed word does not.
+      if (this._lastScreen !== s.screen || this._lastTurns !== turns) {
         requestAnimationFrame(() => {
           this.measureStickies();
           if (window.ScrollTrigger) window.ScrollTrigger.refresh();
@@ -5365,7 +5727,7 @@ class Component extends DCLogic {
     } finally {
       this._lastScreen = s.screen;
       this._lastLang = s.lang;
-      this._lastResults = s.results;
+      this._lastTurns = turns;
     }
     // Controls rendered by this update are not focusable until this runs, so
     // it has to happen on every update, not only on mount. It only ever
@@ -5658,26 +6020,6 @@ class Component extends DCLogic {
     ST.refresh();
   }
 
-  animateResults() {
-    const g = window.gsap;
-    if (!g || !this.root || this.reduced) return;
-    const cards0 = this.q('[data-anim="card"]');
-    const chips0 = this.q('[data-anim="chip"]');
-    if (document.hidden) {
-      // rAF will not run, so the callback below would never fire and results
-      // would sit invisible. Show them now.
-      if (cards0.length) g.set(cards0, { opacity: 1, y: 0 });
-      if (chips0.length) g.set(chips0, { opacity: 1, x: 0 });
-      return;
-    }
-    requestAnimationFrame(() => {
-      const cards = this.q('[data-anim="card"]');
-      if (cards.length) g.fromTo(cards, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.06, ease: 'power3.out' });
-      const chips = this.q('[data-anim="chip"]');
-      if (chips.length) g.fromTo(chips, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.34, stagger: 0.04, ease: 'power2.out' });
-    });
-  }
-
   /**
    * The one place the language changes. Persists the choice and mirrors it
    * onto <html>, so a reader who picks English is still reading English after
@@ -5773,87 +6115,579 @@ class Component extends DCLogic {
   }
 
   /**
-   * `fresh` decides whether this query refines the previous one or replaces
-   * it. Typing again in the box on the results screen is a refinement — that
-   * is what the "refine" placeholder promises. Anything else is a new search.
-   *
-   * Without this every query inherited the last one's constraints forever, so
-   * "apartment for rent in Sweifieh" quietly kept a 4-bedroom, 900k filter
-   * from a search two screens ago and returned nothing.
+   * The hero's search box, the area shortcuts and "find similar" all start
+   * here, and all of them go to the advisor. A query from anywhere but the
+   * advisor's own screen starts a new conversation, the way a new search
+   * always started from scratch.
    */
   submit(text, opts) {
-    const q = (text != null ? text : this.state.query).trim();
-    if (!q || !this.state.ready) return;
+    const q = String(text != null ? text : this.state.query).trim();
+    if (!q) return;
     const fresh = opts && opts.fresh != null ? opts.fresh : this.state.screen !== 'search';
-    const parsed = this.AI.parseQuery(q, fresh ? null : this.state.constraints);
-    this.setState({
-      screen: 'search', query: '', constraints: parsed.constraints,
-      turns: [...this.state.turns, { text: q }], lastParsed: parsed,
-      running: true, stageIdx: 0, stageInfo: {}, results: [], searched: true
+    this.setState({ query: '' });
+    this.aiSend(q, { fresh });
+  }
+
+  /* ── The AI advisor ────────────────────────────────────────────────────
+     One exchange: the message goes to /api/ai/advisor with the signed
+     transcript of the conversation so far, and the reply streams back as
+     events (text, progress, cards, sources, follow-ups). The reply is built
+     in a draft that reaches state at most every 70ms, so a fast stream
+     re-renders the page a dozen times a second rather than a hundred. */
+  async aiSend(raw, opts = {}) {
+    const text = String(raw || '').trim().slice(0, 2000);
+    if (!text || this.state.aiBusy) return;
+    if (!this.ADV) {
+      try { this.ADV = await import('./lib/advisor-client.js'); } catch (e) { return; }
+    }
+    if (this._voice && this._voice.listening) this._voice.abort();
+    const fresh = !!opts.fresh;
+    const leaving = this.state.screen !== 'search';
+    const stamp = Date.now().toString(36);
+    const id = 'a' + stamp;
+    let draft = {
+      id, role: 'assistant', state: 'streaming', status: 'thinking',
+      parts: [], steps: [], sources: [], followups: [], notices: [], error: null, redacted: null
+    };
+    const transcript = fresh ? null : this.state.aiTranscript;
+    this._aiReturn = null;
+    this.setState(st => ({
+      screen: 'search', menuOpen: false, detail: null, aiBusy: true, aiInput: '', aiNote: '',
+      aiThread: [...(fresh ? [] : st.aiThread), { id: 'u' + stamp, role: 'user', text }, draft],
+      ...(fresh ? { aiTranscript: null, aiCriteria: null, aiStepsOpen: {} } : {})
+    }), () => {
+      this.aiGrow();
+      if (leaving) this.scrollTop();
+      this.aiScroll(true);
     });
-    this.scrollTop();
-    this.runStages(parsed);
+
+    const ctl = new AbortController();
+    this._aiCtl = ctl;
+    let timer = null;
+    const flush = () => {
+      timer = null;
+      const snapshot = draft;
+      this.setState(st => ({ aiThread: st.aiThread.map(m => (m.id === id ? snapshot : m)) }), () => this.aiScroll(false));
+    };
+    const change = (fn, now) => {
+      draft = fn(draft);
+      if (now) { clearTimeout(timer); flush(); }
+      else if (!timer) timer = setTimeout(flush, 70);
+    };
+    const addText = d => change(m => {
+      const parts = m.parts.slice();
+      const last = parts[parts.length - 1];
+      if (last && last.k === 'text') parts[parts.length - 1] = { ...last, text: last.text + d };
+      else parts.push({ k: 'text', text: d });
+      return { ...m, parts, status: 'writing' };
+    });
+
+    const onEvent = ev => {
+      switch (ev.t) {
+        case 'status': {
+          if (ev.s === 'thinking') break;
+          const step = { s: String(ev.s), q: String(ev.q || ''), host: String(ev.host || '') };
+          change(m => {
+            const prev = m.steps[m.steps.length - 1];
+            const same = prev && prev.s === step.s && prev.q === step.q && prev.host === step.host;
+            return { ...m, status: step.s, steps: same ? m.steps : [...m.steps, step] };
+          }, true);
+          break;
+        }
+        case 'text':
+          addText(String(ev.d || ''));
+          break;
+        case 'source':
+          if (ev.s && /^https?:\/\//i.test(ev.s.url)) {
+            change(m => (m.sources.some(x => x.n === ev.s.n) ? m : { ...m, sources: [...m.sources, ev.s] }));
+          }
+          break;
+        case 'cite':
+          // Private-use markers the renderer turns into numbered links; the
+          // server strips that range from model text, so none can be forged.
+          if (Array.isArray(ev.n) && ev.n.length) addText('\ue000' + ev.n.join(',') + '\ue001');
+          break;
+        case 'cards':
+          if (Array.isArray(ev.items) && ev.items.length) {
+            change(m => ({ ...m, parts: [...m.parts, { k: 'cards', items: ev.items }] }), true);
+          }
+          break;
+        case 'compare':
+          change(m => ({ ...m, parts: [...m.parts, { k: 'compare', columns: ev.columns || [], rows: ev.rows || [] }] }), true);
+          break;
+        case 'criteria':
+          this.setState({ aiCriteria: ev.c || null });
+          break;
+        case 'followups':
+          change(m => ({ ...m, followups: (ev.items || []).slice(0, 4) }));
+          break;
+        case 'redact':
+          change(m => ({ ...m, parts: m.parts.filter(p => p.k !== 'text'), redacted: ev.reason === 'leak' ? 'leak' : 'refused', followups: [] }), true);
+          break;
+        case 'notice':
+          change(m => ({ ...m, notices: [...m.notices, { kind: ev.kind, lang: ev.lang || null }] }));
+          break;
+        case 'done':
+          this.setState({ aiTranscript: ev.transcript || null });
+          change(m => ({ ...m, state: 'done' }), true);
+          break;
+        case 'error':
+          change(m => ({ ...m, state: 'error', error: ev.code || 'unavailable' }), true);
+          break;
+        default:
+          break;
+      }
+    };
+
+    const result = await this.ADV.streamAdvisor({
+      message: text, lang: this.state.lang, transcript, signal: ctl.signal, onEvent
+    });
+    if (this._aiCtl === ctl) this._aiCtl = null;
+    if (result.ended === 'stopped') {
+      change(m => ({ ...m, state: 'stopped', notices: [...m.notices, { kind: 'stopped' }] }), true);
+    }
+    // The advisor could not answer at all. The page still holds the
+    // marketplace, so run the plain search over it and say that is what it is.
+    if (draft.state === 'error' && !draft.parts.length && AI_FALLBACK_ON.includes(draft.error)) {
+      const cards = this.aiBasicSearch(text);
+      if (cards.length) {
+        change(m => ({ ...m, parts: [{ k: 'cards', items: cards }], notices: [...m.notices, { kind: 'fallback' }] }), true);
+      }
+    }
+    clearTimeout(timer);
+    flush();
+    this.setState({ aiBusy: false }, () => this.aiPersist());
   }
 
-  runStages(parsed) {
-    const c = parsed.constraints;
-    const info = {};
-    // The trace is read by the person searching, so its values follow the
-    // interface language rather than staying in English.
+  aiStop() {
+    if (this._aiCtl) this._aiCtl.abort();
+  }
+
+  aiReset() {
+    if (this._aiCtl) this._aiCtl.abort();
+    if (this._voice) this._voice.abort();
+    this.setState({
+      aiThread: [], aiTranscript: null, aiCriteria: null, aiStepsOpen: {}, aiInput: '', aiNote: '', aiBusy: false
+    }, () => {
+      if (this.ADV) this.ADV.clearThread();
+      this.scrollTop();
+    });
+  }
+
+  // Sends the question behind a failed reply again, in place of both.
+  aiRetry(id) {
+    const t = this.state.aiThread;
+    const i = t.findIndex(m => m.id === id);
+    if (i < 1 || this.state.aiBusy || t[i - 1].role !== 'user') return;
+    const ask = t[i - 1].text;
+    this.setState({ aiThread: t.slice(0, i - 1) }, () => this.aiSend(ask));
+  }
+
+  aiPersist() {
+    if (!this.ADV) return;
+    const s = this.state;
+    if (!s.aiThread.length) { this.ADV.clearThread(); return; }
+    this.ADV.saveThread({ thread: s.aiThread, transcript: s.aiTranscript, criteria: s.aiCriteria });
+  }
+
+  // Removing a criterion is a message like any other, so the advisor sees it,
+  // searches again and says what changed.
+  aiDropCriterion(label) {
+    this.aiSend(this.state.lang === 'ar' ? `احذف هذا الشرط من البحث: ${label}` : `Remove this from my search: ${label}`);
+  }
+
+  /** The plain, rule-based search over the loaded marketplace: the advisor's fallback. */
+  aiBasicSearch(text) {
+    if (!this.AI || !this.M || !Array.isArray(this.state.market)) return [];
+    const c = this.AI.parseQuery(text, null).constraints;
+    if (!(c.deal || c.city || c.hood || c.type || c.budgetMax || c.beds != null)) return [];
+    return this.searchInternal(c)
+      .map(it => ({ it, score: this.AI.scoreListing(it, c) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map(({ it }) => this.aiCardOfRow(it.row));
+  }
+
+  // A listing row in the shape the advisor's own cards arrive in.
+  aiCardOfRow(row) {
+    const M = this.M;
+    const name = (list, id, lang) => { const x = id && list.find(e => e.id === id); return x ? x[lang] : ''; };
+    const where = lang => [name(M.NEIGHBORHOODS, row.neighborhood_id, lang), name(M.CITIES, row.city_id, lang)]
+      .filter(Boolean).join(lang === 'ar' ? '، ' : ', ');
+    const p = row.payload || {};
+    const stamp = row.updated_at || row.published_at || row.created_at;
+    return {
+      key: 'akarat:' + row.id, kind: 'akarat', id: row.id,
+      title: { en: row.title_en || row.title_ar || '', ar: row.title_ar || row.title_en || '' },
+      deal: row.deal, type: row.property_type, price: row.price_jod,
+      basis: row.deal === 'rent' ? 'month' : row.deal === 'daily' ? 'night' : 'total',
+      beds: row.bedrooms, baths: row.bathrooms, size: row.area_sqm, land: row.land_sqm,
+      location: { en: where('en'), ar: where('ar') }, verified: !!row.verified,
+      image: firstStill(p.images) || null,
+      photos: Array.isArray(p.images) ? p.images.length : 0,
+      listedDays: stamp ? Math.max(0, Math.floor((Date.now() - new Date(stamp).getTime()) / 86400000)) : 0,
+      why: ''
+    };
+  }
+
+  aiHref(card) {
+    if (card.kind === 'akarat') return `/${this.state.lang}/property/${encodeURIComponent(card.id)}`;
+    return /^https?:\/\//i.test(card.url || '') ? card.url : '#';
+  }
+
+  /**
+   * An Akarat.ai card opens the listing here, and "back" returns to the
+   * conversation where it was. A modified click (new tab, new window) is left
+   * to the browser, which follows the card's real link. Outside listings are
+   * plain links to the source, in a new tab.
+   */
+  async aiOpen(card, e) {
+    if (card.kind !== 'akarat') return;
+    if (e && (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1)) return;
+    if (e) e.preventDefault();
+    let row = (this.state.market || []).find(r => r.id === card.id);
+    if (!row) {
+      try {
+        const db = this.db || (this.db = await import('./lib/supabase.js'));
+        row = await db.getPropertyById(card.id);
+      } catch (err) { row = null; }
+    }
+    if (!row) { window.location.href = this.aiHref(card); return; }
+    this._aiReturn = { y: this.smoother ? this.smoother.scrollTop() : window.scrollY };
+    this.openListing(row);
+  }
+
+  async aiShare(card) {
     const ar = this.state.lang === 'ar';
-    const T = ar ? {
-      lang: 'عربي · من اليمين', constraint: 'شرط', constraints: 'شروط',
-      unset: 'غير محدد', found: 'نتيجة في منصتنا', skipped: 'تم تخطيه',
-      unavailable: 'الفهرس غير متاح', indexed: 'من الفهرس', empty: 'الفهرس فارغ',
-      normalised: 'تم توحيدها', grouped: 'مجموعة مكررة', noGroups: 'لا تكرار',
-      ranked: 'نتيجة مرتبة'
-    } : {
-      lang: 'en · ltr', constraint: 'constraint', constraints: 'constraints',
-      unset: 'unset', found: 'found', skipped: 'skipped',
-      unavailable: 'index unavailable', indexed: 'indexed', empty: 'index empty',
-      normalised: 'normalised', grouped: 'grouped', noGroups: '0 grouped',
-      ranked: 'ranked'
-    };
-    const steps = [
-      () => { info.lang = parsed.lang === 'ar' ? (ar ? T.lang : 'ar · rtl') : (ar ? 'إنجليزي · من اليسار' : T.lang); },
-      () => {
-        const n = Object.keys(c).filter(k => this.isSet(c[k])).length;
-        info.parse = `${n} ${n === 1 ? T.constraint : T.constraints}`;
-      },
-      () => {
-        const h = this.hoodOf(c.hood), ct = this.cityOf(c.city);
-        const hit = h || ct;
-        info.loc = hit ? `${this.loc(hit)} → ${hit.id}` : T.unset;
-      },
-      () => { this._int = this.searchInternal(c); info.int = `${this._int.length} ${T.found}`; },
-      // the crawler's index, read straight from Postgres: no third-party
-      // request happens while someone is waiting for results
-      async () => {
-        this._ext = [];
-        if (c.internalOnly) { info.ext = T.skipped; return; }
-        if (!this.db) { info.ext = T.unavailable; return; }
-        this._ext = await this.db.searchExternalIndex(c);
-        info.ext = this._ext.length ? `${this._ext.length} ${T.indexed}` : T.empty;
-      },
-      () => { info.norm = `${this._ext.length} ${T.normalised}`; },
-      () => {
-        const groups = this._ext.filter(x => x.sourceCount > 1).length;
-        info.dedup = groups ? `${groups} ${T.grouped}` : T.noGroups;
-      },
-      () => { info.rank = `${this._int.length + this._ext.length} ${T.ranked}`; }
-    ];
-    let i = 0;
-    const tick = async () => {
-      if (i >= steps.length) { this.finish(parsed); return; }
-      try { await steps[i](); } catch (e) { /* a stage failing must not stall the run */ }
-      this.setState({ stageIdx: i, stageInfo: { ...info } });
-      i++;
-      this._timer = setTimeout(tick, 230);
-    };
-    tick();
+    const url = card.kind === 'akarat' ? `${location.origin}${this.aiHref(card)}` : card.url;
+    if (!/^https?:\/\//i.test(url || '')) return;
+    const title = card.kind === 'akarat' ? ((ar ? card.title.ar : card.title.en) || '') : card.title;
+    // The share sheet is what a phone expects; on a desktop it is a clumsy
+    // system dialog, and copying the link is what people want there.
+    const touch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    try {
+      if (touch && navigator.share) { await navigator.share({ title, url }); return; }
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+    }
+    this.copyText(url, 'aiCopied');
   }
 
-  isSet(v) { return v !== null && v !== false && !(Array.isArray(v) && !v.length); }
+  /* ── Voice ── */
+  aiMicToggle() {
+    const AT = AI_TEXT[this.state.lang === 'ar' ? 'ar' : 'en'];
+    if (!this.ADV) return;
+    if (!this.ADV.voiceSupported()) { this.aiNotify(AT.voice.unsupported); return; }
+    if (this._voice && this._voice.listening) { this._voice.stop(); return; }
+    if (!this._voice) {
+      const join = t => [this._voiceBase, t].filter(Boolean).join(' ').trim();
+      this._voice = this.ADV.createVoice({
+        onState: st => this.setState({ aiMic: st }),
+        onInterim: t => this.setState({ aiInput: join(t) }, () => this.aiGrow()),
+        onFinal: t => {
+          this.setState({ aiInput: join(t) }, () => { this.aiGrow(); if (this._aiTa) this._aiTa.focus(); });
+          this.aiNotify(AI_TEXT[this.state.lang === 'ar' ? 'ar' : 'en'].review);
+        },
+        onError: code => {
+          const V = AI_TEXT[this.state.lang === 'ar' ? 'ar' : 'en'].voice;
+          this.setState({ aiMic: 'idle' });
+          this.aiNotify(V[code] || V.other);
+        }
+      });
+    }
+    // Speech is added to whatever was already typed, never instead of it.
+    this._voiceBase = this.state.aiInput.trim();
+    this.setState({ aiNote: '' });
+    this._voice.start(this.state.aiMicLang || this.state.lang);
+  }
+
+  aiNotify(text) {
+    clearTimeout(this._aiNoteT);
+    this.setState({ aiNote: text });
+    this._aiNoteT = setTimeout(() => this.setState({ aiNote: '' }), 6500);
+  }
+
+  // The composer grows with what is typed, up to its maximum, then scrolls.
+  aiGrow() {
+    const el = this._aiTa;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight + 2, el.closest('[data-aidock]') ? 160 : 200) + 'px';
+  }
+
+  // Follows the reply while the visitor is at the bottom of the thread; once
+  // they scroll up to read, they are left where they are.
+  aiScroll(force) {
+    const end = this._aiEnd;
+    if (!end || this.state.screen !== 'search') return;
+    requestAnimationFrame(() => {
+      const r = end.getBoundingClientRect();
+      if (!force && r.top - window.innerHeight > 320) return;
+      if (this.smoother) this.smoother.scrollTo(end, !!force && !this.reduced, 'bottom bottom');
+      else end.scrollIntoView({ block: 'end', behavior: force && !this.reduced ? 'smooth' : 'auto' });
+    });
+  }
+
+  // Dates arrive as ISO stamps (pages read) or as a site's own wording
+  // ("October 25, 2026", "3 days ago"). Anything that parses is shown short
+  // and in the reader's language; anything else as the site wrote it.
+  aiDate(d, ar) {
+    if (!d) return '';
+    const t = new Date(d);
+    if (!isNaN(t) && t.getFullYear() > 2000) {
+      return t.toLocaleDateString(ar ? 'ar-JO' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    return String(d).slice(0, 40);
+  }
+
+  aiVals(ar) {
+    const s = this.state;
+    const AT = AI_TEXT[ar ? 'ar' : 'en'];
+    const thread = s.aiThread || [];
+    const lastAssistant = [...thread].reverse().find(m => m.role === 'assistant');
+    const micLang = s.aiMicLang || s.lang;
+    const listening = s.aiMic === 'listening';
+    const canSend = !!s.aiInput.trim() && !s.aiBusy;
+    const docked = s.screen === 'search' && thread.length > 0;
+
+    // What the advisor last searched for, as removable chips.
+    const chips = [];
+    const c = s.aiCriteria;
+    if (c && this.M) {
+      const M = this.M;
+      const nm = (list, id) => { const x = list.find(e => e.id === id); return x ? x[ar ? 'ar' : 'en'] : String(id); };
+      const n = v => Number(v).toLocaleString('en-US');
+      const add = label => chips.push({ label, remove: () => this.aiDropCriterion(label), removeLabel: AT.removeCriterion(label) });
+      if (c.deal && c.deal !== 'any') add(AT.deal[c.deal] || c.deal);
+      (c.property_types || []).forEach(t => add(nm(M.TYPES, t)));
+      if (c.areas && c.areas.length) c.areas.forEach(a => add(nm(M.NEIGHBORHOODS, a)));
+      else if (c.city) add(nm(M.CITIES, c.city));
+      if (c.budget_min_jod) add(`≥ ${n(c.budget_min_jod)} ${AT.jod}`);
+      if (c.budget_max_jod) add(`≤ ${n(c.budget_max_jod)} ${AT.jod}`);
+      if (c.bedrooms_min != null) add(AT.bedsMin(c.bedrooms_min));
+      if (c.bathrooms_min != null) add(AT.bathsMin(c.bathrooms_min));
+      if (c.size_min_sqm) add(`${n(c.size_min_sqm)}+ m²`);
+      (c.amenities || []).forEach(a => add(nm(M.AMENITIES, a)));
+    }
+
+    return {
+      aiEmpty: !thread.length,
+      aiHasThread: thread.length > 0,
+      aiDock: docked,
+      showFooter: !docked,
+      aiInput: s.aiInput,
+      aiTaRef: el => { this._aiTa = el; },
+      aiEndRef: el => { this._aiEnd = el; },
+      onAiInput: e => { this.setState({ aiInput: e.target.value }); this.aiGrow(); },
+      onAiKey: e => {
+        if (e.key !== 'Enter' || e.shiftKey || (e.nativeEvent && e.nativeEvent.isComposing)) return;
+        e.preventDefault();
+        if (!this.state.aiBusy) this.aiSend(e.target.value);
+      },
+      aiSendOrStop: () => (this.state.aiBusy ? this.aiStop() : this.aiSend(this.state.aiInput)),
+      aiSendLabel: s.aiBusy ? AT.stop : AT.send,
+      aiSendIcon: s.aiBusy ? 'assets/icons/stop.svg' : 'assets/icons/send.svg',
+      aiSendBg: s.aiBusy ? '#17170F' : canSend ? '#007A3D' : 'rgba(23,23,15,0.2)',
+      aiSendHover: s.aiBusy || canSend ? '#CE1126' : 'rgba(23,23,15,0.2)',
+      aiComposerEdge: listening ? 'rgba(206,17,38,0.45)' : 'rgba(23,23,15,0.12)',
+      aiMicShown: !!(this.ADV && this.ADV.voiceSupported()),
+      aiMicToggle: () => this.aiMicToggle(),
+      aiMicLabel: listening ? AT.micStop : AT.mic,
+      aiMicEdge: listening ? '#CE1126' : 'rgba(23,23,15,0.14)',
+      aiMicBg: listening ? '#CE1126' : '#FFFFFF',
+      aiMicFg: listening ? '#FFFFFF' : 'rgba(23,23,15,0.72)',
+      aiMicAnim: listening ? 'akMicPulse 1.4s infinite' : 'none',
+      aiMicLangToggle: () => this.setState({ aiMicLang: micLang === 'ar' ? 'en' : 'ar' }),
+      aiMicLangShort: micLang === 'ar' ? 'عربي' : 'EN',
+      aiMicLangLabel: AT.micLang(micLang),
+      aiHint: listening ? AT.listening : s.aiNote,
+      aiHintFg: listening ? '#B00F20' : 'rgba(23,23,15,0.55)',
+      aiHasNote: listening || !!s.aiNote,
+      aiNote: listening ? AT.listening : s.aiNote,
+      aiCopied: !!s.aiCopied,
+      aiNewChat: () => this.aiReset(),
+      aiPrompts: AT.prompts.map((p, i) => ({
+        label: p.text,
+        dir: /[؀-ۿ]/.test(p.text) ? 'rtl' : 'ltr',
+        icon: `assets/icons/${p.icon}.svg`,
+        tint: ['rgba(0,122,61,0.1)', 'rgba(180,120,20,0.13)', 'rgba(23,23,15,0.07)', 'rgba(206,17,38,0.08)'][i % 4],
+        ink: ['#007A3D', '#8A5A12', '#17170F', '#B00F20'][i % 4],
+        go: () => this.aiSend(p.text, { fresh: true })
+      })),
+      aiMessages: thread.map(m => this.aiMessageVals(m, ar, m === lastAssistant)),
+      aiHasCriteria: docked && chips.length > 0,
+      aiChips: chips,
+      aiCriteriaOpen: !!s.aiCriteriaOpen,
+      aiCriteriaClosed: !s.aiCriteriaOpen,
+      aiCriteriaLine: chips.map(x => x.label).join(' · '),
+      aiCriteriaToggle: () => this.setState({ aiCriteriaOpen: !this.state.aiCriteriaOpen }),
+      aiCriteriaToggleText: s.aiCriteriaOpen ? AT.hide : AT.criteria(chips.length),
+      aiCriteriaToggleLabel: s.aiCriteriaOpen ? AT.hideCriteria : AT.showCriteria,
+      aiCriteriaChevron: s.aiCriteriaOpen ? 'rotate(-90deg)' : 'rotate(90deg)'
+    };
+  }
+
+  aiMessageVals(m, ar, isLast) {
+    if (m.role === 'user') return { isUser: true, isAssistant: false, text: m.text };
+    const s = this.state;
+    const AT = AI_TEXT[ar ? 'ar' : 'en'];
+    const working = m.state === 'streaming';
+    // Links in the reply text may only point at the reply's own sources and
+    // listings (and this site): see renderReply in lib/advisor-client.js.
+    const hosts = [...new Set([
+      ...m.sources.map(x => x.host),
+      ...m.parts.flatMap(p => (p.k === 'cards' ? p.items.filter(c => c.kind === 'external' && c.source).map(c => c.source.host) : []))
+    ].filter(Boolean))];
+    const parts = m.parts.map((p, i) => {
+      if (p.k === 'text') {
+        return {
+          isText: true, isCards: false, isCompare: false,
+          streaming: working && i === m.parts.length - 1,
+          mdRef: el => { if (el && this.ADV) this.ADV.renderReply(el, p.text, { sources: m.sources, hosts, citeLabel: AT.source }); }
+        };
+      }
+      if (p.k === 'cards') return { isText: false, isCards: true, isCompare: false, cards: p.items.map(c => this.aiCardVals(c, ar)) };
+      return { isText: false, isCards: false, isCompare: true, ...this.aiCompareVals(p, ar) };
+    });
+    const open = !!(s.aiStepsOpen || {})[m.id];
+    const last = m.steps[m.steps.length - 1];
+    const noticeText = n => {
+      if (n.kind === 'disclaimer') {
+        const l = n.lang === 'ar' || (!n.lang && ar) ? 'ar' : 'en';
+        return { text: AI_TEXT[l].disclaimer, dir: l === 'ar' ? 'rtl' : 'ltr' };
+      }
+      return { text: AT.notice[n.kind] || '', dir: ar ? 'rtl' : 'ltr' };
+    };
+    return {
+      isUser: false, isAssistant: true, busy: working,
+      isWorking: working,
+      statusText: m.status === 'writing' ? AT.writing : last && m.status === last.s ? AT.doing(last) : AT.thinking,
+      hasSummary: !working && m.steps.length > 0,
+      summary: AT.summary(m.steps),
+      stepsOpen: open && m.steps.length > 0,
+      chevron: open ? 'rotate(-90deg)' : 'rotate(90deg)',
+      toggleSteps: () => this.setState(st => ({ aiStepsOpen: { ...st.aiStepsOpen, [m.id]: !st.aiStepsOpen[m.id] } })),
+      steps: m.steps.map(st => ({ text: AT.did(st), icon: AI_STEP_ICON[st.s] || 'assets/icons/sparkle.svg' })),
+      parts,
+      isRedacted: !!m.redacted,
+      redactedText: m.redacted === 'leak' ? AT.leak : AT.refused,
+      // What a reply is (a fallback, a fresh start) is said before it; how it
+      // ended (a disclaimer, a stop, a cut-off) after it.
+      leadNotices: m.notices.filter(n => AI_LEAD_NOTICES.includes(n.kind)).map(noticeText).filter(n => n.text),
+      notices: m.notices.filter(n => !AI_LEAD_NOTICES.includes(n.kind)).map(noticeText).filter(n => n.text),
+      hasSources: m.sources.length > 0,
+      sources: m.sources.map(x => ({
+        n: x.n, url: x.url, title: x.title || x.host,
+        meta: [x.host, this.aiDate(x.date, ar)].filter(Boolean).join(' · ')
+      })),
+      hasError: m.state === 'error' && !!m.error,
+      errorText: AT.error(m.error, !!s.signedIn),
+      canRetry: m.state === 'error' && AI_RETRYABLE.includes(m.error) && isLast && !s.aiBusy,
+      retry: () => this.aiRetry(m.id),
+      hasFollowups: isLast && !working && m.followups.length > 0 && !m.redacted,
+      followups: m.followups.map(f => ({ label: f, go: () => this.aiSend(f) }))
+    };
+  }
+
+  aiCardVals(c, ar) {
+    const AT = AI_TEXT[ar ? 'ar' : 'en'];
+    const ak = c.kind === 'akarat';
+    const n = v => Number(v).toLocaleString('en-US');
+    const source = ak ? null : (c.source || { name: '', nameAr: '', host: '' });
+    const sourceName = source ? ((ar ? source.nameAr : source.name) || source.host) : 'Akarat.ai';
+    const title = ak ? ((ar ? c.title.ar : c.title.en) || c.title.en || c.title.ar || '') : (c.title || sourceName);
+    const location = ak ? ((ar ? c.location.ar : c.location.en) || '') : (c.location || '');
+    const hasPrice = c.price != null && isFinite(Number(c.price));
+    const savedKey = ak ? c.id : c.key;
+    const saved = (this.state.savedIds || []).includes(savedKey);
+    const facts = [];
+    if (c.beds != null) facts.push({ icon: 'assets/icons/bed.svg', v: String(c.beds), label: AT.beds });
+    if (c.baths != null) facts.push({ icon: 'assets/icons/bath.svg', v: String(c.baths), label: AT.baths });
+    if (c.size) facts.push({ icon: 'assets/icons/area.svg', v: `${n(c.size)} m²`, label: AT.size });
+    if (ak && c.land) facts.push({ icon: 'assets/icons/land.svg', v: `${n(c.land)} m²`, label: AT.land });
+    const type = ak && this.M ? this.M.TYPES.find(t => t.id === c.type) : null;
+    if (type) facts.push({ icon: 'assets/icons/type.svg', v: type[ar ? 'ar' : 'en'], label: AT.type });
+    const deal = ak ? c.deal : c.basis === 'month' ? 'rent' : c.basis === 'night' ? 'daily' : c.basis === 'total' ? 'sale' : '';
+    return {
+      key: c.key, isExternal: !ak,
+      title, location, hasLocation: !!location,
+      price: hasPrice ? `${n(c.price)} ${AT.jod}` : AT.priceOn(sourceName),
+      priceSize: hasPrice ? '20px' : '15px',
+      priceFg: hasPrice ? '#17170F' : 'rgba(23,23,15,0.62)',
+      basis: hasPrice ? (AT.basis[c.basis] || '') : '',
+      facts, hasFacts: facts.length > 0,
+      why: c.why || '', hasWhy: !!c.why, whyLabel: AT.why,
+      hasImage: ak && !!c.image, noImage: !(ak && c.image),
+      imgRef: el => { if (el && c.image && el.getAttribute('src') !== c.image) el.src = c.image; },
+      // Photos are ours to show; another site's are not, so its card gets a
+      // slim band naming the site instead of an empty frame.
+      mediaRatio: ak ? '16 / 9' : '16 / 4',
+      mediaBg: ak ? '#EDE7D9' : 'linear-gradient(135deg, #F2EDE2 0%, #E5DDCC 100%)',
+      placeholderIcon: ak ? 'assets/icons/grid.svg' : 'assets/icons/globe.svg',
+      placeholderTitle: ak ? AT.noPhotos : source.host,
+      placeholderSub: ak ? '' : AT.externalListing,
+      badge: ak ? (c.verified ? AT.verifiedOn : 'Akarat.ai') : sourceName,
+      verified: ak && !!c.verified,
+      badgeBg: ak ? 'rgba(0,105,58,0.92)' : 'rgba(23,23,15,0.78)',
+      badgeFg: '#FFFFFF',
+      hasDeal: !!AT.deal[deal],
+      dealLabel: AT.deal[deal] || '',
+      note: ak ? '' : (c.checked ? AT.extChecked(sourceName) : AT.extUnchecked(sourceName)),
+      hasNote: !ak,
+      age: ak ? AT.updated(c.listedDays) : (c.seen ? AT.seen(this.aiDate(c.seen, ar)) : ''),
+      hasAge: ak || !!c.seen,
+      ageLead: location ? ' · ' : '',
+      hasMeta: !!location || ak || !!c.seen,
+      href: this.aiHref(c), target: ak ? '_self' : '_blank',
+      open: e => this.aiOpen(c, e),
+      openAria: AT.openAria(title),
+      openLabel: ak ? AT.view : AT.viewOn(sourceName),
+      ctaBg: ak ? '#007A3D' : '#FFFFFF',
+      ctaFg: ak ? '#FFFFFF' : '#17170F',
+      ctaEdge: ak ? '#007A3D' : 'rgba(23,23,15,0.2)',
+      ctaHover: ak ? '#CE1126' : 'rgba(23,23,15,0.05)',
+      ctaHoverFg: ak ? '#FFFFFF' : '#17170F',
+      saved, saveLabel: saved ? AT.saved : AT.save,
+      saveEdge: saved ? 'rgba(206,17,38,0.4)' : 'rgba(23,23,15,0.12)',
+      saveBg: saved ? 'rgba(206,17,38,0.08)' : '#FFFFFF',
+      saveFg: saved ? '#CE1126' : 'rgba(23,23,15,0.7)',
+      toggleSave: () => this.toggleSaved(savedKey),
+      share: () => this.aiShare(c),
+      shareLabel: AT.share
+    };
+  }
+
+  aiCompareVals(p, ar) {
+    const AT = AI_TEXT[ar ? 'ar' : 'en'];
+    const n = v => Number(v).toLocaleString('en-US');
+    const cols = (p.columns || []).map(c => ({ title: c.title || '', source: c.source || '' }));
+    const basis = ((p.rows || []).find(r => r.k === 'basis') || {}).v || [];
+    const typeName = id => { const t = this.M && this.M.TYPES.find(x => x.id === id); return t ? t[ar ? 'ar' : 'en'] : id; };
+    const show = (k, v, i) => {
+      if (v == null || v === '') return '—';
+      switch (k) {
+        case 'price': return `${n(v)} ${AT.jod}${basis[i] && AT.basis[basis[i]] ? ' ' + AT.basis[basis[i]] : ''}`;
+        case 'per_sqm': return `${n(v)} ${AT.jod}/m²`;
+        case 'size': case 'land': return `${n(v)} m²`;
+        case 'type': return typeName(v);
+        case 'verified': return v === true ? '✓' : v === false ? '—' : '—';
+        case 'age': return AT.days(v);
+        default: return String(v);
+      }
+    };
+    const cells = [];
+    for (const r of p.rows || []) {
+      if (r.k === 'basis' || !Array.isArray(r.v) || r.v.every(v => v == null || v === '')) continue;
+      cells.push({ role: 'rowheader', v: AT.rows[r.k] || r.k, size: '12.5px', weight: 400, fg: 'rgba(23,23,15,0.58)' });
+      r.v.forEach((v, i) => cells.push({ role: 'cell', v: show(r.k, v, i), size: '13.5px', weight: r.k === 'price' ? 500 : 300, fg: '#17170F' }));
+    }
+    return {
+      cols, cells,
+      gridCols: `minmax(118px, 0.8fr) repeat(${cols.length || 1}, minmax(150px, 1fr))`,
+      minWidth: `${118 + 150 * (cols.length || 1)}px`,
+      caption: AT.compareCaption
+    };
+  }
 
   // A Supabase listing row in the shape the ranker and the result card read.
   // The stored row keeps database column names; everything downstream of the
@@ -5910,37 +6744,12 @@ class Component extends DCLogic {
     });
   }
 
-  finish(parsed) {
-    const c = parsed.constraints;
-    // One ranking over both sets. Same weights, same arithmetic: an indexed
-    // listing is not privileged or penalised for being external, it simply
-    // carries less data and so tends to score lower on its own merits.
-    const scored = this._int.concat(this._ext || [])
-      .map(it => ({ it, score: this.AI.scoreListing(it, c) }))
-      .sort((a, b) => b.score - a.score);
-    this.setState({
-      running: false, results: scored, stageIdx: STAGE_DEFS.length,
-      indexedCount: (this._ext || []).length
-    });
-  }
-
-  rescore() {
-    const c = this.state.constraints;
-    if (!c) return;
-    // editing a chip re-ranks what is already retrieved rather than re-querying
-    const pool = this.searchInternal(c).concat(
-      (this.state.results || []).map(r => r.it).filter(it => it && it.source)
-    );
-    const scored = pool
-      .map(it => ({ it, score: this.AI.scoreListing(it, c) }))
-      .sort((a, b) => b.score - a.score);
-    this.setState({ results: scored });
-  }
-
   renderVals() {
     const s = this.state, L = this.L(), ar = s.lang === 'ar';
     const empty = [];
     const onHero = s.screen === 'home' && !s.scrolled;
+    // The advisor's composer is docked to the bottom of the screen.
+    const aiDocked = s.screen === 'search' && (s.aiThread || []).length > 0;
 
     const base = {
       dir: ar ? 'rtl' : 'ltr',
@@ -6119,7 +6928,7 @@ class Component extends DCLogic {
       // ── morph state.
       // (fabDisplay is handled in CSS so the pill only exists on small screens) Closed it is a pill; open it grows and a dark disc
       // rises from beneath, which is what gives the liquid feel.
-      fabW: s.menuOpen ? '300px' : '150px',
+      fabW: s.menuOpen ? '300px' : aiDocked ? '48px' : '150px',
       fabH: s.menuOpen ? '392px' : '48px',
       fabHDur: s.menuOpen ? '800ms' : '150ms',
       fabRadius: s.menuOpen ? '32px' : '72px',
@@ -6134,12 +6943,12 @@ class Component extends DCLogic {
       ctaOpacity: s.menuOpen ? 1 : 0,
       ctaDelay: s.menuOpen ? '720ms' : '0ms',
       ctaDelay2: s.menuOpen ? '780ms' : '0ms',
-      barPad: s.menuOpen ? '24px' : '20px',
+      barPad: s.menuOpen ? '24px' : aiDocked ? '12px' : '20px',
       barPadBottom: s.menuOpen ? '24px' : '0px',
       barFg: s.menuOpen ? '#F7F2E7' : '#FFFFFF',
       bar1: s.menuOpen ? 'rotate(45deg)' : 'translateY(-3px)',
       bar2: s.menuOpen ? 'rotate(-45deg)' : 'translateY(3px)',
-      menuLabel: L.menu,
+      menuLabel: aiDocked && !s.menuOpen ? '' : L.menu,
       fabItems: [
         { id: 'buy', label: L.buy }, { id: 'rent', label: L.rent }, { id: 'daily', label: L.daily },
         { id: 'sell', label: L.sell }, { id: 'ai', label: L.aiSearch }
@@ -6178,7 +6987,7 @@ class Component extends DCLogic {
       onQuery: e => this.setState({ query: e.target.value }),
       onQueryKey: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.submit(); } },
       runSearch: () => this.submit(),
-      resetSearch: () => this.setState({ constraints: null, turns: [], results: [], expanded: {}, lastParsed: null, searched: false }),
+      ...this.aiVals(ar),
       nav: [
         { id: 'buy', label: L.buy }, { id: 'rent', label: L.rent }, { id: 'daily', label: L.daily },
         { id: 'sell', label: L.sell }, { id: 'ai', label: L.aiSearch }
@@ -6206,8 +7015,7 @@ class Component extends DCLogic {
     };
 
     if (!s.ready) {
-      return { ...base, featured: empty, areas: empty, examples: empty, chips: empty, stages: empty,
-        results: empty, sources: empty, sideNav: empty, rows: empty, tableHead: empty, panels: empty,
+      return { ...base, featured: empty, areas: empty, examples: empty, sideNav: empty, rows: empty, tableHead: empty, panels: empty,
         noRows: false, rowsEmptyLabel: '', hasRowsError: false, rowsError: '',
         dbDotLabel: '', dbDotColor: 'rgba(23,23,15,0.25)', dbDotRing: 'transparent',
         showConnected: false, lblConnected: '', connectedHint: '', connectedRows: empty,
@@ -6223,10 +7031,7 @@ class Component extends DCLogic {
         customAddLabel: '', customPlaceholder: '', customAdd: '',
         openCustom: () => {}, onCustomText: () => {}, onCustomKey: () => {}, addCustom: () => {},
         steps: empty, vocab: empty, vocabChips: empty, pledges: empty, ownerSteps: empty,
-        clarifyActions: empty, hasTurns: false, hasResults: false, hasConstraints: false, noBrief: true,
-        running: false, hasMissing: false, idle: true, noResults: false, showExternalGap: false,
-        externalSearches: empty,
-        langNote: '', clarify: '', resultSummary: '', dashUser: '',
+        dashUser: '',
         marketKicker: '', marketHeading: '', isBrowse: false, hasFeatured: false,
         browseCards: empty, hasBrowse: false, browseEmpty: false,
         browseKicker: '', browseTitle: '', browseBody: '',
@@ -6394,133 +7199,6 @@ class Component extends DCLogic {
       'Furnished 2-bedroom to rent in Sweifieh'
     ]).map(x => ({ label: x, go: () => this.setState({ query: x }, () => this.submit(null, { fresh: true })) }));
 
-    const c = s.constraints;
-    const chips = [];
-    if (c) {
-      const set = (f, v) => () => { this.flipCapture('[data-anim="chip"], [data-anim="card"]'); this.setState({ constraints: { ...c, [f]: v } }, () => this.rescore()); };
-      // fid: a stable identity so Flip can match a chip across a re-render,
-      // which React performs by rebuilding the nodes rather than moving them
-      const K = (k, v, remove) => chips.push({ key: k, value: v, remove, fid: 'chip-' + k + '-' + v });
-      if (c.deal) K(ar ? 'العملية' : 'Deal', c.deal === 'rent' ? (ar ? 'إيجار' : 'Rent') : (ar ? 'شراء' : 'Buy'), set('deal', null));
-      if (c.hood) K(ar ? 'المنطقة' : 'Area', this.loc(this.hoodOf(c.hood)), set('hood', null));
-      if (c.city) K(ar ? 'المدينة' : 'City', this.loc(this.cityOf(c.city)), set('city', null));
-      if (c.type) K(ar ? 'النوع' : 'Type', this.loc(this.typeOf(c.type)), set('type', null));
-      if (c.budgetMax) K(ar ? 'أعلى سعر' : 'Max budget', this.money(c.budgetMax), set('budgetMax', null));
-      if (c.budgetMin) K(ar ? 'أقل سعر' : 'Min budget', this.money(c.budgetMin), set('budgetMin', null));
-      if (c.beds != null) K(ar ? 'غرف النوم' : 'Bedrooms', `${c.beds}+`, set('beds', null));
-      if (c.baths != null) K(ar ? 'الحمامات' : 'Bathrooms', `${c.baths}+`, set('baths', null));
-      if (c.areaMin) K(ar ? 'المساحة' : 'Area', `${c.areaMin}+ m²`, set('areaMin', null));
-      c.amenities.forEach(a => {
-        const am = M.AMENITIES.find(x => x.id === a);
-        K(ar ? 'ميزة' : 'Amenity', am ? this.loc(am) : a,
-          () => { this.flipCapture('[data-anim="chip"], [data-anim="card"]'); this.setState({ constraints: { ...c, amenities: c.amenities.filter(y => y !== a) } }, () => this.rescore()); });
-      });
-      c.styles.forEach(st => K(ar ? 'تفضيل' : 'Preference', st,
-        () => { this.flipCapture('[data-anim="chip"], [data-anim="card"]'); this.setState({ constraints: { ...c, styles: c.styles.filter(y => y !== st) } }, () => this.rescore()); }));
-      if (c.internalOnly) K(ar ? 'النطاق' : 'Scope', ar ? 'منصتنا فقط' : 'Marketplace only', set('internalOnly', false));
-    }
-
-    const missing = (s.lastParsed && s.lastParsed.missing) || [];
-    const needsDeal = missing.indexOf('deal') >= 0 && !s.running;
-
-    const stages = STAGE_DEFS.map((st, i) => ({
-      label: ar ? st.ar : st.en,
-      detail: s.stageInfo[st.id] || (s.searched ? '' : 'ready'),
-      opacity: !s.searched ? 0.42 : i <= s.stageIdx ? 1 : 0.34,
-      dot: !s.searched ? 'rgba(23,23,15,0.18)' : i < s.stageIdx ? GREEN_L : i === s.stageIdx ? RED_L : 'rgba(23,23,15,0.2)',
-      color: !s.searched ? MUTED : i <= s.stageIdx ? '#17170F' : MUTED
-    }));
-
-    const results = s.results.map(({ it, score }) => {
-      const reasons = this.AI.explain(it, c || {}, (n, d) => this.money(n, d), s.lang).map(r => ({
-        text: r.text,
-        color: r.kind === 'bad' ? 'rgba(23,23,15,0.5)' : r.kind === 'warn' ? '#7A5418' : 'rgba(23,23,15,0.86)',
-        dot: r.kind === 'good' ? GREEN_L : r.kind === 'warn' ? RED_L : 'rgba(23,23,15,0.26)'
-      }));
-      const active = s.hoverId === it.id;
-      // an indexed listing from the crawler carries `source`; ours does not
-      const ext = !!it.source;
-      const multi = ext && it.sourceCount > 1;
-      return {
-        fid: 'card-' + it.id,
-        hasCover: !ext && !!firstStill(it.images),
-        coverRef: el => {
-          const u = firstStill(it.images);
-          if (el && u && el.getAttribute('src') !== u) el.src = u;
-        },
-        imgLabel: ext
-          ? 'source image'
-          : (it.images && it.images.length
-            ? `${it.images.length} ${ar ? 'ملف' : it.images.length === 1 ? 'file' : 'files'}`
-            : (ar ? 'بلا صور' : 'no photos')),
-        srcLabel: ext
-          ? (multi
-            ? (ar ? `${it.sourceCount} مصادر` : `Found on ${it.sourceCount} sources`)
-            : it.source)
-          : (ar ? 'منصتنا' : 'Our marketplace'),
-        srcBg: ext ? 'rgba(23,23,15,0.72)' : 'rgba(0,122,61,0.85)',
-        verified: !ext && !!it.verified,
-        title: (ar && it.ar) ? it.ar : it.en,
-        place: this.placeOf(it) || (ar ? 'الموقع غير محدد' : 'Location not provided'),
-        price: this.money(it.price, it.deal),
-        score: `${score}% ${ar ? 'تطابق' : 'match'}`,
-        scoreBg: score >= 90 ? 'rgba(0,122,61,0.12)' : 'rgba(23,23,15,0.05)',
-        scoreBorder: score >= 90 ? 'rgba(0,122,61,0.3)' : 'rgba(23,23,15,0.12)',
-        scoreFg: score >= 90 ? '#00693A' : 'rgba(23,23,15,0.8)',
-        facts: [
-          { v: it.beds != null ? `${it.beds} ${ar ? 'غرف نوم' : 'beds'}` : (ar ? 'غير متوفر' : 'Beds not provided'), color: it.beds != null ? 'rgba(23,23,15,0.84)' : 'rgba(23,23,15,0.42)' },
-          { v: it.baths != null ? `${it.baths} ${ar ? 'حمام' : 'baths'}` : (ar ? 'غير متوفر' : 'Baths not provided'), color: it.baths != null ? 'rgba(23,23,15,0.84)' : 'rgba(23,23,15,0.42)' },
-          { v: it.area ? `${it.area} m²` : (ar ? 'غير متوفر' : 'Area not provided'), color: it.area ? 'rgba(23,23,15,0.84)' : 'rgba(23,23,15,0.42)' },
-          it.land ? { v: `${ar ? 'أرض' : 'Land'} ${it.land} m²`, color: 'rgba(23,23,15,0.84)' } : null,
-          // an unmapped type would render an empty span and leave a phantom gap
-          this.typeOf(it.type) ? { v: this.loc(this.typeOf(it.type)), color: 'rgba(23,23,15,0.84)' } : null
-        ].filter(f => f && f.v),
-        expanded: !!s.expanded[it.id],
-        reasons,
-        provenance: ext ? `source: ${it.url || 'not provided'}` : `akarat.ai/${s.lang}/property/${it.id}`,
-        href: ext ? (it.url || '#') : '#',
-        target: ext ? '_blank' : '_self',
-        click: ext
-          ? (() => { try { console.info('ai_external_redirect', { id: it.id, url: it.url }); } catch (e) {} })
-          // Ours opens the listing rather than following a dead href.
-          : (e => {
-            e.preventDefault();
-            if (it.row) this.openListing(it.row);
-          }),
-        cta: ext
-          ? (ar ? 'الإعلان الأصلي ↗' : 'Original listing ↗')
-          : (ar ? 'عرض العقار' : 'View property'),
-        ctaBg: ext ? 'transparent' : '#007A3D',
-        ctaFg: ext ? '#17170F' : '#FFFFFF',
-        ctaBorder: ext ? 'rgba(23,23,15,0.24)' : 'transparent',
-        whyLabel: s.expanded[it.id] ? (ar ? 'إخفاء' : 'Hide reasons') : (ar ? 'لماذا؟' : 'Why this matches'),
-        toggleWhy: () => this.setState({ expanded: { ...s.expanded, [it.id]: !s.expanded[it.id] } }),
-        saveLabel: s.saved[it.id] ? (ar ? '♥ محفوظ' : '♥ Saved') : (ar ? '♡ حفظ' : '♡ Save'),
-        saveBorder: s.saved[it.id] ? 'rgba(0,122,61,0.35)' : 'rgba(23,23,15,0.14)',
-        saveBg: s.saved[it.id] ? 'rgba(0,122,61,0.1)' : 'transparent',
-        saveFg: s.saved[it.id] ? '#00693A' : '#17170F',
-        toggleSave: () => this.setState({ saved: { ...s.saved, [it.id]: !s.saved[it.id] } }),
-        // never "available now": the crawler knows when it last saw a listing,
-        // which is a different claim and the only one we can stand behind
-        freshness: ext
-          ? (it.checked == null
-            ? (ar ? 'وقت التحقق غير متوفر' : 'Last checked not provided')
-            : it.checked === 0
-              ? (ar ? 'تم التحقق اليوم' : 'Checked today')
-              : (ar ? `تم التحقق قبل ${it.checked} أيام` : `Checked ${it.checked} days ago`))
-          : (ar ? `محدّث قبل ${it.days} أيام` : `Updated ${it.days} days ago`),
-        cardEdge: active ? 'rgba(0,122,61,0.4)' : 'rgba(23,23,15,0.11)',
-        hover: () => this.setState({ hoverId: it.id }),
-        unhover: () => this.setState({ hoverId: null })
-      };
-    });
-
-    const sources = [{
-      name: ar ? 'منصة أكارات' : 'Akarat.ai marketplace',
-      status: s.searched ? `${s.results.length} ${ar ? 'نتيجة' : 'found'}` : (ar ? 'جاهز' : 'ready'),
-      dot: GREEN_L, statusFg: 'rgba(23,23,15,0.5)'
-    }];
-
     // No seeded listing: an empty marketplace renders its empty state.
     const listing = M.INTERNAL[0] || null;
 
@@ -6573,7 +7251,7 @@ class Component extends DCLogic {
 
     return {
       ...base,
-      featured, marketKicker, marketHeading, areas, examples, chips, stages, results, sources,
+      featured, marketKicker, marketHeading, areas, examples,
       hasFeatured: featured.length > 0,
       // Functional form: two clicks inside one render commit must not both
       // write the same index and silently drop a card.
@@ -6679,75 +7357,6 @@ class Component extends DCLogic {
           ? 'لم يعرض أحد عقاراً للبيع حتى الآن. إن كان لديك عقار، كن الأول.'
           : 'No one has listed a property for sale yet. If you have one, be the first.'),
       steps, vocab, vocabChips, pledges, ownerSteps,
-      hasTurns: s.turns.length > 0,
-      hasConstraints: !!c && chips.length > 0,
-      noBrief: !c || chips.length === 0,
-      hasMissing: needsDeal,
-      clarify: ar ? 'هل تريد الشراء أم الاستئجار؟' : 'Are you looking to buy or to rent?',
-      clarifyActions: [
-        { label: L.buy, go: () => this.setState({ constraints: { ...c, deal: 'sale' }, lastParsed: { ...s.lastParsed, missing: [] } }, () => this.rescore()) },
-        { label: L.rent, go: () => this.setState({ constraints: { ...c, deal: 'rent' }, lastParsed: { ...s.lastParsed, missing: [] } }, () => this.rescore()) }
-      ],
-      langNote: s.lastParsed
-        ? (ar
-          ? (s.lastParsed.lang === 'ar' ? 'قرأناها بالعربية' : 'قرأناها بالإنجليزية')
-          : (s.lastParsed.lang === 'ar' ? 'read as Arabic' : 'read as English'))
-        : '',
-      running: s.running,
-      idle: !s.searched && !s.running,
-      hasResults: s.results.length > 0 && !s.running,
-      noResults: s.searched && !s.running && s.results.length === 0,
-      showExternalGap: s.searched && !s.running && !!(c && (c.city || c.hood || c.deal)),
-      externalSearches: (this.PV && c) ? this.PV.buildExternalSearches(c, s.lang).map(x => ({
-        name: x.name,
-        url: x.url,
-        note: x.note,
-        coverage: x.coverage,
-        cta: L.openOn,
-        dot: x.kind === 'general_web_result' ? 'rgba(23,23,15,0.28)' : '#007A3D',
-        // the spec's ai_external_redirect event; point this at your analytics sink
-        track: () => { try { console.info('ai_external_redirect', { source: x.id, url: x.url }); } catch (e) {} }
-      })) : [],
-      // one tap to a real search, so the workspace is never a blank prompt
-      // Arabic-Indic numerals here, matching the rest of the Arabic UI, and
-      // distinct from the hero's examples so the two never read as duplicates.
-      quickPrompts: (ar
-        ? ['شقة ٣ غرف للإيجار في الصويفية',
-           'أرض سكنية في دابوق',
-           'شقة بإطلالة بحرية في العقبة',
-           'مكتب للإيجار في الشميساني']
-        : ['3 bedroom apartment to rent in Sweifieh',
-           'Residential land in Dabouq',
-           'Sea view apartment in Aqaba',
-           'Office to rent in Shmeisani']
-      ).map(text => ({ label: text, go: () => this.submit(text, { fresh: true }) })),
-
-      // where the results came from, in plain counts rather than a config list
-      searchedTally: (() => {
-        const ours = s.results.filter(r => !r.it.source).length;
-        const idx = s.results.length - ours;
-        const st = s.indexState;
-        return [
-          {
-            n: String(ours), color: GREEN_L,
-            label: ar ? 'من منصتنا' : 'On Akarat.ai',
-            sub: ar ? 'تواصل مباشر وطلب معاينة' : 'Direct contact and viewing requests'
-          },
-          {
-            n: String(idx), color: idx ? '#17170F' : 'rgba(23,23,15,0.3)',
-            label: ar ? 'من السوق الأردني' : 'From the Jordanian market',
-            sub: idx
-              ? (ar ? 'مفهرسة من مصادر معتمدة' : 'Indexed from approved sources')
-              : (st && st.ready
-                ? (ar ? 'الفهرس فارغ. شغّل الزاحف' : 'Index is empty. Run the crawler')
-                : (ar ? 'الفهرس غير مُهيَّأ بعد' : 'Index not set up yet'))
-          }
-        ];
-      })(),
-      resultSummary: ar
-        ? `${s.results.length} نتيجة من منصتنا · لا نتائج خارجية`
-        : `${s.results.length} from our marketplace · 0 external`,
-
       // the signed-in account, never an invented persona. Verification is a
       // badge an admin grants, so it is not asserted here by default.
       dashUser: (s.user && ((s.user.user_metadata && s.user.user_metadata.full_name) || s.user.email)) || (ar ? 'حسابك' : 'Your account'),

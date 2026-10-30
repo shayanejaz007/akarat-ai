@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "gen:locations": "node scripts/gen-locations-sql.mjs",
-    "backfill:translations": "node scripts/backfill-translations.mts"
+    "backfill:translations": "node scripts/backfill-translations.mts",
+    "test:advisor": "node --test \"tests/advisor/*.test.mts\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",

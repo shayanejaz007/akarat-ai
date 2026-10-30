@@ -93,16 +93,33 @@ Expect at least one portal to object. The durable path is licensed feeds and
 partnerships, with crawling as the bridge, which is why the adapter interface in
 `app/api/ai/search/route.ts` treats every source as pluggable and optional.
 
-## What the browser does today
+## What the website does today
 
-No credentials, so no fabricated listings. Your brief is turned into real search
-URLs on each portal, and each row states what the link could not carry
-("drops Abdoun, price. Set it on their site"). That is honest and useful now,
-and it becomes the fallback the moment the index has real rows in it.
+The search page is the AI advisor (`app/api/ai/advisor/route.ts`,
+`lib/advisor/`), which follows the shape above: the browser sends text to our
+route, the key stays on the server.
+
+1. **Akarat.ai first.** Its own listings, through Row Level Security.
+2. **Then the market, through search rather than scraping.** Anthropic's web
+   search, restricted to the approved portals (OpenSooq, Bayut) and a list of
+   official and press sources, finds pages the way a search engine does;
+   Anthropic's web fetch reads a single listing page on request, honouring
+   robots.txt. No crawler of ours touches a portal at query time.
+3. **Nothing unverified on a card.** An outside listing is shown only when
+   its exact URL came back from a search, and only with the figures found on
+   the page itself.
+
+When the advisor is unavailable, the page falls back to the rule-based parser
+and ranker (`lib/aisearch.js`) over the listings already loaded.
+
+The app's search still calls `/api/ai/search` with structured constraints and
+builds portal links on the device (`portal_links.dart`, a port of
+`lib/providers.js`). The index-first design above remains the way to give
+both of them full outside listings, once a source agrees to it.
 
 ## Also keep server-side
 
-- The LLM key, if you add model-based query understanding
+- The LLM key (`ANTHROPIC_API_KEY`: the advisor and listing translation)
 - Any search API key used for discovery
 - `SUPABASE_SERVICE_ROLE_KEY`, which the crawler needs and which bypasses RLS
   entirely

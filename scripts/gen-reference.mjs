@@ -8,6 +8,9 @@ import { writeFile } from 'node:fs/promises';
 
 const m = await import('../data/market.js');
 const pick = (arr) => (arr || []).map((x) => ({ id: x.id, en: x.en, ar: x.ar }));
+// Neighbourhoods keep their city: the AI advisor resolves an area to the city
+// it belongs to, and needs the pair without loading the browser module.
+const pickHoods = (arr) => (arr || []).map((x) => ({ id: x.id, en: x.en, ar: x.ar, city: x.city }));
 
 const body = `/**
  * Reference lists for the server-rendered pages.
@@ -15,10 +18,11 @@ const body = `/**
  * GENERATED from data/market.js by scripts/gen-reference.mjs — do not edit.
  */
 export type Ref = { id: string; en: string; ar: string };
+export type Hood = Ref & { city: string };
 
 export const CITIES: Ref[] = ${JSON.stringify(pick(m.CITIES), null, 2)};
 
-export const NEIGHBORHOODS: Ref[] = ${JSON.stringify(pick(m.NEIGHBORHOODS), null, 2)};
+export const NEIGHBORHOODS: Hood[] = ${JSON.stringify(pickHoods(m.NEIGHBORHOODS), null, 2)};
 
 export const TYPES: Ref[] = ${JSON.stringify(pick(m.TYPES), null, 2)};
 
