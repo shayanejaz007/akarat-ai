@@ -169,8 +169,37 @@ type Overview = {
     month: { turns: number; cost: number };
     days: { day: string; turns: number; cost: number | null }[];
     flags: { kind: string; count: number }[];
+    measured: Measured;
+  } | null;
+  // Null until 0021_legal_ai.sql has been run. Costs are estimates in USD.
+  legal: {
+    model: string;
+    access: "public" | "reviewers";
+    reviewers: number;
+    limits: { perDay: number; perDayTotal: number };
+    today: { turns: number; people: number; searches: number; fetches: number; flagged: number; cost: number | null };
+    month: { turns: number; cost: number };
+    days: { day: string; turns: number; cost: number | null }[];
+    flags: { kind: string; count: number }[];
+    measured: Measured;
+    answers: { total: number; withCitations: number; withUnverified: number; cited: number; unverified: number };
+    library: {
+      sources: number; verified: number; judgments: number; legislation: number; commentary: number;
+      repealed: number; stale: number; oldestCheck: string | null; passages: number; embedded: number;
+    };
+    feedback: {
+      counts: { kind: string; count: number }[];
+      recent: {
+        id: number; at: string; kind: string; reviewer: boolean; note: string | null;
+        snapshot: { question: string; answer: string; sources: { kind: string; title: string; url: string; status: string | null }[]; unverified: string[] } | null;
+      }[];
+    };
   } | null;
 };
+
+// What each answer recorded it cost, and which model and effort answered
+// (0022_ai_cost.sql). Null before that migration runs.
+type Measured = { today: number; month: number; mix: { route: string; n: number }[] } | null;
 
 function Panel({ onSignedOut }: { onSignedOut: () => void }) {
   const api = useApi(onSignedOut);
@@ -317,6 +346,7 @@ function OverviewView({ data, onOpen }: { data: Overview | null; onOpen: (t: Tab
       )}
 
       {data.advisor && <AdvisorSection ai={data.advisor} />}
+      {data.legal && <LegalSection law={data.legal} />}
 
       <div className="adm-grid three">
         <ChartCard title="Listing views" caption="Per day, last 30 days" data={data.daily} field="views" />
@@ -347,6 +377,8 @@ const FLAG_LABEL: Record<string, string> = {
   unknown_listing: "Listing not returned by a search",
   invalid_tool_input: "Tool input refused",
   unknown_tool: "Unknown tool called",
+  answer_retry: "Answer asked for again (none was visible)",
+  unbacked_research_claim: "Said it searched when nothing was searched",
 };
 
 const usd = (n: number | null) => (n == null ? "n/a" : n < 0.01 && n > 0 ? "< $0.01" : "$" + n.toFixed(2));
@@ -359,8 +391,8 @@ function AdvisorSection({ ai }: { ai: NonNullable<Overview["advisor"]> }) {
       <div className="adm-grid tiles">
         <Tile label="Questions today" value={ai.today.turns}
           note={`${full(ai.today.people)} people · daily cap ${full(ai.limits.perDayTotal)}`} />
-        <Tile label="Estimated cost today" display={usd(ai.today.cost)}
-          note={`${usd(ai.month.cost)} over 30 days · ${ai.model}`} />
+        <Tile label={ai.measured ? "Cost today" : "Estimated cost today"} display={usd(ai.measured ? ai.measured.today : ai.today.cost)}
+          note={`${usd(ai.measured ? ai.measured.month : ai.month.cost)} over 30 days · default ${ai.model}`} />
         <Tile label="Web research today" value={ai.today.searches}
           note={`searches · ${full(ai.today.fetches)} pages read`} />
         <Tile label="Flagged this week" value={flagged}
@@ -371,6 +403,134 @@ function AdvisorSection({ ai }: { ai: NonNullable<Overview["advisor"]> }) {
         <RankCard title="Flagged events" caption="Last 7 days"
           rows={ai.flags.map(f => ({ key: f.kind, label: FLAG_LABEL[f.kind] ?? f.kind, n: f.count }))} />
       </div>
+      {ai.measured && ai.measured.mix.length > 0 && (
+        <div className="adm-grid two">
+          <RankCard title="Models used" caption="Answers by model and effort, last 30 days"
+            rows={ai.measured.mix.map(m => ({ key: m.route, label: m.route.replace("|", " · "), n: m.n }))} />
+        </div>
+      )}
+    </>
+  );
+}
+
+/* Ask a Lawyer (POST /api/legal/ask): use and cost, whether answers stand on
+   what was retrieved, how much of the library is verified and how fresh, and
+   the reports from the launch review. Report notes and reviewers' snapshots
+   are opened by the server for this panel only. */
+const LEGAL_FLAG_LABEL: Record<string, string> = {
+  prompt_leak: "Answer withdrawn: recited its instructions",
+  refusal: "Request declined by the model",
+  unverified_reference: "Answer named a reference no source supported",
+  library_unavailable: "Legal library could not be searched",
+  bad_tool_input: "Tool input refused",
+  unknown_tool: "Unknown tool called",
+  tool_failed: "A tool failed",
+  answer_retry: "Answer asked for again (none was visible)",
+  unbacked_research_claim: "Said it searched when nothing was searched",
+};
+
+const FEEDBACK_LABEL: Record<string, string> = {
+  good: "Helpful",
+  wrong_law: "Wrong law",
+  wrong_citation: "Wrong article or citation",
+  outdated: "Out of date",
+  fabricated: "Cites something that doesn't exist",
+  missing: "Missed something important",
+  unclear: "Unclear",
+  other: "Something else",
+};
+
+const pct = (n: number, of: number) => (of ? `${Math.round((n / of) * 100)}%` : "n/a");
+
+function LegalSection({ law }: { law: NonNullable<Overview["legal"]> }) {
+  const lib = law.library;
+  return (
+    <>
+      <h2 className="adm-section">Ask a Lawyer</h2>
+      <p className="adm-sub">
+        {law.access === "public"
+          ? "Open to every signed-in account."
+          : `Reviewers only until launch: ${full(law.reviewers)} account${law.reviewers === 1 ? "" : "s"} in LEGAL_REVIEWERS. Set LEGAL_ACCESS=public once the review is done.`}
+      </p>
+      <div className="adm-grid tiles">
+        <Tile label="Questions today" value={law.today.turns}
+          note={`${full(law.today.people)} people · daily cap ${full(law.limits.perDayTotal)}`} />
+        <Tile label={law.measured ? "Cost today" : "Estimated cost today"} display={usd(law.measured ? law.measured.today : law.today.cost)}
+          note={`${usd(law.measured ? law.measured.month : law.month.cost)} over 30 days · default ${law.model}`} />
+        <Tile label="Answers with an unverified reference" display={pct(law.answers.withUnverified, law.answers.total)}
+          note={`${full(law.answers.withUnverified)} of ${full(law.answers.total)} answers, last 30 days`} />
+        <Tile label="Verified library sources" value={lib.verified}
+          note={`${full(lib.legislation)} legislation · ${full(lib.judgments)} judgments · ${full(lib.commentary)} commentary`} />
+        <Tile label="Due for re-verification" value={lib.stale}
+          note={lib.oldestCheck ? `verified over 180 days ago · oldest check ${lib.oldestCheck}` : "nothing verified yet"} />
+      </div>
+      <div className="adm-grid two">
+        <ChartCard title="Ask a Lawyer questions" caption="Per day, last 30 days" data={law.days} field="turns" />
+        <RankCard title="Flagged events" caption="Last 7 days"
+          rows={law.flags.map(f => ({ key: f.kind, label: LEGAL_FLAG_LABEL[f.kind] ?? f.kind, n: f.count }))} />
+      </div>
+      <div className="adm-grid two">
+        {law.measured && law.measured.mix.length > 0 && (
+          <RankCard title="Models used" caption="Answers by model and effort, last 30 days"
+            rows={law.measured.mix.map(m => ({ key: m.route, label: m.route.replace("|", " · "), n: m.n }))} />
+        )}
+        <RankCard title="Reports on answers" caption="Last 30 days"
+          rows={law.feedback.counts.map(f => ({ key: f.kind, label: FEEDBACK_LABEL[f.kind] ?? f.kind, n: f.count }))} />
+        <RankCard title="The legal library" caption="Only verified sources are ever searched"
+          rows={[
+            { key: "verified", label: "Verified sources", n: lib.verified },
+            { key: "waiting", label: "Waiting for verification", n: Math.max(0, lib.sources - lib.verified) },
+            { key: "repealed", label: "Marked repealed", n: lib.repealed },
+            { key: "passages", label: "Articles and passages", n: lib.passages },
+            { key: "embedded", label: "Passages searchable by meaning", n: lib.embedded },
+            { key: "cited", label: "Citations in answers, last 30 days", n: law.answers.cited },
+          ]} />
+      </div>
+      <section className="adm-card">
+        <h2>Latest reports</h2>
+        <p className="adm-cap">Newest first. A reviewer&apos;s report carries the question and answer, with identifiers masked.</p>
+        {law.feedback.recent.length === 0 ? (
+          <div className="adm-empty">No reports yet.</div>
+        ) : (
+          <div className="adm-tablewrap">
+            <table className="adm-table">
+              <thead>
+                <tr><th>When</th><th>Report</th><th>Note and answer</th></tr>
+              </thead>
+              <tbody>
+                {law.feedback.recent.map(r => (
+                  <tr key={r.id}>
+                    <td style={{ whiteSpace: "nowrap" }}>{ago(r.at)}</td>
+                    <td>
+                      <span className={`adm-pill ${r.kind === "good" ? "good" : "bad"}`}>{FEEDBACK_LABEL[r.kind] ?? r.kind}</span>
+                      {r.reviewer && <> <span className="adm-pill">Reviewer</span></>}
+                    </td>
+                    <td style={{ maxWidth: 560 }}>
+                      {r.note && <div dir="auto" style={{ marginBottom: r.snapshot ? 6 : 0 }}>{r.note}</div>}
+                      {r.snapshot && (
+                        <details className="adm-table-toggle">
+                          <summary>Question and answer</summary>
+                          <p dir="auto"><b>Question:</b> {r.snapshot.question}</p>
+                          <p dir="auto" style={{ whiteSpace: "pre-wrap" }}>{r.snapshot.answer.replace(/[\ue000-\uf8ff]/g, "")}</p>
+                          {r.snapshot.unverified.length > 0 && <p><b>Not verified:</b> {r.snapshot.unverified.join(", ")}</p>}
+                          {r.snapshot.sources.length > 0 && (
+                            <ol>
+                              {r.snapshot.sources.map((s, i) => (
+                                <li key={i} dir="auto">{s.title} <span className="adm-muted">({s.kind}{s.status ? `, ${s.status}` : ""})</span></li>
+                              ))}
+                            </ol>
+                          )}
+                        </details>
+                      )}
+                      {!r.note && !r.snapshot && <span className="adm-muted">No note.</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </>
   );
 }

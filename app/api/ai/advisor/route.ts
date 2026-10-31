@@ -10,6 +10,7 @@ import { ammanDate } from "@/lib/advisor/prompt";
 import type { Card } from "@/lib/advisor/tools";
 import { earlierListings, sign, trim, verify, type Turn } from "@/lib/advisor/transcript";
 import { callerKey, recordTurn, takeTurn } from "@/lib/advisor/usage";
+import { inFlight } from "@/lib/inflight";
 
 /**
  * POST /api/ai/advisor
@@ -74,8 +75,13 @@ export async function POST(request: NextRequest) {
     console.info(JSON.stringify({ evt: "advisor_limited", key, scope: "minute" }));
     return reply(429, "rate_limited");
   }
+  // The same message from the same caller while it is still being answered
+  // (a double click, a second tab): refused, so it is not paid for twice.
+  const release = inFlight(`advisor:${key}`, `${message}\u0000${typeof body.transcript === "string" ? body.transcript.slice(-200) : ""}`);
+  if (!release) return reply(409, "busy");
   const quota = await takeTurn(key, user ? LIMITS.perDaySignedIn : LIMITS.perDayAnonymous, LIMITS.perDayTotal);
   if (quota !== "ok") {
+    release();
     console.info(JSON.stringify({ evt: "advisor_limited", key, scope: quota === "global" ? "day_total" : "day" }));
     // The caller's own allowance, or everyone's: they read differently.
     return reply(429, quota === "global" ? "quota_total" : "quota");
@@ -163,6 +169,10 @@ export async function POST(request: NextRequest) {
       console.info(
         JSON.stringify({
           evt: "advisor_turn",
+          model: result.route.model,
+          effort: result.route.effort,
+          route: result.route.route,
+          costUsd: result.costUsd == null ? null : Math.round(result.costUsd * 10000) / 10000,
           key,
           status: result.status,
           ms: Date.now() - started,
@@ -171,7 +181,8 @@ export async function POST(request: NextRequest) {
           usage: result.usage,
         })
       );
-      await recordTurn(key, result.usage, result.flags);
+      await recordTurn(key, result.usage, result.flags, undefined, { costUsd: result.costUsd, route: `${result.route.model}|${result.route.effort}` });
+      release();
 
       if (open) {
         open = false;

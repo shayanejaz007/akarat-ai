@@ -42,3 +42,6 @@ next-env.d.ts
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Ask a Lawyer evaluation runs (answers from the real model, for review)
+eval-results/

@@ -123,9 +123,23 @@ your host's dashboard for production.
 | `AI_ADVISOR_DAILY_TOTAL` | Server only | Optional. Questions per day for everyone together, the ceiling on what a day can cost. Default 600 |
 | `AI_ADVISOR_DAILY_PER_IP` / `AI_ADVISOR_DAILY_PER_USER` | Server only | Optional. Questions per day for one signed-out visitor / one signed-in account. Defaults 30 and 80 |
 | `AI_ADVISOR_PER_MINUTE_IP` / `AI_ADVISOR_PER_MINUTE_USER` | Server only | Optional. Per minute, the same two. Defaults 5 and 8 |
-| `AI_ADVISOR_MODEL` / `AI_ADVISOR_EFFORT` | Server only | Optional. Default `claude-opus-5-5` at `low` effort. `claude-sonnet-5-5` costs half as much per token |
+| `AI_ADVISOR_MODEL` / `AI_ADVISOR_EFFORT` | Server only | Optional. Default `claude-sonnet-5-5` at `low` effort |
+| `AI_ADVISOR_EFFORT_INVESTMENT` | Server only | Optional. Effort for investment questions (picked by a fixed test on the question, not by a model). Default `high` |
+| `AI_ADVISOR_MAX_TURN_USD` | Server only | Optional. Estimated US dollars one answer may spend before its research stops and it answers with what it has. Default 0.3 |
+| `AI_FOLLOWUP_MODEL` | Server only | Optional. The small model that suggests follow-up questions after each answer, for both assistants. Default `claude-haiku-5-5` |
 | `AI_ADVISOR_PORTALS` / `AI_ADVISOR_RESEARCH_DOMAINS` | Server only | Optional. Extra sites the advisor may search and read: `example.jo=Example` pairs for listing portals, plain hosts for research. Add only sites whose terms allow it |
 | `AI_ADVISOR_SECRET` | Server only | Optional. Signs the conversation the browser holds. Defaults to a key derived from `ANTHROPIC_API_KEY`; set it only to rotate conversations independently of the API key |
+| `LEGAL_DATA_KEY` | Server only | **Required for Ask a Lawyer.** 32 random bytes, base64 (`openssl rand -base64 32`). Encrypts every legal conversation, title, document and report before it reaches Supabase. Losing it makes all of them unreadable; keep a copy outside Vercel |
+| `LEGAL_DATA_KEY_PREVIOUS` | Server only | Optional. The old key while rotating: rows sealed with it still open, new ones use `LEGAL_DATA_KEY` |
+| `LEGAL_ACCESS` | Server only | `reviewers` (the default) or `public`. Until a licensed Jordanian lawyer has reviewed Ask a Lawyer, only the accounts in `LEGAL_REVIEWERS` can use it; `public` opens it to every signed-in account |
+| `LEGAL_REVIEWERS` | Server only | Comma-separated emails of the accounts that may use Ask a Lawyer before launch, and whose reports carry the question and answer for the review |
+| `LEGAL_AI_MODEL` / `LEGAL_AI_EFFORT` | Server only | Optional. Default `claude-sonnet-5-5` at `medium` effort |
+| `LEGAL_AI_EFFORT_COMPLEX` | Server only | Optional. Effort for questions with a document, about courts, about urgent matters (eviction, detention, deadlines, inheritance) or with a long account of the facts. Default `high`, with a larger research budget |
+| `LEGAL_ESCALATION_MODEL` / `LEGAL_ESCALATION_EFFORT` / `LEGAL_ESCALATE_ON` | Server only | Optional, off by default. A stronger model (for example `claude-opus-5-5`) for those questions, limited to the triggers listed (`document`, `court`, `urgent`, `long`). Turn it on only where `scripts/model-benchmark.mts` shows a gain. A model cheaper than `LEGAL_AI_MODEL`, or one with no known price, is ignored |
+| `LEGAL_MAX_TURN_USD` | Server only | Optional. Estimated US dollars one legal answer may spend before its research stops. Default 0.8 |
+| `LEGAL_PER_MINUTE` / `LEGAL_PER_DAY` / `LEGAL_PER_DAY_TOTAL` / `LEGAL_UPLOADS_PER_MINUTE` | Server only | Optional. Questions per minute and per day for one account, questions per day for everyone, uploads per minute. Defaults 4, 30, 300 and 4 |
+| `LEGAL_OFFICIAL_DOMAINS` / `LEGAL_SECONDARY_DOMAINS` | Server only | Optional. Extra hosts Ask a Lawyer may search and read, as official (primary) or secondary sources. Add only sites whose terms allow it |
+| `VOYAGE_API_KEY` | Server only | Optional. Embeddings and reranking for the legal library (Voyage AI). Without it the library is searched by Arabic full text and exact citation |
 | `ADMIN_PASSWORD` | Server only | The password for the admin panel at `/admin`. Change it here and redeploy to sign every admin out |
 | `BACKFILL_SECRET` | Server only | Any long random string. Guards `/api/admin/backfill-translations`, which translates listings saved before translation existed: `BACKFILL_SECRET=… npm run backfill:translations` (dry run), then again with `-- --apply` |
 
@@ -164,7 +178,12 @@ re-running a migration you have already applied is safe.
 0018_admin_analytics.sql    ← the admin panel
 0019_daily_rentals.sql      ← daily rentals
 0020_ai_advisor.sql         ← the AI advisor's daily limits and usage figures
+0021_legal_ai.sql           ← Ask a Lawyer: legal library, private conversations, documents
+0022_ai_cost.sql            ← what each AI answer cost, and which model and effort answered
 ```
+
+0021 needs the `vector` extension. The migration enables it; if your project
+refuses, turn it on under Database → Extensions → vector, then run 0021 again.
 
 If the project is already live, run **0007, 0008 and 0009** in that order.
 All three are safe to run again if you are not sure whether you already did.
@@ -345,15 +364,31 @@ the browser's own speech recognition.
 - **Anthropic Console.** Web search and web fetch must be enabled for the
   organisation (Settings → Capabilities). They are on unless someone turned
   them off; if they are off, every question fails with "isn't available".
-- **What it costs.** On Claude Opus 5.5, a question answered from Akarat.ai's
-  listings is typically 3 to 8 US cents; one that also searches the web and
-  reads a page or two, 10 to 30 cents (each web search is a cent on top of
-  tokens). `AI_ADVISOR_DAILY_TOTAL` caps the number of questions a day; at the
-  default of 600 the worst day is roughly $60-180. Raise it as traffic grows,
-  or set `AI_ADVISOR_MODEL=claude-sonnet-5-5` to halve the per-token price.
+- **Which model.** Claude Sonnet 5.5 ($2 / $10 per million input / output
+  tokens). Property searches run at low effort; investment questions, picked
+  by a fixed test on the question, at high effort with a larger output
+  allowance. Follow-up suggestions come from a separate call to Claude Haiku
+  5.5 after the answer is written. Every setting is in the table above.
+- **Measure before release.** `npm run model:benchmark -- --suite both --yes`
+  answers the audit's property questions and Ask a Lawyer's 30 evaluation
+  cases with Sonnet 5.5 at low, medium and high effort and Opus 5.5 at
+  medium (choose others with `--configs model:effort,...`), grades the
+  behaviour, and reports time and cost per answer and the cheapest
+  configuration at the best grade. It prints its cost estimate first (about
+  $40 for everything) and needs `ANTHROPIC_API_KEY` and the Supabase keys.
+  The legal answers are written side by side for the reviewing lawyer.
+- **What it costs** (estimated from token counts at list prices, not yet
+  measured on live traffic). A question answered from Akarat.ai's listings is
+  roughly 2 to 4 US cents; one that also searches the web and reads a page or
+  two, 5 to 15 cents (each web search is a cent on top of tokens); investment
+  questions at high effort sit at the top of that range. No answer goes past
+  `AI_ADVISOR_MAX_TURN_USD` (30 cents) by much: past it, research stops and
+  the advisor answers with what it has. `AI_ADVISOR_DAILY_TOTAL` caps the
+  questions a day; at the default of 600 a heavy day is roughly $30-90.
   Past the cap, visitors get the plain search and a note to come back later.
-  `/admin` → Overview → AI advisor shows each day's questions and an estimated
-  cost; the Anthropic Console has the invoice.
+  With 0022 run, `/admin` → Overview → AI advisor shows each day's measured
+  estimate and which model and effort answered; the Anthropic Console has the
+  invoice.
 - **What it will not do.** It reads only public listings (Row Level Security,
   as a visitor), never owners' contact details, and never a site outside its
   list. An outside listing is shown only if its exact link came back from a
@@ -367,6 +402,49 @@ the browser's own speech recognition.
 - **The app** still uses its own on-device search (`/api/ai/search`, which is
   unchanged). The advisor's API takes the same bearer token the app already
   sends, so the app can move to it later without server changes.
+
+### Ask a Lawyer
+A separate legal research assistant for Jordanian law ("Ask a Lawyer" in the
+site's navigation; `/api/legal/*`, code in `lib/legal/`). Everything about it
+(architecture, sources, what is and is not verified, the review before
+launch) is in **LEGAL-AI.md**. To run it:
+
+1. Run `0021_legal_ai.sql`.
+2. Set `LEGAL_DATA_KEY` (`openssl rand -base64 32`) in Vercel, and keep a copy
+   somewhere safe: without it the stored conversations cannot be read.
+3. Set `LEGAL_REVIEWERS` to the emails of the lawyer reviewing it and of
+   whoever works with them. Leave `LEGAL_ACCESS` unset: everyone else sees
+   "being reviewed by licensed Jordanian lawyers" until you set it to
+   `public`.
+4. `ANTHROPIC_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are shared with the
+   rest of the site. Web search and web fetch must be enabled in the Anthropic
+   Console, as for the advisor.
+5. Load verified legislation and judgments into the library
+   (`data/legal/README.md`, `npm run legal:ingest`). It ships empty; until it
+   has content, answers rely on official websites alone and say so.
+6. Before opening it to the public, run the evaluation (`npm run legal:eval
+   -- --yes`, about $5-8) and have the lawyer complete the review sheet it
+   writes. LEGAL-AI.md, "Before launch", has the whole checklist.
+
+- **Which model.** Claude Sonnet 5.5 at medium effort; questions with a
+  document, about courts, about urgent matters or with a long account of the
+  facts at high effort, with a larger research budget. Escalation to a
+  stronger model is off until `LEGAL_ESCALATION_MODEL` is set, and a legal
+  answer is never routed to a cheaper model.
+- **What it costs** (estimated from token counts and list prices, not yet
+  measured on live traffic). A typical answer is 8 to 20 US cents, more at
+  high effort; one that reads a long uploaded document costs more the first
+  time (a 10-page PDF is roughly 30,000 input tokens, about 6 cents), and much
+  less on follow-ups while it is cached. Research stops past
+  `LEGAL_MAX_TURN_USD` (80 cents). `LEGAL_PER_DAY_TOTAL` caps the day; at the
+  default of 300 a heavy day is roughly $25-75.
+  `/admin` → Overview → Ask a Lawyer shows questions, cost, how many answers
+  named a reference no source supported, library coverage and freshness, and
+  the reviewers' reports.
+- **Retention.** Conversations are deleted 90 days after their last message
+  and documents 30 days after upload, by the database; each person can delete
+  theirs, or all of them, at any time. Deleting an account deletes them too.
+- **Tests without the model:** `npm run test:legal`.
 
 ### The crawler
 `/api/admin/crawl` refreshes the external listing index. It requires

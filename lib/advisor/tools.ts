@@ -50,8 +50,7 @@ export type Card = AkaratCard | ExternalCard;
 export type PageEvent =
   | { t: "cards"; items: Card[] }
   | { t: "criteria"; c: Record<string, unknown> }
-  | { t: "compare"; columns: { key: string; title: string; source: string }[]; rows: { k: string; v: (string | number | boolean | null)[] }[] }
-  | { t: "followups"; items: string[] };
+  | { t: "compare"; columns: { key: string; title: string; source: string }[]; rows: { k: string; v: (string | number | boolean | null)[] }[] };
 
 export type ToolOutcome = { content: string; isError?: boolean; events?: PageEvent[]; flag?: string };
 
@@ -238,19 +237,6 @@ const presentTool: BetaTool = {
   },
 };
 
-const followupsTool: BetaTool = {
-  name: "suggest_followups",
-  description:
-    "Two to four short follow-up questions or requests the user might tap next, phrased as the user would say them, in the user's language. Call once, after your reply.",
-  strict: true,
-  input_schema: {
-    type: "object",
-    properties: { suggestions: { type: "array", items: { type: "string" } } },
-    required: ["suggestions"],
-    additionalProperties: false,
-  },
-};
-
 // Server tools. Called directly rather than through code execution, so every
 // result block comes back to us with its URL and can be checked. URLs the
 // advisor may read come from searches and from the user, never from our own
@@ -276,7 +262,7 @@ const webFetch = {
 
 // Fixed order: the tools array is the front of the cached prefix.
 export const TOOLS: BetaToolUnion[] = [
-  searchTool, listingTool, statsTool, calcTool, compareTool, presentTool, followupsTool, webSearch, webFetch,
+  searchTool, listingTool, statsTool, calcTool, compareTool, presentTool, webSearch, webFetch,
 ];
 
 /* ── Input validation ────────────────────────────────────────────────── */
@@ -611,19 +597,6 @@ async function present(input: unknown, env: ToolEnv): Promise<ToolOutcome> {
   };
 }
 
-function followups(input: unknown): ToolOutcome {
-  const i = obj(input);
-  if (!Array.isArray(i.suggestions)) throw new Invalid("suggestions must be an array");
-  const items = [
-    ...new Set(
-      i.suggestions
-        .map(s => prose(s, 90))
-        .filter(s => s && !/https?:\/\/|www\./i.test(s) && !looksLikePromptLeak(s))
-    ),
-  ].slice(0, 4);
-  return { content: json({ ok: true }), events: items.length ? [{ t: "followups", items }] : [] };
-}
-
 /**
  * Runs one tool call. Never throws: a bad input or a failed read becomes an
  * error result the model can see and correct, and the turn carries on.
@@ -643,8 +616,6 @@ export async function runTool(name: string, input: unknown, env: ToolEnv): Promi
         return await compare(input, env);
       case "present_listings":
         return await present(input, env);
-      case "suggest_followups":
-        return followups(input);
       default:
         return fail(`There is no tool called ${String(name).slice(0, 60)}.`, "unknown_tool");
     }

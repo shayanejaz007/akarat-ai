@@ -94,8 +94,13 @@ export async function startMock(
 ) {
   const seen: Seen[] = [];
   const server = createServer(async (req, res) => {
-    let raw = "";
-    for await (const chunk of req) raw += chunk;
+    // Whole before decoding, so a character split across chunks survives;
+    // the bytes stay on the request for handlers that take binary uploads.
+    const chunks: Buffer[] = [];
+    for await (const chunk of req) chunks.push(chunk as Buffer);
+    const bytes = Buffer.concat(chunks);
+    (req as IncomingMessage & { rawBody?: Buffer }).rawBody = bytes;
+    const raw = bytes.toString("utf8");
     if (extra && (await extra(req, res, raw))) return;
     if (req.method !== "POST" || !req.url?.startsWith("/v1/messages")) {
       res.writeHead(404, { "content-type": "application/json" }).end(JSON.stringify({ type: "error", error: { type: "not_found_error", message: req.url } }));
@@ -113,6 +118,23 @@ export async function startMock(
     if (reply.status) {
       const type = reply.status === 529 ? "overloaded_error" : reply.status === 429 ? "rate_limit_error" : reply.status === 401 ? "authentication_error" : "api_error";
       res.writeHead(reply.status, { "content-type": "application/json", "request-id": "req_mock" }).end(JSON.stringify({ type: "error", error: { type, message: type } }));
+      return;
+    }
+    if (!body.stream) {
+      // A non-streaming request gets the whole message as JSON, as the API does.
+      const blocks = (reply.blocks ?? []).map(b => (b.type === "thinking" ? { type: "thinking", thinking: "", signature: "sig_mock" } : b));
+      res.writeHead(200, { "content-type": "application/json", "request-id": "req_mock" }).end(
+        JSON.stringify({
+          id: `msg_${Math.random().toString(36).slice(2)}`,
+          type: "message",
+          role: "assistant",
+          model: body.model,
+          content: blocks,
+          stop_reason: reply.stop ?? "end_turn",
+          stop_sequence: null,
+          usage: { input_tokens: 300, output_tokens: 40, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 },
+        })
+      );
       return;
     }
     res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", "request-id": "req_mock" });

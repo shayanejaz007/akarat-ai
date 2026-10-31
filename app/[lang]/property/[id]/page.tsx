@@ -80,10 +80,11 @@ function firstImage(row: Listing) {
 }
 
 export async function generateMetadata(
-  { params }: { params: { lang: string; id: string } }
+  { params }: { params: Promise<{ lang: string; id: string }> }
 ): Promise<Metadata> {
-  const lang = asLang(params.lang);
-  const row = await getListing(params.id);
+  const p = await params;
+  const lang = asLang(p.lang);
+  const row = await getListing(p.id);
   if (!row) return { title: lang === "ar" ? "الإعلان غير موجود" : "Listing not found" };
 
   const title = `${titleOf(row, lang)} — ${priceOf(row, lang)}`;
@@ -150,11 +151,12 @@ function safeJsonLd(value: unknown): string {
 }
 
 export default async function PropertyPage(
-  { params }: { params: { lang: string; id: string } }
+  { params }: { params: Promise<{ lang: string; id: string }> }
 ) {
-  const lang = asLang(params.lang);
+  const p = await params;
+  const lang = asLang(p.lang);
   const ar = lang === "ar";
-  const row = await getListing(params.id);
+  const row = await getListing(p.id);
   if (!row) notFound();
 
   const title = titleOf(row, lang);

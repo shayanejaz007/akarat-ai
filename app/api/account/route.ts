@@ -31,7 +31,10 @@ export const maxDuration = 30;
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const BUCKET = "listing-photos";
+// Each keeps one folder per account: listing photos, and Ask a Lawyer's
+// sealed documents (0021_legal_ai.sql), whose rows the database deletes
+// with the account but whose files it cannot.
+const BUCKETS = ["listing-photos", "legal-documents"];
 
 function bearerToken(request: NextRequest): string | null {
   const m = /^Bearer\s+([A-Za-z0-9._-]+)$/i.exec(request.headers.get("authorization") ?? "");
@@ -136,15 +139,18 @@ export async function DELETE(request: NextRequest) {
   const admin = createClient(URL_, SERVICE, { auth: { persistSession: false, autoRefreshToken: false } });
 
   const emptyFolder = async () => {
-    try {
-      for (let page = 0; page < 50; page++) {
-        const { data: files } = await admin.storage.from(BUCKET).list(user.id, { limit: 100 });
-        if (!files || files.length === 0) break;
-        await admin.storage.from(BUCKET).remove(files.map((f) => `${user.id}/${f.name}`));
-        if (files.length < 100) break;
+    for (const bucket of BUCKETS) {
+      try {
+        for (let page = 0; page < 50; page++) {
+          const { data: files } = await admin.storage.from(bucket).list(user.id, { limit: 100 });
+          if (!files || files.length === 0) break;
+          await admin.storage.from(bucket).remove(files.map((f) => `${user.id}/${f.name}`));
+          if (files.length < 100) break;
+        }
+      } catch {
+        /* best effort: orphaned files cost storage, not correctness (and the
+           legal ones are ciphertext under a key the database never sees) */
       }
-    } catch {
-      /* best effort: orphaned files cost storage, not correctness */
     }
   };
 

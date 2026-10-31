@@ -9,9 +9,9 @@
  * object per line.
  */
 import Anthropic from "@anthropic-ai/sdk";
+import { apiErrorCode, arabicShare, claimsResearch, echoable } from "../claude-shared.ts";
 import type {
   BetaContentBlock,
-  BetaContentBlockParam,
   BetaMessage,
   BetaMessageParam,
   BetaTextBlockParam,
@@ -19,7 +19,9 @@ import type {
   BetaToolResultBlockParam,
   BetaToolUseBlockParam,
 } from "@anthropic-ai/sdk/resources/beta/messages/messages";
-import { EFFORT, MAX_TOKENS, MODEL, TURN, WEB_DOMAINS, hostAllowed } from "./config.ts";
+import { budgetCostUsd, estimateCostUsd } from "../ai-models.ts";
+import { suggestFollowups } from "../followups.ts";
+import { INVESTMENT_TALK, TURN, WEB_DOMAINS, hostAllowed, routeAdvisor, type Route } from "./config.ts";
 import { normalizeUrl } from "./evidence.ts";
 import { CANARY, SYSTEM_PROMPT, looksLikePromptLeak, turnContext, type TurnContext } from "./prompt.ts";
 import { TOOLS, runTool, type Card, type PageEvent, type ToolEnv } from "./tools.ts";
@@ -34,8 +36,9 @@ export type ClientEvent =
   | { t: "source"; s: Source }
   | { t: "cite"; n: number[] }
   | { t: "redact"; reason: "leak" | "refused" }
-  | { t: "notice"; kind: "disclaimer" | "partial" | "memory_reset"; lang?: "en" | "ar" }
+  | { t: "notice"; kind: "disclaimer" | "partial" | "memory_reset" | "unbacked_claim"; lang?: "en" | "ar" }
   | PageEvent
+  | { t: "followups"; items: string[] }
   | { t: "done"; transcript: string | null }
   | { t: "error"; code: "busy" | "unavailable" | "not_configured" | "rate_limited" | "quota" | "quota_total" | "bad_request" | "too_long" };
 
@@ -48,6 +51,10 @@ export type TurnOptions = {
   emit: (e: ClientEvent) => void;
   signal: AbortSignal;
   now?: () => number;
+  /** Which model and effort answer; routeAdvisor(message) when not given. */
+  route?: Route;
+  /** Follow-up suggestions after the answer; tests switch them off. */
+  followups?: boolean;
 };
 
 export type TurnResult = {
@@ -57,6 +64,9 @@ export type TurnResult = {
   usage: TurnUsage;
   flags: string[];
   tools: string[];
+  route: Route;
+  /** Estimated US dollars for the whole turn, follow-ups included. */
+  costUsd: number | null;
   error?: Extract<ClientEvent, { t: "error" }>["code"];
 };
 
@@ -74,55 +84,26 @@ const STRIP = /[\ue000-\uf8ff\u202a-\u202e\u2066-\u2069]/g;
 
 const DISCLAIMED = /involves? risk|do your own research|conduct your own research|verify all information|فيه مخاطر|بحثك الخاص|مخاطر الاستثمار/i;
 
-// Questions and answers about investing, financing or where prices are going:
-// the brief requires the disclaimer on those, whichever tools were used.
-const INVESTMENT_TALK =
-  /\b(invest(ing|ment|or)?s?|yields?|roi|returns? on|rental income|appreciat(e|ion)|capital gains?|mortgages?|financing|forecasts?|price trends?)\b|استثمار|أستثمر|استثمر|عائد|عوائد|تمويل|قرض|رهن|توقعات|ارتفاع الأسعار|اتجاه الأسعار/i;
+// What the model is told when a turn ends without a visible answer. On Claude
+// Sonnet 5.5 and Opus 5.5, text written before a tool call comes back as a
+// hidden progress note, so an answer placed there never reaches the page.
+export const NO_ANSWER_NOTE =
+  "Your answer did not reach the user: text written before a tool call is not shown. " +
+  "Write your complete answer now as your final message, using what your tools returned, and do not call any tool.";
 
-const arabicShare = (s: string) => {
-  const letters = s.match(/\p{L}/gu)?.length ?? 0;
-  const arabic = s.match(/[ء-ي]/g)?.length ?? 0;
-  return letters ? arabic / letters : 0;
-};
-
-/**
- * What goes back to the API after a turn that switched models mid-answer.
- * Before the last switch point, only text and completed server-tool pairs are
- * echoed; the declined model's thinking and unfinished tool calls are not.
- */
-export function echoable(content: BetaContentBlock[]): BetaContentBlockParam[] {
-  const last = content.map(b => b.type).lastIndexOf("fallback");
-  if (last < 0) return content as BetaContentBlockParam[];
-  const answered = new Set(
-    content.flatMap(b => (b.type === "web_search_tool_result" || b.type === "web_fetch_tool_result" ? [b.tool_use_id] : []))
-  );
-  return content.filter((b, i) => {
-    if (i > last) return true;
-    switch (b.type) {
-      case "text":
-      case "fallback":
-      case "web_search_tool_result":
-      case "web_fetch_tool_result":
-        return true;
-      case "server_tool_use":
-        return answered.has(b.id);
-      default:
-        return false;
-    }
-  }) as BetaContentBlockParam[];
-}
-
-function errorCode(e: unknown): Extract<ClientEvent, { t: "error" }>["code"] {
-  if (e instanceof Anthropic.AuthenticationError || e instanceof Anthropic.PermissionDeniedError) return "not_configured";
-  if (e instanceof Anthropic.RateLimitError) return "busy";
-  if (e instanceof Anthropic.APIError && (e.status === 529 || e.status === 503)) return "busy";
-  return "unavailable";
-}
+// Shared with Ask a Lawyer; re-exported because the advisor's tests import it from here.
+export { echoable };
+const errorCode = apiErrorCode;
 
 export async function runTurn(o: TurnOptions): Promise<TurnResult> {
   const now = o.now ?? Date.now;
   const started = now();
   const { env, emit } = o;
+  const route = o.route ?? routeAdvisor(o.message);
+  // Set when a turn ended with nothing visible and the model is asked once
+  // for its answer, with no tools.
+  let answerRetried = false;
+  let forceFinal = false;
 
   const ac = new AbortController();
   let timedOut = false;
@@ -281,19 +262,19 @@ export async function runTurn(o: TurnOptions): Promise<TurnResult> {
       const last = call >= TURN.maxModelCalls;
       const stream = o.client.beta.messages.stream(
         {
-          model: MODEL,
-          max_tokens: MAX_TOKENS,
+          model: route.model,
+          max_tokens: route.maxTokens,
           system,
           tools: TOOLS,
           messages,
           thinking: { type: "adaptive" },
-          output_config: { effort: EFFORT },
+          output_config: { effort: route.effort },
           cache_control: { type: "ephemeral" },
           // A policy decline on an ordinary property question would be a
           // false positive; the API retries it on its recommended model.
           betas: ["server-side-fallback-2026-07-01"],
           fallbacks: "default",
-          ...(last ? { tool_choice: { type: "none" as const } } : {}),
+          ...(last || forceFinal ? { tool_choice: { type: "none" as const } } : {}),
         },
         { signal: ac.signal }
       );
@@ -397,7 +378,20 @@ export async function runTurn(o: TurnOptions): Promise<TurnResult> {
         status = "partial";
         break;
       }
-      if (!uses.length) break;
+      if (!uses.length) {
+        // The model has finished. If nothing it wrote is visible (its answer
+        // went before a tool call and came back as a hidden note), it is
+        // asked once for the answer, with tools off.
+        if (!reply.trim() && !answerRetried && call < TURN.maxModelCalls && now() - started < TURN.softMs + 8000) {
+          answerRetried = true;
+          forceFinal = true;
+          flags.push("answer_retry");
+          messages.push({ role: "assistant", content });
+          messages.push({ role: "system", content: NO_ANSWER_NOTE });
+          continue;
+        }
+        break;
+      }
 
       messages.push({ role: "assistant", content });
       const outcomes = await Promise.all(uses.map(u => runTool(u.name, u.input, env)));
@@ -413,11 +407,6 @@ export async function runTurn(o: TurnOptions): Promise<TurnResult> {
         for (const e of out.events ?? []) emit(e);
       }
 
-      // suggest_followups is the advisor's last act. Once it has answered and
-      // every call in that message succeeded, the turn is over; sending the
-      // results back would only buy an empty closing message.
-      const finished = uses.some(u => u.name === "suggest_followups") && outcomes.every(x => !x.isError) && reply.trim().length > 0;
-      if (finished) break;
       if (last) {
         status = "partial";
         break;
@@ -430,6 +419,7 @@ export async function runTurn(o: TurnOptions): Promise<TurnResult> {
         usage.searches >= TURN.webSearchesPerTurn ||
         usage.fetches >= TURN.webFetchesPerTurn ||
         usage.output >= TURN.outputBudget ||
+        budgetCostUsd(usage, route.model) >= TURN.maxCostUsd ||
         call + 1 >= TURN.maxModelCalls;
       if ((late || spent) && !wrapUpSent) {
         // An operator note appended to the conversation, not an edit to it:
@@ -438,7 +428,7 @@ export async function runTurn(o: TurnOptions): Promise<TurnResult> {
           role: "system",
           content:
             "Time and research budget for this reply are used up. Do not call web_search or web_fetch again. " +
-            "If you found suitable listings, present them, then give your answer with what you have, say what you could not check, and call suggest_followups.",
+            "If you found suitable listings, present them, then write your answer as your final message with what you have, and say what you could not check.",
         });
         wrapUpSent = true;
       }
@@ -479,11 +469,30 @@ export async function runTurn(o: TurnOptions): Promise<TurnResult> {
   }
 
   const lang: "en" | "ar" = arabicShare(reply || o.message) > 0.3 ? "ar" : "en";
+  const answered = (status === "complete" || status === "partial") && !!reply.trim();
   const aboutInvesting = toolsUsed.includes("investment_calculator") || INVESTMENT_TALK.test(`${o.message}\n${reply}`);
-  if ((status === "complete" || status === "partial") && reply && aboutInvesting && !DISCLAIMED.test(reply)) {
+  if (answered && aboutInvesting && !DISCLAIMED.test(reply)) {
     emit({ t: "notice", kind: "disclaimer", lang });
+  }
+  // An answer that says it searched when nothing was searched: checked here,
+  // not left to the model.
+  if (answered && !toolsUsed.length && !usage.searches && !usage.fetches && claimsResearch(reply)) {
+    flags.push("unbacked_research_claim");
+    emit({ t: "notice", kind: "unbacked_claim", lang });
+  }
+
+  let costUsd = estimateCostUsd(usage, route.model);
+  // Follow-up suggestions, from a separate small call once the answer is
+  // written, while there is time left in the function's budget.
+  if (answered && o.followups !== false && now() - started < TURN.hardMs - 7000) {
+    const f = await suggestFollowups(o.client, { domain: "property", lang, question: o.message, answer: reply });
+    if (f.items.length) emit({ t: "followups", items: f.items });
+    // Priced at its own model's rate; usage stays the answering model's,
+    // which is what the admin panel's token-based estimate prices.
+    const extra = estimateCostUsd(f.usage, f.model);
+    costUsd = costUsd == null || extra == null ? costUsd : costUsd + extra;
   }
 
   const shown = env.shownThisTurn.map(k => env.cards.get(k)).filter((c): c is Card => !!c).map(remember);
-  return { status, reply: reply.trim(), shown, usage, flags, tools: toolsUsed, error: errorOut };
+  return { status, reply: reply.trim(), shown, usage, flags, tools: toolsUsed, route, costUsd, error: errorOut };
 }

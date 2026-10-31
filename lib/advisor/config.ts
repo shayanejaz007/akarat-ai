@@ -6,6 +6,8 @@
  * redeploy. The defaults are the ones the advisor was built and tested with.
  */
 
+import { effortFromEnv, estimateCostUsd as estimate, modelFromEnv, numberFromEnv, type Effort, type UsageLike } from "../ai-models.ts";
+
 const env = (name: string) => (process.env[name] ?? "").trim();
 
 const int = (name: string, fallback: number, min: number, max: number) => {
@@ -13,18 +15,34 @@ const int = (name: string, fallback: number, min: number, max: number) => {
   return Number.isFinite(n) && n >= min && n <= max ? n : fallback;
 };
 
-export type Effort = "low" | "medium" | "high";
+export type { Effort };
 
-export const MODEL = env("AI_ADVISOR_MODEL") || "claude-opus-5-5";
+/* ── The model, and how much it thinks ──────────────────────────────────
+   Claude Sonnet 5.5 by default: half Claude Opus 5.5's price per token, and
+   Anthropic's recommended starting point for search and short tool use is
+   low effort. Questions about investing (yields, returns, financing, where
+   to put money) are routed to high effort, decided by the deterministic test
+   below, not by another model. Both are environment settings; the model
+   benchmark (scripts/model-benchmark.mts) is how to choose them. */
+export const MODEL = modelFromEnv("AI_ADVISOR_MODEL", "claude-sonnet-5-5");
+export const EFFORT: Effort = effortFromEnv("AI_ADVISOR_EFFORT", "low");
+export const INVESTMENT_EFFORT: Effort = effortFromEnv("AI_ADVISOR_EFFORT_INVESTMENT", "high");
 
-// Low by default. The route has 60 seconds on any Vercel plan, a reply with
-// web research already spends much of that waiting on searches, and in testing
-// low effort answered property questions well. Raise it here if a deployment
-// with a longer function limit wants more deliberate investment analysis.
-export const EFFORT: Effort = (["low", "medium", "high"] as const).find(e => e === env("AI_ADVISOR_EFFORT")) ?? "low";
+// Questions and answers about investing, financing or where prices are going.
+export const INVESTMENT_TALK =
+  /\b(invest(ing|ment|or)?s?|yields?|roi|returns? on|rental income|appreciat(e|ion)|capital gains?|mortgages?|financing|forecasts?|price trends?)\b|استثمار|أستثمر|استثمر|عائد|عوائد|تمويل|قرض|رهن|توقعات|ارتفاع الأسعار|اتجاه الأسعار/i;
 
-// Per model call. Thinking counts toward it, so it is sized for thinking plus a
-// full reply, not for the reply alone.
+export type Route = { model: string; effort: Effort; route: "search" | "investment"; maxTokens: number };
+
+/** Which model and effort answer this message. */
+export function routeAdvisor(message: string): Route {
+  return INVESTMENT_TALK.test(message)
+    ? { model: MODEL, effort: INVESTMENT_EFFORT, route: "investment", maxTokens: 12000 }
+    : { model: MODEL, effort: EFFORT, route: "search", maxTokens: 8000 };
+}
+
+// Per model call, for code that does not route. Thinking counts toward it,
+// so it is sized for thinking plus a full reply.
 export const MAX_TOKENS = 8000;
 
 /* ── Limits on one turn ─────────────────────────────────────────────────
@@ -44,6 +62,9 @@ export const TURN = {
   // and at hardMs the stream ends with whatever has been written.
   softMs: 38_000,
   hardMs: 54_000,
+  // Estimated cost of one answer, in US dollars, past which the advisor is
+  // told to stop researching and answer.
+  maxCostUsd: numberFromEnv("AI_ADVISOR_MAX_TURN_USD", 0.3, 0.02, 5),
 };
 
 /* ── Limits on callers ──────────────────────────────────────────────────── */
@@ -146,19 +167,7 @@ export function portalFor(url: string): Portal | null {
 export const SITE_URL = (env("NEXT_PUBLIC_SITE_URL") || "https://akarat.ai").replace(/\/+$/, "");
 
 /* ── What a turn costs ───────────────────────────────────────────────────
-   For the admin panel's estimate only: Anthropic's invoice is the record.
-   US dollars per million tokens (October 2026 list prices), and per web
-   search. Cache writes are the five-minute kind, 1.25 times input. */
-const PRICES: Record<string, { input: number; output: number; cacheRead: number }> = {
-  "claude-opus-5-5": { input: 4, output: 20, cacheRead: 0.2 },
-  "claude-sonnet-5-5": { input: 2, output: 10, cacheRead: 0.2 },
-  "claude-haiku-5-5": { input: 0.1, output: 0.5, cacheRead: 0.01 },
-};
-const PER_SEARCH = 0.01;
-
-export function estimateCostUsd(u: { input: number; output: number; cacheRead: number; cacheWrite: number; searches: number }, model = MODEL): number | null {
-  const p = PRICES[model];
-  if (!p) return null;
-  const perM = (n: number, price: number) => (n / 1_000_000) * price;
-  return perM(u.input, p.input) + perM(u.output, p.output) + perM(u.cacheRead, p.cacheRead) + perM(u.cacheWrite, p.input * 1.25) + u.searches * PER_SEARCH;
+   Prices live in lib/ai-models.ts, shared with Ask a Lawyer. */
+export function estimateCostUsd(u: UsageLike, model = MODEL): number | null {
+  return estimate(u, model);
 }

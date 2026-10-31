@@ -11,7 +11,7 @@
   --line-strong: rgba(23, 23, 15, 0.18);
   --ink: #17170F;
   --ink-2: rgba(23, 23, 15, 0.66);
-  --ink-3: rgba(23, 23, 15, 0.46);
+  --ink-3: rgba(23, 23, 15, 0.62);
   --accent: #007A3D;
   --accent-wash: rgba(0, 122, 61, 0.1);
   --chart: #007A3D;
@@ -39,7 +39,7 @@
     --line-strong: rgba(247, 242, 231, 0.18);
     --ink: #F7F2E7;
     --ink-2: rgba(247, 242, 231, 0.7);
-    --ink-3: rgba(247, 242, 231, 0.48);
+    --ink-3: rgba(247, 242, 231, 0.55);
     --accent: #3FB27A;
     --accent-wash: rgba(46, 158, 99, 0.16);
     --chart: #2E9E63;

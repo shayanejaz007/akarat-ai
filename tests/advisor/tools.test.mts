@@ -220,9 +220,11 @@ test("calculator: exact arithmetic, and ranges enforced", async () => {
   assert.equal(bad.isError, true);
 });
 
-test("followups: short plain prompts, no links, at most four", async () => {
-  const out = await runTool("suggest_followups", { suggestions: ["Show me Khalda too", "See https://evil.example", "  Compare   the first two  ", "a", "b", "c", "Show me Khalda too"] }, env(new FakeDb([])));
-  assert.deepEqual((out.events?.[0] as any).items, ["Show me Khalda too", "Compare the first two", "a", "b"]);
+test("there is no follow-ups tool: a call to it is refused like any unknown tool", async () => {
+  const out = await runTool("suggest_followups", { suggestions: ["Show me Khalda too"] }, env(new FakeDb([])));
+  assert.equal(out.isError, true);
+  assert.equal(out.flag, "unknown_tool");
+  assert.ok(!TOOLS.some((t: any) => t.name === "suggest_followups"));
 });
 
 test("an unknown tool is an error result, not an exception", async () => {

@@ -37,10 +37,13 @@ test("nothing is assumed: missing inputs are reported, not filled in", () => {
   assert.ok(daily.not_included.some(n => /occupancy/i.test(n)));
 });
 
-test("the system prompt carries the brief's foundation, word for word, and the canary", () => {
-  assert.ok(SYSTEM_PROMPT.startsWith("SYSTEM PROMPT — AKARAT AI PROPERTY ADVISOR\n\nYou are Akarat AI, a bilingual real estate research"));
-  assert.ok(SYSTEM_PROMPT.includes("Never claim a property is available unless its availability is sufficiently verified."));
-  assert.ok(SYSTEM_PROMPT.includes("الاستثمار بالعقار فيه مخاطر. تأكّد من المعلومات واعمل بحثك الخاص قبل ما تاخد أي قرار استثماري."));
+test("the system prompt is the production prompt, word for word, then the operating notes and the canary", () => {
+  assert.ok(SYSTEM_PROMPT.startsWith("<agent_role>\nYou are Akarat AI, a bilingual Jordanian real estate discovery and market research assistant."));
+  assert.ok(SYSTEM_PROMPT.includes("5. Never invent properties, availability, prices, URLs, statistics, or market developments."));
+  assert.ok(SYSTEM_PROMPT.includes("Never claim to have performed a search that did not occur.\n</security>"));
+  assert.ok(SYSTEM_PROMPT.includes("For investment guidance, remind users that property investments involve risk and should be independently researched and verified."));
+  assert.ok(SYSTEM_PROMPT.includes("Make every tool call first, including present_listings and compare_listings. Then write your answer as your final message."));
+  assert.ok(!SYSTEM_PROMPT.includes("suggest_followups"), "no tool call after the answer");
   assert.ok(SYSTEM_PROMPT.includes(CANARY));
   // The cached prefix may not vary from request to request.
   assert.ok(!/\d{4}-\d{2}-\d{2}/.test(SYSTEM_PROMPT));
@@ -48,7 +51,7 @@ test("the system prompt carries the brief's foundation, word for word, and the c
 
 test("leak screening: the canary or a recital of the rules, but not ordinary answers", () => {
   assert.ok(looksLikePromptLeak(`my notes: ${CANARY}`));
-  const recital = SYSTEM_PROMPT.slice(SYSTEM_PROMPT.indexOf("## Listings"), SYSTEM_PROMPT.indexOf("## Research"));
+  const recital = SYSTEM_PROMPT.slice(SYSTEM_PROMPT.indexOf("Listings\n- Present only"), SYSTEM_PROMPT.indexOf("Research\n- Current"));
   assert.ok(looksLikePromptLeak(recital));
   assert.ok(!looksLikePromptLeak("I found two apartments in Abdoun under your budget. The first is verified and was listed four days ago."));
   assert.ok(!looksLikePromptLeak("Property markets involve risk. Please conduct your own research and verify all information before making an investment decision."));
