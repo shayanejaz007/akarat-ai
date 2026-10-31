@@ -14,6 +14,17 @@ import '../localization/l10n.dart';
 import '../theme/tokens.dart';
 import 'routes.dart';
 
+/// The shell's tabs, in the order of the router's branches (app_router.dart)
+/// and of the bar's items.
+abstract final class NavTab {
+  static const home = 0;
+  static const explore = 1;
+  static const daily = 2;
+  static const ai = 3;
+  static const saved = 4;
+  static const profile = 5;
+}
+
 /// The six-tab shell. Each tab keeps its own navigation stack and scroll
 /// position (IndexedStack under StatefulShellRoute); tapping the active tab
 /// again returns it to its first screen.
@@ -76,7 +87,7 @@ class ScaffoldWithNav extends ConsumerWidget {
                   index: shell.currentIndex,
                   signedIn: signedIn,
                   attention: unread,
-                  tabKeys: [null, t.navExplore, null, t.navAi, t.navSaved, t.navProfile],
+                  tabKeys: t.navTabs,
                   onSelect: (i) {
                     unawaited(HapticFeedback.selectionClick());
                     shell.goBranch(i, initialLocation: i == shell.currentIndex);

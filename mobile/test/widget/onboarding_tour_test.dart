@@ -91,7 +91,7 @@ Widget _homeWithTabs({required bool signedIn}) => Consumer(
         index: 0,
         signedIn: signedIn,
         onSelect: (_) {},
-        tabKeys: [null, t.navExplore, t.navAi, t.navSaved, t.navProfile],
+        tabKeys: t.navTabs,
       ),
     );
   },

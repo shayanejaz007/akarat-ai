@@ -7,6 +7,7 @@
 @Tags(['visual'])
 library;
 
+import 'package:akarat/app/router/scaffold_with_nav.dart';
 import 'package:akarat/features/ai_search/data/search_repository.dart';
 import 'package:akarat/features/ai_search/domain/search_item.dart';
 import 'package:akarat/features/ai_search/presentation/ai_search_screen.dart';
@@ -127,7 +128,7 @@ void main() {
     for (final lang in ['en', 'ar']) {
       testWidgets('data $lang', (t) async {
         final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
-        await render(t, 'home_$lang', withNav(const HomeScreen(), 0), overrides: await deps.overrides(), lang: lang);
+        await render(t, 'home_$lang', withNav(const HomeScreen(), NavTab.home), overrides: await deps.overrides(), lang: lang);
       });
     }
     testWidgets('scrolled', (t) async {
@@ -135,7 +136,7 @@ void main() {
       await render(
         t,
         'home_scrolled',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         interact: (t) => t.drag(find.byType(CustomScrollView), const Offset(0, -700)),
       );
@@ -145,7 +146,7 @@ void main() {
       await render(
         t,
         'home_dark',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         brightness: Brightness.dark,
       );
@@ -155,7 +156,7 @@ void main() {
       await render(
         t,
         'home_compact',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         device: Device.compact,
       );
@@ -165,28 +166,28 @@ void main() {
       await render(
         t,
         'home_tablet',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         device: Device.tablet,
       );
     });
     testWidgets('loading', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(pending: true));
-      await render(t, 'home_loading', withNav(const HomeScreen(), 0), overrides: await deps.overrides());
+      await render(t, 'home_loading', withNav(const HomeScreen(), NavTab.home), overrides: await deps.overrides());
     });
     testWidgets('empty', (t) async {
-      await render(t, 'home_empty', withNav(const HomeScreen(), 0), overrides: await TestDeps().overrides());
+      await render(t, 'home_empty', withNav(const HomeScreen(), NavTab.home), overrides: await TestDeps().overrides());
     });
     testWidgets('error', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(error: const SocketExceptionLike()));
-      await render(t, 'home_error', withNav(const HomeScreen(), 0), overrides: await deps.overrides());
+      await render(t, 'home_error', withNav(const HomeScreen(), NavTab.home), overrides: await deps.overrides());
     });
     testWidgets('large text ar', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
       await render(
         t,
         'home_text16_ar',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         lang: 'ar',
         textScale: 1.6,
@@ -201,7 +202,7 @@ void main() {
         await render(
           t,
           'explore_$lang',
-          withNav(const ExploreScreen(), 1),
+          withNav(const ExploreScreen(), NavTab.explore),
           overrides: await deps.overrides(),
           lang: lang,
         );
@@ -212,24 +213,24 @@ void main() {
       await render(
         t,
         'explore_tablet',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         device: Device.tablet,
       );
     });
     testWidgets('loading', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(pending: true));
-      await render(t, 'explore_loading', withNav(const ExploreScreen(), 1), overrides: await deps.overrides());
+      await render(t, 'explore_loading', withNav(const ExploreScreen(), NavTab.explore), overrides: await deps.overrides());
     });
     testWidgets('empty', (t) async {
-      await render(t, 'explore_empty', withNav(const ExploreScreen(), 1), overrides: await TestDeps().overrides());
+      await render(t, 'explore_empty', withNav(const ExploreScreen(), NavTab.explore), overrides: await TestDeps().overrides());
     });
     testWidgets('list view', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
       await render(
         t,
         'explore_list',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         interact: (t) => t.tap(find.text('List')),
       );
@@ -239,7 +240,7 @@ void main() {
       await render(
         t,
         'explore_tour',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(prefs: {'akarat.tour.map': false}),
         interact: (t) => t.pump(const Duration(milliseconds: 900)),
       );
@@ -249,7 +250,7 @@ void main() {
       await render(
         t,
         'explore_filters',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         interact: (t) => t.tap(find.byTooltip('Filters')),
       );
@@ -259,7 +260,7 @@ void main() {
       await render(
         t,
         'explore_filters_ar',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         lang: 'ar',
         interact: (t) => t.tap(find.byTooltip('الفلاتر')),
@@ -274,7 +275,7 @@ void main() {
         await render(
           t,
           'ai_idle_$lang',
-          withNav(const AiSearchScreen(), 2),
+          withNav(const AiSearchScreen(), NavTab.ai),
           overrides: await deps.overrides(),
           lang: lang,
         );
@@ -284,7 +285,7 @@ void main() {
         await render(
           t,
           'ai_results_$lang',
-          withNav(const AiSearchScreen(), 2),
+          withNav(const AiSearchScreen(), NavTab.ai),
           overrides: await deps.overrides(),
           lang: lang,
           interact: (t) => submit(
@@ -299,7 +300,7 @@ void main() {
       await render(
         t,
         'ai_voice_listening_ar',
-        withNav(const AiSearchScreen(voiceToken: '1'), 2),
+        withNav(const AiSearchScreen(voiceToken: '1'), NavTab.ai),
         overrides: await TestDeps(speech: speech).overrides(),
         lang: 'ar',
         interact: (t) async {
@@ -315,7 +316,7 @@ void main() {
       await render(
         t,
         'ai_voice_review',
-        withNav(const AiSearchScreen(voiceToken: '1'), 2),
+        withNav(const AiSearchScreen(voiceToken: '1'), NavTab.ai),
         overrides: await TestDeps(speech: speech).overrides(),
         interact: (t) async => speech.say(
           'three bedroom apartment in Abdoun under one hundred fifty thousand JOD with parking',
@@ -327,7 +328,7 @@ void main() {
       await render(
         t,
         'ai_voice_denied',
-        withNav(const AiSearchScreen(voiceToken: '1'), 2),
+        withNav(const AiSearchScreen(voiceToken: '1'), NavTab.ai),
         overrides: await TestDeps(speech: FakeSpeechService(ready: false, failure: SpeechFailure.denied)).overrides(),
       );
     });
@@ -336,7 +337,7 @@ void main() {
       await render(
         t,
         'ai_typing',
-        withNav(const AiSearchScreen(), 2),
+        withNav(const AiSearchScreen(), NavTab.ai),
         overrides: await deps.overrides(),
         interact: (t) async {
           await t.enterText(find.byType(TextField), 'villa for rent in Dabouq with a pool under 3000 a month');
@@ -349,7 +350,7 @@ void main() {
       await render(
         t,
         'ai_results_scrolled',
-        withNav(const AiSearchScreen(), 2),
+        withNav(const AiSearchScreen(), NavTab.ai),
         overrides: await deps.overrides(),
         interact: (t) async {
           await submit(t, '3 bedroom apartment for sale in Abdoun under 150k');
@@ -365,7 +366,7 @@ void main() {
       await render(
         t,
         'ai_none',
-        withNav(const AiSearchScreen(), 2),
+        withNav(const AiSearchScreen(), NavTab.ai),
         overrides: await deps.overrides(),
         interact: (t) async {
           await submit(t, 'castle in Wadi Rum');
@@ -457,14 +458,14 @@ void main() {
 
   group('saved', () {
     testWidgets('empty guest', (t) async {
-      await render(t, 'saved_empty', withNav(const SavedScreen(), 3), overrides: await TestDeps().overrides());
+      await render(t, 'saved_empty', withNav(const SavedScreen(), NavTab.saved), overrides: await TestDeps().overrides());
     });
     testWidgets('with items', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
       await render(
         t,
         'saved_items',
-        withNav(const SavedScreen(), 3),
+        withNav(const SavedScreen(), NavTab.saved),
         overrides: await deps.overrides(
           prefs: {
             'akarat.onboarded': true,
@@ -494,7 +495,7 @@ void main() {
       await render(
         t,
         'saved_searches',
-        withNav(const SavedScreen(initialTab: 'searches'), 3),
+        withNav(const SavedScreen(initialTab: 'searches'), NavTab.saved),
         overrides: await deps.overrides(user: fakeUser()),
       );
     });
@@ -503,7 +504,7 @@ void main() {
       await render(
         t,
         'saved_tablet',
-        withNav(const SavedScreen(), 3),
+        withNav(const SavedScreen(), NavTab.saved),
         overrides: await deps.overrides(
           prefs: {
             'akarat.onboarded': true,
@@ -533,7 +534,7 @@ void main() {
       await render(
         t,
         'saved_searches_ar',
-        withNav(const SavedScreen(initialTab: 'searches'), 3),
+        withNav(const SavedScreen(initialTab: 'searches'), NavTab.saved),
         overrides: await deps.overrides(user: fakeUser()),
         lang: 'ar',
       );
@@ -542,7 +543,7 @@ void main() {
 
   group('profile', () {
     testWidgets('guest en', (t) async {
-      await render(t, 'profile_guest', withNav(const ProfileScreen(), 4), overrides: await TestDeps().overrides());
+      await render(t, 'profile_guest', withNav(const ProfileScreen(), NavTab.profile), overrides: await TestDeps().overrides());
     });
     testWidgets('signed in ar', (t) async {
       final deps = TestDeps(
@@ -553,7 +554,7 @@ void main() {
       await render(
         t,
         'profile_signed_ar',
-        withNav(const ProfileScreen(), 4),
+        withNav(const ProfileScreen(), NavTab.profile),
         overrides: await deps.overrides(user: fakeUser()),
         lang: 'ar',
       );
@@ -565,7 +566,7 @@ void main() {
       await render(
         t,
         'profile_dark',
-        withNav(const ProfileScreen(), 4),
+        withNav(const ProfileScreen(), NavTab.profile),
         overrides: await deps.overrides(user: fakeUser()),
         brightness: Brightness.dark,
       );
@@ -577,7 +578,7 @@ void main() {
       await render(
         t,
         'profile_tablet',
-        withNav(const ProfileScreen(), 4),
+        withNav(const ProfileScreen(), NavTab.profile),
         overrides: await deps.overrides(user: fakeUser()),
         device: Device.tablet,
       );
@@ -746,7 +747,7 @@ void main() {
         await render(
           t,
           'type_explore_xl_$lang',
-          withNav(const ExploreScreen(), 1),
+          withNav(const ExploreScreen(), NavTab.explore),
           overrides: await deps.overrides(),
           lang: lang,
           textScale: 1.6,
@@ -761,7 +762,7 @@ void main() {
         await render(
           t,
           'type_home_compact_$lang',
-          withNav(const HomeScreen(), 0),
+          withNav(const HomeScreen(), NavTab.home),
           overrides: await deps.overrides(),
           lang: lang,
           device: Device.compact,
@@ -774,7 +775,7 @@ void main() {
       await render(
         t,
         'type_home_xl_en',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         textScale: 1.6,
       );
@@ -790,7 +791,7 @@ void main() {
       await render(
         t,
         'landscape_home',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(),
         device: Device.landscape,
       );
@@ -813,7 +814,7 @@ void main() {
         await render(
           t,
           'tour_welcome_$lang',
-          withNav(const HomeScreen(), 0),
+          withNav(const HomeScreen(), NavTab.home),
           overrides: await deps.overrides(user: lina, prefs: {'akarat.tour.explore': false}),
           lang: lang,
         );
@@ -823,7 +824,7 @@ void main() {
         await render(
           t,
           'tour_search_xl_$lang',
-          withNav(const HomeScreen(), 0),
+          withNav(const HomeScreen(), NavTab.home),
           overrides: await deps.overrides(user: lina, prefs: {'akarat.tour.explore': false}),
           lang: lang,
           textScale: 1.6,
@@ -836,7 +837,7 @@ void main() {
       await render(
         t,
         'tour_dark',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(prefs: {'akarat.tour.explore': false}),
         brightness: Brightness.dark,
         interact: (t) => next(t, 1),
@@ -847,7 +848,7 @@ void main() {
       await render(
         t,
         'tour_welcome_brief_ar',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(user: lina),
         lang: 'ar',
       );
@@ -857,7 +858,7 @@ void main() {
       await render(
         t,
         'tour_landscape',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(prefs: {'akarat.tour.explore': false}),
         device: Device.landscape,
         textScale: 1.3,
@@ -869,7 +870,7 @@ void main() {
       await render(
         t,
         'tour_tablet',
-        withNav(const HomeScreen(), 0),
+        withNav(const HomeScreen(), NavTab.home),
         overrides: await deps.overrides(prefs: {'akarat.tour.explore': false}),
         device: Device.tablet,
         interact: (t) => next(t, 5),
@@ -897,7 +898,7 @@ void main() {
       await render(
         t,
         'dark_explore',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         brightness: dark,
       );
@@ -907,7 +908,7 @@ void main() {
       await render(
         t,
         'dark_explore_list',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         brightness: dark,
         interact: (t) => t.tap(find.text('List')),
@@ -918,7 +919,7 @@ void main() {
       await render(
         t,
         'dark_filters',
-        withNav(const ExploreScreen(), 1),
+        withNav(const ExploreScreen(), NavTab.explore),
         overrides: await deps.overrides(),
         brightness: dark,
         interact: (t) => t.tap(find.byTooltip('Filters')),
@@ -929,7 +930,7 @@ void main() {
       await render(
         t,
         'dark_ai_results',
-        withNav(const AiSearchScreen(), 2),
+        withNav(const AiSearchScreen(), NavTab.ai),
         overrides: await deps.overrides(),
         brightness: dark,
         interact: (t) async {
@@ -943,7 +944,7 @@ void main() {
       await render(
         t,
         'dark_saved',
-        withNav(const SavedScreen(), 3),
+        withNav(const SavedScreen(), NavTab.saved),
         overrides: await deps.overrides(
           prefs: {
             'akarat.onboarded': true,
@@ -1059,7 +1060,7 @@ void main() {
       await render(
         t,
         'phone_profile',
-        withNav(const ProfileScreen(), 4),
+        withNav(const ProfileScreen(), NavTab.profile),
         overrides: await deps(user: fakeUser()),
         interact: (t) => t.drag(find.byType(Scrollable).first, const Offset(0, -900)),
       );
@@ -1109,7 +1110,7 @@ void main() {
       await render(
         t,
         'facebook_profile_dark',
-        withNav(const ProfileScreen(), 4),
+        withNav(const ProfileScreen(), NavTab.profile),
         overrides: await TestDeps().overrides(user: withFacebook(), facebookSignIn: true, phoneSignIn: true),
         brightness: Brightness.dark,
         interact: (t) => t.drag(find.byType(Scrollable).first, const Offset(0, -900)),

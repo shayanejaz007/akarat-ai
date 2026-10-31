@@ -166,7 +166,7 @@ void main() {
                 index: 0,
                 signedIn: false,
                 onSelect: (_) {},
-                tabKeys: [null, t.navExplore, t.navAi, t.navSaved, t.navProfile],
+                tabKeys: t.navTabs,
               ),
             );
           },

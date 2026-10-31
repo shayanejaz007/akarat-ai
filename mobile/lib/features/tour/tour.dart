@@ -35,6 +35,11 @@ class TourTargets {
   final navSaved = GlobalKey(debugLabel: 'tour.navSaved');
   final navProfile = GlobalKey(debugLabel: 'tour.navProfile');
 
+  /// The tab bar's keys in the shell's order (NavTab); Home and Daily have
+  /// none. The shell and the tests take the list from here so they cannot
+  /// drift apart when a tab is added.
+  List<Key?> get navTabs => [null, navExplore, null, navAi, navSaved, navProfile];
+
   final mapDeal = GlobalKey(debugLabel: 'tour.mapDeal');
   final mapLegend = GlobalKey(debugLabel: 'tour.mapLegend');
   final mapFilters = GlobalKey(debugLabel: 'tour.mapFilters');

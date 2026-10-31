@@ -129,7 +129,7 @@ Widget withNav(Widget child, int index) => Scaffold(
                   signedIn: ref.watch(isSignedInProvider),
                   onSelect: (_) {},
                   // The tabs the main tour points at, as in the app.
-                  tabKeys: [null, t.navExplore, t.navAi, t.navSaved, t.navProfile],
+                  tabKeys: t.navTabs,
                 );
               },
             ),
