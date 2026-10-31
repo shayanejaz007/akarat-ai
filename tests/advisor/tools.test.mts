@@ -4,6 +4,7 @@ import { runTool, TOOLS } from "../../lib/advisor/tools.ts";
 import { CANARY } from "../../lib/advisor/prompt.ts";
 import { forModel, detailForModel } from "../../lib/advisor/listings.ts";
 import { FakeDb, env, listing } from "./fixtures.mts";
+import { STRICT_UNION_LIMIT, strictUnionCount } from "./mock-anthropic.mts";
 
 const search = (over: Record<string, unknown> = {}) => ({
   deal: "sale",
@@ -22,10 +23,16 @@ const search = (over: Record<string, unknown> = {}) => ({
 
 const parse = (s: string) => JSON.parse(s);
 
-test("tool definitions are strict, closed and fully required", () => {
+test("tool definitions are closed and fully required; strict where the API allows it", () => {
+  // The API refuses a request whose strict tools carry more than 16 nullable
+  // parameters between them (found live: all six strict came to 31). The
+  // tools that decide what the reader sees stay strict; the others are
+  // checked in code (the bad-input tests below).
+  const strict = TOOLS.filter((t: any) => t.strict === true).map((t: any) => t.name);
+  assert.deepEqual(strict, ["search_akarat_listings", "get_akarat_listing", "present_listings"]);
+  assert.ok(strictUnionCount(TOOLS) <= STRICT_UNION_LIMIT, `${strictUnionCount(TOOLS)} nullable parameters in strict tools`);
   for (const t of TOOLS) {
     if (!("input_schema" in t)) continue;
-    assert.equal((t as any).strict, true, `${t.name} is strict`);
     const walk = (schema: any, path: string) => {
       if (schema?.type === "object") {
         assert.equal(schema.additionalProperties, false, `${path} closed`);

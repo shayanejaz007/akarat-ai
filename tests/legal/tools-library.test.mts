@@ -4,10 +4,13 @@ import { OFFICIAL_DOMAINS, SECONDARY_DOMAINS, WEB_DOMAINS, tierOfHost } from "..
 import { citationTitle, libraryCounts, resetLibraryCache, toSearchResult } from "../../lib/legal/library.ts";
 import { TOOLS, runTool } from "../../lib/legal/tools.ts";
 import { FakeLibrary, hit } from "./fixtures.mts";
+import { STRICT_UNION_LIMIT, strictUnionCount } from "../advisor/mock-anthropic.mts";
 
 test("custom tools are strict, with every property required", () => {
   const custom = TOOLS.filter((t: any) => t.input_schema) as any[];
   assert.deepEqual(custom.map(t => t.name), ["search_legal_library", "lookup_citation", "flag_urgent"]);
+  // The API refuses more than 16 nullable parameters across strict tools.
+  assert.ok(strictUnionCount(TOOLS) <= STRICT_UNION_LIMIT, `${strictUnionCount(TOOLS)} nullable parameters in strict tools`);
   assert.deepEqual(TOOLS.map((t: any) => t.name), ["search_legal_library", "lookup_citation", "flag_urgent", "web_search", "web_fetch"]);
   for (const t of custom) {
     assert.equal(t.strict, true, t.name);

@@ -31,6 +31,29 @@ export type Reply = {
 
 export type Seen = { body: any; headers: IncomingMessage["headers"] };
 
+/**
+ * The real API compiles strict tool schemas into a grammar and refuses (400)
+ * a request whose strict tools have more than 16 parameters with a union
+ * type between them: anyOf, or a list of types, so every nullable field.
+ * Found against the live API; the stand-in refuses the same requests.
+ */
+export const STRICT_UNION_LIMIT = 16;
+
+export function strictUnionCount(tools: readonly unknown[] | undefined): number {
+  let n = 0;
+  const walk = (s: any) => {
+    if (!s || typeof s !== "object") return;
+    for (const v of Object.values(s.properties ?? {}) as any[]) {
+      if (v && (Array.isArray(v.anyOf) || Array.isArray(v.type))) n++;
+      walk(v);
+    }
+    if (s.items) walk(s.items);
+    for (const alt of s.anyOf ?? []) walk(alt);
+  };
+  for (const t of (tools ?? []) as any[]) if (t?.strict === true && t.input_schema) walk(t.input_schema);
+  return n;
+}
+
 const event = (type: string, data: unknown) => `event: ${type}\ndata: ${JSON.stringify({ type, ...(data as object) })}\n\n`;
 
 export function streamOf(reply: Reply, model = "claude-opus-5-5"): string[] {
@@ -108,6 +131,12 @@ export async function startMock(
     }
     const body = JSON.parse(raw || "{}");
     seen.push({ body, headers: req.headers });
+    const unions = strictUnionCount(body.tools);
+    if (unions > STRICT_UNION_LIMIT) {
+      const message = `Schemas contains too many parameters with union types (${unions} parameters with type arrays or anyOf). This causes exponential compilation cost. Reduce the number of nullable or union-typed parameters (limit: ${STRICT_UNION_LIMIT} parameters with unions).`;
+      res.writeHead(400, { "content-type": "application/json", "request-id": "req_mock" }).end(JSON.stringify({ type: "error", error: { type: "invalid_request_error", message } }));
+      return;
+    }
     let reply: Reply;
     try {
       reply = await handler(body, seen);

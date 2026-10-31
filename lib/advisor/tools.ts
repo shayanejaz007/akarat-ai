@@ -128,7 +128,12 @@ const statsTool: BetaTool = {
   description:
     "Asking-price statistics (median, quartiles, median price per square metre) from active Akarat.ai listings. " +
     "Asking prices on one marketplace, not sale prices: always say so, and give the sample size.",
-  strict: true,
+  // Not strict: the API refuses a request whose strict tools have more than
+  // 16 nullable parameters between them (modelled in
+  // tests/advisor/mock-anthropic.mts). Search and present_listings, which
+  // decide what the reader sees, keep strict mode; this tool's input is
+  // checked in code (runTool) like every other.
+  strict: false,
   input_schema: {
     type: "object",
     properties: {
@@ -149,7 +154,12 @@ const calcTool: BetaTool = {
   description:
     "Exact investment arithmetic: purchase costs, gross and net rental yield, payback, mortgage payment and cash flow, and an optional growth scenario. " +
     "Use it for every financial figure you state. Rates, fees and rents must come from your research or the user, or be labelled as assumptions; leave a field null rather than guess.",
-  strict: true,
+  // Not strict: the API refuses a request whose strict tools have more than
+  // 16 nullable parameters between them (modelled in
+  // tests/advisor/mock-anthropic.mts). Search and present_listings, which
+  // decide what the reader sees, keep strict mode; this tool's input is
+  // checked in code (runTool) like every other.
+  strict: false,
   input_schema: {
     type: "object",
     properties: {
@@ -191,7 +201,12 @@ const compareTool: BetaTool = {
   description:
     "A side-by-side table of two to four listings returned or shown earlier in this conversation: price, price per square metre, rooms, size, location, source and age. " +
     "The table appears in the chat; your text adds the judgement.",
-  strict: true,
+  // Not strict: the API refuses a request whose strict tools have more than
+  // 16 nullable parameters between them (modelled in
+  // tests/advisor/mock-anthropic.mts). Search and present_listings, which
+  // decide what the reader sees, keep strict mode; this tool's input is
+  // checked in code (runTool) like every other.
+  strict: false,
   input_schema: {
     type: "object",
     properties: { listings: { type: "array", items: refSchema } },
