@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../features/ai_hub/ai_hub_screen.dart';
 import '../../features/ai_search/presentation/ai_search_screen.dart';
 import '../../features/authentication/presentation/auth_callback_screen.dart';
 import '../../features/authentication/presentation/forgot_password_screen.dart';
@@ -112,11 +113,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.aiSearch,
-                builder: (context, state) => AiSearchScreen(
+                builder: (context, state) => AiHubScreen(
+                  mode: state.uri.queryParameters['mode'],
+                  modeToken: state.uri.queryParameters['t'],
                   initialQuery: state.uri.queryParameters['q'],
                   focusToken: state.uri.queryParameters['focus'],
                   voiceToken: state.uri.queryParameters['voice'],
                 ),
+                routes: [
+                  // The listings search without the advisor, over the hub.
+                  GoRoute(
+                    path: 'search',
+                    builder: (context, state) => AiSearchScreen(initialQuery: state.uri.queryParameters['q']),
+                  ),
+                ],
               ),
             ],
           ),

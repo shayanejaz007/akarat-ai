@@ -18,10 +18,15 @@ of accounts, one set of listings, one set of inquiries.
 ## What it does
 
 Home with real recent (and, when an admin flags them, featured) listings ·
-Explore with server-side filters, sort and infinite scroll · AI Search in
-English or Jordanian Arabic, using the website's own parser and ranker,
-the Vercel search route and the market index, with match explanations and
-honest portal links · listing details with gallery, video, privacy-respecting
+Explore with server-side filters, sort and infinite scroll · the AI tab,
+with the website's two Claude assistants: **Property AI** (the advisor at
+`/api/ai/advisor`: listing cards, comparisons, cited sources, follow-ups,
+removable search criteria, dictation) and **Ask a Lawyer** (`/api/legal/*`:
+document upload, history, cited and checked sources, unverified-reference
+marks, urgent notices, reports, research summary), plus the plain listings
+search in English or Jordanian Arabic, using the website's own parser and
+ranker, the Vercel search route and the market index, with match
+explanations and honest portal links · listing details with gallery, video, privacy-respecting
 location, call / WhatsApp / in-app inquiry · saved properties and saved
 searches · email and Google sign-in, password reset · a 9-step listing flow
 with photo/video upload, map pin and drafts · owner dashboard and inquiries ·

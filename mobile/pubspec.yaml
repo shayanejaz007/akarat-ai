@@ -2,7 +2,7 @@ name: akarat
 description: "Akarat.ai — property search across Jordan. Native client for the same Supabase project and Vercel API the website uses."
 publish_to: 'none'
 
-version: 1.0.3+4
+version: 1.0.4+5
 
 environment:
   sdk: ^3.13.5
@@ -48,6 +48,7 @@ dependencies:
   crypto: ^3.0.7
   # The app's own folder, for the profile picture kept on the phone.
   path_provider: ^2.1.6
+  file_picker: ^13.3.2
 
 dev_dependencies:
   flutter_test:

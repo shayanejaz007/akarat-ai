@@ -223,7 +223,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tourAiTitle => 'اطلبه بكلماتك';
 
   @override
-  String get tourAiBody => 'عدّل بحثك بكلمات بسيطة، واحفظه، وارجع إليه متى شئت.';
+  String get tourAiBody => 'اسأل مستشار العقارات عن البيوت والمناطق والاستثمار، أو اسأل محامي عن القانون الأردني.';
 
   @override
   String get tourSavedTitle => 'احتفظ بما يعجبك';
@@ -340,6 +340,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get voiceHint => 'قل ما تبحث عنه، مثل «ثلاث غرف في عبدون بأقل من ١٥٠ ألف».';
+
+  @override
+  String get voiceDictationHint => 'تكلّم بشكل طبيعي. سيُضاف كلامك إلى مربع الرسالة عندما تتوقف، أو اضغط «تم».';
 
   @override
   String get voiceReviewTitle => 'هل هذا ما قصدته؟';
@@ -2636,4 +2639,836 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dailyErrNotYours => 'هذا للمالك فقط.';
+
+  @override
+  String get aiHubAdvisor => 'مستشار العقارات';
+
+  @override
+  String get aiHubLawyer => 'اسأل محامي';
+
+  @override
+  String get aiHubPlainSearch => 'بحث عادي';
+
+  @override
+  String get aiHubNewChat => 'محادثة جديدة';
+
+  @override
+  String get aiHubCopy => 'نسخ';
+
+  @override
+  String get aiHubCopied => 'تم النسخ';
+
+  @override
+  String get aiHubDictate => 'تكلّم بدل الكتابة';
+
+  @override
+  String get homeAiTitle => 'اسأل أكارات AI';
+
+  @override
+  String get homeAdvisorBody => 'ابحث عن بيت، قارن المناطق، وقيّم استثمارك.';
+
+  @override
+  String get homeLawyerBody => 'أسئلة عن قوانين العقار والإيجار في الأردن.';
+
+  @override
+  String get advKicker => 'أكارات AI · مستشارك العقاري';
+
+  @override
+  String get advIdleTitle => 'اعثر على عقارك القادم بالذكاء الاصطناعي.';
+
+  @override
+  String get advIdleBody => 'ابحث واستكشف واستثمر في عقارات الأردن مع مستشار محلي ذكي.';
+
+  @override
+  String get advPrompt1 => 'بدي شقة 3 غرف نوم بعبدون بأقل من 150 ألف دينار.';
+
+  @override
+  String get advPrompt2 => 'وين أستثمر 50 ألف دينار بالعقار بالأردن؟';
+
+  @override
+  String get advPrompt3 => 'قارنلي بين الاستثمار العقاري بعمّان والعقبة.';
+
+  @override
+  String get advPrompt4 => 'Find a 3-bedroom apartment in Abdoun under 150,000 JOD.';
+
+  @override
+  String get advPlaceholder => 'اسأل عن بيت أو منطقة أو استثمار في الأردن…';
+
+  @override
+  String get advPlaceholderMore => 'اسأل سؤالاً آخر…';
+
+  @override
+  String get advInputLabel => 'اكتب رسالتك لمستشار أكارات';
+
+  @override
+  String get advSend => 'إرسال';
+
+  @override
+  String get advStop => 'إيقاف';
+
+  @override
+  String get advThinking => 'أفكّر…';
+
+  @override
+  String get advWriting => 'أكتب الرد…';
+
+  @override
+  String get advDoingSearch => 'أبحث في إعلانات أكارات…';
+
+  @override
+  String get advDoingListing => 'أفتح تفاصيل الإعلان…';
+
+  @override
+  String get advDoingStats => 'أراجع أسعار العرض على أكارات…';
+
+  @override
+  String advDoingWebSearchFor(String q) {
+    return 'أبحث في مصادر موثوقة عن «$q»…';
+  }
+
+  @override
+  String get advDoingWebSearch => 'أبحث في مصادر موثوقة…';
+
+  @override
+  String advDoingWebFetch(String host) {
+    return 'أقرأ صفحة على $host…';
+  }
+
+  @override
+  String get advDoingWebFetchPage => 'أقرأ صفحة على الويب…';
+
+  @override
+  String get advDoingCalc => 'أحسب الأرقام…';
+
+  @override
+  String get advDoingCompare => 'أقارن الإعلانات…';
+
+  @override
+  String get advDoingOther => 'أعمل على طلبك…';
+
+  @override
+  String get advDidSearch => 'بحثت في إعلانات أكارات';
+
+  @override
+  String get advDidListing => 'فتحت تفاصيل إعلان';
+
+  @override
+  String get advDidStats => 'راجعت أسعار العرض على أكارات';
+
+  @override
+  String advDidWebSearchFor(String q) {
+    return 'بحثت في مصادر موثوقة عن «$q»';
+  }
+
+  @override
+  String get advDidWebSearch => 'بحثت في مصادر موثوقة';
+
+  @override
+  String advDidWebFetch(String host) {
+    return 'قرأت صفحة على $host';
+  }
+
+  @override
+  String get advDidWebFetchPage => 'قرأت صفحة على الويب';
+
+  @override
+  String get advDidCalc => 'حسبت الأرقام';
+
+  @override
+  String get advDidCompare => 'قارنت الإعلانات';
+
+  @override
+  String get advSummaryAkarat => 'أكارات';
+
+  @override
+  String advSummarySearches(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count عملية بحث على الويب',
+      few: '$count عمليات بحث على الويب',
+      two: 'بحثان على الويب',
+      one: 'بحث واحد على الويب',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String advSummaryPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قراءة $count صفحة',
+      few: 'قراءة $count صفحات',
+      two: 'قراءة صفحتين',
+      one: 'قراءة صفحة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get advSummaryCalc => 'حسابات';
+
+  @override
+  String get advSummaryCompare => 'مقارنة';
+
+  @override
+  String get advSummarySteps => 'الخطوات';
+
+  @override
+  String get advLeak => 'ما بقدر أشارك تفاصيل إعدادات الخدمة. اسألني أي شي عن العقارات بالأردن.';
+
+  @override
+  String get advRefused => 'ما بقدر أساعد بهذا الطلب. بقدر أساعدك تلاقي عقار أو تقارن أو تقيّم عقارات بالأردن.';
+
+  @override
+  String get advDisclaimer =>
+      'الاستثمار بالعقار فيه مخاطر. تأكّد من المعلومات واعمل بحثك الخاص قبل ما تاخد أي قرار استثماري.';
+
+  @override
+  String get advNoticePartial => 'انتهى الوقت قبل ما أكمل. اطلب مني أكمل، أو ضيّق السؤال.';
+
+  @override
+  String get advNoticeMemoryReset => 'انتهت صلاحية محادثتنا السابقة، فجاوبت على هذا السؤال من جديد.';
+
+  @override
+  String get advNoticeUnbacked =>
+      'هذا الرد بيذكر إنه بحث، بس ما صار أي بحث فعلي. اعتبر أي معلومة فيه عن السوق غير متحقق منها.';
+
+  @override
+  String get advNoticeStopped => 'تم الإيقاف. أرسل رسالة جديدة للمتابعة.';
+
+  @override
+  String get advErrRateLimited => 'عم ترسل رسائل بسرعة. استنى ثواني وحاول مرة ثانية.';
+
+  @override
+  String get advErrQuotaSignedIn => 'وصلت حد اليوم للمستشار الذكي. بيتجدد بكرة، وكل الإعلانات متاحة للتصفح.';
+
+  @override
+  String get advErrQuotaGuest => 'وصلت حد اليوم للمستشار الذكي. سجّل الدخول لحد أعلى، أو تصفح الإعلانات مباشرة.';
+
+  @override
+  String get advErrQuotaTotal => 'المستشار الذكي وصل حدّه لليوم. كل الإعلانات متاحة للتصفح، وبيرجع بكرة.';
+
+  @override
+  String get advErrBusy => 'المستشار مشغول هلأ. جرّب بعد شوي.';
+
+  @override
+  String get advErrNotConfigured => 'المستشار الذكي غير متاح حالياً.';
+
+  @override
+  String get advErrTooLong => 'الرسالة طويلة. خليها أقل من 2,000 حرف.';
+
+  @override
+  String get advErrOffline => 'يبدو إنك غير متصل بالإنترنت. تأكد من الاتصال وحاول مرة ثانية.';
+
+  @override
+  String get advErrInterrupted => 'انقطع الرد بالطريق. حاول مرة ثانية.';
+
+  @override
+  String get advErrOther => 'صار خطأ بالوصول للمستشار. حاول مرة ثانية.';
+
+  @override
+  String get advPlainSearch => 'ابحث في الإعلانات بدلاً من ذلك';
+
+  @override
+  String advRemoveCriterion(String label) {
+    return 'احذف «$label» من البحث';
+  }
+
+  @override
+  String advBedsMin(int n) {
+    return '$n+ غرف';
+  }
+
+  @override
+  String advBathsMin(int n) {
+    return '$n+ حمامات';
+  }
+
+  @override
+  String get advDealSale => 'للبيع';
+
+  @override
+  String get advDealRent => 'للإيجار';
+
+  @override
+  String get advDealDaily => 'إيجار يومي';
+
+  @override
+  String get advPerMonth => 'شهرياً';
+
+  @override
+  String get advPerNight => 'لليلة';
+
+  @override
+  String get advJod => 'د.أ';
+
+  @override
+  String get advWhy => 'ليش يناسبك';
+
+  @override
+  String get advView => 'عرض العقار';
+
+  @override
+  String advViewOn(String source) {
+    return 'افتح على $source';
+  }
+
+  @override
+  String advPriceOn(String source) {
+    return 'السعر على $source';
+  }
+
+  @override
+  String get advVerified => 'أكارات · موثّق';
+
+  @override
+  String get advNoPhotos => 'لا صور بعد';
+
+  @override
+  String get advExternal => 'إعلان على موقع آخر';
+
+  @override
+  String advExtChecked(String source) {
+    return 'التفاصيل كما نشرها $source وقرأها المستشار. تأكّد منها على الإعلان.';
+  }
+
+  @override
+  String advExtUnchecked(String source) {
+    return 'ما فتحه المستشار: السعر والتفاصيل على $source.';
+  }
+
+  @override
+  String advUpdated(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'محدّث قبل $days يوم',
+      one: 'محدّث أمس',
+      zero: 'محدّث اليوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get advRowPrice => 'السعر';
+
+  @override
+  String get advRowPerSqm => 'سعر المتر';
+
+  @override
+  String get advRowBeds => 'غرف النوم';
+
+  @override
+  String get advRowBaths => 'الحمامات';
+
+  @override
+  String get advRowSize => 'المساحة';
+
+  @override
+  String get advRowLand => 'الأرض';
+
+  @override
+  String get advRowType => 'النوع';
+
+  @override
+  String get advRowLocation => 'الموقع';
+
+  @override
+  String get advRowVerified => 'موثّق على أكارات';
+
+  @override
+  String get advRowAge => 'معروض منذ';
+
+  @override
+  String advDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n يوم', two: 'يومين', one: 'يوم واحد');
+    return '$_temp0';
+  }
+
+  @override
+  String get advYes => 'نعم';
+
+  @override
+  String get advNo => 'لا';
+
+  @override
+  String get advCompareCaption => 'مقارنة الإعلانات جنباً إلى جنب';
+
+  @override
+  String get advSources => 'المصادر';
+
+  @override
+  String get advCriteria => 'شروط البحث';
+
+  @override
+  String get lawKicker => 'أكارات القانوني · القانون الأردني';
+
+  @override
+  String get lawTitle => 'اسأل محامي.';
+
+  @override
+  String get lawSub => 'افهم حقوقك بمساعدة الذكاء الاصطناعي، بالاعتماد على التشريعات والأحكام القضائية الأردنية.';
+
+  @override
+  String get lawName => 'أكارات القانوني';
+
+  @override
+  String get lawPlaceholder => 'اشرح وضعك أو اكتب سؤالك القانوني…';
+
+  @override
+  String get lawPlaceholderMore => 'اسأل سؤالاً آخر…';
+
+  @override
+  String get lawInputLabel => 'سؤالك القانوني';
+
+  @override
+  String get lawAttach => 'أرفق مستنداً';
+
+  @override
+  String get lawAttachPhotos => 'صورة لصفحة';
+
+  @override
+  String get lawAttachCamera => 'التقط صورة';
+
+  @override
+  String get lawAttachFile => 'ملف PDF أو Word أو نص';
+
+  @override
+  String get lawDisclaimerShort =>
+      'معلومات قانونية مولّدة بالذكاء الاصطناعي، وليست استشارة قانونية. راجعها مع محامٍ أردني مرخّص قبل أن تتصرف.';
+
+  @override
+  String get lawFullNotice => 'اقرأ التنبيه كاملاً';
+
+  @override
+  String get lawDisclaimer =>
+      'هذه المعلومات إرشادات قانونية مولّدة بالذكاء الاصطناعي ولأغراض التوعية العامة، ولا تُغني عن استشارة محامٍ أردني مرخّص. قد تتغير القوانين وتفسيراتها، لذلك يُرجى مراجعة محامٍ مختص للتحقق من دقة المعلومات ومدى انطباقها على حالتك، وإجراء بحثك الخاص قبل اتخاذ أي قرار قانوني.';
+
+  @override
+  String get lawPrompt1 => 'صاحب البيت بده يرفع عليّ الأجرة. هل هذا قانوني في الأردن؟';
+
+  @override
+  String get lawPrompt2 => 'هل يحق للأجنبي شراء عقار في عمّان؟';
+
+  @override
+  String get lawPrompt3 => 'راجع عقد الإيجار هذا وحدّد المخاطر القانونية فيه.';
+
+  @override
+  String get lawPrompt4 => 'ماذا يحدث إذا رفض البائع نقل ملكية العقار بعد استلام الثمن؟';
+
+  @override
+  String get lawPrompt5 => 'شو حقوقي إذا صاحب البيت بده يطلعني قبل ما يخلص العقد؟';
+
+  @override
+  String get lawPrompt6 => 'كيف بقدر أرفع دعوى على شخص ما رجّعلي مصاري؟';
+
+  @override
+  String get lawDocQuestion => 'راجع هذا المستند وحدّد المخاطر القانونية فيه.';
+
+  @override
+  String get lawPickDoc => 'اختر العقد الذي تريد مراجعته، وسيُقرأ مع سؤالك.';
+
+  @override
+  String get lawHistory => 'السجل';
+
+  @override
+  String get lawHistoryTitle => 'محادثاتك';
+
+  @override
+  String get lawHistoryEmpty => 'لا شيء هنا بعد. ستظهر محادثاتك هنا.';
+
+  @override
+  String get lawHistoryError => 'تعذّر تحميل محادثاتك.';
+
+  @override
+  String get lawRetention => 'خاصة بحسابك. تُحفظ 90 يوماً بعد آخر رسالة، والمستندات 30 يوماً. يمكنك حذفها في أي وقت.';
+
+  @override
+  String get lawDeleteOne => 'احذف هذه المحادثة';
+
+  @override
+  String get lawDeleteAll => 'احذف كل محادثاتي القانونية';
+
+  @override
+  String get lawConfirmAll => 'سيؤدي هذا إلى حذف كل محادثاتك ومستنداتك القانونية. لا يمكن التراجع عن ذلك.';
+
+  @override
+  String get lawDeleted => 'تم الحذف.';
+
+  @override
+  String get lawAllDeleted => 'حُذفت كل محادثاتك ومستنداتك القانونية.';
+
+  @override
+  String get lawThinking => 'أفكر…';
+
+  @override
+  String get lawWriting => 'أكتب…';
+
+  @override
+  String get lawDoingDocuments => 'أقرأ مستنداتك…';
+
+  @override
+  String get lawDoingLibrary => 'أبحث في المكتبة القانونية…';
+
+  @override
+  String get lawDoingLookup => 'أتحقق من مرجع…';
+
+  @override
+  String get lawDoingWebSearch => 'أبحث في المصادر الأردنية الرسمية…';
+
+  @override
+  String lawDoingWebFetch(String host) {
+    return 'أقرأ $host…';
+  }
+
+  @override
+  String get lawDoingWebFetchSource => 'أقرأ مصدراً…';
+
+  @override
+  String get lawDoingOther => 'جارٍ العمل…';
+
+  @override
+  String get lawDidDocuments => 'قرأت مستنداتك';
+
+  @override
+  String lawDidLibraryFor(String q) {
+    return 'بحثت في المكتبة القانونية عن «$q»';
+  }
+
+  @override
+  String get lawDidLibrary => 'بحثت في المكتبة القانونية';
+
+  @override
+  String lawDidLookupFor(String q) {
+    return 'تحققت من المرجع «$q»';
+  }
+
+  @override
+  String get lawDidLookup => 'تحققت من مرجع';
+
+  @override
+  String lawDidWebSearchFor(String q) {
+    return 'بحثت في المصادر الرسمية عن «$q»';
+  }
+
+  @override
+  String get lawDidWebSearch => 'بحثت في المصادر الرسمية';
+
+  @override
+  String lawDidWebFetch(String host) {
+    return 'قرأت $host';
+  }
+
+  @override
+  String get lawDidWebFetchSource => 'قرأت مصدراً';
+
+  @override
+  String get lawSummaryLibrary => 'المكتبة القانونية';
+
+  @override
+  String lawSummarySearches(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count عملية بحث',
+      few: '$count عمليات بحث',
+      two: 'بحثان',
+      one: 'بحث واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lawSummarySources(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مصدراً',
+      few: '$count مصادر',
+      two: 'مصدران',
+      one: 'مصدر واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lawSummaryDocuments => 'مستنداتك';
+
+  @override
+  String get lawSources => 'المصادر';
+
+  @override
+  String get lawBadgeInForce => 'تشريع موثّق · نافذ';
+
+  @override
+  String get lawBadgeAmended => 'تشريع موثّق · معدّل';
+
+  @override
+  String get lawBadgeRepealed => 'تشريع موثّق · ملغى';
+
+  @override
+  String get lawBadgeLaw => 'تشريع موثّق';
+
+  @override
+  String get lawBadgeJudgment => 'حكم قضائي موثّق';
+
+  @override
+  String get lawBadgeCommentary => 'شرح فقهي';
+
+  @override
+  String get lawBadgeOfficial => 'موقع رسمي';
+
+  @override
+  String get lawBadgeSecondary => 'مصدر ثانوي · غير ملزم';
+
+  @override
+  String get lawBadgeDocument => 'مستندك';
+
+  @override
+  String lawChecked(String date) {
+    return 'تم التحقق $date';
+  }
+
+  @override
+  String get lawLicensed => 'قاعدة بيانات مرخّصة';
+
+  @override
+  String lawPage(int n) {
+    return 'صفحة $n';
+  }
+
+  @override
+  String get lawUnverifiedTitle => 'مراجع تعذّر التحقق منها';
+
+  @override
+  String get lawUnverifiedBody =>
+      'تعذّر ربط هذه المراجع الواردة في الإجابة بمصدر رسمي. اعتبرها غير مؤكدة وتحقق منها مع محامٍ.';
+
+  @override
+  String get lawUnverifiedMark => 'لم يُتحقق منه من مصدر رسمي';
+
+  @override
+  String get lawUrgent => 'عاجل.';
+
+  @override
+  String get lawImportant => 'مهم.';
+
+  @override
+  String get lawShareSummary => 'مشاركة الملخص';
+
+  @override
+  String get lawReport => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get lawReported => 'تم الإبلاغ';
+
+  @override
+  String get lawFbTitle => 'ما المشكلة في هذه الإجابة؟';
+
+  @override
+  String get lawFbGood => 'كانت مفيدة';
+
+  @override
+  String get lawFbWrongLaw => 'قانون غير صحيح';
+
+  @override
+  String get lawFbWrongCitation => 'مادة أو مرجع غير صحيح';
+
+  @override
+  String get lawFbOutdated => 'معلومات قديمة';
+
+  @override
+  String get lawFbFabricated => 'تستند إلى مرجع غير موجود';
+
+  @override
+  String get lawFbMissing => 'أغفلت أمراً مهماً';
+
+  @override
+  String get lawFbUnclear => 'غير واضحة';
+
+  @override
+  String get lawFbOther => 'أمر آخر';
+
+  @override
+  String get lawFbPlaceholder => 'أضف تفاصيل (اختياري). يُرجى عدم ذكر معلومات شخصية.';
+
+  @override
+  String get lawFbReviewerNote =>
+      'بلاغ مراجِع: يُرفق السؤال والإجابة، مع إخفاء البيانات المعرِّفة، لمراجعة ما قبل الإطلاق.';
+
+  @override
+  String get lawFbSend => 'إرسال البلاغ';
+
+  @override
+  String get lawFbSent => 'شكراً لك. تم إرسال بلاغك.';
+
+  @override
+  String get lawFbFailed => 'تعذّر إرسال البلاغ. حاول مرة أخرى.';
+
+  @override
+  String get lawSummaryHeading => 'أكارات — اسأل محامي · ملخص البحث';
+
+  @override
+  String get lawSummaryQuestion => 'السؤال:';
+
+  @override
+  String get lawSummaryUnverified => 'غير متحقق منه:';
+
+  @override
+  String get lawBannerNotReady => 'خدمة «اسأل محامي» غير متاحة الآن. يُرجى المحاولة لاحقاً.';
+
+  @override
+  String get lawBannerSignIn => 'سجّل الدخول لتسأل. تبقى محادثاتك ومستنداتك خاصة بحسابك.';
+
+  @override
+  String get lawBannerReview => 'تخضع خدمة «اسأل محامي» لمراجعة محامين أردنيين مرخّصين قبل إتاحتها للجميع.';
+
+  @override
+  String get lawBannerReviewer =>
+      'صلاحية مراجِع. استخدم «الإبلاغ عن مشكلة» على أي إجابة لتسجيل ملاحظاتك لمراجعة ما قبل الإطلاق.';
+
+  @override
+  String get lawDocUploading => 'جارٍ الرفع…';
+
+  @override
+  String get lawDocScan => 'مسح ضوئي';
+
+  @override
+  String lawDocPages(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n صفحة',
+      few: '$n صفحات',
+      two: 'صفحتان',
+      one: 'صفحة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lawDocPhoto => 'صورة';
+
+  @override
+  String get lawDocText => 'نص';
+
+  @override
+  String get lawDocRemove => 'إزالة';
+
+  @override
+  String get lawDocFailed => 'تعذّرت الإضافة';
+
+  @override
+  String get lawDocErrTooBig => 'حجم الملف أكبر من 4 ميغابايت.';
+
+  @override
+  String get lawDocErrUnsupported => 'ارفع ملف PDF أو Word (.docx) أو ملفاً نصياً أو صورة (JPG أو PNG أو WebP).';
+
+  @override
+  String get lawDocErrOldWord => 'لا يمكن قراءة ملفات Word القديمة (.doc). احفظه بصيغة .docx أو PDF ثم ارفعه.';
+
+  @override
+  String get lawDocErrEncrypted => 'الملف محمي بكلمة مرور. احفظ نسخة غير محمية، أو اطبعه إلى PDF، ثم ارفعها.';
+
+  @override
+  String get lawDocErrActiveContent =>
+      'يحتوي الملف على برمجيات أو وحدات ماكرو أو ملفات مضمّنة، لذلك لا يمكن قبوله. احفظه كملف PDF عادي وحاول مرة أخرى.';
+
+  @override
+  String get lawDocErrMacros => 'يحتوي ملف Word على وحدات ماكرو، لذلك لا يمكن قبوله. احفظه بصيغة PDF وحاول مرة أخرى.';
+
+  @override
+  String get lawDocErrDamaged => 'تعذّرت قراءة الملف. قد يكون تالفاً.';
+
+  @override
+  String get lawDocErrTooManyPages => 'المستند أطول من 30 صفحة. ارفع الصفحات المهمة فقط.';
+
+  @override
+  String get lawDocErrNotText => 'لا يبدو هذا الملف مستنداً.';
+
+  @override
+  String get lawDocErrNoText =>
+      'لا يحتوي ملف Word هذا على نص (قد يحتوي صوراً ممسوحة). ارفعه بصيغة PDF أو كصور بدلاً من ذلك.';
+
+  @override
+  String get lawDocErrTooLong => 'المستند أطول من أن يُقرأ دفعة واحدة. ارفع الجزء المهم منه.';
+
+  @override
+  String get lawDocErrEmpty => 'الملف فارغ.';
+
+  @override
+  String get lawDocErrTooMany => 'تتسع المحادثة لأربعة مستندات كحد أقصى. ابدأ محادثة جديدة للمزيد.';
+
+  @override
+  String get lawDocErrFull => 'هذه المستندات معاً أطول من اللازم. أزل أحدها أو ابدأ محادثة جديدة.';
+
+  @override
+  String get lawDocErrRateLimited => 'ترفع الملفات بسرعة. انتظر قليلاً ثم حاول مرة أخرى.';
+
+  @override
+  String get lawDocErrOffline => 'يبدو أنك غير متصل بالإنترنت.';
+
+  @override
+  String get lawDocErrBusy => 'انتظر حتى ينتهي الرفع الحالي.';
+
+  @override
+  String get lawDocErrOther => 'تعذّرت إضافة الملف. حاول مرة أخرى.';
+
+  @override
+  String get lawLeak => 'لا أستطيع مشاركة طريقة إعداد هذه الخدمة. اسألني عن مسألتك القانونية.';
+
+  @override
+  String get lawRefused =>
+      'لا أستطيع المساعدة في هذا الطلب. يمكنني شرح القانون الأردني ومساعدتك في التحضير للحديث مع محامٍ.';
+
+  @override
+  String get lawWithdrawn => 'سُحبت هذه الإجابة.';
+
+  @override
+  String get lawNoticePartial => 'نفد الوقت قبل أن أُكمل. اطلب مني المتابعة، أو حدّد سؤالك أكثر.';
+
+  @override
+  String get lawNoticeStopped => 'توقفت. أرسل رسالة أخرى للمتابعة.';
+
+  @override
+  String get lawNoticeUnbacked =>
+      'تذكر هذه الإجابة أنها راجعت مصادر، لكن لم يُجرَ أي بحث فعلي. اعتبر ما ورد فيها غير متحقَّق منه وراجعه مع محامٍ.';
+
+  @override
+  String get lawErrRateLimited => 'ترسل الرسائل بسرعة. انتظر بضع ثوانٍ ثم حاول مرة أخرى.';
+
+  @override
+  String get lawErrQuota => 'وصلت إلى حدّك اليومي في «اسأل محامي». يتجدد غداً.';
+
+  @override
+  String get lawErrQuotaTotal => 'أجابت خدمة «اسأل محامي» عن كل ما تستطيعه اليوم. ستعود غداً.';
+
+  @override
+  String get lawErrBusy => 'الخدمة مشغولة الآن. حاول بعد لحظات.';
+
+  @override
+  String get lawErrNotConfigured => 'خدمة «اسأل محامي» غير متاحة الآن.';
+
+  @override
+  String get lawErrTooLong => 'الرسالة طويلة جداً. اجعلها أقل من 4000 حرف.';
+
+  @override
+  String get lawErrOffline => 'يبدو أنك غير متصل بالإنترنت. تحقق من الاتصال وحاول مرة أخرى.';
+
+  @override
+  String get lawErrInterrupted => 'انقطعت الإجابة في الطريق. حاول مرة أخرى.';
+
+  @override
+  String get lawErrSignIn => 'انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.';
+
+  @override
+  String get lawErrNotOpen => 'خدمة «اسأل محامي» غير متاحة لحسابك بعد.';
+
+  @override
+  String get lawErrNotFound => 'لم تعد هذه المحادثة موجودة. ابدأ محادثة جديدة.';
+
+  @override
+  String get lawErrOther => 'حدث خطأ ما. حاول مرة أخرى.';
 }

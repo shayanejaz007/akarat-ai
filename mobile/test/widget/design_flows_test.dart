@@ -169,7 +169,7 @@ void main() {
             builder: (_, _) => PropertyDetailsScreen(id: row.id, initial: row),
           ),
           GoRoute(
-            path: Routes.aiSearch,
+            path: Routes.plainSearch,
             builder: (_, _) => const Scaffold(body: Text('AI search')),
           ),
         ],
