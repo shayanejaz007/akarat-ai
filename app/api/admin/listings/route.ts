@@ -5,7 +5,7 @@ import { unpackPayload } from "@/lib/listing-server";
 /**
  * /api/admin/listings — every listing, whatever its status or owner.
  *
- *   GET    ?q=&status=&sort=created|views|inquiries|saves|price&page=
+ *   GET    ?q=&status=&owner=&sort=created|views|inquiries|saves|price&page=
  *   PATCH  { id, status?, featured?, verified? }
  *   DELETE ?id=
  */
@@ -38,6 +38,8 @@ export async function GET(request: NextRequest) {
     );
   const status = url.searchParams.get("status");
   if (status && STATUSES.includes(status)) query = query.eq("status", status);
+  const owner = url.searchParams.get("owner");
+  if (isUuid(owner)) query = query.eq("owner_id", owner);
   const q = searchTerm(url);
   if (q) query = isUuid(q) ? query.eq("id", q) : query.or(`title_en.ilike.*${q}*,title_ar.ilike.*${q}*`);
   const sort = SORTS[url.searchParams.get("sort") ?? ""] ?? "created_at";

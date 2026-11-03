@@ -56,13 +56,16 @@ export function sessionToken(): string {
   return `${exp}.${sign(adminPassword()!, exp)}`;
 }
 
-export function validSession(request: NextRequest): boolean {
+/** When a valid session cookie runs out (ms since the epoch), or null when there is none. */
+export function sessionExpiry(request: NextRequest): number | null {
   const password = adminPassword();
   const m = /^(\d{13})\.([A-Za-z0-9_-]+)$/.exec(request.cookies.get(COOKIE)?.value ?? "");
-  if (!password || !m) return false;
+  if (!password || !m) return null;
   const exp = Number(m[1]);
-  return exp > Date.now() && same(m[2], sign(password, exp));
+  return exp > Date.now() && same(m[2], sign(password, exp)) ? exp : null;
 }
+
+export const validSession = (request: NextRequest): boolean => sessionExpiry(request) !== null;
 
 /** A service-role client, or the response to send instead. */
 export async function requireAdmin(request: NextRequest): Promise<Admin | NextResponse> {

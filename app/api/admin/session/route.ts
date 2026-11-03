@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { COOKIE, SESSION_HOURS, adminPassword, checkPassword, fail, sessionToken, validSession } from "@/lib/admin";
+import { COOKIE, SESSION_HOURS, adminPassword, checkPassword, fail, sessionExpiry, sessionToken } from "@/lib/admin";
 import { allow } from "@/lib/rate-limit";
 
 /* Sign in to, check, and sign out of the admin panel. The password is
@@ -19,7 +19,8 @@ const cookie = (value: string, maxAge: number) => ({
 
 export async function GET(request: NextRequest) {
   if (!adminPassword()) return fail("The admin panel is not configured: set ADMIN_PASSWORD in Vercel.", 503);
-  return validSession(request) ? NextResponse.json({ ok: true }) : fail("Sign in.", 401);
+  const expiresAt = sessionExpiry(request);
+  return expiresAt ? NextResponse.json({ ok: true, expiresAt }) : fail("Sign in.", 401);
 }
 
 export async function POST(request: NextRequest) {

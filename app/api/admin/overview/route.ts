@@ -17,6 +17,8 @@ type AiOverview = {
   flags: { kind: string; count: number }[];
 };
 
+const DEALS = ["sale", "rent", "daily"] as const;
+
 const ammanDay = (d: Date) =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Amman", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
 
@@ -111,7 +113,7 @@ export async function GET(request: NextRequest) {
   const admin = await requireAdmin(request);
   if (admin instanceof NextResponse) return admin;
 
-  const [{ data, error }, daily, ai, law, aiCost, lawCost] = await Promise.all([
+  const [{ data, error }, daily, ai, law, aiCost, lawCost, ...deals] = await Promise.all([
     admin.db.rpc("admin_overview"),
     // Daily rentals (0019), the AI advisor (0020) and Ask a Lawyer (0021).
     // Each is absent until its migration runs; the rest of the overview does
@@ -122,14 +124,19 @@ export async function GET(request: NextRequest) {
     // Measured cost and model mix (0022); absent before it runs.
     admin.db.rpc("ai_cost_summary", { p_table: "ai_usage_daily" }),
     admin.db.rpc("ai_cost_summary", { p_table: "legal_usage_daily" }),
+    // Listings per deal, for the overview's listing mix. A count that cannot
+    // be read (no "daily" deal before 0019) is null, not a failure.
+    ...DEALS.map(deal => admin.db.from("properties").select("id", { count: "exact", head: true }).eq("deal", deal)),
   ]);
   if (error) {
     // 42883 / PGRST202: the function is not there, i.e. 0018 has not been run.
     const missing = error.code === "42883" || error.code === "PGRST202";
     return fail(missing ? "Run supabase/migrations/0018_admin_analytics.sql first." : error.message, missing ? 501 : 500);
   }
+  const byDeal = Object.fromEntries(DEALS.map((deal, i) => [deal, deals[i].error ? null : deals[i].count ?? 0]));
   return NextResponse.json({
     ...data,
+    byDeal: Object.values(byDeal).every(n => n === null) ? null : byDeal,
     dailyRentals: daily.error ? null : daily.data,
     advisor: ai.error || !ai.data ? null : { ...advisor(ai.data as AiOverview), measured: measured(aiCost) },
     legal: law.error || !law.data ? null : { ...legal(law.data as LegalOverview), measured: measured(lawCost) },

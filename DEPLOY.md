@@ -304,10 +304,25 @@ Anything that runs Next.js 14 works — Netlify, Render, Fly, a container.
 ## 8. Operations
 
 ### The admin panel
-`/admin` (app/admin) shows people on the site and app right now, daily views,
-inquiries and sign-ups, the most viewed and most inquired listings, and every
-listing, inquiry, account and report, with the actions on each (status,
-feature, verify, delete; inquiry status; role; report decisions).
+`/admin` (app/admin) is the control room: a sidebar of sections, each its own
+address, so a filtered list can be bookmarked or shared.
+
+| Page | What it is for |
+|---|---|
+| `/admin` | Overview: people on the site and app right now, what needs an admin, 7/14/30-day trends (views, viewers, inquiries, sign-ups, new listings), the listing mix, top listings, and both AI assistants at a glance |
+| `/admin/listings` | Every listing: status, feature, verify, delete; open one for its numbers and owner |
+| `/admin/daily-rentals` | The daily-rental review queue: approve, reject, suspend, revoke, reinstate |
+| `/admin/bookings` | Every booking request, read only |
+| `/admin/inquiries` | Every message to an owner, with its status |
+| `/admin/users` | Every account: role, verified badge, sign-in methods, last seen |
+| `/admin/reports` | Reported listings: take down, mark reviewed, dismiss, reopen |
+| `/admin/property-ai`, `/admin/ask-a-lawyer` | Use, cost, limits, flags and answer quality of the two assistants |
+| `/admin/system` | Which migrations the panel can read, the assistants' settings, this session |
+
+Ctrl K (⌘K on a Mac) searches listings, people, inquiries and bookings or
+jumps to any page; the theme follows the device unless set to light or dark.
+Old links to the one-page panel (`/admin#listings`) still land on the right
+page. Tests for its arithmetic and formatting: `npm run test:admin`.
 
 It needs `supabase/migrations/0018_admin_analytics.sql` (view and session
 tracking, and the aggregates), `SUPABASE_SERVICE_ROLE_KEY` on Vercel with
@@ -332,10 +347,10 @@ else changes.
   a price per night, how many it sleeps and a minimum stay. The listing's
   phone is never published; it carries a grey check and is visible only to
   its owner until approved.
-- **Review.** `/admin` → Daily rentals: approve, reject (with a reason the
+- **Review.** `/admin/daily-rentals`: approve, reject (with a reason the
   owner sees), suspend, revoke or reinstate. Approval makes it public on the
   website and the app and turns its check green. Edits to an approved
-  listing keep it live and appear under "Changed since approval".
+  listing keep it live and appear under "Edited since approval".
 - **Requests.** A signed-in renter picks dates on the listing's calendar
   (taken nights are crossed out) and sends a request with the number of
   guests. The owner approves it from their dashboard (website) or Bookings
@@ -346,7 +361,7 @@ else changes.
 - **Notifications.** New requests, answers and review decisions arrive in
   the dashboard (website) and under Profile → Notifications (app), live.
   There are no push notifications or emails yet.
-- **Admin.** `/admin` → Bookings lists every request with renter, owner,
+- **Admin.** `/admin/bookings` lists every request with renter, owner,
   dates, total and status.
 
 ### The AI advisor
@@ -386,9 +401,9 @@ the browser's own speech recognition.
   the advisor answers with what it has. `AI_ADVISOR_DAILY_TOTAL` caps the
   questions a day; at the default of 600 a heavy day is roughly $30-90.
   Past the cap, visitors get the plain search and a note to come back later.
-  With 0022 run, `/admin` → Overview → AI advisor shows each day's measured
-  estimate and which model and effort answered; the Anthropic Console has the
-  invoice.
+  `/admin/property-ai` shows questions and estimated cost per day, today's
+  use against the cap, and flags; with 0022 run, the measured cost and which
+  model and effort answered. The Anthropic Console has the invoice.
 - **What it will not do.** It reads only public listings (Row Level Security,
   as a visitor), never owners' contact details, and never a site outside its
   list. An outside listing is shown only if its exact link came back from a
@@ -438,9 +453,9 @@ launch) is in **LEGAL-AI.md**. To run it:
   less on follow-ups while it is cached. Research stops past
   `LEGAL_MAX_TURN_USD` (80 cents). `LEGAL_PER_DAY_TOTAL` caps the day; at the
   default of 300 a heavy day is roughly $25-75.
-  `/admin` → Overview → Ask a Lawyer shows questions, cost, how many answers
-  named a reference no source supported, library coverage and freshness, and
-  the reviewers' reports.
+  `/admin/ask-a-lawyer` shows questions, cost, how many answers named a
+  reference no source supported, library coverage and freshness, and the
+  reviewers' reports.
 - **Retention.** Conversations are deleted 90 days after their last message
   and documents 30 days after upload, by the database; each person can delete
   theirs, or all of them, at any time. Deleting an account deletes them too.

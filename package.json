@@ -10,6 +10,7 @@
     "start": "next start",
     "gen:locations": "node scripts/gen-locations-sql.mjs",
     "backfill:translations": "node scripts/backfill-translations.mts",
+    "test:admin": "node --test \"tests/admin/*.test.mts\"",
     "test:advisor": "node --test \"tests/advisor/*.test.mts\"",
     "test:legal": "node --test \"tests/legal/*.test.mts\"",
     "legal:ingest": "node scripts/legal-ingest.mts",
