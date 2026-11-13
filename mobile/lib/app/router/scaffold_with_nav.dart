@@ -67,6 +67,11 @@ class ScaffoldWithNav extends ConsumerWidget {
                   data: mq.copyWith(
                     padding: mq.padding.copyWith(bottom: reserve),
                     viewPadding: mq.viewPadding.copyWith(bottom: reserve),
+                    // This Scaffold already keeps its body above the
+                    // keyboard. Passed on, the keyboard would be made room
+                    // for twice: a screen's own Scaffold, or a sheet, would
+                    // sit a keyboard's height above it.
+                    viewInsets: mq.viewInsets.copyWith(bottom: 0),
                   ),
                   child: shell,
                 ),

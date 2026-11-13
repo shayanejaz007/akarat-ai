@@ -21,6 +21,8 @@ import '../../shared/services/profile_photos.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../../shared/widgets/pickers.dart';
 import '../../shared/widgets/property_card.dart';
+import '../ai_search/presentation/ai_search_screen.dart' show AiMark;
+import '../lawyer/lawyer_view.dart' show LawMark;
 import '../property_details/property_details_screen.dart';
 import '../tour/tour.dart';
 import '../tour/tour_store.dart';
@@ -149,6 +151,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       onTap: (t) => _explore(context, ref, type: t),
                     ),
                   ),
+                  const SliverToBoxAdapter(child: SizedBox(height: Space.xl)),
+                  SliverToBoxAdapter(child: SectionHeader(title: l.homeAiTitle)),
+                  const SliverToBoxAdapter(child: SizedBox(height: Space.sm)),
+                  const SliverToBoxAdapter(child: _AskAi()),
                   if (featuredRows.isNotEmpty) ...[
                     const SliverToBoxAdapter(child: SizedBox(height: Space.xl)),
                     SliverToBoxAdapter(child: SectionHeader(title: l.homeFeatured)),
@@ -699,6 +705,82 @@ class _CityStrip extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// The two assistants, side by side: Property AI and Ask a Lawyer, each a
+/// tap from Home.
+class _AskAi extends StatelessWidget {
+  const _AskAi();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    String link(String mode) => '${Routes.aiSearch}?mode=$mode&t=${DateTime.now().millisecondsSinceEpoch}';
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: _AskAiCard(
+                mark: const AiMark(size: 36),
+                title: l.aiHubAdvisor,
+                body: l.homeAdvisorBody,
+                onTap: () => context.go(link('advisor')),
+              ),
+            ),
+            const SizedBox(width: Space.sm),
+            Expanded(
+              child: _AskAiCard(
+                mark: const LawMark(size: 36),
+                title: l.aiHubLawyer,
+                body: l.homeLawyerBody,
+                onTap: () => context.go(link('lawyer')),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AskAiCard extends StatelessWidget {
+  const _AskAiCard({required this.mark, required this.title, required this.body, required this.onTap});
+  final Widget mark;
+  final String title;
+  final String body;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Material(
+      color: c.surfaceMuted,
+      borderRadius: BorderRadius.circular(Radii.lg),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Semantics(
+          button: true,
+          child: Padding(
+            padding: const EdgeInsets.all(Space.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                mark,
+                const SizedBox(height: Space.sm),
+                Text(title, style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: Space.hair),
+                Text(body, style: context.text.bodySmall?.copyWith(color: c.inkMuted, height: 1.4)),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

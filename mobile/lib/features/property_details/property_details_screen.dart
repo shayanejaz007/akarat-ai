@@ -1345,7 +1345,7 @@ class _Similar extends ConsumerWidget {
           onAction: () {
             final label = t.detailsSimilarTurn(listing.title(context.lang));
             unawaited(ref.read(aiSearchProvider.notifier).setConstraintsFresh(_brief(), label: label));
-            context.go(Routes.aiSearch);
+            context.go(Routes.plainSearch);
           },
         ),
         if (rows.isNotEmpty) ...[

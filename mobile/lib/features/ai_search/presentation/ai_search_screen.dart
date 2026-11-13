@@ -152,7 +152,7 @@ class _AiSearchScreenState extends ConsumerState<AiSearchScreen> {
     final l = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     if (!ref.read(isSignedInProvider)) {
-      await context.push(Routes.withNext(Routes.signIn, Routes.aiSearch));
+      await context.push(Routes.withNext(Routes.signIn, Routes.plainSearch));
       return;
     }
     final c = s.constraints!;

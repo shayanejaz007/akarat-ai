@@ -10,7 +10,7 @@ no separate Supabase project, no copy of the data and no parallel user table.
  mobile ───┘    │  Auth (auth.users)   Storage (listing-photos)                       │
      │          └──────────────────────────────────────────────────────────────────────┘
      │                                   ▲ service-role key (server only)
-     └─ HTTPS, bearer JWT ──► Vercel: /api/ai/search, /api/account*, /api/admin/crawl (never called)
+     └─ HTTPS, bearer JWT ──► Vercel: /api/ai/search, /api/ai/advisor, /api/legal/*, /api/account*, /api/admin/crawl (never called)
                                                                      * added in this change
 ```
 
@@ -23,6 +23,8 @@ no separate Supabase project, no copy of the data and no parallel user table.
 | Supabase Auth (email/password, Google, Facebook, recovery, phone one-time codes, connecting Facebook to an account) | gotrue, PKCE | none stored but the session (in the keystore) |
 | Supabase public auth settings (`/auth/v1/settings`) | Dio, publishable key | none: only to see whether phone sign-in is switched on |
 | `POST /api/ai/search` | Dio, `Authorization: Bearer <access token>` | the user's access token, or nothing |
+| `POST /api/ai/advisor` (Property AI) | Dio, streamed NDJSON, bearer when signed in (the higher daily allowance) | the user's access token, or nothing |
+| `GET /api/legal/status`, `POST /api/legal/ask` (streamed NDJSON), `GET`/`DELETE /api/legal/conversations`, `POST` (multipart) / `DELETE /api/legal/documents`, `POST /api/legal/feedback` (Ask a Lawyer) | Dio, bearer; the session is refreshed first when it has expired | the user's access token (signed-in accounts only) |
 | `DELETE /api/account` | Dio, bearer | the user's access token |
 
 Never on the device: `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, partner-feed
@@ -198,6 +200,9 @@ absent, Google + email auth enabled, email confirmation required).
 | External index | `external_properties_grouped` | same query | ✅ (index empty in production) |
 | Portal deep links + "drops X" notes | `lib/providers.js` | Dart port, identical URLs/notes | ✅ parity-tested |
 | Execution trace | timed animation | real progress (stages tick on real events) | ✅ |
+| AI advisor (Property AI) | conversation over `/api/ai/advisor`: answer streamed with numbered citations, Akarat.ai and external listing cards, comparison tables, sources, follow-ups, removable criteria, notices (risk note, cut short, memory reset, unbacked claim), withdrawn replies, errors with the plain search as fallback, dictation | the same events read the same way (`lib/features/advisor`), in the AI tab beside Ask a Lawyer; cards save, share and open the listing; the plain search stays one tap away | ✅ parity, tested with a scripted server |
+| Ask a Lawyer | `/api/legal/*`: status gates (not ready, sign in, review, reviewer), answers in sections with citations and verified-source badges, unverified-reference marks and list, urgent notices, the notice under every answer, documents (PDF, Word, text, photos), history with delete one / delete all, report a problem, copy, research summary | the same (`lib/features/lawyer`); photos from the camera or library, files from the system picker; the research summary is shared as text instead of saved as a page | ✅ parity, tested with a scripted server |
+| Dictation in the assistants | browser speech recognition | the on-device recogniser (as voice search), the words land in the box to be checked and sent | ✅ |
 | Editable brief / refinement | yes | chips remove + re-search, refine by typing, clarifications for deal / location | ✅ |
 | Save a search | tab placeholder, never written | `saved_searches` create / list / run / delete | ➕ mobile only |
 | Detail page | gallery, video, lightbox, specs, amenities, location (approx/exact), call, copy, share, save, similar | same + WhatsApp, pinch-zoom viewer, map preview (pin or 300 m circle) | ✅ |

@@ -1,6 +1,6 @@
 /* English permission prompts. Keep in step with Info.plist and ar.lproj. */
-"NSCameraUsageDescription" = "Akarat.ai uses the camera only when you choose to take a photo: of a property you are listing, or for your profile picture.";
+"NSCameraUsageDescription" = "Akarat.ai uses the camera only when you choose to take a photo: of a property you are listing, of a document you want Ask a Lawyer to read, or for your profile picture.";
 "NSLocationWhenInUseUsageDescription" = "Akarat.ai doesn't use your location. If it ever offers to show where you are on a map, your location will be used only for that.";
-"NSMicrophoneUsageDescription" = "Akarat.ai uses the microphone only when you choose to search by voice or to film a video of a property you are listing.";
-"NSSpeechRecognitionUsageDescription" = "Akarat.ai turns what you say into a property search when you tap the microphone. Recognition is done by Apple's speech service.";
-"NSPhotoLibraryUsageDescription" = "Akarat.ai opens your photo library so you can add photos and videos to a property you are listing, or choose your profile picture.";
+"NSMicrophoneUsageDescription" = "Akarat.ai uses the microphone only when you choose to speak a search or a question to its AI assistants, or to film a video of a property you are listing.";
+"NSSpeechRecognitionUsageDescription" = "Akarat.ai turns what you say into text when you tap the microphone: a property search, or a question for its AI assistants. Recognition is done by Apple's speech service.";
+"NSPhotoLibraryUsageDescription" = "Akarat.ai opens your photo library so you can add photos and videos to a property you are listing, choose your profile picture, or give Ask a Lawyer a photo of a document.";

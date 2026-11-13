@@ -10,9 +10,19 @@ class Routes {
   static const home = '/home';
   static const explore = '/explore';
   static const daily = '/daily';
-  static const aiSearch = '/ai';
   static const saved = '/saved';
   static const profile = '/profile';
+
+  /// The AI tab: Property AI (the advisor) and Ask a Lawyer, side by side.
+  /// `?mode=lawyer` opens Ask a Lawyer; `q`, `focus` and `voice` go to the
+  /// advisor.
+  static const aiSearch = '/ai';
+  static const askLawyer = '$aiSearch?mode=lawyer';
+
+  /// The listings search on its own, without the advisor: "Search for
+  /// similar", a saved search, and the fallback when the advisor cannot
+  /// answer. `?q=` searches straight away.
+  static const plainSearch = '/ai/search';
 
   static const onboarding = '/onboarding';
   static const signIn = '/auth/sign-in';

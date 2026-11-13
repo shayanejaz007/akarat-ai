@@ -237,7 +237,10 @@ class _SavedScreenState extends ConsumerState<SavedScreen> {
                       icon: Icons.bookmarks_outlined,
                       title: l.savedSearchesEmptyTitle,
                       body: l.savedSearchesEmptyBody,
-                      action: OutlinedButton(onPressed: () => context.go(Routes.aiSearch), child: Text(l.tabAiSearch)),
+                      action: OutlinedButton(
+                        onPressed: () => context.go(Routes.plainSearch),
+                        child: Text(l.tabAiSearch),
+                      ),
                     ),
                   ),
                 ]
@@ -283,7 +286,7 @@ class _SavedSearchCard extends ConsumerWidget {
 
   Future<void> _run(BuildContext context, WidgetRef ref) async {
     ref.read(aiSearchProvider.notifier).reset();
-    context.go(Routes.aiSearch);
+    context.go(Routes.plainSearch);
     await ref.read(aiSearchProvider.notifier).setConstraintsFresh(search.constraints, label: search.label);
   }
 
