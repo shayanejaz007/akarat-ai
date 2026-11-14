@@ -188,7 +188,10 @@ class _RequestCardState extends ConsumerState<_RequestCard> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ServiceIconTile(icon: r.icon, size: 40),
+              Padding(
+                padding: const EdgeInsets.only(top: Space.hair),
+                child: Icon(serviceIcon(r.icon), size: 22, color: c.ink),
+              ),
               const SizedBox(width: Space.sm),
               Expanded(
                 child: Column(
@@ -237,17 +240,17 @@ class _RequestCardState extends ConsumerState<_RequestCard> {
           if (where.isNotEmpty) Text(where, style: context.text.bodySmall),
           if (note != null) ...[
             const SizedBox(height: Space.sm),
+            // A note from the team, set off by a rule down its leading edge.
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(Space.sm),
-              decoration: BoxDecoration(color: c.emerald.withValues(alpha: 0.07), borderRadius: Radii.field),
+              padding: const EdgeInsetsDirectional.only(start: Space.sm, top: Space.hair, bottom: Space.hair),
+              decoration: BoxDecoration(
+                border: BorderDirectional(start: BorderSide(color: c.emerald, width: 2)),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    l.svTeamNote,
-                    style: context.text.labelSmall?.copyWith(color: c.emerald, fontWeight: FontWeight.w600),
-                  ),
+                  Text(l.svTeamNote, style: context.text.labelSmall?.copyWith(color: c.inkMuted)),
                   const SizedBox(height: Space.hair),
                   UserText(note, style: context.text.bodyMedium),
                 ],

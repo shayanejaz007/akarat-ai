@@ -96,6 +96,35 @@ class ServiceStatusPill extends StatelessWidget {
   }
 }
 
+/// 01, 02…: the numbers the Services directory and the request form's
+/// sections are set with. Arabic-Indic digits in Arabic.
+String twoDigits(int n, String lang) {
+  final t = n.toString().padLeft(2, '0');
+  if (lang != 'ar') return t;
+  const digits = '٠١٢٣٤٥٦٧٨٩';
+  return t.split('').map((d) => digits[int.parse(d)]).join();
+}
+
+/// A small numeral in the brand's green, tabular so a column of them lines up.
+class ServiceNumeral extends StatelessWidget {
+  const ServiceNumeral(this.n, {super.key, this.muted = false});
+  final int n;
+  final bool muted;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Text(
+      twoDigits(n, Localizations.localeOf(context).languageCode),
+      style: context.text.labelMedium?.copyWith(
+        color: muted ? c.inkFaint : c.emerald,
+        fontWeight: muted ? FontWeight.w400 : FontWeight.w600,
+        fontFeatures: const [FontFeature.tabularFigures()],
+      ),
+    );
+  }
+}
+
 /// A category's icon in its rounded tile.
 class ServiceIconTile extends StatelessWidget {
   const ServiceIconTile({super.key, required this.icon, this.size = 46});

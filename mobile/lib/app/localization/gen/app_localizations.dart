@@ -5480,12 +5480,6 @@ abstract class AppLocalizations {
   /// **'Services'**
   String get servicesTitle;
 
-  /// No description provided for @servicesHeadline.
-  ///
-  /// In en, this message translates to:
-  /// **'Home services, requested in one place'**
-  String get servicesHeadline;
-
   /// No description provided for @servicesIntro.
   ///
   /// In en, this message translates to:
@@ -6367,6 +6361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ask out loud in Arabic or English and hear the answer.'**
   String get talkCardHint;
+
+  /// No description provided for @servicesAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All services'**
+  String get servicesAll;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

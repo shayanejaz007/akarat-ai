@@ -57,7 +57,6 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final c = context.colors;
-    final lang = context.lang;
     final inset = Layout.inset(context);
     final cats = ref.watch(serviceCategoriesProvider);
     final open = ref.watch(myServiceRequestsProvider).value?.where((r) => r.open).length ?? 0;
@@ -93,16 +92,27 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               padding: inset.copyWith(top: 0, bottom: Space.md),
               sliver: SliverList.list(
                 children: [
-                  Text(l.servicesHeadline, style: context.text.headlineSmall),
-                  const SizedBox(height: Space.xs),
-                  Text(l.servicesIntro, style: context.text.bodyMedium?.copyWith(color: c.inkMuted, height: 1.5)),
-                  const SizedBox(height: Space.md),
-                  FilledButton.icon(
-                    onPressed: () => request(),
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(l.servicesRequest),
+                  Text(l.servicesIntro, style: context.text.bodyLarge?.copyWith(color: c.inkMuted, height: 1.5)),
+                  const SizedBox(height: Space.lg),
+                  FilledButton(onPressed: () => request(), child: Text(l.servicesRequest)),
+                  const SizedBox(height: Space.xl),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(l.servicesAll, style: context.text.titleLarge),
+                      const SizedBox(width: Space.xs),
+                      if (cats.value case final all?)
+                        Text(
+                          q.isEmpty ? '${all.length}' : '${all.where((x) => _matches(x, q)).length} / ${all.length}',
+                          style: context.text.bodySmall?.copyWith(
+                            color: c.inkMuted,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(height: Space.md),
+                  const SizedBox(height: Space.sm),
                   TextField(
                     controller: _search,
                     textInputAction: TextInputAction.search,
@@ -154,18 +164,19 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                     ),
                   ];
                 }
+                // A ruled directory, each service keeping its number through
+                // a search.
                 return [
                   SliverPadding(
-                    padding: inset.copyWith(top: 0),
-                    sliver: SliverGrid.builder(
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 220,
-                        mainAxisSpacing: Space.sm,
-                        crossAxisSpacing: Space.sm,
-                        mainAxisExtent: 150,
-                      ),
+                    padding: inset.copyWith(top: 0, bottom: 0),
+                    sliver: SliverList.builder(
                       itemCount: shown.length,
-                      itemBuilder: (context, i) => _CategoryCard(category: shown[i], onTap: () => request(shown[i].id)),
+                      itemBuilder: (context, i) => _CategoryRow(
+                        number: all.indexOf(shown[i]) + 1,
+                        category: shown[i],
+                        first: i == 0,
+                        onTap: () => request(shown[i].id),
+                      ),
                     ),
                   ),
                 ];
@@ -175,33 +186,35 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               padding: inset.copyWith(top: Space.xl, bottom: Space.xxl),
               sliver: SliverList.list(
                 children: [
-                  Text(l.servicesHow, style: context.text.titleMedium),
-                  const SizedBox(height: Space.sm),
+                  Text(l.servicesHow, style: context.text.titleLarge),
+                  const SizedBox(height: Space.xs),
                   for (final (i, (t, b)) in [
                     (l.servicesStep1, l.servicesStep1Body),
                     (l.servicesStep2, l.servicesStep2Body),
                     (l.servicesStep3, l.servicesStep3Body),
                   ].indexed)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: Space.sm),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: Space.sm),
+                      decoration: BoxDecoration(
+                        border: Border(top: BorderSide(color: c.border)),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 13,
-                            backgroundColor: c.emerald,
-                            child: Text(
-                              lang == 'ar' ? ['١', '٢', '٣'][i] : '${i + 1}',
-                              style: context.text.labelMedium?.copyWith(color: c.onForest),
+                          SizedBox(
+                            width: 36,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: Space.hair),
+                              child: ServiceNumeral(i + 1),
                             ),
                           ),
-                          const SizedBox(width: Space.sm),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(t, style: context.text.titleSmall),
-                                Text(b, style: context.text.bodySmall?.copyWith(color: c.inkMuted)),
+                                const SizedBox(height: Space.hair),
+                                Text(b, style: context.text.bodySmall?.copyWith(color: c.inkMuted, height: 1.45)),
                               ],
                             ),
                           ),
@@ -218,45 +231,61 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   }
 }
 
-class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({required this.category, required this.onTap});
+/// One line of the directory: its number, icon, name and examples, ruled
+/// off from the next. The whole line is the button.
+class _CategoryRow extends StatelessWidget {
+  const _CategoryRow({required this.number, required this.category, required this.first, required this.onTap});
+  final int number;
   final ServiceCategory category;
+  final bool first;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
     final lang = context.lang;
-    return Material(
-      color: c.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: Radii.card,
-        side: BorderSide(color: c.border, style: category.custom ? BorderStyle.solid : BorderStyle.solid),
-      ),
-      clipBehavior: Clip.antiAlias,
+    return Semantics(
+      button: true,
       child: InkWell(
         onTap: onTap,
-        child: Semantics(
-          button: true,
-          child: Padding(
-            padding: const EdgeInsets.all(Space.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ServiceIconTile(icon: category.icon, size: 42),
-                const SizedBox(height: Space.sm),
-                Text(category.name(lang), style: context.text.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: Space.hair),
-                Expanded(
-                  child: Text(
-                    category.examples(lang),
-                    style: context.text.bodySmall?.copyWith(color: c.inkMuted),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 68),
+          padding: const EdgeInsets.symmetric(vertical: Space.sm),
+          decoration: BoxDecoration(
+            border: Border(
+              top: first ? BorderSide(color: c.ink) : BorderSide.none,
+              bottom: BorderSide(color: c.border),
             ),
+          ),
+          child: Row(
+            children: [
+              SizedBox(width: 30, child: ServiceNumeral(number, muted: true)),
+              Icon(serviceIcon(category.icon), size: 22, color: c.ink),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      category.name(lang),
+                      style: context.text.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (category.examples(lang).isNotEmpty)
+                      Text(
+                        category.examples(lang),
+                        style: context.text.bodySmall?.copyWith(color: c.inkMuted),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: Space.xs),
+              Icon(Icons.adaptive.arrow_forward_rounded, size: 18, color: c.inkFaint),
+            ],
           ),
         ),
       ),

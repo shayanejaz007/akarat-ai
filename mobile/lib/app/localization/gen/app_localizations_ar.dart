@@ -3020,9 +3020,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get servicesTitle => 'الخدمات';
 
   @override
-  String get servicesHeadline => 'خدمات المنزل، تطلبها من مكان واحد';
-
-  @override
   String get servicesIntro => 'أخبرنا بما تحتاجه وأين. يتصل بك فريقنا لترتيبه، ولا يُحجز شيء ولا يُسعَّر قبل موافقتك.';
 
   @override
@@ -3480,4 +3477,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get talkCardHint => 'اسأل بصوتك بالعربية أو الإنجليزية واسمع الجواب.';
+
+  @override
+  String get servicesAll => 'كل الخدمات';
 }

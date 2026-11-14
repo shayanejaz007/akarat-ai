@@ -185,6 +185,12 @@
      the page. Phone numbers, media and the verified mark never mirror. */
   [dir="rtl"] [data-flip] { transform: scaleX(-1); }
   [data-gallerystrip]::-webkit-scrollbar { display: none; }
+  /* The gallery is a fixed band, about half the screen at most: a listing
+     with one photo, or a tall one, no longer pushes the page down. */
+  [data-gallery] { height: clamp(300px, 56vh, 540px); }
+  [data-galleryhero] { height: 100%; }
+  @media (max-width: 1000px) { [data-gallery] { height: clamp(240px, 46vh, 440px); } }
+  @media (max-width: 620px) { [data-gallery] { height: auto; } [data-galleryhero] { height: auto; aspect-ratio: 3 / 2; } }
   @media (max-width: 620px) {
     [data-stack] [data-media] { height: 230px !important; }
   }
@@ -211,20 +217,42 @@
   @keyframes akShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
   [data-filterbar] > [data-placebox] { flex: 1 1 230px; }
   [data-svpage] input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+  /* Services is set like a printed directory: ruled rows, not cards. The
+     index runs down two columns; a row lights up as a whole. */
+  [data-svrow] { break-inside: avoid; transition: background 180ms; }
+  [data-svrow]:hover, [data-svrow]:focus-visible { background: rgba(0,122,61,0.05); }
+  [data-svrow] [data-svgo] { opacity: 0.35; transition: opacity 180ms, transform 220ms cubic-bezier(.2,.7,.3,1), color 180ms; }
+  [data-svrow]:hover [data-svgo], [data-svrow]:focus-visible [data-svgo] { opacity: 1; color: #007A3D; transform: translateX(4px); }
+  [dir="rtl"] [data-svrow]:hover [data-svgo], [dir="rtl"] [data-svrow]:focus-visible [data-svgo] { transform: translateX(-4px); }
+  [data-svrow]:hover [data-svname], [data-svrow]:focus-visible [data-svname] { color: #00693A; }
+  /* The request form is one sheet. A section is a row: its number and name
+     in a rail, its fields beside it. */
+  [data-svsec] { display: grid; grid-template-columns: 190px minmax(0, 1fr); column-gap: 32px; padding: 30px 32px; }
+  [data-svsec] + [data-svsec] { border-top: 1px solid rgba(23,23,15,0.1); }
+  [data-svsec] > [data-svrail] { grid-column: 1; grid-row: 1 / span 12; align-self: start; }
+  [data-svsec] > :not([data-svrail]) { grid-column: 2; min-width: 0; }
+  [data-svurg] > [role="radio"] + [role="radio"] { border-inline-start: 1px solid rgba(23,23,15,0.14); }
   @media (max-width: 1080px) {
-    [data-svgrid] { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    [data-svhero] { grid-template-columns: 1fr !important; gap: 34px !important; }
     [data-svform] { grid-template-columns: 1fr !important; }
     [data-svaside] { position: static !important; }
   }
   @media (max-width: 760px) {
-    [data-svgrid] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
-    [data-svsteps], [data-svtwo], [data-svthree], [data-svurg], [data-placegrid] { grid-template-columns: 1fr !important; }
+    [data-svgrid] { column-count: 1 !important; }
+    [data-svindexhead] { flex-direction: column; align-items: stretch !important; }
+    [data-svindexhead] > [data-svfind] { width: 100% !important; }
+    [data-svtwo], [data-svthree], [data-svurg], [data-placegrid] { grid-template-columns: 1fr !important; }
+    [data-svurg] > [role="radio"] + [role="radio"] { border-inline-start: none; border-top: 1px solid rgba(23,23,15,0.14); }
     [data-svstepper] [data-steplabel] { display: none !important; }
+    [data-svsec] { grid-template-columns: 1fr; padding: 24px 20px; }
+    [data-svsec] > [data-svrail] { grid-row: auto; margin-bottom: 16px; }
+    [data-svsec] > :not([data-svrail]) { grid-column: 1; }
   }
   @media (max-width: 560px) {
     [data-filterbar] > [data-placebox] { flex: 1 1 100%; }
-    [data-svcard] { padding: 16px !important; }
     [data-svpage] { padding-left: 16px !important; padding-right: 16px !important; }
+    [data-svsec] { padding: 22px 16px; }
+    [data-svrow] { grid-template-columns: 26px 22px minmax(0, 1fr) auto !important; column-gap: 12px !important; }
   }
   /* The listing sheet is three columns on a desktop so the whole form is
      visible without scrolling; it folds down as the viewport narrows. */
@@ -247,7 +275,6 @@
     [data-headprice] { text-align: start !important; }
     /* room for the fixed call bar */
     [data-detailpage] { padding-bottom: 132px !important; }
-    [data-galleryhero] { aspect-ratio: 3 / 2 !important; }
   }
   @media (max-width: 1080px) {
     [data-grid] { grid-template-columns: 1fr !important; }
@@ -1229,11 +1256,12 @@
            Desktop: one hero frame with a stack of supporting frames beside
            it. Mobile: the same media as a scroll-snap strip, which gives
            native swipe and momentum without a carousel library. -->
-      <div data-gallery="true" style="display: grid; grid-template-columns: {{ dGalleryCols }}; gap: 10px; border-radius: 22px; overflow: hidden;">
+      <div data-gallery="true" style="display: {{ dGalleryDisplay }}; grid-template-columns: {{ dGalleryCols }}; gap: 10px; border-radius: 22px; overflow: hidden;">
 
-        <div data-galleryhero="true" style="position: relative; aspect-ratio: 4 / 3; background-color: #EDE7D9; background-image: repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px); overflow: hidden;">
+        <div data-galleryhero="true" style="position: relative; background-color: #EDE7D9; background-image: {{ dHeroGround }}; overflow: hidden;">
           <sc-if value="{{ dCoverIsImage }}" hint-placeholder-val="{{ false }}">
-            <img onClick="{{ dZoom }}" ref="{{ dCoverRef }}" alt="{{ dTitle }}" style="width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; filter: {{ dClosedFilter }};" />
+            <img data-blur="true" alt="" aria-hidden="true" style="position: absolute; top: -30px; left: -30px; width: calc(100% + 60px); height: calc(100% + 60px); max-width: none; object-fit: cover; filter: blur(26px) brightness(0.78); display: none; pointer-events: none;" />
+            <img onClick="{{ dZoom }}" ref="{{ dCoverRef }}" alt="{{ dTitle }}" style="position: relative; width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; filter: {{ dClosedFilter }};" />
           </sc-if>
           <sc-if value="{{ dCoverIsVideo }}" hint-placeholder-val="{{ false }}">
             <video ref="{{ dCoverVideoRef }}" controls="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F;"></video>
@@ -1250,7 +1278,7 @@
 
         <!-- Two equal slots as tall as the main photo: a tall photo is
              cropped to its slot instead of stretching the column. -->
-        <div data-gallerystack="true" style="display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 10px; min-height: 0;">
+        <div data-gallerystack="true" style="display: {{ dStackDisplay }}; grid-template-rows: {{ dStackRows }}; gap: 10px; min-height: 0;">
           <sc-for list="{{ dSideMedia }}" as="sm" hint-placeholder-count="2">
             <div onClick="{{ sm.zoom }}" style="position: relative; overflow: hidden; background: #EDE7D9; cursor: zoom-in; min-height: 0;">
               <sc-if value="{{ sm.isImage }}" hint-placeholder-val="{{ true }}">
@@ -1269,17 +1297,22 @@
       </div>
 
       <!-- mobile: one swipeable strip, snapping a frame at a time -->
-      <div data-gallerystrip="true" ref="{{ dStripRef }}" style="display: {{ dStripDisplay }}; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 18px;">
+      <div style="position: relative; display: {{ dStripWrap }};">
+      <div data-gallerystrip="true" ref="{{ dStripRef }}" style="display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 18px;">
         <sc-for list="{{ dAllMedia }}" as="gm" hint-placeholder-count="1">
-          <div onClick="{{ gm.zoom }}" style="position: relative; flex: 0 0 100%; scroll-snap-align: center; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 18px; background: #EDE7D9;">
+          <div onClick="{{ gm.zoom }}" style="position: relative; flex: 0 0 100%; scroll-snap-align: center; aspect-ratio: 4 / 3; max-height: min(56vh, 460px); overflow: hidden; border-radius: 18px; background: #EDE7D9;">
             <sc-if value="{{ gm.isImage }}" hint-placeholder-val="{{ true }}">
-              <img loading="lazy" decoding="async" ref="{{ gm.imgRef }}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ dClosedFilter }};" />
+              <img data-blur="true" alt="" aria-hidden="true" style="position: absolute; top: -30px; left: -30px; width: calc(100% + 60px); height: calc(100% + 60px); max-width: none; object-fit: cover; filter: blur(26px) brightness(0.78); display: none; pointer-events: none;" />
+              <img loading="lazy" decoding="async" ref="{{ gm.imgRef }}" alt="" style="position: relative; width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ dClosedFilter }};" />
             </sc-if>
             <sc-if value="{{ gm.isVideo }}" hint-placeholder-val="{{ false }}">
               <video ref="{{ gm.videoRef }}" controls="{{ true }}" playsInline="{{ true }}" preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block; background: #17170F; filter: {{ dClosedFilter }};"></video>
             </sc-if>
           </div>
         </sc-for>
+      </div>
+        <span style="position: absolute; top: 12px; inset-inline-start: 12px; padding: 6px 13px; border-radius: 100px; background: {{ dBadgeBg }}; color: #FFFFFF; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; pointer-events: none;">{{ dBadge }}</span>
+        <span data-stripcount="true" dir="ltr" style="position: absolute; bottom: 12px; inset-inline-end: 12px; padding: 5px 11px; border-radius: 100px; background: rgba(12,12,8,0.62); color: #FFFFFF; font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; pointer-events: none;">{{ dStripCount }}</span>
       </div>
 
       <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
@@ -1289,7 +1322,6 @@
             {{ dViewAllLabel }}
           </div>
         </sc-if>
-        <span data-stripcount="true" style="display: {{ dStripDisplay }}; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.64); font-variant-numeric: tabular-nums;">{{ dStripCount }}</span>
       </div>
 
       <!-- ── HEADER ─────────────────────────────────────────────── -->
@@ -2206,44 +2238,62 @@
     <div data-svpage="true" style="padding: 117px 6vw 120px;">
 
       <sc-if value="{{ svIsHome }}" hint-placeholder-val="{{ true }}">
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <span style="width: 20px; height: 1px; background: #CE1126; display: block;"></span>
-        <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.64);">{{ svT.kicker }}</span>
-      </div>
-      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 28px;">
-        <div style="max-width: 64ch;">
-          <h1 style="margin: 0 0 12px; font-size: clamp(2rem, 3.4vw, 2.8rem); font-weight: 300; letter-spacing: -0.032em; text-wrap: balance;">{{ svT.title }}</h1>
-          <p style="margin: 0; font-size: 15.5px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.64); text-wrap: pretty;">{{ svT.body }}</p>
+      <div data-svhero="true" style="display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 72px; align-items: end; margin-bottom: 64px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+            <span style="width: 20px; height: 1px; background: #CE1126; display: block;"></span>
+            <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.64);">{{ svT.kicker }}</span>
+          </div>
+          <h1 style="margin: 0 0 18px; font-size: clamp(2.2rem, 4.6vw, 3.7rem); font-weight: 300; line-height: 1.08; letter-spacing: -0.035em; text-wrap: balance;">{{ svT.title }}</h1>
+          <p style="margin: 0; max-width: 54ch; font-size: 16px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.66); text-wrap: pretty;">{{ svT.body }}</p>
+          <div style="display: flex; align-items: center; gap: 10px 26px; flex-wrap: wrap; margin-top: 30px;">
+            <span role="button" tabIndex="0" onClick="{{ svRequest }}" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 100px; background: #17170F; color: #FFFFFF; font-size: 14.5px; font-weight: 500; cursor: pointer; min-height: 50px; box-sizing: border-box;" style-hover="background: #007A3D;">
+              {{ svT.request }}
+              <span data-flip="true" aria-hidden="true" style="display: inline-block;">→</span>
+            </span>
+            <span role="button" tabIndex="0" onClick="{{ svGoMine }}" style="font-size: 14px; font-weight: 400; cursor: pointer; padding: 6px 0; border-bottom: 1px solid rgba(23,23,15,0.3);" style-hover="color: #00693A; border-color: #007A3D;">{{ svMineLink }}</span>
+          </div>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <span role="button" tabIndex="0" onClick="{{ svRequest }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 100px; background: #007A3D; color: #FFFFFF; font-size: 14px; font-weight: 500; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="background: #00693A;">
-            <span style="width: 15px; height: 15px; background: currentColor; -webkit-mask: url('assets/icons/plus.svg') center/contain no-repeat; mask: url('assets/icons/plus.svg') center/contain no-repeat;"></span>
-            {{ svT.request }}
-          </span>
-          <span role="button" tabIndex="0" onClick="{{ svGoMine }}" style="display: inline-flex; align-items: center; padding: 13px 20px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.18); background: #FFFFFF; font-size: 14px; font-weight: 400; cursor: pointer; min-height: 46px; box-sizing: border-box;" style-hover="border-color: #007A3D; color: #00693A;">{{ svMineLink }}</span>
+        <div>
+          <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.64); padding-bottom: 12px;">{{ svT.how }}</div>
+          <ol style="list-style: none; margin: 0; padding: 0;">
+            <sc-for list="{{ svSteps }}" as="st" hint-placeholder-count="3">
+              <li style="display: grid; grid-template-columns: 40px minmax(0, 1fr); padding: 15px 0; border-top: 1px solid rgba(23,23,15,0.14);">
+                <span style="font-size: 12.5px; font-weight: 500; color: #007A3D; font-variant-numeric: tabular-nums; padding-top: 3px;">{{ st.n }}</span>
+                <span>
+                  <span style="display: block; font-size: 15px; font-weight: 400;">{{ st.t }}</span>
+                  <span style="display: block; margin-top: 3px; font-size: 13px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.64); text-wrap: pretty;">{{ st.b }}</span>
+                </span>
+              </li>
+            </sc-for>
+          </ol>
         </div>
       </div>
 
-      <div style="position: relative; max-width: 620px; margin-bottom: 26px;">
-        <span aria-hidden="true" style="position: absolute; top: 50%; inset-inline-start: 18px; width: 17px; height: 17px; transform: translateY(-50%); background: rgba(23,23,15,0.5); -webkit-mask: url('assets/icons/search.svg') center/contain no-repeat; mask: url('assets/icons/search.svg') center/contain no-repeat;"></span>
-        <input type="search" value="{{ svQuery }}" onChange="{{ svOnQuery }}" placeholder="{{ svT.search }}" aria-label="{{ svT.searchLabel }}" dir="{{ dir }}" autoComplete="off" style="width: 100%; box-sizing: border-box; padding: 14px 46px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.14); background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 300; color: #17170F; outline: none; min-height: 52px; box-shadow: 0 10px 30px rgba(70,58,32,0.07);" style-focus="border-color: #007A3D;" />
-        <sc-if value="{{ svHasQuery }}" hint-placeholder-val="{{ false }}">
-          <span role="button" tabIndex="0" onClick="{{ svClearQuery }}" aria-label="{{ svT.searchLabel }}" style="position: absolute; top: 50%; inset-inline-end: 12px; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(23,23,15,0.55); font-size: 18px;" style-hover="background: rgba(23,23,15,0.06);">×</span>
-        </sc-if>
+      <div data-svindexhead="true" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px 28px; padding-bottom: 14px; border-bottom: 1px solid #17170F;">
+        <h2 style="margin: 0; font-size: 21px; font-weight: 400; letter-spacing: -0.015em;">{{ svT.indexTitle }} <span style="margin-inline-start: 8px; font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.55); font-variant-numeric: tabular-nums;">{{ svCount }}</span></h2>
+        <div data-svfind="true" style="position: relative; width: 320px; max-width: 100%;">
+          <span aria-hidden="true" style="position: absolute; top: 50%; inset-inline-start: 0; width: 16px; height: 16px; transform: translateY(-50%); color: rgba(23,23,15,0.5); background: currentColor; -webkit-mask: url('assets/icons/search.svg') center/contain no-repeat; mask: url('assets/icons/search.svg') center/contain no-repeat;"></span>
+          <input type="search" value="{{ svQuery }}" onChange="{{ svOnQuery }}" placeholder="{{ svT.search }}" aria-label="{{ svT.searchLabel }}" dir="{{ dir }}" autoComplete="off" style="width: 100%; box-sizing: border-box; padding: 8px 30px 8px 26px; padding-inline: 26px 30px; border: none; border-bottom: 1px solid rgba(23,23,15,0.22); border-radius: 0; background: transparent; font-family: inherit; font-size: 14.5px; font-weight: 300; color: #17170F; outline: none; min-height: 40px;" style-focus="border-bottom-color: #007A3D;" />
+          <sc-if value="{{ svHasQuery }}" hint-placeholder-val="{{ false }}">
+            <span role="button" tabIndex="0" onClick="{{ svClearQuery }}" aria-label="{{ svT.clearSearch }}" style="position: absolute; top: 50%; inset-inline-end: 0; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(23,23,15,0.55); font-size: 18px;" style-hover="background: rgba(23,23,15,0.06);">×</span>
+          </sc-if>
+        </div>
       </div>
 
       <sc-if value="{{ svCatsLoading }}" hint-placeholder-val="{{ false }}">
-        <div data-svgrid="true" aria-busy="true" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+        <div aria-busy="true" style="display: grid; gap: 0;">
           <sc-for list="{{ svSteps }}" as="sk" hint-placeholder-count="3">
-            <div style="height: 132px; border-radius: 20px; background: linear-gradient(90deg, rgba(23,23,15,0.04), rgba(23,23,15,0.08), rgba(23,23,15,0.04)); background-size: 200% 100%; animation: akShimmer 1.4s infinite linear;"></div>
-            <div style="height: 132px; border-radius: 20px; background: linear-gradient(90deg, rgba(23,23,15,0.04), rgba(23,23,15,0.08), rgba(23,23,15,0.04)); background-size: 200% 100%; animation: akShimmer 1.4s infinite linear;"></div>
+            <div style="padding: 21px 6px; border-bottom: 1px solid rgba(23,23,15,0.1);">
+              <div style="height: 18px; width: 42%; border-radius: 4px; background: linear-gradient(90deg, rgba(23,23,15,0.04), rgba(23,23,15,0.09), rgba(23,23,15,0.04)); background-size: 200% 100%; animation: akShimmer 1.4s infinite linear;"></div>
+            </div>
           </sc-for>
         </div>
         <div style="margin-top: 12px; font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.6);">{{ svT.loading }}</div>
       </sc-if>
 
       <sc-if value="{{ svCatsFailed }}" hint-placeholder-val="{{ false }}">
-        <div role="alert" style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 16px 18px; border-radius: 16px; background: rgba(206,17,38,0.06); border: 1px solid rgba(206,17,38,0.22);">
+        <div role="alert" style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 20px 6px; border-bottom: 1px solid rgba(23,23,15,0.1);">
           <span style="font-size: 14px; font-weight: 300; color: #B00F20;">{{ svCatsErrorText }}</span>
           <sc-if value="{{ svCanRetryCats }}" hint-placeholder-val="{{ false }}">
             <span role="button" tabIndex="0" onClick="{{ svRetryCats }}" style="padding: 9px 16px; border-radius: 100px; border: 1px solid rgba(206,17,38,0.35); color: #B00F20; font-size: 13px; cursor: pointer;" style-hover="background: #CE1126; color: #FFFFFF;">{{ svT.retry }}</span>
@@ -2252,43 +2302,30 @@
       </sc-if>
 
       <sc-if value="{{ svHasCards }}" hint-placeholder-val="{{ false }}">
-      <div data-svgrid="true" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+      <div data-svgrid="true" style="column-count: 2; column-gap: 64px;">
         <sc-for list="{{ svCards }}" as="sc" hint-placeholder-count="8">
-          <div data-svcard="true" role="button" tabIndex="0" onClick="{{ sc.go }}" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 20px; background: #FFFFFF; border: 1px {{ sc.dash }} {{ sc.ring }}; cursor: pointer; transition: transform 260ms cubic-bezier(.2,.7,.3,1), border-color 260ms, box-shadow 260ms; min-height: 132px; box-sizing: border-box;" style-hover="transform: translateY(-3px); border-color: rgba(0,122,61,0.45); box-shadow: 0 14px 34px rgba(70,58,32,0.1);">
-            <span style="width: 46px; height: 46px; border-radius: 14px; background: rgba(0,122,61,0.08); color: #007A3D; display: flex; align-items: center; justify-content: center; flex: none;">
-              <span ref="{{ sc.iconRef }}" style="width: 24px; height: 24px; display: block;"></span>
+          <div data-svrow="true" data-svcard="true" role="button" tabIndex="0" onClick="{{ sc.go }}" style="display: grid; grid-template-columns: 32px 24px minmax(0, 1fr) auto; column-gap: 16px; align-items: center; padding: 17px 6px; border-bottom: 1px solid rgba(23,23,15,0.1); cursor: pointer; outline-offset: -2px;">
+            <span style="font-size: 12px; font-weight: 400; color: rgba(23,23,15,0.45); font-variant-numeric: tabular-nums;">{{ sc.no }}</span>
+            <span ref="{{ sc.iconRef }}" aria-hidden="true" style="width: 22px; height: 22px; display: block; color: rgba(23,23,15,0.78);"></span>
+            <span style="min-width: 0;">
+              <span data-svname="true" style="display: block; font-size: 17px; font-weight: 400; line-height: 1.35; letter-spacing: -0.01em; transition: color 180ms;">{{ sc.name }}</span>
+              <span style="display: block; margin-top: 2px; font-size: 13px; font-weight: 300; line-height: 1.5; color: rgba(23,23,15,0.6); text-wrap: pretty;">{{ sc.ex }}</span>
             </span>
-            <span style="font-size: 15px; font-weight: 400; line-height: 1.35;">{{ sc.name }}</span>
-            <span style="font-size: 12.5px; font-weight: 300; line-height: 1.5; color: rgba(23,23,15,0.6); text-wrap: pretty;">{{ sc.ex }}</span>
+            <span data-svgo="true" data-flip="true" aria-hidden="true" style="display: inline-block; font-size: 17px;">→</span>
           </div>
         </sc-for>
       </div>
       </sc-if>
 
       <sc-if value="{{ svNoMatch }}" hint-placeholder-val="{{ false }}">
-        <div style="padding: 36px 24px; border-radius: 20px; background: #FFFFFF; border: 1px dashed rgba(23,23,15,0.2); text-align: center;">
-          <div style="font-size: 16px; font-weight: 400;">{{ svNoMatchText }}</div>
-          <p style="margin: 8px auto 18px; max-width: 46ch; font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.64);">{{ svT.noMatchBody }}</p>
+        <div style="padding: 34px 6px; border-bottom: 1px solid rgba(23,23,15,0.1);">
+          <div style="font-size: 17px; font-weight: 400;">{{ svNoMatchText }}</div>
+          <p style="margin: 6px 0 18px; max-width: 52ch; font-size: 14px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.64);">{{ svT.noMatchBody }}</p>
           <sc-if value="{{ svHasCustom }}" hint-placeholder-val="{{ true }}">
-            <span role="button" tabIndex="0" onClick="{{ svCustomGo }}" style="display: inline-flex; padding: 12px 20px; border-radius: 100px; background: #17170F; color: #FFFFFF; font-size: 13.5px; font-weight: 500; cursor: pointer;" style-hover="background: #007A3D;">{{ svT.customCta }}</span>
+            <span role="button" tabIndex="0" onClick="{{ svCustomGo }}" style="display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 100px; background: #17170F; color: #FFFFFF; font-size: 13.5px; font-weight: 500; cursor: pointer;" style-hover="background: #007A3D;">{{ svT.customCta }} <span data-flip="true" aria-hidden="true" style="display: inline-block;">→</span></span>
           </sc-if>
         </div>
       </sc-if>
-
-      <div style="margin-top: 44px;">
-        <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.64); margin-bottom: 14px;">{{ svT.how }}</div>
-        <div data-svsteps="true" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
-          <sc-for list="{{ svSteps }}" as="st" hint-placeholder-count="3">
-            <div style="display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-radius: 18px; background: rgba(255,255,255,0.7); border: 1px solid rgba(23,23,15,0.09);">
-              <span style="width: 26px; height: 26px; border-radius: 50%; background: #17170F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex: none; background: #007A3D;">{{ st.n }}</span>
-              <div>
-                <div style="font-size: 14.5px; font-weight: 400;">{{ st.t }}</div>
-                <div style="margin-top: 4px; font-size: 13px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.64); text-wrap: pretty;">{{ st.b }}</div>
-              </div>
-            </div>
-          </sc-for>
-        </div>
-      </div>
       </sc-if>
 
       <!-- ── The request form ── -->
@@ -2305,16 +2342,14 @@
 
       <div data-svform="true" style="display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start;">
         <div style="display: grid; gap: 16px; min-width: 0;">
+          <div data-svsheet="true" style="border-radius: 22px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
 
           <!-- 1 · the service and the problem -->
-          <section data-svcard="true" style="padding: 22px 22px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;"><span style="width: 26px; height: 26px; border-radius: 50%; background: #17170F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex: none;">1</span><h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 400; letter-spacing: -0.01em;">{{ svT.lblCategory }}</h3></div>
+          <section data-svsec="true">
+            <div data-svrail="true"><div style="font-size: 12.5px; font-weight: 500; color: #007A3D; font-variant-numeric: tabular-nums;">{{ svNo.n1 }}</div><h3 style="margin: 6px 0 0; font-size: 18px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3;">{{ svT.lblCategory }}</h3></div>
             <div style="display: grid; gap: 14px;">
               <div data-svfield="category_id" style="display: grid; gap: 6px; align-content: start;">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                  <span style="width: 46px; height: 46px; border-radius: 14px; background: rgba(0,122,61,0.08); color: #007A3D; display: flex; align-items: center; justify-content: center; flex: none;">
-                    <span ref="{{ svCatIconRef }}" style="width: 22px; height: 22px; display: block;"></span>
-                  </span>
+                <div>
                   <select value="{{ svCat }}" onChange="{{ svOnCat }}" dir="{{ dir }}" aria-label="{{ svT.lblCategory }}" style="width: 100%; box-sizing: border-box; padding: 12px 13px; border-radius: 12px; border: 1px solid {{ svEdge.category_id }}; background: #FDFBF5; font-family: inherit; font-size: 14.5px; font-weight: 300; color: #17170F; outline: none; min-height: 46px; cursor: pointer;" style-focus="border-color: #007A3D;"><sc-for list="{{ svCatOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select>
                 </div>
                 <div style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6);">{{ svCatEx }}</div>
@@ -2348,8 +2383,8 @@
           </section>
 
           <!-- 2 · where -->
-          <section data-svcard="true" style="padding: 22px 22px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;"><span style="width: 26px; height: 26px; border-radius: 50%; background: #17170F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex: none;">2</span><h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 400; letter-spacing: -0.01em;">{{ svT.lblWhere }}</h3></div>
+          <section data-svsec="true">
+            <div data-svrail="true"><div style="font-size: 12.5px; font-weight: 500; color: #007A3D; font-variant-numeric: tabular-nums;">{{ svNo.n2 }}</div><h3 style="margin: 6px 0 0; font-size: 18px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3;">{{ svT.lblWhere }}</h3></div>
             <div style="display: grid; gap: 12px;">
               <div data-placebox="true" style="position: relative; min-width: 0; ">
             <span aria-hidden="true" style="position: absolute; top: 50%; inset-inline-start: 13px; width: 15px; height: 15px; transform: translateY(-50%); background: rgba(23,23,15,0.45); -webkit-mask: url('assets/icons/pin.svg') center/contain no-repeat; mask: url('assets/icons/pin.svg') center/contain no-repeat; pointer-events: none;"></span>
@@ -2435,8 +2470,8 @@
           </section>
 
           <!-- 3 · when, and how urgent -->
-          <section data-svcard="true" style="padding: 22px 22px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;"><span style="width: 26px; height: 26px; border-radius: 50%; background: #17170F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex: none;">3</span><h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 400; letter-spacing: -0.01em;">{{ svT.lblWhen }}</h3></div>
+          <section data-svsec="true">
+            <div data-svrail="true"><div style="font-size: 12.5px; font-weight: 500; color: #007A3D; font-variant-numeric: tabular-nums;">{{ svNo.n3 }}</div><h3 style="margin: 6px 0 0; font-size: 18px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3;">{{ svT.lblWhen }}</h3></div>
             <div style="display: grid; gap: 16px;">
               <div data-svtwo="true" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <label data-svfield="preferred_date" style="display: grid; gap: 6px; align-content: start; ">
@@ -2453,10 +2488,9 @@
               </div>
               <div data-svfield="urgency" style="display: grid; gap: 8px;">
                 <span id="sv-urgency" style="font-size: 12px; font-weight: 400; color: rgba(23,23,15,0.72);">{{ svT.lblUrgency }}</span>
-                <div data-svurg="true" role="radiogroup" aria-labelledby="sv-urgency" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+                <div data-svurg="true" role="radiogroup" aria-labelledby="sv-urgency" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid rgba(23,23,15,0.16); border-radius: 14px; overflow: hidden; background: #FDFBF5;">
                   <sc-for list="{{ svUrgencyOpts }}" as="ug" hint-placeholder-count="3">
-                    <div role="radio" tabIndex="0" aria-checked="{{ ug.pressed }}" onClick="{{ ug.pick }}" onKeyDown="{{ ug.key }}" style="display: flex; gap: 10px; align-items: flex-start; padding: 13px 14px; border-radius: 14px; cursor: pointer; background: {{ ug.bg }}; border: 1px solid {{ ug.border }}; transition: background 160ms, border-color 160ms;">
-                      <span style="width: 10px; height: 10px; border-radius: 50%; background: {{ ug.dot }}; margin-top: 5px; flex: none;"></span>
+                    <div role="radio" tabIndex="0" aria-checked="{{ ug.pressed }}" onClick="{{ ug.pick }}" onKeyDown="{{ ug.key }}" style="padding: 13px 15px 14px; cursor: pointer; background: {{ ug.bg }}; box-shadow: inset 0 -2px 0 {{ ug.bar }}; transition: background 160ms, box-shadow 160ms; outline-offset: -3px;">
                       <span>
                         <span style="display: block; font-size: 14px; font-weight: 500; color: {{ ug.fg }};">{{ ug.label }}</span>
                         <span style="display: block; margin-top: 2px; font-size: 12px; font-weight: 300; line-height: 1.45; color: rgba(23,23,15,0.62);">{{ ug.note }}</span>
@@ -2475,9 +2509,8 @@
           </section>
 
           <!-- 4 · photos -->
-          <section data-svcard="true" data-svfield="photos" style="padding: 22px 22px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;"><span style="width: 26px; height: 26px; border-radius: 50%; background: #17170F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex: none;">4</span><h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 400; letter-spacing: -0.01em;">{{ svT.lblPhotos }}</h3><span style="margin-inline-start: auto; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55); font-variant-numeric: tabular-nums;">{{ svPhotoCount }}</span></div>
-            <p style="margin: -6px 0 14px; font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6);">{{ svT.photosHint }}</p>
+          <section data-svsec="true" data-svfield="photos">
+            <div data-svrail="true"><div style="font-size: 12.5px; font-weight: 500; color: #007A3D; font-variant-numeric: tabular-nums;">{{ svNo.n4 }}</div><h3 style="margin: 6px 0 0; font-size: 18px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3;">{{ svT.lblPhotos }}</h3><p style="margin: 8px 0 0; font-size: 12.5px; font-weight: 300; line-height: 1.55; color: rgba(23,23,15,0.6);">{{ svT.photosHint }}</p><div style="margin-top: 6px; font-size: 12px; font-weight: 300; color: rgba(23,23,15,0.55); font-variant-numeric: tabular-nums;">{{ svPhotoCount }}</div></div>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px;">
               <sc-for list="{{ svPhotos }}" as="sp" hint-placeholder-count="0">
                 <div style="position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: #EDE7D9; border: 1px solid rgba(23,23,15,0.1);">
@@ -2497,8 +2530,8 @@
           </section>
 
           <!-- 5 · contact -->
-          <section data-svcard="true" style="padding: 22px 22px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;"><span style="width: 26px; height: 26px; border-radius: 50%; background: #17170F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex: none;">5</span><h3 style="margin: 0 0 4px; font-size: 17px; font-weight: 400; letter-spacing: -0.01em;">{{ svT.lblContact }}</h3></div>
+          <section data-svsec="true">
+            <div data-svrail="true"><div style="font-size: 12.5px; font-weight: 500; color: #007A3D; font-variant-numeric: tabular-nums;">{{ svNo.n5 }}</div><h3 style="margin: 6px 0 0; font-size: 18px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3;">{{ svT.lblContact }}</h3></div>
             <div data-svthree="true" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
               <label data-svfield="contact_name" style="display: grid; gap: 6px; align-content: start; ">
               <span style="font-size: 12px; font-weight: 400; color: rgba(23,23,15,0.72);">{{ svT.lblName }}</span>
@@ -2517,6 +2550,7 @@
             </label>
             </div>
           </section>
+          </div>
 
           <sc-if value="{{ svHasAlert }}" hint-placeholder-val="{{ false }}">
             <div role="alert" style="padding: 13px 15px; border-radius: 12px; background: rgba(206,17,38,0.07); border: 1px solid rgba(206,17,38,0.26); font-size: 13.5px; font-weight: 400; line-height: 1.55; color: #B00F20;">{{ svAlertText }}</div>
@@ -2532,45 +2566,44 @@
           </div>
         </div>
 
-        <aside data-svaside="true" style="position: sticky; top: 96px; display: grid; gap: 14px;">
-          <div style="padding: 20px; border-radius: 20px; background: #17170F; color: #F7F2E7;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.1); color: #9BE0B8; display: flex; align-items: center; justify-content: center; flex: none;">
-                <span ref="{{ svCatIconRef }}" style="width: 22px; height: 22px; display: block;"></span>
-              </span>
-              <div style="min-width: 0;">
-                <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(247,242,231,0.6);">{{ svT.kicker }}</div>
-                <div style="font-size: 16px; font-weight: 400; margin-top: 2px;">{{ svCatName }}</div>
+        <aside data-svaside="true" style="position: sticky; top: 96px;">
+          <div style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.64); padding-bottom: 12px; border-bottom: 1px solid #17170F;">{{ svT.sumTitle }}</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 18px 0;">
+            <span ref="{{ svCatIconRef }}" aria-hidden="true" style="width: 24px; height: 24px; display: block; flex: none; color: #007A3D;"></span>
+            <span style="font-size: 19px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.3; min-width: 0;">{{ svCatName }}</span>
+          </div>
+          <dl style="margin: 0;">
+            <sc-for list="{{ svSummary }}" as="sm" hint-placeholder-count="3">
+              <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid rgba(23,23,15,0.1);">
+                <dt style="font-size: 12.5px; font-weight: 300; color: rgba(23,23,15,0.6);">{{ sm.k }}</dt>
+                <dd dir="auto" style="margin: 0; font-size: 13.5px; font-weight: 400; line-height: 1.5; color: {{ sm.fg }}; overflow-wrap: anywhere;">{{ sm.v }}</dd>
               </div>
-            </div>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: 16px; background: rgba(0,122,61,0.06); border: 1px solid rgba(0,122,61,0.18); font-size: 12.5px; font-weight: 300; line-height: 1.55; color: #00693A;">
-            <span style="width: 15px; height: 15px; flex: none; margin-top: 2px; background: currentColor; -webkit-mask: url('assets/icons/verified.svg') center/contain no-repeat; mask: url('assets/icons/verified.svg') center/contain no-repeat;"></span>
-            <span>{{ svT.privacy }}</span>
-          </div>
+            </sc-for>
+          </dl>
+          <p style="margin: 0; padding-top: 14px; border-top: 1px solid rgba(23,23,15,0.1); font-size: 12.5px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.6);">{{ svT.privacy }}</p>
         </aside>
       </div>
       </sc-if>
 
       <!-- ── Sent ── -->
       <sc-if value="{{ svIsDone }}" hint-placeholder-val="{{ false }}">
-      <div role="status" style="max-width: 620px; margin: 10px auto 0; padding: 38px 30px; border-radius: 26px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11); text-align: center; box-shadow: 0 22px 60px rgba(70,58,32,0.1);">
-        <span style="width: 64px; height: 64px; border-radius: 50%; background: #007A3D; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center;">
-          <span style="width: 28px; height: 28px; background: currentColor; -webkit-mask: url('assets/icons/check.svg') center/contain no-repeat; mask: url('assets/icons/check.svg') center/contain no-repeat;"></span>
-        </span>
-        <div style="margin-top: 18px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.6);">{{ svT.doneKicker }}</div>
-        <h1 style="margin: 8px 0 10px; font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 300; letter-spacing: -0.03em;">{{ svT.doneTitle }}</h1>
-        <p style="margin: 0 auto; max-width: 48ch; font-size: 14.5px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.66);">{{ svT.doneBody }}</p>
-        <div style="margin: 22px auto 0; display: inline-grid; gap: 4px; padding: 14px 26px; border-radius: 16px; background: #F7F2E7; border: 1px dashed rgba(23,23,15,0.2);">
-          <span style="font-size: 11.5px; color: rgba(23,23,15,0.6);">{{ svT.doneRef }}</span>
-          <span dir="ltr" style="font-size: 24px; font-weight: 500; letter-spacing: 0.04em; font-family: ui-monospace, 'SF Mono', Menlo, monospace;">{{ svDoneRef }}</span>
+      <div role="status" style="max-width: 640px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+          <span style="width: 20px; height: 1px; background: #CE1126; display: block;"></span>
+          <span style="font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(23,23,15,0.64);">{{ svT.doneKicker }}</span>
+        </div>
+        <h1 style="margin: 0 0 14px; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.035em; text-wrap: balance;">{{ svT.doneTitle }}</h1>
+        <p style="margin: 0; max-width: 52ch; font-size: 15.5px; font-weight: 300; line-height: 1.7; color: rgba(23,23,15,0.66);">{{ svT.doneBody }}</p>
+        <div style="margin-top: 30px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 18px 0; border-top: 1px solid #17170F; border-bottom: 1px solid rgba(23,23,15,0.14);">
+          <span style="font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.64);">{{ svT.doneRef }}</span>
+          <span dir="ltr" style="font-size: 26px; font-weight: 500; letter-spacing: 0.04em; font-family: ui-monospace, 'SF Mono', Menlo, monospace;">{{ svDoneRef }}</span>
         </div>
         <sc-if value="{{ svDoneDup }}" hint-placeholder-val="{{ false }}">
-          <p style="margin: 14px auto 0; max-width: 46ch; font-size: 13px; font-weight: 300; color: rgba(23,23,15,0.64);">{{ svT.doneDup }}</p>
+          <p style="margin: 14px 0 0; max-width: 52ch; font-size: 13px; font-weight: 300; line-height: 1.6; color: rgba(23,23,15,0.64);">{{ svT.doneDup }}</p>
         </sc-if>
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 26px;">
-          <span role="button" tabIndex="0" onClick="{{ svGoMine }}" style="padding: 13px 22px; border-radius: 100px; background: #007A3D; color: #FFFFFF; font-size: 14px; font-weight: 500; cursor: pointer;" style-hover="background: #00693A;">{{ svT.seeMine }}</span>
-          <span role="button" tabIndex="0" onClick="{{ svAnother }}" style="padding: 13px 20px; border-radius: 100px; border: 1px solid rgba(23,23,15,0.18); font-size: 14px; cursor: pointer;" style-hover="border-color: #007A3D; color: #00693A;">{{ svT.another }}</span>
+        <div style="display: flex; align-items: center; gap: 10px 26px; flex-wrap: wrap; margin-top: 30px;">
+          <span role="button" tabIndex="0" onClick="{{ svGoMine }}" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 100px; background: #17170F; color: #FFFFFF; font-size: 14.5px; font-weight: 500; cursor: pointer; min-height: 50px; box-sizing: border-box;" style-hover="background: #007A3D;">{{ svT.seeMine }} <span data-flip="true" aria-hidden="true" style="display: inline-block;">→</span></span>
+          <span role="button" tabIndex="0" onClick="{{ svAnother }}" style="font-size: 14px; font-weight: 400; cursor: pointer; padding: 6px 0; border-bottom: 1px solid rgba(23,23,15,0.3);" style-hover="color: #00693A; border-color: #007A3D;">{{ svT.another }}</span>
         </div>
       </div>
       </sc-if>
@@ -2755,9 +2788,7 @@
           <sc-for list="{{ svMineRows }}" as="sr" hint-placeholder-count="1">
             <article style="padding: 18px 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(23,23,15,0.11);">
               <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <span style="width: 42px; height: 42px; border-radius: 13px; background: rgba(0,122,61,0.08); color: #007A3D; display: flex; align-items: center; justify-content: center; flex: none;">
-                  <span ref="{{ sr.iconRef }}" style="width: 21px; height: 21px; display: block;"></span>
-                </span>
+                <span ref="{{ sr.iconRef }}" aria-hidden="true" style="width: 22px; height: 22px; display: block; flex: none; margin-top: 2px; color: rgba(23,23,15,0.78);"></span>
                 <div style="flex: 1; min-width: 0;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <span style="font-size: 15px; font-weight: 400;">{{ sr.title }}</span>
@@ -2783,8 +2814,8 @@
                 <span dir="auto">{{ sr.where }}</span>
               </div>
               <sc-if value="{{ sr.hasLastNote }}" hint-placeholder-val="{{ false }}">
-                <div style="margin-top: 12px; padding: 11px 13px; border-radius: 12px; background: rgba(42,120,214,0.06); border: 1px solid rgba(42,120,214,0.2);">
-                  <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #1F5FAD;">{{ sr.lastNoteLabel }}</div>
+                <div style="margin-top: 14px; padding: 2px 0 2px 14px; padding-inline: 14px 0; border-inline-start: 2px solid #007A3D;">
+                  <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(23,23,15,0.6);">{{ sr.lastNoteLabel }}</div>
                   <div dir="auto" style="margin-top: 3px; font-size: 13.5px; font-weight: 300; line-height: 1.6; white-space: pre-wrap;">{{ sr.lastNote }}</div>
                 </div>
               </sc-if>
@@ -3679,6 +3710,9 @@ const SV_TEXT = {
     uploading: (i, n) => `Uploading photo ${i} of ${n}…`,
     signInToSend: 'Sign in to send your request. What you have written stays here.',
     privacy: 'Your request and photos are seen only by you and the Akarat.ai team.',
+    indexTitle: 'All services', clearSearch: 'Clear the search',
+    sumTitle: 'Your request',
+    sum: { where: 'Where', when: 'When', urgency: 'Urgency', photos: 'Photos', empty: 'Not set yet' },
     fixBelow: 'Some details need a look. They are marked below.',
     errors: {
       category_id: 'Choose a service.',
@@ -3812,6 +3846,9 @@ const SV_TEXT = {
     uploading: (i, n) => `جارٍ رفع الصورة ${i} من ${n}…`,
     signInToSend: 'سجّل الدخول لإرسال طلبك. ما كتبته يبقى كما هو.',
     privacy: 'لا يرى طلبك وصورك إلا أنت وفريق عقارات.',
+    indexTitle: 'كل الخدمات', clearSearch: 'امسح البحث',
+    sumTitle: 'طلبك',
+    sum: { where: 'الموقع', when: 'الموعد', urgency: 'الأولوية', photos: 'الصور', empty: 'لم يُحدَّد بعد' },
     fixBelow: 'بعض البيانات تحتاج إلى مراجعة، وهي معلَّمة أدناه.',
     errors: {
       category_id: 'اختر خدمة.',
@@ -4120,6 +4157,31 @@ class Component extends DCLogic {
    * the arrows walk photos and video clips in the order the owner uploaded
    * them. Scrolling is locked while it is open, or the page drifts behind it.
    */
+  // A photo much taller than its frame is shown whole over a blurred copy
+  // of itself, rather than cropped to a band through its middle. Decided
+  // from the loaded photo and the frame as they are, and again on a resize.
+  fitPhoto(el) {
+    if (!el) return;
+    const run = () => {
+      const frame = el.parentElement;
+      if (!frame || !el.naturalWidth || !frame.clientHeight) return;
+      const tall = el.naturalWidth / el.naturalHeight < (frame.clientWidth / frame.clientHeight) * 0.8;
+      el.style.objectFit = tall ? 'contain' : 'cover';
+      const blur = frame.querySelector('[data-blur]');
+      if (!blur) return;
+      const src = el.currentSrc || el.src;
+      if (tall && blur.getAttribute('src') !== src) blur.src = src;
+      blur.style.display = tall ? 'block' : 'none';
+    };
+    if (!el.__fit) {
+      el.__fit = true;
+      el.addEventListener('load', run);
+      // The frame changes shape with the window and as the page settles.
+      if (typeof ResizeObserver !== 'undefined' && el.parentElement) new ResizeObserver(run).observe(el.parentElement);
+    }
+    if (el.complete) run();
+  }
+
   openLightbox(index) {
     this.setState({ lightbox: index || 0 });
     try { document.body.style.overflow = 'hidden'; } catch (e) {}
@@ -6891,6 +6953,7 @@ class Component extends DCLogic {
       dCoverRef: el => {
         const u = (cover && !coverIsVideo && cover.url) || '';
         if (el && u && el.getAttribute('src') !== u) el.src = u;
+        this.fitPhoto(el);
       },
       dCoverVideoRef: el => {
         const u = (cover && coverIsVideo && cover.url) || '';
@@ -6900,12 +6963,22 @@ class Component extends DCLogic {
       dCoverIsImage: !!cover && !coverIsVideo,
       dCoverIsVideo: !!cover && coverIsVideo,
       dNoMedia: !cover,
+      dHeroGround: cover ? 'none' : 'repeating-linear-gradient(135deg, rgba(23,23,15,0.05) 0 11px, rgba(23,23,15,0.015) 11px 22px)',
       dHasMedia: media.length > 0,
       dSideMedia: side,
-      dAllMedia: media.map(mediaItem),
+      dAllMedia: media.map((im, i) => {
+        const item = mediaItem(im, i);
+        const set = item.imgRef;
+        return Object.assign(item, { imgRef: el => { set(el); this.fitPhoto(el); } });
+      }),
       // One column when there is nothing to put beside the hero.
       dGalleryCols: narrow ? '1fr' : (side.length ? 'minmax(0, 2fr) minmax(0, 1fr)' : '1fr'),
-      dStripDisplay: narrow && media.length > 1 ? 'flex' : 'none',
+      dStackRows: side.length === 1 ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))',
+      dStackDisplay: side.length ? 'grid' : 'none',
+      // On a narrow screen with several photos the swipe strip is the whole
+      // gallery; the hero above it would show the first photo twice.
+      dGalleryDisplay: narrow && media.length > 1 ? 'none' : 'grid',
+      dStripWrap: narrow && media.length > 1 ? 'block' : 'none',
       dStripCount: media.length ? `1 / ${media.length}` : '',
       dStripRef: el => {
         // Written straight to the DOM on scroll. Routing this through state
@@ -9478,6 +9551,9 @@ class Component extends DCLogic {
     const hit = t => !!t && ((qa && PL.foldAr(t).includes(qa)) || (qe && (PL ? PL.foldEn(t) : String(t).toLowerCase()).includes(qe)));
     const shown = q ? cats.filter(c => [c.name_en, c.name_ar, c.examples_en, c.examples_ar].some(hit)) : cats;
     const customCat = cats.find(c => c.custom);
+    // 01, 02…: Arabic-Indic digits in Arabic, like the steps beside them.
+    const numLocale = ar ? 'ar-JO-u-nu-arab' : 'en-US';
+    const two = n => n.toLocaleString(numLocale, { minimumIntegerDigits: 2 });
 
     const code = k => (s.svErrors || {})[k] || '';
     const text = c => (c ? T.errors[c] || T.errors.other : '');
@@ -9516,7 +9592,9 @@ class Component extends DCLogic {
       svIsDone: s.svView === 'done' && !!s.svDone,
 
       /* the landing page */
-      svSteps: T.steps.map(([t, b], i) => ({ n: ar ? ['١', '٢', '٣'][i] : String(i + 1), t, b })),
+      svSteps: T.steps.map(([t, b], i) => ({ n: two(i + 1), t, b })),
+      svNo: { n1: two(1), n2: two(2), n3: two(3), n4: two(4), n5: two(5) },
+      svCount: q ? `${shown.length.toLocaleString(numLocale)} / ${cats.length.toLocaleString(numLocale)}` : cats.length ? cats.length.toLocaleString(numLocale) : '',
       svQuery: s.svQuery || '',
       svOnQuery: e => this.setState({ svQuery: e.target.value }),
       svClearQuery: () => this.setState({ svQuery: '' }),
@@ -9526,13 +9604,13 @@ class Component extends DCLogic {
       svCatsErrorText: s.svCatsError === 'not_set_up' ? T.notReady : T.loadError,
       svCanRetryCats: s.svCatsError === 'load',
       svRetryCats: () => { this.setState({ svCats: null, svCatsError: '' }); this.svLoadCats(); },
+      // Numbered by place in the whole list, so a search keeps each number.
       svCards: shown.map(c => ({
+        no: two(cats.indexOf(c) + 1),
         name: nameOf(c),
         ex: exOf(c),
         iconRef: icon(c.icon),
-        go: () => this.svOpenForm(c.id),
-        ring: c.custom ? 'rgba(23,23,15,0.22)' : 'rgba(23,23,15,0.11)',
-        dash: c.custom ? 'dashed' : 'solid'
+        go: () => this.svOpenForm(c.id)
       })),
       svHasCards: shown.length > 0,
       svNoMatch: !!s.svCats && !s.svCatsError && !!q && shown.length === 0,
@@ -9614,13 +9692,19 @@ class Component extends DCLogic {
           pick: () => this.svSet({ urgency: k }),
           key: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.svSet({ urgency: k }); } },
           pressed: on ? 'true' : 'false',
-          bg: on ? (k === 'emergency' ? 'rgba(206,17,38,0.07)' : k === 'urgent' ? 'rgba(184,134,43,0.1)' : 'rgba(0,122,61,0.08)') : '#FFFFFF',
-          border: on ? tone : 'rgba(23,23,15,0.14)',
-          fg: on ? tone : '#17170F',
-          dot: on ? tone : 'rgba(23,23,15,0.2)'
+          bg: on ? (k === 'emergency' ? 'rgba(206,17,38,0.07)' : k === 'urgent' ? 'rgba(184,134,43,0.1)' : 'rgba(0,122,61,0.08)') : 'transparent',
+          bar: on ? tone : 'transparent',
+          fg: on ? tone : '#17170F'
         };
       }),
       svIsEmergency: !!f && f.urgency === 'emergency',
+      // The side panel: the request as it stands, filled in as they go.
+      svSummary: f ? [
+        [T.sum.where, [near, (f.address || '').trim()].filter(Boolean).join(ar ? '، ' : ', ')],
+        [T.sum.when, f.preferred_date ? `${fmtDay(f.preferred_date, ar)} · ${T.windows[f.preferred_window] || T.windows.any}` : ''],
+        [T.sum.urgency, f.urgency ? T.urgency[f.urgency][0] : ''],
+        [T.sum.photos, f.photos && f.photos.length ? f.photos.length.toLocaleString(numLocale) : '']
+      ].map(([k, v]) => ({ k, v: v || T.sum.empty, fg: v ? '#17170F' : 'rgba(23,23,15,0.42)' })) : [],
 
       svPhotos: ((f && f.photos) || []).map((p, i) => ({
         // A blob: URL from this browser, set through the ref.
@@ -10057,7 +10141,7 @@ class Component extends DCLogic {
         dSaveLabel: '', dSaveBg: '#FFFFFF', dSaveFg: 'inherit', dSaveBorder: 'transparent',
         dToggleSave: () => {}, dShareLabel: '', dShareIcon: 'share', dShare: () => {},
         dQuickFacts: empty, dSideMedia: empty, dAllMedia: empty, dSimilar: empty,
-        dHasSimilar: false, dHasMedia: false, dGalleryCols: '1fr', dStripDisplay: 'none',
+        dHasSimilar: false, dHasMedia: false, dGalleryCols: '1fr', dGalleryDisplay: 'grid', dHeroGround: 'none', dStripWrap: 'none', dStackRows: 'minmax(0, 1fr)', dStackDisplay: 'none',
         dStripCount: '', dStripRef: () => {}, dViewAll: () => {}, dViewAllLabel: '',
         dHasPricePer: false, dPricePer: '', dBadgeBg: '#007A3D',
         dClosed: false, dNotClosed: true, dClosedFilter: 'none',

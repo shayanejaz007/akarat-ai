@@ -282,30 +282,22 @@ class _ServiceRequestScreenState extends ConsumerState<ServiceRequestScreen> {
     );
   }
 
+  /// One part of the form: its number and name, then its fields, ruled off
+  /// from the part above. No box around it; the page is the sheet.
   Widget _section(BuildContext context, int n, String title, List<Widget> children) {
     final c = context.colors;
     return Container(
-      margin: const EdgeInsets.only(bottom: Space.md),
-      padding: const EdgeInsets.all(Space.md),
+      margin: const EdgeInsets.only(bottom: Space.xl),
+      padding: const EdgeInsets.only(top: Space.md),
       decoration: BoxDecoration(
-        color: c.surface,
-        borderRadius: Radii.card,
-        border: Border.all(color: c.border),
+        border: Border(top: BorderSide(color: n == 1 ? c.ink : c.border)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: c.ink,
-                child: Text('$n', style: context.text.labelSmall?.copyWith(color: c.surface)),
-              ),
-              const SizedBox(width: Space.xs),
-              Expanded(child: Text(title, style: context.text.titleMedium)),
-            ],
-          ),
+          ServiceNumeral(n),
+          const SizedBox(height: Space.hair),
+          Text(title, style: context.text.titleLarge),
           const SizedBox(height: Space.md),
           ...children,
         ],
@@ -701,7 +693,8 @@ class _UrgencyTile extends StatelessWidget {
   }
 }
 
-/// Sent: the reference from the database, and what happens next.
+/// Sent: the reference from the database, and what happens next. Set like
+/// a receipt: the words, then the number between two rules.
 class _Done extends StatelessWidget {
   const _Done({required this.created, required this.onAgain});
   final ServiceCreated created;
@@ -714,48 +707,39 @@ class _Done extends StatelessWidget {
     return ListView(
       padding: Layout.inset(context).copyWith(top: Space.xxl, bottom: Space.xxl),
       children: [
-        Center(
-          child: CircleAvatar(
-            radius: 34,
-            backgroundColor: c.emerald,
-            child: Icon(Icons.check_rounded, color: c.onForest, size: 36),
-          ),
-        ),
-        const SizedBox(height: Space.md),
-        Text(l.svDoneTitle, textAlign: TextAlign.center, style: context.text.headlineSmall),
+        Icon(Icons.check_rounded, color: c.emerald, size: 32),
+        const SizedBox(height: Space.sm),
+        Text(l.svDoneTitle, style: context.text.headlineMedium),
         const SizedBox(height: Space.xs),
-        Text(
-          l.svDoneBody,
-          textAlign: TextAlign.center,
-          style: context.text.bodyMedium?.copyWith(color: c.inkMuted, height: 1.5),
-        ),
-        const SizedBox(height: Space.lg),
-        Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: Space.xl, vertical: Space.sm),
-            decoration: BoxDecoration(
-              color: c.surfaceMuted,
-              borderRadius: Radii.card,
-              border: Border.all(color: c.border),
+        Text(l.svDoneBody, style: context.text.bodyLarge?.copyWith(color: c.inkMuted, height: 1.5)),
+        const SizedBox(height: Space.xl),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: Space.md),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: c.ink),
+              bottom: BorderSide(color: c.border),
             ),
-            child: Column(
-              children: [
-                Text(l.svDoneRef, style: context.text.labelMedium?.copyWith(color: c.inkMuted)),
-                SelectableText(
-                  created.ref,
-                  textDirection: TextDirection.ltr,
-                  style: context.text.headlineSmall?.copyWith(
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                    letterSpacing: 1,
-                  ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l.svDoneRef, style: context.text.labelMedium?.copyWith(color: c.inkMuted)),
+              const SizedBox(height: Space.hair),
+              SelectableText(
+                created.ref,
+                textDirection: TextDirection.ltr,
+                style: context.text.headlineSmall?.copyWith(
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  letterSpacing: 1,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         if (created.duplicate) ...[
           const SizedBox(height: Space.sm),
-          Text(l.svDoneDup, textAlign: TextAlign.center, style: context.text.bodySmall),
+          Text(l.svDoneDup, style: context.text.bodySmall?.copyWith(color: c.inkMuted)),
         ],
         const SizedBox(height: Space.xl),
         FilledButton(onPressed: () => context.pushReplacement(Routes.myServiceRequests), child: Text(l.svSeeMine)),

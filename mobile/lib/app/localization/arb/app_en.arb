@@ -1506,7 +1506,6 @@
   },
   "placeField": "Place",
   "servicesTitle": "Services",
-  "servicesHeadline": "Home services, requested in one place",
   "servicesIntro": "Tell us what needs doing and where. Our team calls you to arrange it, and nothing is booked or priced until you agree.",
   "servicesSearch": "Search services",
   "servicesRequest": "Request a service",
@@ -1734,5 +1733,6 @@
   "talkSpeakFailed": "The answer couldn’t be read aloud. It is written here.",
   "talkFailed": "That couldn’t be answered just now. Tap the circle to try again.",
   "talkOnScreen": "The results are in the chat.",
-  "talkCardHint": "Ask out loud in Arabic or English and hear the answer."
+  "talkCardHint": "Ask out loud in Arabic or English and hear the answer.",
+  "servicesAll": "All services"
 }
