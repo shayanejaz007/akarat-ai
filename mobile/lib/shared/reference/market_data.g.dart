@@ -320,7 +320,7 @@ const List<Neighborhood> _neighborhoods = [
     lng: 35.945,
     alt: ['hashmi shamali', 'al hashimi'],
   ),
-  Neighborhood(id: 'nazzal', city: 'amman', en: 'Al Nazzal', ar: 'النزهة', lat: 31.93, lng: 35.925, alt: ['nazzal']),
+  Neighborhood(id: 'nazzal', city: 'amman', en: 'Al Nazzal', ar: 'النزال', lat: 31.93, lng: 35.925, alt: ['nazzal']),
   Neighborhood(
     id: 'downtown',
     city: 'amman',

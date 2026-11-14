@@ -72,7 +72,7 @@ void main() {
     expect(auth.created, ['lina@example.com']);
     expect(find.text('Check your email'), findsOneWidget);
     expect(find.textContaining('lina@example.com'), findsOneWidget);
-    expect(find.text('I’ve confirmed — sign in'), findsOneWidget);
+    expect(find.text('I’ve confirmed. Sign in'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, 'Create account'), findsNothing, reason: 'the form gives way');
   });
 

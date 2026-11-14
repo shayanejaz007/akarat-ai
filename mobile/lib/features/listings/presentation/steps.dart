@@ -19,9 +19,12 @@ import '../../../core/widgets/layout.dart';
 import '../../../core/widgets/listing_image.dart';
 import '../../../core/widgets/maps.dart';
 import '../../../core/widgets/motion.dart';
+import '../../../core/widgets/place_picker.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../shared/models/listing.dart';
 import '../../../shared/reference/market_data.dart';
+import '../../../shared/reference/places.dart';
+import '../../../shared/reference/places_provider.dart';
 import '../../../shared/widgets/pickers.dart';
 import '../application/listing_wizard_controller.dart';
 import '../domain/listing_draft.dart';
@@ -316,46 +319,30 @@ class LocationStep extends ConsumerWidget {
     final lang = context.lang;
     final d = ref.watch(listingWizardProvider(editId).select((s) => s.draft));
     final ctrl = ref.read(listingWizardProvider(editId).notifier);
-    final hoods = Market.neighborhoodsOf(d.cityId);
+    final places = ref.watch(placesNowProvider).places;
+    // Every town and neighbourhood (data/locations.js), searched in either
+    // language; the governorate is the picker's, a listing stores the town.
+    final sel = d.cityId == null
+        ? null
+        : PlaceSel(governorateId: places.govOfCity(d.cityId), cityId: d.cityId, neighborhoodId: d.neighborhoodId);
+    final centre = places.centre(sel);
     final city = Market.city(d.cityId);
-
-    Widget picker(String label, String value, VoidCallback onTap) => InkWell(
-      onTap: onTap,
-      borderRadius: Radii.field,
-      child: InputDecorator(
-        decoration: InputDecoration(labelText: label, suffixIcon: const Icon(Icons.expand_more_rounded)),
-        child: Text(value, style: context.text.bodyLarge),
-      ),
-    );
+    final near = d.hasPin ? nearPlaceLabel(places, d.lat!, d.lng!, lang, l.placeNear) : '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        picker(l.fieldCity, city?.label(lang) ?? '—', () async {
-          final id = await showChoiceSheet(
-            context: context,
-            title: l.fieldCity,
-            options: Market.cities,
-            selected: d.cityId,
-          );
-          if (id != null && id.isNotEmpty && id != d.cityId) {
-            ctrl.update((x) => x.copyWith(cityId: id, clearNeighborhood: true));
-          }
-        }),
-        const SizedBox(height: Space.sm),
-        picker(
-          l.fieldNeighborhood,
-          Market.neighborhood(d.neighborhoodId)?.label(lang) ?? l.fieldNeighborhoodNone,
-          () async {
-            final id = await showChoiceSheet(
-              context: context,
-              title: l.fieldNeighborhood,
-              options: hoods,
-              selected: d.neighborhoodId,
-              anyLabel: l.fieldNeighborhoodNone,
+        PlaceField(
+          label: l.fieldCity,
+          value: sel,
+          requireCity: true,
+          onChanged: (p) {
+            if (p?.city == null) return;
+            ctrl.update(
+              (x) => p!.hood == null
+                  ? x.copyWith(cityId: p.city, clearNeighborhood: true)
+                  : x.copyWith(cityId: p.city, neighborhoodId: p.hood),
             );
-            if (id == null) return;
-            ctrl.update((x) => id.isEmpty ? x.copyWith(clearNeighborhood: true) : x.copyWith(neighborhoodId: id));
           },
         ),
         const SizedBox(height: Space.xl),
@@ -370,7 +357,12 @@ class LocationStep extends ConsumerWidget {
               height: 260,
               child: PinPicker(
                 initial: d.hasPin ? LatLngPoint(d.lat!, d.lng!) : null,
-                center: city == null ? Geo.jordanCenter : LatLngPoint(city.lat, city.lng),
+                center: centre != null
+                    ? LatLngPoint(centre.lat, centre.lng)
+                    : city == null
+                    ? Geo.jordanCenter
+                    : LatLngPoint(city.lat, city.lng),
+                centerZoom: centre?.zoom ?? 12,
                 onChanged: ctrl.setPin,
               ),
             ),
@@ -385,10 +377,16 @@ class LocationStep extends ConsumerWidget {
               ),
               const SizedBox(width: Space.xs),
               Expanded(
-                child: Text(
-                  d.hasPin ? '${d.lat!.toStringAsFixed(5)}, ${d.lng!.toStringAsFixed(5)}' : l.locationPinNone,
-                  textDirection: TextDirection.ltr,
-                  style: context.text.bodySmall,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (near.isNotEmpty) Text(near, style: context.text.bodyMedium),
+                    Text(
+                      d.hasPin ? '${d.lat!.toStringAsFixed(5)}, ${d.lng!.toStringAsFixed(5)}' : l.locationPinNone,
+                      textDirection: TextDirection.ltr,
+                      style: context.text.bodySmall,
+                    ),
+                  ],
                 ),
               ),
               if (d.hasPin)

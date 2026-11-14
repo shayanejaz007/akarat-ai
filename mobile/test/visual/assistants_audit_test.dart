@@ -1,5 +1,5 @@
-// Visual audit of the AI tab: Property AI and Ask a Lawyer, idle and
-// answering, in both languages and both themes.
+// Visual audit of the AI tab: Property AI, idle and answering, in both
+// languages and both themes.
 //
 //   flutter test test/visual/assistants_audit_test.dart --tags visual --update-goldens --run-skipped
 //
@@ -8,17 +8,20 @@
 @Tags(['visual'])
 library;
 
+import 'dart:async';
+
 import 'package:akarat/app/router/scaffold_with_nav.dart';
 import 'package:akarat/features/advisor/advisor_controller.dart';
+import 'package:akarat/features/advisor/voice_conversation.dart';
 import 'package:akarat/features/ai_hub/ai_hub_screen.dart';
 import 'package:akarat/features/assistant/assistant_stream.dart';
 import 'package:akarat/features/home/home_screen.dart';
-import 'package:akarat/features/lawyer/lawyer_controller.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../support/assistant_fakes.dart';
+import '../support/fakes.dart';
 import '../support/harness.dart';
 import 'render.dart';
 
@@ -132,82 +135,9 @@ List<StreamEvent> _advisor(String lang) {
   ];
 }
 
-List<StreamEvent> _lawyer(String lang) {
-  final ar = lang == 'ar';
-  return [
-    {'t': 'conversation', 'id': 'c-1', 'title': 'Rent increase'},
-    {'t': 'status', 's': 'documents'},
-    {'t': 'status', 's': 'library', 'q': 'rent increase'},
-    {'t': 'status', 's': 'web_search', 'q': 'Owners and Tenants Law amendments'},
-    {
-      't': 'urgent',
-      'level': 'important',
-      'text': ar ? 'ردّ كتابيًا خلال ٣٠ يومًا.' : 'Reply in writing within 30 days.',
-    },
-    {
-      't': 'text',
-      'd': ar
-          ? '## الجواب المختصر\nلا يجوز للمؤجر رفع الأجرة خلال مدة العقد إلا إذا نصّ العقد على ذلك'
-          : '## Short answer\nYour landlord cannot raise the rent during the lease term unless the lease allows it',
-    },
-    {
-      't': 'cite',
-      'n': [1],
-    },
-    {
-      't': 'text',
-      'd': ar
-          ? '.\n\n## القانون الأردني المطبّق\nقانون المالكين والمستأجرين رقم 11 لسنة 1994 وتعديلاته، والقانون رقم 99 لسنة 2031'
-          : '.\n\n## Applicable Jordanian law\nThe Owners and Tenants Law No. 11 of 1994, as amended, and Law No. 99 of 2031',
-    },
-    {
-      't': 'cite',
-      'n': [2],
-    },
-    {'t': 'text', 'd': '.'},
-    {
-      't': 'unverified',
-      'refs': [ar ? 'القانون رقم 99 لسنة 2031' : 'Law No. 99 of 2031'],
-    },
-    {
-      't': 'source',
-      's': {
-        'n': 1,
-        'kind': 'library',
-        'url': 'https://example.gov.jo/law/11-1994',
-        'title': 'Owners and Tenants Law No. 11 of 1994, Article 5',
-        'host': 'example.gov.jo',
-        'status': 'in_force',
-        'verified': '2026-10-01',
-        'quote': 'The rent agreed in the lease binds both parties for its term.',
-      },
-    },
-    {
-      't': 'source',
-      's': {
-        'n': 2,
-        'kind': 'document',
-        'url': '',
-        'title': 'lease.pdf',
-        'host': '',
-        'doc': 1,
-        'page': 2,
-        'quote': 'Clause 4: rent may be reviewed yearly.',
-      },
-    },
-    {
-      't': 'followups',
-      'items': ar ? ['ماذا أفعل إذا رفض؟'] : ['What if the landlord refuses?'],
-    },
-    {'t': 'saved', 'messageId': 41},
-    {'t': 'done', 'lang': lang},
-  ];
-}
-
-Future<List<Override>> _deps({required String lang, bool signedIn = true, Map<String, Object?>? status}) async => [
+Future<List<Override>> _deps({required String lang, bool signedIn = true}) async => [
   ...await TestDeps().overrides(user: signedIn ? fakeUser() : null),
   advisorApiProvider.overrideWithValue(FakeAdvisorApi((_) => _advisor(lang))),
-  lawyerApiProvider.overrideWithValue(FakeLawyerApi(status: status, answer: (_, _) => _lawyer(lang))),
 ];
 
 Future<void> _ask(WidgetTester t, String q) async {
@@ -223,6 +153,38 @@ extension on Element {
 
 void main() {
   setUpAll(loadRealFonts);
+
+  // The voice conversation while the answer is being read aloud.
+  for (final lang in ['en', 'ar']) {
+    testWidgets('voice conversation, speaking $lang', (t) async {
+      final ar = lang == 'ar';
+      final speech = FakeSpeechService();
+      final speaker = FakeSpeaker()..hold = Completer<void>();
+      final api = FakeAdvisorApi(
+        (_) => [
+          {
+            't': 'text',
+            'd': ar ? 'لقيتلك ثلاث شقق بعبدون ضمن ميزانيتك. أرخصها بحوالي 85 ألف دينار. بدك غرفتين ولا ثلاث؟' : 'I found three apartments in Abdoun within your budget. The cheapest is about 85 thousand dinars. Do you want two bedrooms or three?',
+          },
+          {'t': 'done', 'transcript': 't'},
+        ],
+      );
+      await render(
+        t,
+        'voice_conversation_$lang',
+        const VoiceConversation(),
+        overrides: [
+          ...await TestDeps(speech: speech, speaker: speaker).overrides(),
+          advisorApiProvider.overrideWithValue(api),
+        ],
+        lang: lang,
+        folder: 'assistants',
+        interact: (t) async {
+          speech.say(ar ? 'بدي شقة بعبدون' : 'find me an apartment in Abdoun', done: true);
+        },
+      );
+    });
+  }
 
   for (final lang in ['en', 'ar']) {
     testWidgets('advisor idle $lang', (t) async {
@@ -247,27 +209,6 @@ void main() {
             _ask(t, lang == 'ar' ? 'معي ١٠٠ ألف دينار، وين أستثمر؟' : 'I have 100,000 JOD to invest. Where?'),
       );
     });
-    testWidgets('lawyer idle $lang', (t) async {
-      await render(
-        t,
-        'lawyer_idle_$lang',
-        withNav(const AiHubScreen(mode: 'lawyer'), NavTab.ai),
-        overrides: await _deps(lang: lang),
-        lang: lang,
-        folder: 'assistants',
-      );
-    });
-    testWidgets('lawyer answer $lang', (t) async {
-      await render(
-        t,
-        'lawyer_answer_$lang',
-        withNav(const AiHubScreen(mode: 'lawyer'), NavTab.ai),
-        overrides: await _deps(lang: lang),
-        lang: lang,
-        folder: 'assistants',
-        interact: (t) => _ask(t, lang == 'ar' ? 'صاحب البيت بده يرفع الأجرة' : 'My landlord wants to raise the rent'),
-      );
-    });
   }
 
   testWidgets('advisor answer, scrolled to the cards', (t) async {
@@ -283,37 +224,6 @@ void main() {
         await t.drag(find.byType(Scrollable).first, const Offset(0, 900));
         await t.pump(const Duration(milliseconds: 600));
       },
-    );
-  });
-
-  testWidgets('lawyer answer, top, dark', (t) async {
-    await render(
-      t,
-      'lawyer_answer_dark',
-      withNav(const AiHubScreen(mode: 'lawyer'), NavTab.ai),
-      overrides: await _deps(lang: 'en'),
-      brightness: Brightness.dark,
-      folder: 'assistants',
-      interact: (t) async {
-        await _ask(t, 'My landlord wants to raise the rent');
-        await t.pump(const Duration(milliseconds: 600));
-        await t.drag(find.byType(Scrollable).first, const Offset(0, 700));
-        await t.pump(const Duration(milliseconds: 600));
-      },
-    );
-  });
-
-  testWidgets('lawyer signed out', (t) async {
-    await render(
-      t,
-      'lawyer_signed_out',
-      withNav(const AiHubScreen(mode: 'lawyer'), NavTab.ai),
-      overrides: await _deps(
-        lang: 'en',
-        signedIn: false,
-        status: {'ready': true, 'phase': 'open', 'signedIn': false, 'allowed': false},
-      ),
-      folder: 'assistants',
     );
   });
 

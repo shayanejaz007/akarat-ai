@@ -118,7 +118,7 @@ your host's dashboard for production.
 | `NEXT_PUBLIC_SUPABASE_URL` | Browser + server | Baked into `public/config.js` at build time |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser + server | Publishable key. Safe to expose — RLS decides what it can reach |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | **Bypasses RLS.** Never expose to the browser, never commit |
-| `CRON_SECRET` | Server only | Bearer token guarding `/api/admin/crawl` |
+| `CRON_SECRET` | Server only | Bearer token guarding `/api/admin/crawl` and `/api/admin/maintenance` (the daily housekeeping in `vercel.json`, which Vercel's cron sends it to) |
 | `ANTHROPIC_API_KEY` | Server only | The AI advisor (`/api/ai/advisor`) and listing translation (`/api/translate`). Unset, the advisor says it is unavailable and the page falls back to its plain search, and the forms leave the other language to the owner |
 | `AI_ADVISOR_DAILY_TOTAL` | Server only | Optional. Questions per day for everyone together, the ceiling on what a day can cost. Default 600 |
 | `AI_ADVISOR_DAILY_PER_IP` / `AI_ADVISOR_DAILY_PER_USER` | Server only | Optional. Questions per day for one signed-out visitor / one signed-in account. Defaults 30 and 80 |
@@ -126,20 +126,9 @@ your host's dashboard for production.
 | `AI_ADVISOR_MODEL` / `AI_ADVISOR_EFFORT` | Server only | Optional. Default `claude-sonnet-5-5` at `low` effort |
 | `AI_ADVISOR_EFFORT_INVESTMENT` | Server only | Optional. Effort for investment questions (picked by a fixed test on the question, not by a model). Default `high` |
 | `AI_ADVISOR_MAX_TURN_USD` | Server only | Optional. Estimated US dollars one answer may spend before its research stops and it answers with what it has. Default 0.3 |
-| `AI_FOLLOWUP_MODEL` | Server only | Optional. The small model that suggests follow-up questions after each answer, for both assistants. Default `claude-haiku-5-5` |
+| `AI_FOLLOWUP_MODEL` | Server only | Optional. The small model that suggests follow-up questions after each answer. Default `claude-haiku-5-5` |
 | `AI_ADVISOR_PORTALS` / `AI_ADVISOR_RESEARCH_DOMAINS` | Server only | Optional. Extra sites the advisor may search and read: `example.jo=Example` pairs for listing portals, plain hosts for research. Add only sites whose terms allow it |
 | `AI_ADVISOR_SECRET` | Server only | Optional. Signs the conversation the browser holds. Defaults to a key derived from `ANTHROPIC_API_KEY`; set it only to rotate conversations independently of the API key |
-| `LEGAL_DATA_KEY` | Server only | **Required for Ask a Lawyer.** 32 random bytes, base64 (`openssl rand -base64 32`). Encrypts every legal conversation, title, document and report before it reaches Supabase. Losing it makes all of them unreadable; keep a copy outside Vercel |
-| `LEGAL_DATA_KEY_PREVIOUS` | Server only | Optional. The old key while rotating: rows sealed with it still open, new ones use `LEGAL_DATA_KEY` |
-| `LEGAL_ACCESS` | Server only | `reviewers` (the default) or `public`. Until a licensed Jordanian lawyer has reviewed Ask a Lawyer, only the accounts in `LEGAL_REVIEWERS` can use it; `public` opens it to every signed-in account |
-| `LEGAL_REVIEWERS` | Server only | Comma-separated emails of the accounts that may use Ask a Lawyer before launch, and whose reports carry the question and answer for the review |
-| `LEGAL_AI_MODEL` / `LEGAL_AI_EFFORT` | Server only | Optional. Default `claude-sonnet-5-5` at `medium` effort |
-| `LEGAL_AI_EFFORT_COMPLEX` | Server only | Optional. Effort for questions with a document, about courts, about urgent matters (eviction, detention, deadlines, inheritance) or with a long account of the facts. Default `high`, with a larger research budget |
-| `LEGAL_ESCALATION_MODEL` / `LEGAL_ESCALATION_EFFORT` / `LEGAL_ESCALATE_ON` | Server only | Optional, off by default. A stronger model (for example `claude-opus-5-5`) for those questions, limited to the triggers listed (`document`, `court`, `urgent`, `long`). Turn it on only where `scripts/model-benchmark.mts` shows a gain. A model cheaper than `LEGAL_AI_MODEL`, or one with no known price, is ignored |
-| `LEGAL_MAX_TURN_USD` | Server only | Optional. Estimated US dollars one legal answer may spend before its research stops. Default 0.8 |
-| `LEGAL_PER_MINUTE` / `LEGAL_PER_DAY` / `LEGAL_PER_DAY_TOTAL` / `LEGAL_UPLOADS_PER_MINUTE` | Server only | Optional. Questions per minute and per day for one account, questions per day for everyone, uploads per minute. Defaults 4, 30, 300 and 4 |
-| `LEGAL_OFFICIAL_DOMAINS` / `LEGAL_SECONDARY_DOMAINS` | Server only | Optional. Extra hosts Ask a Lawyer may search and read, as official (primary) or secondary sources. Add only sites whose terms allow it |
-| `VOYAGE_API_KEY` | Server only | Optional. Embeddings and reranking for the legal library (Voyage AI). Without it the library is searched by Arabic full text and exact citation |
 | `ADMIN_PASSWORD` | Server only | The password for the admin panel at `/admin`. Change it here and redeploy to sign every admin out |
 | `BACKFILL_SECRET` | Server only | Any long random string. Guards `/api/admin/backfill-translations`, which translates listings saved before translation existed: `BACKFILL_SECRET=… npm run backfill:translations` (dry run), then again with `-- --apply` |
 
@@ -178,9 +167,16 @@ re-running a migration you have already applied is safe.
 0018_admin_analytics.sql    ← the admin panel
 0019_daily_rentals.sql      ← daily rentals
 0020_ai_advisor.sql         ← the AI advisor's daily limits and usage figures
-0021_legal_ai.sql           ← Ask a Lawyer: legal library, private conversations, documents
+0021_legal_ai.sql           ← Ask a Lawyer (since removed; see below: its data still has to expire)
 0022_ai_cost.sql            ← what each AI answer cost, and which model and effort answered
+0023_locations.sql          ← every governorate, town and neighbourhood (GeoNames, CC BY 4.0)
+0024_services.sql           ← Services: categories, requests, their history, the photo bucket
 ```
+
+0024 needs 0019 (notifications) and 0023 (governorates). Run **0023, then
+0024**, before deploying the website or releasing the apps that use them.
+Both are additive and safe to run again; 0023 never overwrites a place an
+admin has changed in the panel.
 
 0021 needs the `vector` extension. The migration enables it; if your project
 refuses, turn it on under Database → Extensions → vector, then run 0021 again.
@@ -369,8 +365,11 @@ The "Search with AI" page is a conversation with a property advisor built on
 Claude (`/api/ai/advisor`, code in `lib/advisor/`). It searches Akarat.ai's
 listings first, then two Jordanian portals and a fixed list of official, news
 and research sites, and answers in English or Jordanian Arabic with listing
-cards, comparisons, cited sources and follow-up questions. Voice input uses
-the browser's own speech recognition.
+cards, comparisons, cited sources and follow-up questions. The microphone
+opens a voice conversation: the browser's own speech recognition hears the
+question, the request carries `voice: true` so the advisor answers in a few
+short spoken sentences in the language spoken, and the browser's own speech
+synthesis reads the answer aloud. The same turn is written in the chat.
 
 - **Turn it on.** `ANTHROPIC_API_KEY` in Vercel (already set if listing
   translation works), then run `0020_ai_advisor.sql`. Without 0020 the
@@ -418,48 +417,56 @@ the browser's own speech recognition.
   unchanged). The advisor's API takes the same bearer token the app already
   sends, so the app can move to it later without server changes.
 
-### Ask a Lawyer
-A separate legal research assistant for Jordanian law ("Ask a Lawyer" in the
-site's navigation; `/api/legal/*`, code in `lib/legal/`). Everything about it
-(architecture, sources, what is and is not verified, the review before
-launch) is in **LEGAL-AI.md**. To run it:
+### Ask a Lawyer (removed)
+Ask a Lawyer has been taken off the website, the apps and the admin panel,
+with its routes (`/api/legal/*`) and code. Its tables (0021) are kept on
+purpose: people were told their conversations would be deleted 90 days after
+the last message and their documents 30 days after upload, and that promise
+still holds. `lib/legal-retention.ts` calls the database's own
+`legal_sweep()` and deletes the stored files it returns. It runs:
 
-1. Run `0021_legal_ai.sql`.
-2. Set `LEGAL_DATA_KEY` (`openssl rand -base64 32`) in Vercel, and keep a copy
-   somewhere safe: without it the stored conversations cannot be read.
-3. Set `LEGAL_REVIEWERS` to the emails of the lawyer reviewing it and of
-   whoever works with them. Leave `LEGAL_ACCESS` unset: everyone else sees
-   "being reviewed by licensed Jordanian lawyers" until you set it to
-   `public`.
-4. `ANTHROPIC_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are shared with the
-   rest of the site. Web search and web fetch must be enabled in the Anthropic
-   Console, as for the advisor.
-5. Load verified legislation and judgments into the library
-   (`data/legal/README.md`, `npm run legal:ingest`). It ships empty; until it
-   has content, answers rely on official websites alone and say so.
-6. Before opening it to the public, run the evaluation (`npm run legal:eval
-   -- --yes`, about $5-8) and have the lawyer complete the review sheet it
-   writes. LEGAL-AI.md, "Before launch", has the whole checklist.
+- every day at 02:30 UTC (05:30 Amman), from `vercel.json`'s cron on
+  `/api/admin/maintenance`, which needs `CRON_SECRET` set in Vercel;
+- now and then when an admin opens the panel.
 
-- **Which model.** Claude Sonnet 5.5 at medium effort; questions with a
-  document, about courts, about urgent matters or with a long account of the
-  facts at high effort, with a larger research budget. Escalation to a
-  stronger model is off until `LEGAL_ESCALATION_MODEL` is set, and a legal
-  answer is never routed to a cheaper model.
-- **What it costs** (estimated from token counts and list prices, not yet
-  measured on live traffic). A typical answer is 8 to 20 US cents, more at
-  high effort; one that reads a long uploaded document costs more the first
-  time (a 10-page PDF is roughly 30,000 input tokens, about 6 cents), and much
-  less on follow-ups while it is cached. Research stops past
-  `LEGAL_MAX_TURN_USD` (80 cents). `LEGAL_PER_DAY_TOTAL` caps the day; at the
-  default of 300 a heavy day is roughly $25-75.
-  `/admin/ask-a-lawyer` shows questions, cost, how many answers named a
-  reference no source supported, library coverage and freshness, and the
-  reviewers' reports.
-- **Retention.** Conversations are deleted 90 days after their last message
-  and documents 30 days after upload, by the database; each person can delete
-  theirs, or all of them, at any time. Deleting an account deletes them too.
-- **Tests without the model:** `npm run test:legal`.
+The `LEGAL_*` environment variables are no longer read and can be deleted
+from Vercel. Once every legal row has expired (`legal_conversations` and
+`legal_documents` are empty), the tables, the `legal-documents` bucket and
+0021's functions can be dropped by hand; nothing else depends on them.
+
+### Services
+People ask for plumbing, electrical work, cleaning and the rest from the
+website (Services in the navigation) or the apps (Home and Profile); the
+team answers from the admin panel (Service requests).
+
+1. Run `0023_locations.sql`, then `0024_services.sql`.
+2. Give each person who handles requests the **admin** role in the panel's
+   Users page: new requests and cancellations notify every admin account,
+   and only admin accounts can be assigned a request.
+3. Categories (the 14 to start with) are edited in the panel's Service
+   categories page. The website and the apps read them from the database,
+   so a change needs no release.
+
+- **Where the rules live.** `create_service_request()` checks every field,
+  limits an account to 10 requests a day, and turns a retried submission (the
+  same `client_token`) back into the first request. `service_requests` has no
+  policies at all: a request is only read or written through the functions,
+  which check who is asking. Photos go to the private `service-photos`
+  bucket, each person in their own folder; the panel shows them through
+  links that last an hour.
+- **What the customer sees.** The status, and the notes an admin writes *for
+  the customer*. Internal notes and who is assigned stay in the panel. No
+  price, technician or date is shown unless an admin writes it in a note.
+- **Tests:** `npm run test:services` (the SQL, on a real Postgres in
+  memory), `npm run test:places`, and in `mobile/`, `flutter test`.
+
+### Every place in Jordan
+`data/locations.js` lists the 12 governorates, 1,182 cities, towns and
+villages, and 452 neighbourhoods; the pickers and filters on the website and
+in the apps search all of it in Arabic or English. LOCATIONS.md, "The place
+list", says where it comes from and how to rebuild it. Admins correct names,
+add a missing place or switch one off in the panel's Locations page; that
+change shows everywhere at once and survives a rebuild.
 
 ### The crawler
 `/api/admin/crawl` refreshes the external listing index. It requires
@@ -541,6 +548,13 @@ Facebook) do not, and there the microphone is simply not shown. Recognition
 runs in the browser's own speech service (Google's in Chrome, Apple's in
 Safari); no audio reaches our server. A server-side transcriber would cover
 the rest, but needs a second provider account and key.
+
+**The recogniser has to be told the language.** Neither the browser nor the
+phone detects Arabic or English by itself, so the conversation starts in the
+interface language and a button at the top switches it. The answer's voice
+follows the answer's language. Reading aloud uses the voices the device has:
+one with no Arabic voice shows the Arabic answer as text and says so. A
+neural voice of our own would need a text-to-speech provider and key.
 
 **The advisor has 60 seconds.** That is the function limit on every Vercel
 plan. It stops researching at about 38 seconds and finishes the answer with

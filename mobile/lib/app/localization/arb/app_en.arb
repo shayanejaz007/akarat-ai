@@ -2,13 +2,11 @@
   "@@locale": "en",
   "appTitle": "Akarat.ai",
   "brandTagline": "Property search across Jordan",
-
   "tabHome": "Home",
   "tabExplore": "Explore",
   "tabAiSearch": "AI Search",
   "tabSaved": "Saved",
   "tabProfile": "Profile",
-
   "actionRetry": "Try again",
   "actionCancel": "Cancel",
   "actionSave": "Save",
@@ -24,7 +22,13 @@
   "actionSeeAll": "See all",
   "tourWelcomeTitle": "Welcome to Akarat.ai",
   "tourWelcomeTitleName": "Welcome, {name}",
-  "@tourWelcomeTitleName": {"placeholders": {"name": {"type": "String"}}},
+  "@tourWelcomeTitleName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "tourWelcomeBody": "Your account is ready. Here's a one-minute look at finding, saving and listing properties.",
   "tourWelcomeAccountBody": "Your account is ready. Here's where to find what it adds.",
   "tourPhotosTitle": "Every photo",
@@ -58,7 +62,16 @@
   "a11yDecrease": "Decrease",
   "a11yIncrease": "Increase",
   "tourStepOf": "{current} of {total}",
-  "@tourStepOf": {"placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "@tourStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "tourSkip": "Skip tour",
   "tourDone": "Got it",
   "tourSearchTitle": "Just describe it",
@@ -68,18 +81,18 @@
   "tourCityTitle": "Pick a city",
   "tourCityBody": "Focus on one city, or keep all of Jordan.",
   "tourExploreTitle": "See it on a map",
-  "tourExploreBody": "Explore shows every property on a map — green for sale, gold for rent — with filters and a list view.",
+  "tourExploreBody": "Explore shows homes for sale or for rent on a map, with filters and a list view.",
   "tourAiTitle": "Ask for it",
-  "tourAiBody": "Ask Property AI about homes, areas and investments, or Ask a Lawyer about Jordanian law.",
+  "tourAiBody": "Ask Property AI about homes, areas and investments, in English or Arabic.",
   "tourSavedTitle": "Keep the ones you like",
   "tourSavedBody": "Tap the heart on any property. It waits for you in Saved, next to your saved searches.",
   "tourProfileTitle": "List your own property",
   "tourProfileBody": "From Profile, list a property in a few guided steps, then answer inquiries from buyers and tenants.",
   "tourProfileGuestBody": "Log in here to list a property in a few guided steps, then answer inquiries from buyers and tenants.",
-  "tourMapDealTitle": "All, sale or rent",
-  "tourMapDealBody": "Choose what the map shows.",
+  "tourMapDealTitle": "Sale or rent",
+  "tourMapDealBody": "Choose what the map shows: homes for sale or for rent, one at a time.",
   "tourMapPinsTitle": "Read the pins",
-  "tourMapPinsBody": "Each pin shows the price. Green is for sale, gold is for rent; a number groups pins that are close together, so tap it to zoom in. A shaded circle means the owner shared an approximate location. Tap a pin to preview the property.",
+  "tourMapPinsBody": "Each pin shows the price. A number groups pins that are close together: tap it to zoom in. A shaded circle means the owner shared an approximate location. Tap a pin to preview the property.",
   "tourMapFiltersTitle": "Narrow it down",
   "tourMapFiltersBody": "Filter by city, type, rooms, price and size.",
   "tourMapToggleTitle": "Prefer a list?",
@@ -98,15 +111,26 @@
   "guideListing": "Listing a property",
   "mapAll": "All",
   "mapCount": "{count, plural, =0{None on the map} =1{1 on the map} other{{count} on the map}}",
-  "@mapCount": {"placeholders": {"count": {"type": "num"}}},
+  "@mapCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "mapCluster": "{count} properties here. Tap to zoom in.",
-  "@mapCluster": {"placeholders": {"count": {"type": "int"}}},
+  "@mapCluster": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "mapNoLocation": "Not on the map",
   "a11yVoice": "Search by voice",
   "voiceListening": "Listening…",
   "voiceStarting": "Getting the microphone ready…",
   "voiceHint": "Say what you’re looking for, like “three bedrooms in Abdoun under 150 thousand”.",
-  "voiceDictationHint": "Speak naturally. Your words go into the box when you pause, or tap Done.",
   "voiceReviewTitle": "Is this right?",
   "voiceReviewBody": "Edit anything before searching.",
   "voiceUnderstood": "Understood",
@@ -125,26 +149,37 @@
   "aiUnder": "Under {amount}",
   "aiUpTo": "Up to {amount}",
   "aiBedsPlus": "{count}+ beds",
-  "@aiBedsPlus": {"placeholders": {"count": {"type": "int"}}},
+  "@aiBedsPlus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "aiTryInstead": "Try instead",
   "aiAllOfCity": "All of {city}",
   "aiAnyType": "Any type",
   "aiBothDeals": "Sale or rent",
   "aiFewerFeatures": "Fewer features",
   "aiFoundSummary": "{count, plural, =0{Nothing on Akarat.ai matches all of that yet.} =1{I found 1 match on Akarat.ai.} other{I found {count} matches on Akarat.ai, closest first.}}",
-  "@aiFoundSummary": {"placeholders": {"count": {"type": "num"}}},
+  "@aiFoundSummary": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "authAccountCreated": "Account created",
   "authAccountCreatedName": "Welcome, {name}. Your account is ready.",
   "authWelcomeBack": "Signed in",
   "authCheckEmailTitle": "Check your email",
   "authCheckEmailBody": "Your account is created. We sent a confirmation link to {email}. Open it to confirm your address, then sign in here.",
-  "authCheckEmailSignIn": "I’ve confirmed — sign in",
+  "authCheckEmailSignIn": "I’ve confirmed. Sign in",
   "authCheckEmailWrong": "Wrong address? Go back",
   "homeLocation": "Location",
   "detailsFacilities": "Facilities",
   "navLogIn": "Log in",
   "actionUndo": "Undo",
-
   "errorGeneric": "Something went wrong. Please try again.",
   "errorNetwork": "You appear to be offline. Check your connection and try again.",
   "errorTimeout": "The server took too long to answer. Try again.",
@@ -155,7 +190,6 @@
   "offlineBanner": "You're offline. Showing what was already loaded.",
   "notProvided": "Not provided",
   "routeNotFound": "This page doesn't exist.",
-
   "onboardingTitle1": "Property across Jordan, in one place",
   "onboardingBody1": "Apartments in Abdoun, land in Madaba, chalets at the Dead Sea. Every listing here traces to a real record.",
   "onboardingTitle2": "Search the way you speak",
@@ -163,7 +197,6 @@
   "onboardingTitle3": "Buy, rent, or list your own",
   "onboardingBody3": "Save the places you like, send inquiries straight to owners, and publish a property in a few guided steps.",
   "onboardingLanguage": "Language",
-
   "homeGreeting": "Find your place in Jordan",
   "homeSubtitle": "Search the usual way, or just say what you're looking for.",
   "homeSearchHint": "A four-bedroom villa in Abdoun with a garden",
@@ -177,15 +210,20 @@
   "homeListCtaBody": "List it in a few guided steps. Your inquiries and listings sit in one dashboard, on the app and the website.",
   "homeListCtaButton": "List your property",
   "homeEmptyTitle": "The marketplace is opening",
-  "homeEmptyBody": "No listings match here yet. Nothing is invented to fill the space — check back soon, or be the first to list.",
+  "homeEmptyBody": "No listings here yet. Check back soon, or be the first to list.",
   "locationAllJordan": "All of Jordan",
   "locationPickerTitle": "Choose a city",
   "dealSale": "Buy",
   "dealRent": "Rent",
-
   "exploreTitle": "Explore",
   "exploreResultsCount": "{count, plural, =0{No properties} =1{1 property} other{{count} properties}}",
-  "@exploreResultsCount": {"placeholders": {"count": {"type": "int"}}},
+  "@exploreResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "exploreFilters": "Filters",
   "exploreSort": "Sort",
   "sortNewest": "Newest",
@@ -216,7 +254,6 @@
   "exploreEnd": "That's everything that matches.",
   "mapApproximateNote": "Circles mark approximate locations the owner chose not to pin exactly.",
   "mapNoPins": "None of the loaded listings has a map location yet.",
-
   "badgeForSale": "For sale",
   "badgeForRent": "For rent",
   "badgeSold": "SOLD",
@@ -227,14 +264,25 @@
   "a11ySave": "Save property",
   "a11yUnsave": "Remove from saved",
   "a11yBeds": "{count} bedrooms",
-  "@a11yBeds": {"placeholders": {"count": {"type": "int"}}},
+  "@a11yBeds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "a11yBaths": "{count} bathrooms",
-  "@a11yBaths": {"placeholders": {"count": {"type": "int"}}},
-
+  "@a11yBaths": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "aiTitle": "AI Search",
   "aiKicker": "Property intelligence",
   "aiIdleTitle": "Tell us what you are looking for.",
-  "aiIdleBody": "Write it the way you would say it out loud. We pick out whether you are buying or renting, where, your budget, bedrooms, bathrooms and features, recognise Jordanian place names in either language, and search straight away.",
+  "aiIdleBody": "Write it the way you would say it, in English or Arabic: the area, your budget, the rooms.",
   "aiIdleBodyShort": "Describe it the way you’d say it, in English or Arabic. We read the area, budget, rooms and features, then show why each result fits.",
   "aiRefineHintShort": "Refine, e.g. “only Abdoun”",
   "aiCoveragePartner": "Licensed partner feeds aren’t connected yet, so they weren’t part of this search.",
@@ -257,9 +305,15 @@
   "aiStageRank": "Deterministic ranking",
   "aiResultsInternal": "On Akarat.ai",
   "aiResultsExternal": "Indexed from other portals",
-  "aiResultsExternalNote": "Found on other Jordanian portals and indexed by our crawler. Availability is not confirmed — open the source to check.",
+  "aiResultsExternalNote": "Found on other Jordanian portals. Availability is not confirmed: open the source to check.",
   "aiMatch": "{score}% match",
-  "@aiMatch": {"placeholders": {"score": {"type": "int"}}},
+  "@aiMatch": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
   "aiWhyMatches": "Why this matches",
   "aiNoMatchTitle": "Nothing in our inventory matches that yet.",
   "aiNoMatchBody": "Try widening the area or raising the budget, or search the wider Jordanian market below.",
@@ -267,7 +321,13 @@
   "aiWiderBody": "We turn your brief into a real search on each Jordanian portal. These open their own filtered results, so the listings you see are theirs and current. Nothing here is copied or invented.",
   "aiOpensOutside": "Opens outside Akarat.ai",
   "aiCoverageMissing": "Not searched this time: {sources}",
-  "@aiCoverageMissing": {"placeholders": {"sources": {"type": "String"}}},
+  "@aiCoverageMissing": {
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
   "aiServedDirect": "The search service didn't answer, so we searched the Akarat.ai database directly.",
   "aiMissingDeal": "Buying or renting? Say so and the ranking gets sharper.",
   "aiMissingLocation": "Name a city or an area to narrow it down.",
@@ -276,24 +336,65 @@
   "aiStartOver": "Clear search",
   "aiExternalBadge": "Other portal",
   "aiSourcesCount": "{count, plural, =1{1 source} other{{count} sources}}",
-  "@aiSourcesCount": {"placeholders": {"count": {"type": "int"}}},
+  "@aiSourcesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "aiViewOnSource": "View on source",
   "aiSaveSearchTitle": "Name this search",
   "aiSearchedFor": "You asked",
   "chipBedsMin": "{count}+ bedrooms",
-  "@chipBedsMin": {"placeholders": {"count": {"type": "int"}}},
+  "@chipBedsMin": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "chipBathsMin": "{count}+ bathrooms",
-  "@chipBathsMin": {"placeholders": {"count": {"type": "int"}}},
+  "@chipBathsMin": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "chipBudgetMax": "Up to {price}",
-  "@chipBudgetMax": {"placeholders": {"price": {"type": "String"}}},
+  "@chipBudgetMax": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "chipBudgetMin": "From {price}",
-  "@chipBudgetMin": {"placeholders": {"price": {"type": "String"}}},
+  "@chipBudgetMin": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "chipAreaMin": "{area}+ m²",
-  "@chipAreaMin": {"placeholders": {"area": {"type": "String"}}},
+  "@chipAreaMin": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "chipOnlyAkarat": "Akarat.ai only",
   "chipRemove": "Remove {label}",
-  "@chipRemove": {"placeholders": {"label": {"type": "String"}}},
-
+  "@chipRemove": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "detailsSpecs": "Property details",
   "detailsAmenities": "Features and amenities",
   "detailsAbout": "About this property",
@@ -329,15 +430,35 @@
   "detailsFindSimilar": "Search for similar",
   "detailsNotFound": "This listing is no longer available.",
   "detailsListedOn": "Listed {date}",
-  "@detailsListedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@detailsListedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "detailsUpdatedOn": "Updated {date}",
-  "@detailsUpdatedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@detailsUpdatedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "detailsMediaPosition": "{index} of {total}",
-  "@detailsMediaPosition": {"placeholders": {"index": {"type": "int"}, "total": {"type": "int"}}},
+  "@detailsMediaPosition": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "detailsVideo": "Video",
   "detailsYourListing": "This is your listing",
   "detailsManage": "Manage",
-
   "inquiryTitle": "Send an inquiry",
   "inquiryBody": "Your message goes straight to the owner's dashboard on Akarat.ai.",
   "inquiryName": "Your name",
@@ -345,27 +466,43 @@
   "inquiryPhone": "Phone",
   "inquiryMessage": "Message",
   "inquiryDefaultMessage": "Hello, I'm interested in “{title}”. Is it still available?",
-  "@inquiryDefaultMessage": {"placeholders": {"title": {"type": "String"}}},
+  "@inquiryDefaultMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "inquirySend": "Send inquiry",
   "inquirySending": "Sending…",
   "inquirySent": "Sent. The owner will see it in their dashboard.",
   "inquiryNeedContact": "Add an email or a phone number so the owner can reply.",
   "inquiryClosed": "This listing is no longer taking inquiries.",
-
   "validationRequired": "Required",
   "validationEmail": "Enter a valid email address",
   "validationPhone": "Enter a valid phone number",
   "validationPasswordShort": "Use at least {count} characters",
-  "@validationPasswordShort": {"placeholders": {"count": {"type": "int"}}},
+  "@validationPasswordShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "validationNumber": "Enter a whole number",
   "validationPositive": "Must be greater than zero",
   "validationYear": "Enter a year between 1900 and {max}",
-  "@validationYear": {"placeholders": {"max": {"type": "int"}}},
-
+  "@validationYear": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "authSignInTitle": "Welcome back",
   "authSignInBody": "Sign in with the same account you use on akarat.ai.",
   "authSignUpTitle": "Create your account",
-  "authSignUpBody": "One account to list a property, track inquiries and save searches — on the app and the website.",
+  "authSignUpBody": "One account to list a property, track inquiries and save searches, on the app and the website.",
   "fieldName": "Full name",
   "fieldEmail": "Email address",
   "fieldPassword": "Password",
@@ -380,7 +517,16 @@
   "authSavePassword": "Save password",
   "authPasswordUpdated": "Password updated.",
   "authAgreement": "By creating an account, you agree to the {terms} and {privacy}.",
-  "@authAgreement": {"placeholders": {"terms": {"type": "String"}, "privacy": {"type": "String"}}},
+  "@authAgreement": {
+    "placeholders": {
+      "terms": {
+        "type": "String"
+      },
+      "privacy": {
+        "type": "String"
+      }
+    }
+  },
   "authCreateAccount": "Create account",
   "authHaveAccount": "Already have an account? Sign in",
   "authNoAccount": "New here? Create an account",
@@ -401,7 +547,7 @@
   "authPhoneButton": "Continue with a phone number",
   "authPhoneSignUpButton": "Sign up with a phone number",
   "authPhoneTitle": "Sign in with your phone",
-  "authPhoneBody": "Choose your country and enter your number. We’ll send you a code to sign in — no password needed.",
+  "authPhoneBody": "Choose your country and enter your number. We’ll send you a code to sign in, no password needed.",
   "authPhoneSignUpTitle": "Create an account with your phone",
   "authPhoneSignUpBody": "Enter your name and number. We’ll send a code to confirm the number is yours.",
   "authPhoneLinkTitle": "Add a phone number",
@@ -415,9 +561,27 @@
   "fieldPhoneNumber": "Phone number",
   "fieldCode": "Verification code",
   "authPhoneHint": "Enter the {digits}-digit number after +{dial}, without the leading zero.",
-  "@authPhoneHint": {"placeholders": {"digits": {"type": "String"}, "dial": {"type": "String"}}},
+  "@authPhoneHint": {
+    "placeholders": {
+      "digits": {
+        "type": "String"
+      },
+      "dial": {
+        "type": "String"
+      }
+    }
+  },
   "authPhoneCountryA11y": "Country code: {country}, +{dial}",
-  "@authPhoneCountryA11y": {"placeholders": {"country": {"type": "String"}, "dial": {"type": "String"}}},
+  "@authPhoneCountryA11y": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      },
+      "dial": {
+        "type": "String"
+      }
+    }
+  },
   "authSendCode": "Send code",
   "authSending": "Sending…",
   "authCodeTitle": "Enter your code",
@@ -431,7 +595,13 @@
   "authVerifying": "Checking…",
   "authResend": "Resend code",
   "authResendIn": "Resend code in {seconds}s",
-  "@authResendIn": {"placeholders": {"seconds": {"type": "int"}}},
+  "@authResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "authCodeResent": "A new code is on its way.",
   "authCodeIncomplete": "Enter the 6-digit code you were sent.",
   "authCodeWrong": "That code is wrong or has expired. Check it, or ask for a new one.",
@@ -488,14 +658,26 @@
   "reportThanks": "Thanks. We’ll review this listing.",
   "reportSignIn": "Sign in to report a listing, so we can follow up with you.",
   "reportByEmail": "Reports aren’t switched on in the app yet. We’ve opened an email to {email} instead.",
-  "@reportByEmail": {"placeholders": {"email": {"type": "String"}}},
+  "@reportByEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "hideAdvertiser": "Hide this advertiser",
   "hideAdvertiserTitle": "Hide this advertiser?",
   "hideAdvertiserBody": "You won’t see any of their listings again on this device. You can show them again from Profile.",
   "hideAdvertiserAction": "Hide",
   "hideAdvertiserDone": "Hidden. You won’t see their listings any more.",
   "profileHiddenAdvertisers": "Hidden advertisers: {count}",
-  "@profileHiddenAdvertisers": {"placeholders": {"count": {"type": "int"}}},
+  "@profileHiddenAdvertisers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "profileHiddenAdvertisersShow": "Tap to show their listings again",
   "showHiddenTitle": "Show hidden advertisers again?",
   "showHiddenBody": "Their listings will appear in your results again.",
@@ -511,7 +693,6 @@
   "profilePhotoRemoved": "Profile picture removed",
   "profilePhotoFailed": "That picture couldn’t be used. Try another one.",
   "profilePhotoNoCamera": "The camera isn’t available. Choose from your photos instead.",
-
   "savedTitle": "Saved",
   "savedProperties": "Properties",
   "savedSearches": "Searches",
@@ -527,11 +708,19 @@
   "savedSearchRun": "Search again",
   "savedSearchDeleted": "Search removed",
   "savedListingGone": "No longer available",
-
   "listingNewTitle": "List your property",
   "listingEditTitle": "Edit listing",
   "stepOf": "Step {current} of {total}",
-  "@stepOf": {"placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "@stepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "stepPurpose": "What are you listing?",
   "stepType": "What kind of property?",
   "stepLocation": "Where is it?",
@@ -582,17 +771,41 @@
   "listingTranslatedEn": "English filled in automatically. Check it before publishing.",
   "mediaAddPhotos": "Add photos",
   "mediaAddVideo": "Add video",
-  "mediaHelp": "Up to 8 files, including up to 2 video clips. Photos are resized before they upload. The first photo is the cover — drag to reorder.",
+  "mediaHelp": "Up to 8 files, including up to 2 video clips. The first photo is the cover: drag to reorder.",
   "mediaCover": "Cover",
   "mediaTooMany": "Eight files is the maximum.",
   "mediaTooManyVideos": "Two video clips is the maximum.",
   "mediaTooLarge": "{name} is larger than {size} MB.",
-  "@mediaTooLarge": {"placeholders": {"name": {"type": "String"}, "size": {"type": "int"}}},
+  "@mediaTooLarge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
   "mediaUnsupported": "{name} isn't a supported format.",
-  "@mediaUnsupported": {"placeholders": {"name": {"type": "String"}}},
+  "@mediaUnsupported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "mediaUploading": "Uploading file {done} of {total}",
-  "@mediaUploading": {"placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
-  "mediaUploadFailed": "A file didn't upload, so nothing was saved yet. Check your connection and try again — files that already uploaded won't be sent twice.",
+  "@mediaUploading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mediaUploadFailed": "A file didn't upload, so nothing was saved yet. Check your connection and try again. Files that already uploaded won't be sent twice.",
   "mediaRemove": "Remove",
   "previewPublish": "Publish listing",
   "previewSaveDraft": "Save as draft",
@@ -615,7 +828,6 @@
   "errorUnknownArea": "This area is not set up in the database yet. Choose another area, or “Other”, and try again.",
   "errorGeoColumns": "Location pins aren't set up on the server yet. Remove the pin and try again.",
   "errorStorageMissing": "Photo storage isn't set up on the server yet. Remove the files and publish without them, or try later.",
-
   "dashboardTitle": "My listings",
   "dashStatListings": "Listings",
   "dashStatLive": "Live now",
@@ -642,19 +854,23 @@
   "dashAnalyticsNote": "Views are not tracked yet. We show no numbers before they exist.",
   "dashStatusUpdated": "Listing updated",
   "dashDeleted": "Listing deleted",
-
   "inquiriesTitle": "Inquiries",
   "inquiriesReceived": "Received",
   "inquiriesSent": "Sent",
   "inquiriesEmpty": "No inquiries yet. They arrive here the moment someone contacts you about a property.",
   "inquiriesSentEmpty": "Inquiries you send to owners appear here.",
   "inquiryAbout": "About {title}",
-  "@inquiryAbout": {"placeholders": {"title": {"type": "String"}}},
+  "@inquiryAbout": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "inquiryDeletedProperty": "a deleted property",
   "inquiryUnknownSender": "Unknown",
   "inquiryReplyEmail": "Email",
   "inquiryReplyCall": "Call",
-
   "profileTitle": "Profile",
   "profileGuestTitle": "You're browsing as a guest",
   "profileGuestBody": "Sign in to list a property, keep saved searches with your account, and see inquiries.",
@@ -679,7 +895,13 @@
   "settingsEmailUs": "Email support",
   "settingsWebsite": "Open the website",
   "settingsVersion": "Version {version}",
-  "@settingsVersion": {"placeholders": {"version": {"type": "String"}}},
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "settingsDeleteAccount": "Delete account",
   "signOutConfirmTitle": "Sign out?",
   "signOutConfirmBody": "Your listings and saved searches stay in your account.",
@@ -688,14 +910,19 @@
   "deleteAccountConfirmHint": "Type DELETE to confirm",
   "deleteAccountConfirmWord": "DELETE",
   "deleteAccountUnavailable": "In-app deletion isn't switched on yet. We've opened an email to {email} so you can request it.",
-  "@deleteAccountUnavailable": {"placeholders": {"email": {"type": "String"}}},
+  "@deleteAccountUnavailable": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "deleteAccountDone": "Your account has been deleted.",
-
   "legalUpdated": "Last updated: August 2026",
   "privacyH1": "What we collect",
   "privacyP1": "An account needs an email address and a name. If you list a property, we store what you write about it: location, price, specifications and descriptions. Search text is kept to improve how requests are read, and is not tied to your account.",
   "privacyH2": "What we do not collect",
-  "privacyP2": "We do not ask for national ID numbers, banking details or your physical location. We run no advertising, we do not sell your data, and we do not share it with ad brokers.",
+  "privacyP2": "We do not ask for national ID numbers or banking details. Your location is read only when you tap the location button on a map, to move that map; it is not stored or sent to us. We run no advertising, we do not sell your data, and we do not share it with ad brokers.",
   "privacyH3": "Links to other portals",
   "privacyP3": "When you open a result from another Jordanian portal, you leave for their site. From that moment their privacy policy applies, not ours, and we do not tell them who was searching.",
   "privacyH4": "Your rights",
@@ -721,17 +948,56 @@
   "dailyNoMatchTitle": "Nothing free for that",
   "dailyNoMatchBody": "Try other dates, fewer guests or another city.",
   "dailyGuests": "{n, plural, =1{1 guest} other{{n} guests}}",
-  "@dailyGuests": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyGuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyNights": "{n, plural, =1{1 night} other{{n} nights}}",
-  "@dailyNights": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyNights": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailySleeps": "Sleeps {n}",
-  "@dailySleeps": {"placeholders":{"n":{"type":"int"}}},
+  "@dailySleeps": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyMinStay": "{n, plural, =1{1-night minimum} other{{n}-night minimum}}",
-  "@dailyMinStay": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyMinStay": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyBedrooms": "{n, plural, =1{1 bedroom} other{{n} bedrooms}}",
-  "@dailyBedrooms": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyBedrooms": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyTotalFor": "{price} for {nights}",
-  "@dailyTotalFor": {"placeholders":{"price":{"type":"String"},"nights":{"type":"String"}}},
+  "@dailyTotalFor": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "nights": {
+        "type": "String"
+      }
+    }
+  },
   "dailyPerNight": "per night",
   "badgeDaily": "Daily rental",
   "bookingTitle": "Request to book",
@@ -771,7 +1037,28 @@
   "bookingCancelBody": "The owner is told.",
   "bookingKeep": "Keep it",
   "bookingWhatsAppText": "Hello, this is {name}. You approved my Akarat.ai booking request for “{title}” from {from} to {to} ({nights}, {guests}). Can we arrange the details?",
-  "@bookingWhatsAppText": {"placeholders":{"name":{"type":"String"},"title":{"type":"String"},"from":{"type":"String"},"to":{"type":"String"},"nights":{"type":"String"},"guests":{"type":"String"}}},
+  "@bookingWhatsAppText": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "nights": {
+        "type": "String"
+      },
+      "guests": {
+        "type": "String"
+      }
+    }
+  },
   "bookingsTitle": "Bookings",
   "bookingsRequests": "For my places",
   "bookingsMine": "My bookings",
@@ -780,7 +1067,13 @@
   "bookingApprove": "Approve",
   "bookingApproveTitle": "Approve and share your number",
   "bookingApproveBody": "{name} alone sees this number, with a WhatsApp button.",
-  "@bookingApproveBody": {"placeholders":{"name":{"type":"String"}}},
+  "@bookingApproveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "bookingPhoneLabel": "Your WhatsApp number",
   "bookingReject": "Decline",
   "bookingRejectTitle": "Decline this request?",
@@ -791,7 +1084,13 @@
   "bookingOwnerCancel": "Cancel booking",
   "bookingOwnerCancelBody": "The guest is told and the nights open again.",
   "bookingSharedPhone": "Shown to the guest: {phone}",
-  "@bookingSharedPhone": {"placeholders":{"phone":{"type":"String"}}},
+  "@bookingSharedPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
   "bookingAutoClosed": "Closed for you: you confirmed another stay for these nights.",
   "bookingUpdated": "Updated.",
   "availabilityTitle": "Availability",
@@ -808,9 +1107,21 @@
   "reviewSuspended": "Suspended",
   "reviewPendingBody": "Our team checks every daily rental before it appears. It stays hidden until approved, and we will let you know.",
   "reviewRejectedBody": "Not approved: {note}. Edit and save it to send it for review again.",
-  "@reviewRejectedBody": {"placeholders":{"note":{"type":"String"}}},
+  "@reviewRejectedBody": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
   "reviewSuspendedBody": "Suspended: {note}.",
-  "@reviewSuspendedBody": {"placeholders":{"note":{"type":"String"}}},
+  "@reviewSuspendedBody": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
   "purposeDaily": "Daily rental",
   "purposeDailyBody": "Let it by the night: a chalet, a flat, a farm.",
   "fieldPriceNight": "Price per night (JOD)",
@@ -825,29 +1136,107 @@
   "notificationsTitle": "Notifications",
   "notificationsEmpty": "No notifications yet.",
   "notifBookingNew": "New booking request from {name} for “{title}”.",
-  "@notifBookingNew": {"placeholders":{"name":{"type":"String"},"title":{"type":"String"}}},
+  "@notifBookingNew": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifBookingApproved": "Your request for “{title}” was approved. The owner’s number is in My bookings.",
-  "@notifBookingApproved": {"placeholders":{"title":{"type":"String"}}},
+  "@notifBookingApproved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifBookingRejected": "Your request for “{title}” was declined.",
-  "@notifBookingRejected": {"placeholders":{"title":{"type":"String"}}},
+  "@notifBookingRejected": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifBookingDatesTaken": "The dates you asked for at “{title}” went to another guest.",
-  "@notifBookingDatesTaken": {"placeholders":{"title":{"type":"String"}}},
+  "@notifBookingDatesTaken": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifBookingConfirmed": "Your stay at “{title}” is confirmed.",
-  "@notifBookingConfirmed": {"placeholders":{"title":{"type":"String"}}},
+  "@notifBookingConfirmed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifBookingCancelledByRenter": "{name} cancelled their request for “{title}”.",
-  "@notifBookingCancelledByRenter": {"placeholders":{"name":{"type":"String"},"title":{"type":"String"}}},
+  "@notifBookingCancelledByRenter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifBookingCancelledByOwner": "The owner cancelled your booking at “{title}”.",
-  "@notifBookingCancelledByOwner": {"placeholders":{"title":{"type":"String"}}},
+  "@notifBookingCancelledByOwner": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifListingApproved": "“{title}” was approved and is live in Daily rentals.",
-  "@notifListingApproved": {"placeholders":{"title":{"type":"String"}}},
+  "@notifListingApproved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifListingRejected": "“{title}” was not approved. Edit and save it to send it for review again.",
-  "@notifListingRejected": {"placeholders":{"title":{"type":"String"}}},
+  "@notifListingRejected": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifListingSuspended": "“{title}” was suspended.",
-  "@notifListingSuspended": {"placeholders":{"title":{"type":"String"}}},
+  "@notifListingSuspended": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifListingUnapproved": "“{title}” is back in review and hidden until it is approved again.",
-  "@notifListingUnapproved": {"placeholders":{"title":{"type":"String"}}},
+  "@notifListingUnapproved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "notifReason": "Reason: {note}",
-  "@notifReason": {"placeholders":{"note":{"type":"String"}}},
+  "@notifReason": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
   "notifGuest": "A guest",
   "profileBookings": "Bookings",
   "profileNotifications": "Notifications",
@@ -858,11 +1247,29 @@
   "dailyErrPast": "Those dates have passed.",
   "dailyErrTooFar": "Requests can be made up to a year ahead.",
   "dailyErrMinNights": "This place needs a stay of at least {n} nights.",
-  "@dailyErrMinNights": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyErrMinNights": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyErrMaxNights": "Stays are up to {n} nights.",
-  "@dailyErrMaxNights": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyErrMaxNights": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyErrMaxGuests": "This place sleeps up to {n} guests.",
-  "@dailyErrMaxGuests": {"placeholders":{"n":{"type":"int"}}},
+  "@dailyErrMaxGuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "dailyErrBadGuests": "Choose how many guests.",
   "dailyErrUnavailable": "Some of those nights are no longer free. Pick other dates.",
   "dailyErrOpenRequest": "You already have an open request for this place.",
@@ -871,20 +1278,17 @@
   "dailyErrClosed": "This request has already been answered.",
   "dailyErrMissing": "This request no longer exists.",
   "dailyErrNotYours": "Only the owner can do that.",
-
   "aiHubAdvisor": "Property AI",
-  "aiHubLawyer": "Ask a Lawyer",
   "aiHubPlainSearch": "Plain search",
   "aiHubNewChat": "New conversation",
   "aiHubCopy": "Copy",
   "aiHubCopied": "Copied",
-  "aiHubDictate": "Speak instead of typing",
+  "aiHubDictate": "Talk to Akarat AI",
   "homeAiTitle": "Ask Akarat AI",
   "homeAdvisorBody": "Find a home, compare areas, weigh up an investment.",
-  "homeLawyerBody": "Questions about property and tenancy law in Jordan.",
   "advKicker": "Akarat AI · Property advisor",
   "advIdleTitle": "Find your next property with AI.",
-  "advIdleBody": "Search, explore, and invest in Jordanian real estate with an intelligent local advisor.",
+  "advIdleBody": "Ask about homes, areas and investments in Jordan, in English or Arabic.",
   "advPrompt1": "Find a 3-bedroom apartment in Abdoun under 150,000 JOD.",
   "advPrompt2": "Where should I invest 50,000 JOD in Jordan?",
   "advPrompt3": "Compare property investments in Amman and Aqaba.",
@@ -900,10 +1304,22 @@
   "advDoingListing": "Opening a listing…",
   "advDoingStats": "Checking asking prices on Akarat.ai…",
   "advDoingWebSearchFor": "Searching trusted sources for “{q}”…",
-  "@advDoingWebSearchFor": {"placeholders":{"q":{"type":"String"}}},
+  "@advDoingWebSearchFor": {
+    "placeholders": {
+      "q": {
+        "type": "String"
+      }
+    }
+  },
   "advDoingWebSearch": "Searching trusted sources…",
   "advDoingWebFetch": "Reading {host}…",
-  "@advDoingWebFetch": {"placeholders":{"host":{"type":"String"}}},
+  "@advDoingWebFetch": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "advDoingWebFetchPage": "Reading a page…",
   "advDoingCalc": "Running the numbers…",
   "advDoingCompare": "Comparing listings…",
@@ -912,18 +1328,42 @@
   "advDidListing": "Opened a listing",
   "advDidStats": "Checked asking prices on Akarat.ai",
   "advDidWebSearchFor": "Searched trusted sources for “{q}”",
-  "@advDidWebSearchFor": {"placeholders":{"q":{"type":"String"}}},
+  "@advDidWebSearchFor": {
+    "placeholders": {
+      "q": {
+        "type": "String"
+      }
+    }
+  },
   "advDidWebSearch": "Searched trusted sources",
   "advDidWebFetch": "Read a page on {host}",
-  "@advDidWebFetch": {"placeholders":{"host":{"type":"String"}}},
+  "@advDidWebFetch": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "advDidWebFetchPage": "Read a page on the web",
   "advDidCalc": "Ran the numbers",
   "advDidCompare": "Compared listings",
   "advSummaryAkarat": "Akarat.ai",
   "advSummarySearches": "{count, plural, =1{1 web search} other{{count} web searches}}",
-  "@advSummarySearches": {"placeholders":{"count":{"type":"int"}}},
+  "@advSummarySearches": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "advSummaryPages": "{count, plural, =1{1 page read} other{{count} pages read}}",
-  "@advSummaryPages": {"placeholders":{"count":{"type":"int"}}},
+  "@advSummaryPages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "advSummaryCalc": "calculations",
   "advSummaryCompare": "comparison",
   "advSummarySteps": "Steps",
@@ -946,11 +1386,29 @@
   "advErrOther": "Something went wrong reaching the advisor. Try again.",
   "advPlainSearch": "Search the listings instead",
   "advRemoveCriterion": "Remove “{label}” from the search",
-  "@advRemoveCriterion": {"placeholders":{"label":{"type":"String"}}},
+  "@advRemoveCriterion": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "advBedsMin": "{n}+ beds",
-  "@advBedsMin": {"placeholders":{"n":{"type":"int"}}},
+  "@advBedsMin": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "advBathsMin": "{n}+ baths",
-  "@advBathsMin": {"placeholders":{"n":{"type":"int"}}},
+  "@advBathsMin": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "advDealSale": "For sale",
   "advDealRent": "For rent",
   "advDealDaily": "Daily rental",
@@ -960,18 +1418,48 @@
   "advWhy": "Why it fits",
   "advView": "View property",
   "advViewOn": "View on {source}",
-  "@advViewOn": {"placeholders":{"source":{"type":"String"}}},
+  "@advViewOn": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
   "advPriceOn": "Price on {source}",
-  "@advPriceOn": {"placeholders":{"source":{"type":"String"}}},
+  "@advPriceOn": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
   "advVerified": "Akarat.ai · Verified",
   "advNoPhotos": "No photos yet",
   "advExternal": "Listing on another site",
   "advExtChecked": "Details as published on {source}, read by the advisor. Confirm them on the listing.",
-  "@advExtChecked": {"placeholders":{"source":{"type":"String"}}},
+  "@advExtChecked": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
   "advExtUnchecked": "Not opened by the advisor: see {source} for the price and details.",
-  "@advExtUnchecked": {"placeholders":{"source":{"type":"String"}}},
+  "@advExtUnchecked": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
   "advUpdated": "{days, plural, =0{Updated today} =1{Updated yesterday} other{Updated {days} days ago}}",
-  "@advUpdated": {"placeholders":{"days":{"type":"int"}}},
+  "@advUpdated": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "advRowPrice": "Price",
   "advRowPerSqm": "Price per m²",
   "advRowBeds": "Bedrooms",
@@ -983,159 +1471,268 @@
   "advRowVerified": "Verified on Akarat.ai",
   "advRowAge": "Listed for",
   "advDays": "{n, plural, =1{1 day} other{{n} days}}",
-  "@advDays": {"placeholders":{"n":{"type":"int"}}},
+  "@advDays": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "advYes": "Yes",
   "advNo": "No",
   "advCompareCaption": "Listings compared side by side",
   "advSources": "Sources",
   "advCriteria": "Search criteria",
-  "lawKicker": "Akarat Legal AI · Jordanian law",
-  "lawTitle": "Ask a Lawyer.",
-  "lawSub": "Understand your rights with AI-powered guidance grounded in Jordanian law.",
-  "lawName": "Akarat Legal AI",
-  "lawPlaceholder": "Describe your situation or ask a legal question…",
-  "lawPlaceholderMore": "Ask a follow-up…",
-  "lawInputLabel": "Your legal question",
-  "lawAttach": "Attach a document",
-  "lawAttachPhotos": "Photo of a page",
-  "lawAttachCamera": "Take a photo",
-  "lawAttachFile": "PDF, Word or text file",
-  "lawDisclaimerShort": "AI-generated legal information, not legal advice. Check it with a licensed Jordanian lawyer before you act.",
-  "lawFullNotice": "Read the full notice",
-  "lawDisclaimer": "This information is AI-generated legal guidance for general informational purposes, not a substitute for professional legal advice. Jordanian laws and their interpretation may change. Consult a licensed Jordanian lawyer to verify the information and its applicability to your situation. Conduct your own research before making any legal decision.",
-  "lawPrompt1": "My landlord wants to increase my rent. Is this legal in Jordan?",
-  "lawPrompt2": "Can a foreigner purchase property in Amman?",
-  "lawPrompt3": "Review this rental agreement and identify legal risks.",
-  "lawPrompt4": "What happens if a seller refuses to transfer property ownership after payment?",
-  "lawPrompt5": "شو حقوقي إذا صاحب البيت بده يطلعني قبل ما يخلص العقد؟",
-  "lawPrompt6": "كيف بقدر أرفع دعوى على شخص ما رجّعلي مصاري؟",
-  "lawDocQuestion": "Review this document and identify the legal risks.",
-  "lawPickDoc": "Choose the agreement to review. It will be read with your question.",
-  "lawHistory": "History",
-  "lawHistoryTitle": "Your conversations",
-  "lawHistoryEmpty": "Nothing here yet. Your conversations will appear here.",
-  "lawHistoryError": "Your conversations couldn’t be loaded.",
-  "lawRetention": "Private to your account. Kept 90 days after your last message; documents 30 days. Delete them any time.",
-  "lawDeleteOne": "Delete this conversation",
-  "lawDeleteAll": "Delete all my legal conversations",
-  "lawConfirmAll": "This deletes every legal conversation and document on your account. It can’t be undone.",
-  "lawDeleted": "Deleted.",
-  "lawAllDeleted": "All your legal conversations and documents were deleted.",
-  "lawThinking": "Thinking…",
-  "lawWriting": "Writing…",
-  "lawDoingDocuments": "Reading your documents…",
-  "lawDoingLibrary": "Searching the legal library…",
-  "lawDoingLookup": "Checking a citation…",
-  "lawDoingWebSearch": "Searching official Jordanian sources…",
-  "lawDoingWebFetch": "Reading {host}…",
-  "@lawDoingWebFetch": {"placeholders":{"host":{"type":"String"}}},
-  "lawDoingWebFetchSource": "Reading a source…",
-  "lawDoingOther": "Working…",
-  "lawDidDocuments": "Read your documents",
-  "lawDidLibraryFor": "Searched the legal library for “{q}”",
-  "@lawDidLibraryFor": {"placeholders":{"q":{"type":"String"}}},
-  "lawDidLibrary": "Searched the legal library",
-  "lawDidLookupFor": "Checked the citation “{q}”",
-  "@lawDidLookupFor": {"placeholders":{"q":{"type":"String"}}},
-  "lawDidLookup": "Checked a citation",
-  "lawDidWebSearchFor": "Searched official sources for “{q}”",
-  "@lawDidWebSearchFor": {"placeholders":{"q":{"type":"String"}}},
-  "lawDidWebSearch": "Searched official sources",
-  "lawDidWebFetch": "Read {host}",
-  "@lawDidWebFetch": {"placeholders":{"host":{"type":"String"}}},
-  "lawDidWebFetchSource": "Read a source",
-  "lawSummaryLibrary": "Legal library",
-  "lawSummarySearches": "{count, plural, =1{1 search} other{{count} searches}}",
-  "@lawSummarySearches": {"placeholders":{"count":{"type":"int"}}},
-  "lawSummarySources": "{count, plural, =1{1 source read} other{{count} sources read}}",
-  "@lawSummarySources": {"placeholders":{"count":{"type":"int"}}},
-  "lawSummaryDocuments": "your documents",
-  "lawSources": "Sources",
-  "lawBadgeInForce": "Verified law · in force",
-  "lawBadgeAmended": "Verified law · amended",
-  "lawBadgeRepealed": "Verified law · repealed",
-  "lawBadgeLaw": "Verified law",
-  "lawBadgeJudgment": "Verified judgment",
-  "lawBadgeCommentary": "Commentary",
-  "lawBadgeOfficial": "Official website",
-  "lawBadgeSecondary": "Secondary source · not binding",
-  "lawBadgeDocument": "Your document",
-  "lawChecked": "Checked {date}",
-  "@lawChecked": {"placeholders":{"date":{"type":"String"}}},
-  "lawLicensed": "Licensed database",
-  "lawPage": "page {n}",
-  "@lawPage": {"placeholders":{"n":{"type":"int"}}},
-  "lawUnverifiedTitle": "References that couldn’t be verified",
-  "lawUnverifiedBody": "These references in the answer couldn’t be matched to an official source. Treat them as unconfirmed and check them with a lawyer.",
-  "lawUnverifiedMark": "Not verified against an official source",
-  "lawUrgent": "Urgent.",
-  "lawImportant": "Important.",
-  "lawShareSummary": "Share summary",
-  "lawReport": "Report a problem",
-  "lawReported": "Reported",
-  "lawFbTitle": "What was wrong with this answer?",
-  "lawFbGood": "It was helpful",
-  "lawFbWrongLaw": "Wrong law",
-  "lawFbWrongCitation": "Wrong article or citation",
-  "lawFbOutdated": "Out of date",
-  "lawFbFabricated": "Cites something that doesn’t exist",
-  "lawFbMissing": "Missed something important",
-  "lawFbUnclear": "Unclear",
-  "lawFbOther": "Something else",
-  "lawFbPlaceholder": "Add details (optional). Please leave out personal information.",
-  "lawFbReviewerNote": "Reviewer report: the question and answer are attached, with identifiers masked, for the launch review.",
-  "lawFbSend": "Send report",
-  "lawFbSent": "Thank you. Your report was sent.",
-  "lawFbFailed": "The report couldn’t be sent. Try again.",
-  "lawSummaryHeading": "Akarat.ai — Ask a Lawyer · Research summary",
-  "lawSummaryQuestion": "Question:",
-  "lawSummaryUnverified": "Not verified:",
-  "lawBannerNotReady": "Ask a Lawyer isn’t available right now. Please try again later.",
-  "lawBannerSignIn": "Sign in to ask. Your conversations and documents stay private to your account.",
-  "lawBannerReview": "Ask a Lawyer is being reviewed by licensed Jordanian lawyers before it opens to everyone.",
-  "lawBannerReviewer": "Reviewer access. Use “Report a problem” on any answer to record findings for the launch review.",
-  "lawDocUploading": "Uploading…",
-  "lawDocScan": "scan",
-  "lawDocPages": "{n, plural, =1{1 page} other{{n} pages}}",
-  "@lawDocPages": {"placeholders":{"n":{"type":"int"}}},
-  "lawDocPhoto": "photo",
-  "lawDocText": "text",
-  "lawDocRemove": "Remove",
-  "lawDocFailed": "Couldn’t add",
-  "lawDocErrTooBig": "That file is over 4 MB.",
-  "lawDocErrUnsupported": "Upload a PDF, a Word file (.docx), a text file, or a photo (JPG, PNG or WebP).",
-  "lawDocErrOldWord": "Older Word files (.doc) can’t be read. Save it as .docx or PDF and upload that.",
-  "lawDocErrEncrypted": "That file is password-protected. Save an unprotected copy, or print it to PDF, and upload that.",
-  "lawDocErrActiveContent": "That file contains scripts, macros or embedded files, so it can’t be accepted. Save it as a plain PDF and try again.",
-  "lawDocErrMacros": "That Word file contains macros, so it can’t be accepted. Save it as a PDF and try again.",
-  "lawDocErrDamaged": "That file couldn’t be read. It may be damaged.",
-  "lawDocErrTooManyPages": "That document has more than 30 pages. Upload just the pages that matter.",
-  "lawDocErrNotText": "That file doesn’t look like a document.",
-  "lawDocErrNoText": "That Word file has no text in it (it may hold scanned images). Upload it as a PDF or as photos instead.",
-  "lawDocErrTooLong": "That document is too long to read in one go. Upload the part that matters.",
-  "lawDocErrEmpty": "That file is empty.",
-  "lawDocErrTooMany": "A conversation can hold up to 4 documents. Start a new conversation for more.",
-  "lawDocErrFull": "These documents together are too long. Remove one, or start a new conversation.",
-  "lawDocErrRateLimited": "You’re uploading quickly. Wait a moment and try again.",
-  "lawDocErrOffline": "You seem to be offline.",
-  "lawDocErrBusy": "Wait for the current upload to finish.",
-  "lawDocErrOther": "That file couldn’t be added. Try again.",
-  "lawLeak": "I can’t share how this service is set up. Ask me about your legal question.",
-  "lawRefused": "I can’t help with that request. I can explain Jordanian law and help you prepare to speak with a lawyer.",
-  "lawWithdrawn": "This answer was withdrawn.",
-  "lawNoticePartial": "I ran out of time before finishing. Ask me to continue, or narrow the question.",
-  "lawNoticeStopped": "Stopped. Send another message to carry on.",
-  "lawNoticeUnbacked": "This answer says it checked sources, but no search or lookup was run for it. Treat its statements as unverified and check them with a lawyer.",
-  "lawErrRateLimited": "You’re sending messages quickly. Wait a few seconds and try again.",
-  "lawErrQuota": "You’ve reached today’s limit for Ask a Lawyer. It resets tomorrow.",
-  "lawErrQuotaTotal": "Ask a Lawyer has answered all it can for today. It will be back tomorrow.",
-  "lawErrBusy": "The service is busy right now. Try again in a moment.",
-  "lawErrNotConfigured": "Ask a Lawyer isn’t available right now.",
-  "lawErrTooLong": "That message is too long. Keep it under 4,000 characters.",
-  "lawErrOffline": "You seem to be offline. Check your connection and try again.",
-  "lawErrInterrupted": "The answer was cut off on its way here. Try again.",
-  "lawErrSignIn": "Your session has ended. Sign in again to continue.",
-  "lawErrNotOpen": "Ask a Lawyer isn’t open to your account yet.",
-  "lawErrNotFound": "That conversation no longer exists. Start a new one.",
-  "lawErrOther": "Something went wrong. Try again."
+  "placePickTitle": "Choose the place",
+  "placeSearchHint": "City, town or neighbourhood",
+  "placeNoMatch": "No place by that name. Try another spelling, or clear the search and choose from the list.",
+  "placeGovernorates": "Governorates",
+  "placeAllOf": "All of {name}",
+  "@placeAllOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "placeAnywhere": "Anywhere in Jordan",
+  "placeNear": "Near {place}",
+  "@placeNear": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "placeField": "Place",
+  "servicesTitle": "Services",
+  "servicesHeadline": "Home services, requested in one place",
+  "servicesIntro": "Tell us what needs doing and where. Our team calls you to arrange it, and nothing is booked or priced until you agree.",
+  "servicesSearch": "Search services",
+  "servicesRequest": "Request a service",
+  "servicesMine": "My service requests",
+  "servicesNoMatch": "No service matches “{q}”.",
+  "@servicesNoMatch": {
+    "placeholders": {
+      "q": {
+        "type": "String"
+      }
+    }
+  },
+  "servicesNoMatchBody": "Choose Custom service and describe what you need in your own words.",
+  "servicesCustomCta": "Describe a custom service",
+  "servicesNotReady": "Services are not available yet. Please try again later.",
+  "servicesHow": "How it works",
+  "servicesStep1": "Describe it",
+  "servicesStep1Body": "Say what needs doing, where, and when suits you. Add photos if they help.",
+  "servicesStep2": "We review it",
+  "servicesStep2Body": "Our team reads your request and contacts you to agree the details.",
+  "servicesStep3": "Follow it",
+  "servicesStep3Body": "Every update shows in My service requests, and we notify you as it moves.",
+  "homeServicesTitle": "Services",
+  "homeServicesBody": "Plumbing, AC, cleaning and more, arranged by our team.",
+  "svFormTitle": "What do you need?",
+  "svFormBody": "Fields marked * are required.",
+  "svService": "Service *",
+  "svChooseService": "Choose the service",
+  "svCustom": "What service do you need? *",
+  "svCustomHint": "e.g. Solar panel cleaning",
+  "svDesc": "Describe the problem *",
+  "svDescHint": "What is wrong, since when, and anything we should know before visiting.",
+  "svWhere": "Where *",
+  "svPlace": "Area *",
+  "svAddress": "Street, building and floor *",
+  "svAddressHint": "e.g. Al-Kindi St, building 12, 3rd floor, flat 5",
+  "svPin": "Pin on the map (optional)",
+  "svPinHint": "Tap the map or drag the pin onto the building.",
+  "svPinNone": "No pin yet",
+  "svPinRemove": "Remove pin",
+  "svWhen": "When suits you *",
+  "svDate": "Preferred day *",
+  "svWindow": "Time of day",
+  "svWindowAny": "Any time",
+  "svWindowMorning": "Morning (8–12)",
+  "svWindowAfternoon": "Afternoon (12–5)",
+  "svWindowEvening": "Evening (5–9)",
+  "svUrgency": "How urgent is it? *",
+  "svUrgNormal": "Normal",
+  "svUrgNormalNote": "In the next few days",
+  "svUrgUrgent": "Urgent",
+  "svUrgUrgentNote": "As soon as possible",
+  "svUrgEmergency": "Emergency",
+  "svUrgEmergencyNote": "Leaking, unsafe, or not working at all",
+  "svEmergencyWarning": "If anyone is in danger, or you smell gas or see fire, call 911 first.",
+  "svPhotos": "Photos (optional)",
+  "svPhotosHint": "Up to 6 photos. Only you and the Akarat.ai team can see them.",
+  "svAddPhotos": "Add photos",
+  "svRemovePhoto": "Remove photo",
+  "svContact": "How we reach you *",
+  "svName": "Your name *",
+  "svPhone": "Phone number *",
+  "svEmail": "Email (optional)",
+  "svSend": "Send request",
+  "svSending": "Sending…",
+  "svUploading": "Uploading photo {i} of {n}…",
+  "@svUploading": {
+    "placeholders": {
+      "i": {
+        "type": "String"
+      },
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "svPrivacy": "Your request and photos are seen only by you and the Akarat.ai team.",
+  "svFixBelow": "Some details need a look. They are marked below.",
+  "svErrCategory": "Choose a service.",
+  "svErrCustom": "Name the service in a few words (2 to 80 characters).",
+  "svErrDesc": "Describe the problem in at least 10 characters.",
+  "svErrPlace": "Choose the city or town.",
+  "svErrHood": "That neighbourhood is not in the city chosen. Choose it again.",
+  "svErrAddress": "Write the street and building (at least 3 characters).",
+  "svErrPin": "The pin is outside Jordan. Move it, or remove it.",
+  "svErrDate": "Choose a day from today up to six months ahead.",
+  "svErrPhotos": "A photo could not be attached. Remove it and add it again.",
+  "svErrName": "Write your name.",
+  "svErrPhone": "Write a phone number we can call, for example 07 9123 4567.",
+  "svErrEmail": "That email address does not look right.",
+  "svErrTooMany": "You have sent 10 requests in the last day. Please wait before sending another.",
+  "svErrSignIn": "Sign in to send your request.",
+  "svErrPhotoType": "Photos must be JPEG, PNG, WebP or HEIC.",
+  "svErrPhotoSize": "Each photo can be up to 8 MB.",
+  "svErrPhotoCount": "Up to 6 photos.",
+  "svErrNetwork": "Your connection dropped. Press Send again: it will not create a second request.",
+  "svErrOther": "Your request could not be sent. Please try again.",
+  "svDoneTitle": "We have your request",
+  "svDoneBody": "Our team will call you to arrange it. Nothing is booked until you agree.",
+  "svDoneRef": "Your reference",
+  "svDoneDup": "This request had already reached us, so it was not sent twice.",
+  "svSeeMine": "See my requests",
+  "svAnother": "Request another service",
+  "svStatusPending": "Pending",
+  "svStatusUnderReview": "Under review",
+  "svStatusAccepted": "Accepted",
+  "svStatusInProgress": "In progress",
+  "svStatusCompleted": "Completed",
+  "svStatusRejected": "Rejected",
+  "svStatusCancelled": "Cancelled",
+  "svBodyPending": "Received. Our team will look at it soon.",
+  "svBodyUnderReview": "Our team is reviewing your request.",
+  "svBodyAccepted": "Accepted. We will contact you to arrange it.",
+  "svBodyInProgress": "The work is under way.",
+  "svBodyCompleted": "The work is done.",
+  "svBodyRejected": "We cannot take this request.",
+  "svBodyCancelled": "You cancelled this request.",
+  "svMineSub": "You can cancel a request until work begins.",
+  "svMineEmpty": "You have not requested a service yet.",
+  "svSent": "Sent {date}",
+  "@svSent": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "svPreferred": "Preferred: {when}",
+  "@svPreferred": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "svDetails": "Details",
+  "svUpdates": "Updates",
+  "svTeamNote": "From the Akarat.ai team",
+  "svYourNote": "Your reason",
+  "svEventCreated": "Request sent",
+  "svEventNote": "A note from the team",
+  "svCancel": "Cancel request",
+  "svCancelAsk": "Cancel this request?",
+  "svCancelBody": "The team is told at once. You can send a new request at any time.",
+  "svCancelReason": "Reason (optional)",
+  "svCancelYes": "Yes, cancel it",
+  "svCancelNo": "Keep it",
+  "svCancelled": "Request cancelled.",
+  "svCancelFail": "It could not be cancelled. If work has started, contact us.",
+  "notifServiceStatus": "Service request {ref} ({what}): {status}.",
+  "@notifServiceStatus": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "what": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "notifServiceSaid": "The team says: {note}",
+  "@notifServiceSaid": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "notifServiceNote": "A note from the team on {ref} ({what}): {note}",
+  "@notifServiceNote": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "what": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "notifServiceNew": "New service request {ref}: {what}.",
+  "@notifServiceNew": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "notifServiceCancelled": "The customer cancelled service request {ref}.",
+  "@notifServiceCancelled": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "mapLocateMe": "Go to my location",
+  "mapLocateOff": "Turn on location services to see where you are.",
+  "mapLocateDenied": "Akarat.ai isn’t allowed to see your location. Allow it in Settings.",
+  "mapLocateFailed": "Your location couldn’t be found. Try again.",
+  "mapLocateSettings": "Settings",
+  "talkThinking": "Thinking…",
+  "talkSpeaking": "Speaking…",
+  "talkPaused": "Tap the circle to speak",
+  "talkHintListening": "Ask about property in Jordan. I answer when you pause.",
+  "talkHintThinking": "Searching listings and sources.",
+  "talkHintSpeaking": "Tap the circle to interrupt.",
+  "talkOrbSend": "Send what I said",
+  "talkOrbInterrupt": "Interrupt and speak",
+  "talkOrbStart": "Start speaking",
+  "talkLangAr": "I’m speaking Arabic",
+  "talkLangEn": "I’m speaking English",
+  "talkLangSwitch": "Switch the language you speak",
+  "talkClose": "End voice conversation",
+  "talkKept": "Everything said here is also written in the chat, with the listings.",
+  "talkNoVoice": "This phone has no voice for this language, so the answer is written here instead.",
+  "talkSpeakFailed": "The answer couldn’t be read aloud. It is written here.",
+  "talkFailed": "That couldn’t be answered just now. Tap the circle to try again.",
+  "talkOnScreen": "The results are in the chat.",
+  "talkCardHint": "Ask out loud in Arabic or English and hear the answer."
 }

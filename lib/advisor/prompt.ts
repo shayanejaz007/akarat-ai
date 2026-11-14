@@ -91,7 +91,19 @@ export type TurnContext = {
   today: string; // YYYY-MM-DD, Amman time
   uiLang: "en" | "ar";
   signedIn: boolean;
+  /** The user is in a voice conversation: the reply is read aloud. */
+  voice?: boolean;
 };
+
+// A voice conversation: the user spoke, speech recognition wrote it down,
+// and the reply is read aloud by the device and also kept in the chat.
+const VOICE_TURN = [
+  "This turn is a voice conversation. The user's message was spoken and transcribed, so expect missing punctuation and misheard words or place names; when a word is unclear, take the most likely property meaning or ask.",
+  "Your final message is read aloud. Write it the way a helpful person talks: two to four short sentences, no lists, tables, bold, symbols or abbreviations, and round figures said simply (about 85 thousand dinars).",
+  "Answer in the language the user spoke: spoken Jordanian Arabic for Arabic, English for English. If they switch language, switch with them.",
+  "Listing cards and sources still appear on screen: say how many you found and what stands out about the best one or two, not every detail. End with one short question when it moves the search forward.",
+  "The investment reminder still applies, in one short spoken sentence.",
+].join("\n");
 
 /** The per-request part of the system prompt: deliberately small and dull. */
 export function turnContext(c: TurnContext): string {
@@ -99,6 +111,7 @@ export function turnContext(c: TurnContext): string {
     `Today's date in Amman: ${c.today}.`,
     `The site's interface is set to ${c.uiLang === "ar" ? "Arabic" : "English"}. Reply in the language of the user's latest message all the same.`,
     c.signedIn ? "The user is signed in to Akarat.ai." : "The user is not signed in.",
+    ...(c.voice ? [VOICE_TURN] : []),
   ].join("\n");
 }
 

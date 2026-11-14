@@ -1,28 +1,24 @@
 /**
- * Which model and effort each assistant should run on. The same questions
- * are answered by each configuration, graded on behaviour, and timed and
- * priced per answer, so the cheapest configuration that meets the bar can be
- * chosen (DEPLOY.md, "Which model").
+ * Which model and effort the property advisor should run on. The same
+ * questions are answered by each configuration, graded on behaviour, and
+ * timed and priced per answer, so the cheapest configuration that meets the
+ * bar can be chosen (DEPLOY.md, "Which model").
  *
- *   node scripts/model-benchmark.mts --suite advisor|legal|both --yes \
+ *   node scripts/model-benchmark.mts --yes \
  *     [--configs claude-sonnet-5-5:low,claude-sonnet-5-5:high,claude-opus-5-5:medium] \
  *     [--only id,id] [--repeat 1] [--out eval-results]
  *
- * Needs ANTHROPIC_API_KEY. The advisor suite searches Akarat.ai's public
- * listings as a visitor would (NEXT_PUBLIC_SUPABASE_URL and
- * NEXT_PUBLIC_SUPABASE_ANON_KEY); the legal suite reads the legal library
- * when SUPABASE_SERVICE_ROLE_KEY is set, as scripts/legal-eval.mts does.
+ * Needs ANTHROPIC_API_KEY, and searches Akarat.ai's public listings as a
+ * visitor would (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY).
  * ANTHROPIC_BASE_URL points it at a stand-in for a dry run.
  *
  * It costs money: the estimate is printed first and nothing runs without
- * --yes. The grades are about behaviour (in scope, grounded, cited, refuses
- * what it must, no instructions leaked, the right language); whether a legal
- * answer's law is right is still for the reviewing lawyer, so the legal
- * answers are written side by side to a sheet for them.
+ * --yes. The grades are about behaviour (in scope, grounded, refuses what it
+ * must, no instructions leaked, the right language).
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { KNOWN_MODELS, type Effort } from "../lib/ai-models.ts";
 import { runTurn as runAdvisor, type ClientEvent as AdvisorEvent } from "../lib/advisor/agent.ts";
@@ -33,18 +29,14 @@ import { ammanDate } from "../lib/advisor/prompt.ts";
 import type { Card } from "../lib/advisor/tools.ts";
 import type { Turn } from "../lib/advisor/transcript.ts";
 import { arabicShare } from "../lib/claude-shared.ts";
-import { runTurn as runLegal, type ClientEvent as LegalEvent, type DocInput } from "../lib/legal/agent.ts";
-import { routeLegal } from "../lib/legal/config.ts";
-import { grade, type Check, type EvalCase } from "../lib/legal/evals.ts";
-import { libraryCounts } from "../lib/legal/library.ts";
-import { libraryDb, serviceClient } from "../lib/legal/store.ts";
+
+type Check = { name: string; pass: boolean; detail?: string };
 
 const args = process.argv.slice(2);
 const opt = (name: string) => {
   const i = args.indexOf(name);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const suite = opt("--suite") ?? "both";
 const only = opt("--only")?.split(",").map(s => s.trim()).filter(Boolean);
 const repeat = Math.max(1, Math.min(5, Number(opt("--repeat") ?? 1) || 1));
 const outDir = opt("--out") ?? "eval-results";
@@ -139,11 +131,9 @@ const ADVISOR_CASES: AdvisorCase[] = [
 ];
 
 /* ── Plumbing ─────────────────────────────────────────────────────────── */
-const advisorCases = suite === "legal" ? [] : ADVISOR_CASES.filter(c => !only || only.includes(c.id) || ADVISOR_CASES.some(d => only.includes(d.id) && d.after === c.id));
-const legalAll = (JSON.parse(readFileSync("tests/legal/evals/cases.json", "utf8")) as { cases: EvalCase[] }).cases;
-const legalCases = suite === "advisor" ? [] : legalAll.filter(c => !only || only.includes(c.id));
-const runs = (advisorCases.length * 0.08 + legalCases.length * 0.3) * configs.length * repeat;
-console.log(`${advisorCases.length} advisor and ${legalCases.length} legal question(s), ${configs.length} configuration(s), ×${repeat}. Rough cost: up to about $${runs.toFixed(2)}.`);
+const advisorCases = ADVISOR_CASES.filter(c => !only || only.includes(c.id) || ADVISOR_CASES.some(d => only.includes(d.id) && d.after === c.id));
+const runs = advisorCases.length * 0.08 * configs.length * repeat;
+console.log(`${advisorCases.length} question(s), ${configs.length} configuration(s), ×${repeat}. Rough cost: up to about $${runs.toFixed(2)}.`);
 if (!args.includes("--yes")) {
   console.log("Nothing run. Add --yes to run them (this uses the Anthropic API and costs money).");
   process.exit(0);
@@ -164,7 +154,7 @@ function listingsDb(): ListingsDb | null {
 }
 
 type Row = {
-  suite: "advisor" | "legal"; config: string; id: string; attempt: number;
+  suite: "advisor"; config: string; id: string; attempt: number;
   status: string; checks: Check[]; ms: number; costUsd: number | null; route: string;
   inputTokens: number; outputTokens: number; searches: number; reply: string;
 };
@@ -198,11 +188,6 @@ async function advisorRun(cfg: (typeof configs)[number], c: AdvisorCase, history
   return { r, checks, ms: Date.now() - started, turn: { r: "a" as const, t: r.reply.slice(0, 6000), ...(r.shown.length ? { l: r.shown } : {}) } };
 }
 
-const counts = legalCases.length ? await (async () => {
-  const db = libraryDb(serviceClient());
-  return { db, counts: db ? await libraryCounts(db) : null };
-})() : { db: null, counts: null };
-
 for (const cfg of configs) {
   for (let attempt = 1; attempt <= repeat; attempt++) {
     if (advisorCases.length) {
@@ -224,35 +209,6 @@ for (const cfg of configs) {
         }
       }
     }
-    for (const c of legalCases) {
-      const events: LegalEvent[] = [];
-      const docs: DocInput[] = c.document
-        ? [{ id: `bench-${c.id}`, n: 1, name: c.document.name, kind: "txt", mediaType: "text/plain", body: Buffer.from(c.document.text, "utf8"), pages: null, scanned: false }]
-        : [];
-      const base = routeLegal({ message: c.question, hasDocuments: docs.length > 0 });
-      const started = Date.now();
-      const r = await runLegal({
-        client,
-        history: [],
-        message: c.question,
-        docs,
-        context: { today, uiLang: c.lang, library: counts.counts, documents: docs.map(d => ({ n: d.n, name: d.name, kind: d.kind, pages: null, scanned: false })) },
-        env: { db: counts.db },
-        knownRefs: [],
-        emit: e => events.push(e),
-        signal: new AbortController().signal,
-        route: { ...base, model: cfg.model, effort: cfg.effort },
-        followups: false,
-      });
-      const checks = grade(c, { status: r.status, reply: r.reply, sources: r.sources, unverified: r.unverified, urgent: !!r.urgent, redacted: events.some(e => e.t === "redact") });
-      const ms = Date.now() - started;
-      rows.push({
-        suite: "legal", config: cfg.label, id: c.id, attempt, status: r.status, checks, ms, costUsd: r.costUsd == null ? null : Math.round(r.costUsd * 1e6) / 1e6,
-        route: [r.route.route, ...r.route.reasons].join(":"), inputTokens: r.usage.input + r.usage.cacheRead + r.usage.cacheWrite,
-        outputTokens: r.usage.output, searches: r.usage.searches, reply: r.reply,
-      });
-      log("legal", cfg.label, c.id, checks, ms, r.costUsd);
-    }
   }
 }
 
@@ -270,7 +226,7 @@ const pct = (xs: number[], p: number) => {
 };
 type Summary = { suite: string; config: string; answers: number; allChecks: number; checkRate: number; meanCost: number | null; p50s: number; p95s: number };
 const summary: Summary[] = [];
-for (const s of ["advisor", "legal"] as const) {
+for (const s of ["advisor"] as const) {
   for (const cfg of configs) {
     const mine = rows.filter(r => r.suite === s && r.config === cfg.label);
     if (!mine.length) continue;
@@ -293,41 +249,17 @@ for (const x of summary) {
   console.log(`${x.suite.padEnd(8)} ${x.config.padEnd(25)} ${String(x.answers).padEnd(8)} ${String(x.allChecks).padEnd(11)} ${`${x.checkRate}%`.padEnd(11)} ${x.meanCost == null ? "?".padEnd(10) : `$${x.meanCost.toFixed(4)}`.padEnd(10)} ${`${x.p50s}s`.padEnd(6)} ${x.p95s}s`);
 }
 // The cheapest configuration whose check rate matches the best one measured.
-// A suggestion from behaviour checks only: for the legal assistant the
-// lawyer's review of the sheet decides.
-for (const s of ["advisor", "legal"]) {
+for (const s of ["advisor"]) {
   const mine = summary.filter(x => x.suite === s && x.meanCost != null);
   if (!mine.length) continue;
   const best = Math.max(...mine.map(x => x.checkRate));
   const pick = mine.filter(x => x.checkRate >= best).sort((a, b) => a.meanCost! - b.meanCost!)[0];
-  console.log(`${s}: cheapest at the best check rate (${best}%): ${pick.config}${s === "legal" ? " (subject to the lawyer's review of the sheet)" : ""}`);
+  console.log(`${s}: cheapest at the best check rate (${best}%): ${pick.config}`);
 }
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
 mkdirSync(outDir, { recursive: true });
 const jsonPath = join(outDir, `model-benchmark-${stamp}.json`);
-writeFileSync(jsonPath, JSON.stringify({ date: today, configs: configs.map(c => c.label), repeat, library: counts.counts, summary, rows }, null, 2));
+writeFileSync(jsonPath, JSON.stringify({ date: today, configs: configs.map(c => c.label), repeat, summary, rows }, null, 2));
 console.log(`\nResults: ${jsonPath}`);
 
-if (legalCases.length) {
-  const esc = (v: unknown) => String(v ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]!);
-  const byCase = legalCases.map(c => ({ c, answers: rows.filter(r => r.suite === "legal" && r.id === c.id && r.attempt === 1) }));
-  const sheet = `<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
-<title>Ask a Lawyer: configurations side by side ${esc(today)}</title>
-<style>
-  body { font: 13px/1.55 -apple-system, "Segoe UI", Tahoma, sans-serif; color: #17170F; margin: 24px; }
-  section { border: 1px solid #ccc; border-radius: 10px; padding: 12px 14px; margin: 16px 0; }
-  .cols { display: grid; grid-template-columns: repeat(${configs.length}, minmax(0, 1fr)); gap: 12px; }
-  .a { white-space: pre-wrap; border-inline-start: 3px solid #007A3D; padding-inline-start: 8px; }
-  .meta { color: #555; font-size: 12px; } .bad { color: #B00F20; }
-</style></head><body>
-<h1>Ask a Lawyer: configurations side by side</h1>
-<p class="meta">${esc(today)} · ${configs.map(c => esc(c.label)).join(" · ")} · library: ${counts.counts ? `${counts.counts.total} verified sources` : "not connected"}. For each question, note which answers are legally correct and complete.</p>
-${byCase.map(({ c, answers }) => `<section><h2>${esc(c.id)} · ${esc(c.category)}</h2><p dir="auto"><b>Question:</b> ${esc(c.question)}</p><p class="meta"><b>A correct answer:</b> ${esc(c.rubric)}</p>
-<div class="cols">${answers.map(a => `<div><p class="meta"><b>${esc(a.config)}</b> · ${(a.ms / 1000).toFixed(1)}s · ${a.costUsd == null ? "" : `$${a.costUsd.toFixed(3)}`} · ${a.checks.filter(x => x.pass).length}/${a.checks.length} checks</p>${a.checks.filter(x => !x.pass).map(x => `<p class="bad">✗ ${esc(x.name)}</p>`).join("")}<div class="a" dir="auto">${esc(a.reply.replace(/[\ue000-\uf8ff]/g, "")) || `<i>(${esc(a.status)})</i>`}</div></div>`).join("")}</div></section>`).join("\n")}
-</body></html>`;
-  const sheetPath = join(outDir, `model-benchmark-legal-${stamp}.html`);
-  writeFileSync(sheetPath, sheet);
-  console.log(`Side-by-side sheet for the reviewing lawyer: ${sheetPath}`);
-}

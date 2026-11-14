@@ -1,11 +1,10 @@
-// Prompt extraction, both assistants: the screen that withdraws a reply
+// Prompt extraction: the screen that withdraws a reply
 // reciting the hidden instructions, against the ways a model can be talked
 // into writing them out. What the model does is for the live checks; this is
 // the server's own guard, which holds whatever the model was persuaded to do.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { CANARY as ADVISOR_CANARY, SYSTEM_PROMPT as ADVISOR_PROMPT, looksLikePromptLeak as advisorLeak } from "../../lib/advisor/prompt.ts";
-import { CANARY as LEGAL_CANARY, DISCLAIMER, SYSTEM_PROMPT as LEGAL_PROMPT, looksLikePromptLeak as legalLeak } from "../../lib/legal/prompt.ts";
 
 const ZW = String.fromCharCode(0x200b);
 const b64 = (s: string) => Buffer.from(s, "utf8").toString("base64");
@@ -14,7 +13,6 @@ const production = (p: string, from: string, len = 900) => p.slice(p.indexOf(fro
 
 for (const [name, leak, canary, prompt, first] of [
   ["advisor", advisorLeak, ADVISOR_CANARY, ADVISOR_PROMPT, "<instructions>"],
-  ["legal", legalLeak, LEGAL_CANARY, LEGAL_PROMPT, "<instructions>"],
 ] as const) {
   test(`${name}: the canary however it is written`, () => {
     assert.ok(leak(`ref ${canary}`), "as is");
@@ -47,18 +45,3 @@ test("advisor: ordinary answers, in both languages, with the risk note", () => {
   assert.ok(!advisorLeak("لقيتلك شقتين بعبدون ضمن ميزانيتك. الاستثمار بالعقار فيه مخاطر، تأكّد من المعلومات واعمل بحثك الخاص."));
 });
 
-test("legal: ordinary answers with the sections and the full disclaimer", () => {
-  const answer = [
-    "## Short answer",
-    "Not before the lease ends, except in the cases the law lists.",
-    "## Applicable Jordanian law",
-    "The Owners and Tenants Law sets the grounds for eviction.",
-    "## Relevant judicial decisions",
-    "No verified judicial decision was found on this point.",
-    "## Recommended next steps",
-    "Keep the lease and every receipt, and speak to a licensed lawyer.",
-    DISCLAIMER.en,
-  ].join("\n");
-  assert.ok(!legalLeak(answer));
-  assert.ok(!legalLeak(`## الإجابة المختصرة\nلا يجوز ذلك قبل انتهاء العقد إلا في الحالات التي يحددها القانون.\n${DISCLAIMER.ar}`));
-});

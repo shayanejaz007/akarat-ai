@@ -168,7 +168,8 @@ class AppNotification {
 
   /// booking_new, booking_approved, booking_rejected, booking_confirmed,
   /// booking_cancelled, listing_approved, listing_rejected,
-  /// listing_suspended, listing_unapproved.
+  /// listing_suspended, listing_unapproved; and for service requests
+  /// (0024) service_status, service_note, service_new, service_cancelled.
   final String kind;
   final Map<String, Object?> data;
   final DateTime createdAt;

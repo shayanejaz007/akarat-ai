@@ -61,24 +61,44 @@ class MapLayerNotifier extends Notifier<MapLayer> {
   }
 }
 
+/// The layer of the maps that place a pin (a listing's location, a service
+/// request's): satellite with street names, unless the person switched, so
+/// a building can be found from above. Remembered apart from the other
+/// maps, which keep the street map.
+final pinLayerProvider = NotifierProvider<PinLayerNotifier, MapLayer>(PinLayerNotifier.new);
+
+class PinLayerNotifier extends Notifier<MapLayer> {
+  @override
+  MapLayer build() => ref.read(preferencesProvider).pinLayer == 'map' ? MapLayer.map : MapLayer.satellite;
+
+  Future<void> toggle() async {
+    state = state == MapLayer.map ? MapLayer.satellite : MapLayer.map;
+    await ref.read(preferencesProvider).setPinLayer(state.name);
+  }
+}
+
 /// A white pill on a map that switches it to the other view: "Satellite"
 /// on the street map, "Map" on the satellite view. Only on Google's maps;
-/// the key-free maps have no imagery to switch to.
+/// the key-free maps have no imagery to switch to. [pin] switches the pin
+/// pickers' layer ([pinLayerProvider]) instead of the other maps'.
 class MapLayerButton extends ConsumerWidget {
-  const MapLayerButton({super.key, this.compact = false});
+  const MapLayerButton({super.key, this.compact = false, this.pin = false});
 
   /// A square icon button the size of Explore's filter button, for a row
   /// with no room for a label.
   final bool compact;
+  final bool pin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!ref.watch(googleMapsProvider)) return const SizedBox.shrink();
     final l = context.l10n;
-    final satellite = ref.watch(mapLayerProvider) == MapLayer.satellite;
+    final satellite = ref.watch(pin ? pinLayerProvider : mapLayerProvider) == MapLayer.satellite;
+    Future<void> flip() =>
+        pin ? ref.read(pinLayerProvider.notifier).toggle() : ref.read(mapLayerProvider.notifier).toggle();
     void toggle() {
       unawaited(HapticFeedback.selectionClick());
-      unawaited(ref.read(mapLayerProvider.notifier).toggle());
+      unawaited(flip());
     }
 
     if (compact) {
@@ -87,7 +107,7 @@ class MapLayerButton extends ConsumerWidget {
         tooltip: satellite ? l.a11yMapViewMap : l.a11yMapViewSatellite,
         style: SquareStyle.onImage,
         size: 52,
-        onTap: () => unawaited(ref.read(mapLayerProvider.notifier).toggle()),
+        onTap: () => unawaited(flip()),
       );
     }
     const ink = Color(0xFF16201D);

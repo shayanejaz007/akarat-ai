@@ -35,7 +35,7 @@ export default function BookingsPage() {
     <>
       <PageHeader
         title="Bookings"
-        subtitle="Every daily-rental booking request. The owner approves a request (their number is then shown to the renter) and confirms the stay once it is agreed; confirmed nights close on the calendar."
+        subtitle="Requests for daily rentals. Approving shows the renter the owner's number; confirmed stays close their nights."
       />
 
       {req && (

@@ -15,7 +15,8 @@ import { inFlight } from "@/lib/inflight";
 /**
  * POST /api/ai/advisor
  *
- *   { message: string, lang: "en" | "ar", transcript?: string }
+ *   { message: string, lang: "en" | "ar", transcript?: string, voice?: boolean }
+ *     voice: the message was spoken and the reply will be read aloud.
  *   → application/x-ndjson: one ClientEvent per line (lib/advisor/agent.ts),
  *     ending with { t: "done", transcript } or { t: "error", code }.
  *
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
   if (!message) return reply(400, "bad_request");
   if (message.length > INPUT.maxMessageChars) return reply(413, "too_long");
   const lang: Lang = body.lang === "ar" ? "ar" : "en";
+  const voice = body.voice === true;
 
   const { supabase, user } = await resolveCaller(request);
   const ip = callerIp(request);
@@ -143,7 +145,7 @@ export async function POST(request: NextRequest) {
         client: client!,
         history: turns,
         message,
-        context: { today, uiLang: lang, signedIn: !!user },
+        context: { today, uiLang: lang, signedIn: !!user, voice },
         env: { db: supabaseListings(supabase), lang, evidence, today, cards, shownThisTurn: [] },
         emit,
         signal: request.signal,

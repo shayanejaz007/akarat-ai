@@ -216,14 +216,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tourExploreTitle => 'شاهدها على الخريطة';
 
   @override
-  String get tourExploreBody =>
-      'يعرض «تصفّح» كل العقارات على الخريطة — الأخضر للبيع والذهبي للإيجار — مع الفلاتر وعرض القائمة.';
+  String get tourExploreBody => 'يعرض «تصفّح» العقارات المعروضة للبيع أو للإيجار على الخريطة، مع الفلاتر وعرض القائمة.';
 
   @override
   String get tourAiTitle => 'اطلبه بكلماتك';
 
   @override
-  String get tourAiBody => 'اسأل مستشار العقارات عن البيوت والمناطق والاستثمار، أو اسأل محامي عن القانون الأردني.';
+  String get tourAiBody => 'اسأل مستشار العقارات عن البيوت والمناطق والاستثمار، بالعربية أو بالإنجليزية.';
 
   @override
   String get tourSavedTitle => 'احتفظ بما يعجبك';
@@ -243,17 +242,17 @@ class AppLocalizationsAr extends AppLocalizations {
       'سجّل الدخول من هنا لتعرض عقارك بخطوات قليلة موجّهة، ثم رُدّ على استفسارات المشترين والمستأجرين.';
 
   @override
-  String get tourMapDealTitle => 'الكل أو للبيع أو للإيجار';
+  String get tourMapDealTitle => 'للبيع أو للإيجار';
 
   @override
-  String get tourMapDealBody => 'اختر ما تعرضه الخريطة.';
+  String get tourMapDealBody => 'اختر ما تعرضه الخريطة: عقارات للبيع أو للإيجار، كلٌّ على حدة.';
 
   @override
   String get tourMapPinsTitle => 'اقرأ الدبابيس';
 
   @override
   String get tourMapPinsBody =>
-      'يظهر السعر على كل دبوس. الأخضر للبيع والذهبي للإيجار، والرقم يجمع الدبابيس المتقاربة، فاضغط عليه للتكبير. الدائرة المظللة تعني أن المالك شارك موقعاً تقريبياً. اضغط على دبوس لمعاينة العقار.';
+      'يظهر السعر على كل دبوس. والرقم يجمع الدبابيس المتقاربة، فاضغط عليه للتكبير. الدائرة المظللة تعني أن المالك شارك موقعاً تقريبياً. اضغط على دبوس لمعاينة العقار.';
 
   @override
   String get tourMapFiltersTitle => 'ضيّق النتائج';
@@ -340,9 +339,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get voiceHint => 'قل ما تبحث عنه، مثل «ثلاث غرف في عبدون بأقل من ١٥٠ ألف».';
-
-  @override
-  String get voiceDictationHint => 'تكلّم بشكل طبيعي. سيُضاف كلامك إلى مربع الرسالة عندما تتوقف، أو اضغط «تم».';
 
   @override
   String get voiceReviewTitle => 'هل هذا ما قصدته؟';
@@ -456,7 +452,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get authCheckEmailSignIn => 'أكّدت — تسجيل الدخول';
+  String get authCheckEmailSignIn => 'أكّدت. تسجيل الدخول';
 
   @override
   String get authCheckEmailWrong => 'العنوان خطأ؟ ارجع';
@@ -566,8 +562,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeEmptyTitle => 'المنصة على وشك الانطلاق';
 
   @override
-  String get homeEmptyBody =>
-      'لا توجد إعلانات مطابقة هنا بعد. لا نختلق شيئاً لملء الفراغ — عُد قريباً، أو كن أول من يعرض عقاره.';
+  String get homeEmptyBody => 'لا توجد إعلانات هنا بعد. عُد قريباً، أو كن أول من يعرض عقاره.';
 
   @override
   String get locationAllJordan => 'كل الأردن';
@@ -736,8 +731,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiIdleTitle => 'صف العقار الذي تريده.';
 
   @override
-  String get aiIdleBody =>
-      'اكتبه كما تقوله. نلتقط نوع العملية والمنطقة والسعر وعدد الغرف والحمامات والمزايا، ونعرف أسماء المناطق الأردنية بأي من اللغتين، ونبحث فوراً.';
+  String get aiIdleBody => 'اكتبه كما تقوله، بالعربية أو الإنجليزية: المنطقة والميزانية وعدد الغرف.';
 
   @override
   String get aiIdleBodyShort =>
@@ -807,8 +801,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiResultsExternal => 'مفهرسة من منصات أخرى';
 
   @override
-  String get aiResultsExternalNote =>
-      'وُجدت على منصات أردنية أخرى وفهرسها زاحفنا. التوفر غير مؤكد — افتح المصدر للتحقق.';
+  String get aiResultsExternalNote => 'وُجدت على منصات أردنية أخرى. التوفر غير مؤكد: افتح المصدر للتحقق.';
 
   @override
   String aiMatch(int score) {
@@ -1117,7 +1110,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authSignUpTitle => 'أنشئ حسابك';
 
   @override
-  String get authSignUpBody => 'حساب واحد لعرض عقارك ومتابعة الاستفسارات وحفظ عمليات البحث — على التطبيق والموقع.';
+  String get authSignUpBody => 'حساب واحد لعرض عقارك ومتابعة الاستفسارات وحفظ عمليات البحث، على التطبيق والموقع.';
 
   @override
   String get fieldName => 'الاسم الكامل';
@@ -1772,8 +1765,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mediaAddVideo => 'أضف فيديو';
 
   @override
-  String get mediaHelp =>
-      'حتى ٨ ملفات، منها مقطعا فيديو كحد أقصى. تُصغَّر الصور قبل رفعها. الصورة الأولى هي الغلاف — اسحب لإعادة الترتيب.';
+  String get mediaHelp => 'حتى ٨ ملفات، منها مقطعا فيديو كحد أقصى. الصورة الأولى هي الغلاف: اسحب لإعادة الترتيب.';
 
   @override
   String get mediaCover => 'الغلاف';
@@ -1801,7 +1793,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get mediaUploadFailed =>
-      'لم يُرفع أحد الملفات، لذا لم يُحفظ شيء بعد. تحقق من اتصالك وحاول مجدداً — الملفات التي رُفعت لن تُرسل مرتين.';
+      'لم يُرفع أحد الملفات، لذا لم يُحفظ شيء بعد. تحقق من اتصالك وحاول مجدداً. الملفات التي رُفعت لن تُرسل مرتين.';
 
   @override
   String get mediaRemove => 'إزالة';
@@ -2099,7 +2091,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get privacyP2 =>
-      'لا نطلب رقم هوية ولا بيانات بنكية ولا موقعك الجغرافي. ولا نضع إعلانات، ولا نبيع بياناتك، ولا نشاركها مع وسطاء إعلان.';
+      'لا نطلب رقم هوية ولا بيانات بنكية. يُقرأ موقعك فقط عندما تضغط زر الموقع على الخريطة، لتحريك تلك الخريطة، ولا يُحفظ ولا يُرسل إلينا. ولا نضع إعلانات، ولا نبيع بياناتك، ولا نشاركها مع وسطاء الإعلانات.';
 
   @override
   String get privacyH3 => 'روابط المنصات الأخرى';
@@ -2644,9 +2636,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiHubAdvisor => 'مستشار العقارات';
 
   @override
-  String get aiHubLawyer => 'اسأل محامي';
-
-  @override
   String get aiHubPlainSearch => 'بحث عادي';
 
   @override
@@ -2659,7 +2648,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiHubCopied => 'تم النسخ';
 
   @override
-  String get aiHubDictate => 'تكلّم بدل الكتابة';
+  String get aiHubDictate => 'تحدّث مع Akarat AI';
 
   @override
   String get homeAiTitle => 'اسأل أكارات AI';
@@ -2668,16 +2657,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeAdvisorBody => 'ابحث عن بيت، قارن المناطق، وقيّم استثمارك.';
 
   @override
-  String get homeLawyerBody => 'أسئلة عن قوانين العقار والإيجار في الأردن.';
-
-  @override
   String get advKicker => 'أكارات AI · مستشارك العقاري';
 
   @override
   String get advIdleTitle => 'اعثر على عقارك القادم بالذكاء الاصطناعي.';
 
   @override
-  String get advIdleBody => 'ابحث واستكشف واستثمر في عقارات الأردن مع مستشار محلي ذكي.';
+  String get advIdleBody => 'اسأل عن البيوت والمناطق والاستثمار في الأردن، بالعربية أو الإنجليزية.';
 
   @override
   String get advPrompt1 => 'بدي شقة 3 غرف نوم بعبدون بأقل من 150 ألف دينار.';
@@ -3003,472 +2989,495 @@ class AppLocalizationsAr extends AppLocalizations {
   String get advCriteria => 'شروط البحث';
 
   @override
-  String get lawKicker => 'أكارات القانوني · القانون الأردني';
+  String get placePickTitle => 'اختر المكان';
 
   @override
-  String get lawTitle => 'اسأل محامي.';
+  String get placeSearchHint => 'مدينة أو بلدة أو حي';
 
   @override
-  String get lawSub => 'افهم حقوقك بمساعدة الذكاء الاصطناعي، بالاعتماد على التشريعات والأحكام القضائية الأردنية.';
+  String get placeNoMatch => 'لا يوجد مكان بهذا الاسم. جرّب كتابته بطريقة أخرى، أو امسح البحث واختر من القائمة.';
 
   @override
-  String get lawName => 'أكارات القانوني';
+  String get placeGovernorates => 'المحافظات';
 
   @override
-  String get lawPlaceholder => 'اشرح وضعك أو اكتب سؤالك القانوني…';
-
-  @override
-  String get lawPlaceholderMore => 'اسأل سؤالاً آخر…';
-
-  @override
-  String get lawInputLabel => 'سؤالك القانوني';
-
-  @override
-  String get lawAttach => 'أرفق مستنداً';
-
-  @override
-  String get lawAttachPhotos => 'صورة لصفحة';
-
-  @override
-  String get lawAttachCamera => 'التقط صورة';
-
-  @override
-  String get lawAttachFile => 'ملف PDF أو Word أو نص';
-
-  @override
-  String get lawDisclaimerShort =>
-      'معلومات قانونية مولّدة بالذكاء الاصطناعي، وليست استشارة قانونية. راجعها مع محامٍ أردني مرخّص قبل أن تتصرف.';
-
-  @override
-  String get lawFullNotice => 'اقرأ التنبيه كاملاً';
-
-  @override
-  String get lawDisclaimer =>
-      'هذه المعلومات إرشادات قانونية مولّدة بالذكاء الاصطناعي ولأغراض التوعية العامة، ولا تُغني عن استشارة محامٍ أردني مرخّص. قد تتغير القوانين وتفسيراتها، لذلك يُرجى مراجعة محامٍ مختص للتحقق من دقة المعلومات ومدى انطباقها على حالتك، وإجراء بحثك الخاص قبل اتخاذ أي قرار قانوني.';
-
-  @override
-  String get lawPrompt1 => 'صاحب البيت بده يرفع عليّ الأجرة. هل هذا قانوني في الأردن؟';
-
-  @override
-  String get lawPrompt2 => 'هل يحق للأجنبي شراء عقار في عمّان؟';
-
-  @override
-  String get lawPrompt3 => 'راجع عقد الإيجار هذا وحدّد المخاطر القانونية فيه.';
-
-  @override
-  String get lawPrompt4 => 'ماذا يحدث إذا رفض البائع نقل ملكية العقار بعد استلام الثمن؟';
-
-  @override
-  String get lawPrompt5 => 'شو حقوقي إذا صاحب البيت بده يطلعني قبل ما يخلص العقد؟';
-
-  @override
-  String get lawPrompt6 => 'كيف بقدر أرفع دعوى على شخص ما رجّعلي مصاري؟';
-
-  @override
-  String get lawDocQuestion => 'راجع هذا المستند وحدّد المخاطر القانونية فيه.';
-
-  @override
-  String get lawPickDoc => 'اختر العقد الذي تريد مراجعته، وسيُقرأ مع سؤالك.';
-
-  @override
-  String get lawHistory => 'السجل';
-
-  @override
-  String get lawHistoryTitle => 'محادثاتك';
-
-  @override
-  String get lawHistoryEmpty => 'لا شيء هنا بعد. ستظهر محادثاتك هنا.';
-
-  @override
-  String get lawHistoryError => 'تعذّر تحميل محادثاتك.';
-
-  @override
-  String get lawRetention => 'خاصة بحسابك. تُحفظ 90 يوماً بعد آخر رسالة، والمستندات 30 يوماً. يمكنك حذفها في أي وقت.';
-
-  @override
-  String get lawDeleteOne => 'احذف هذه المحادثة';
-
-  @override
-  String get lawDeleteAll => 'احذف كل محادثاتي القانونية';
-
-  @override
-  String get lawConfirmAll => 'سيؤدي هذا إلى حذف كل محادثاتك ومستنداتك القانونية. لا يمكن التراجع عن ذلك.';
-
-  @override
-  String get lawDeleted => 'تم الحذف.';
-
-  @override
-  String get lawAllDeleted => 'حُذفت كل محادثاتك ومستنداتك القانونية.';
-
-  @override
-  String get lawThinking => 'أفكر…';
-
-  @override
-  String get lawWriting => 'أكتب…';
-
-  @override
-  String get lawDoingDocuments => 'أقرأ مستنداتك…';
-
-  @override
-  String get lawDoingLibrary => 'أبحث في المكتبة القانونية…';
-
-  @override
-  String get lawDoingLookup => 'أتحقق من مرجع…';
-
-  @override
-  String get lawDoingWebSearch => 'أبحث في المصادر الأردنية الرسمية…';
-
-  @override
-  String lawDoingWebFetch(String host) {
-    return 'أقرأ $host…';
+  String placeAllOf(String name) {
+    return 'كل $name';
   }
 
   @override
-  String get lawDoingWebFetchSource => 'أقرأ مصدراً…';
+  String get placeAnywhere => 'في أي مكان في الأردن';
 
   @override
-  String get lawDoingOther => 'جارٍ العمل…';
-
-  @override
-  String get lawDidDocuments => 'قرأت مستنداتك';
-
-  @override
-  String lawDidLibraryFor(String q) {
-    return 'بحثت في المكتبة القانونية عن «$q»';
+  String placeNear(String place) {
+    return 'قرب $place';
   }
 
   @override
-  String get lawDidLibrary => 'بحثت في المكتبة القانونية';
+  String get placeField => 'المكان';
 
   @override
-  String lawDidLookupFor(String q) {
-    return 'تحققت من المرجع «$q»';
+  String get servicesTitle => 'الخدمات';
+
+  @override
+  String get servicesHeadline => 'خدمات المنزل، تطلبها من مكان واحد';
+
+  @override
+  String get servicesIntro => 'أخبرنا بما تحتاجه وأين. يتصل بك فريقنا لترتيبه، ولا يُحجز شيء ولا يُسعَّر قبل موافقتك.';
+
+  @override
+  String get servicesSearch => 'ابحث عن خدمة';
+
+  @override
+  String get servicesRequest => 'اطلب خدمة';
+
+  @override
+  String get servicesMine => 'طلبات الخدمة';
+
+  @override
+  String servicesNoMatch(String q) {
+    return 'لا توجد خدمة تطابق «$q».';
   }
 
   @override
-  String get lawDidLookup => 'تحققت من مرجع';
+  String get servicesNoMatchBody => 'اختر «خدمة أخرى» واكتب ما تحتاجه بكلماتك.';
 
   @override
-  String lawDidWebSearchFor(String q) {
-    return 'بحثت في المصادر الرسمية عن «$q»';
+  String get servicesCustomCta => 'اطلب خدمة أخرى';
+
+  @override
+  String get servicesNotReady => 'الخدمات غير متاحة بعد. حاول لاحقاً.';
+
+  @override
+  String get servicesHow => 'كيف تعمل';
+
+  @override
+  String get servicesStep1 => 'صِف ما تحتاجه';
+
+  @override
+  String get servicesStep1Body => 'اكتب ما المطلوب وأين ومتى يناسبك. أضف صوراً إن كانت تساعد.';
+
+  @override
+  String get servicesStep2 => 'نراجع طلبك';
+
+  @override
+  String get servicesStep2Body => 'يقرأ فريقنا طلبك ويتواصل معك للاتفاق على التفاصيل.';
+
+  @override
+  String get servicesStep3 => 'تابِع طلبك';
+
+  @override
+  String get servicesStep3Body => 'يظهر كل تحديث في «طلبات الخدمة»، ونُعلمك كلما تغيّرت حالته.';
+
+  @override
+  String get homeServicesTitle => 'الخدمات';
+
+  @override
+  String get homeServicesBody => 'سباكة وتكييف وتنظيف وغيرها، يرتّبها فريقنا لك.';
+
+  @override
+  String get svFormTitle => 'ما الذي تحتاجه؟';
+
+  @override
+  String get svFormBody => 'الحقول المعلَّمة بـ * مطلوبة.';
+
+  @override
+  String get svService => 'الخدمة *';
+
+  @override
+  String get svChooseService => 'اختر الخدمة';
+
+  @override
+  String get svCustom => 'ما الخدمة التي تحتاجها؟ *';
+
+  @override
+  String get svCustomHint => 'مثلاً: تنظيف الألواح الشمسية';
+
+  @override
+  String get svDesc => 'صِف المشكلة *';
+
+  @override
+  String get svDescHint => 'ما المشكلة، ومنذ متى، وأي شيء يجب أن نعرفه قبل الزيارة.';
+
+  @override
+  String get svWhere => 'الموقع *';
+
+  @override
+  String get svPlace => 'المنطقة *';
+
+  @override
+  String get svAddress => 'الشارع والبناية والطابق *';
+
+  @override
+  String get svAddressHint => 'مثلاً: شارع الكندي، بناية ١٢، الطابق الثالث، شقة ٥';
+
+  @override
+  String get svPin => 'الموقع على الخريطة (اختياري)';
+
+  @override
+  String get svPinHint => 'اضغط على الخريطة أو اسحب الدبوس إلى البناية.';
+
+  @override
+  String get svPinNone => 'لم يُحدَّد موقع بعد';
+
+  @override
+  String get svPinRemove => 'أزل الدبوس';
+
+  @override
+  String get svWhen => 'الموعد المناسب *';
+
+  @override
+  String get svDate => 'اليوم المفضّل *';
+
+  @override
+  String get svWindow => 'الوقت من اليوم';
+
+  @override
+  String get svWindowAny => 'أي وقت';
+
+  @override
+  String get svWindowMorning => 'صباحاً (٨–١٢)';
+
+  @override
+  String get svWindowAfternoon => 'بعد الظهر (١٢–٥)';
+
+  @override
+  String get svWindowEvening => 'مساءً (٥–٩)';
+
+  @override
+  String get svUrgency => 'ما مدى الاستعجال؟ *';
+
+  @override
+  String get svUrgNormal => 'عادي';
+
+  @override
+  String get svUrgNormalNote => 'خلال الأيام القادمة';
+
+  @override
+  String get svUrgUrgent => 'مستعجل';
+
+  @override
+  String get svUrgUrgentNote => 'في أقرب وقت ممكن';
+
+  @override
+  String get svUrgEmergency => 'طارئ';
+
+  @override
+  String get svUrgEmergencyNote => 'تسريب أو خطر أو عطل كامل';
+
+  @override
+  String get svEmergencyWarning => 'إن كان أحد في خطر، أو شممت رائحة غاز أو رأيت حريقاً، اتصل بالرقم ٩١١ أولاً.';
+
+  @override
+  String get svPhotos => 'صور (اختياري)';
+
+  @override
+  String get svPhotosHint => 'حتى ٦ صور. لا يراها إلا أنت وفريق عقارات.';
+
+  @override
+  String get svAddPhotos => 'أضف صوراً';
+
+  @override
+  String get svRemovePhoto => 'أزل الصورة';
+
+  @override
+  String get svContact => 'كيف نتواصل معك *';
+
+  @override
+  String get svName => 'اسمك *';
+
+  @override
+  String get svPhone => 'رقم الهاتف *';
+
+  @override
+  String get svEmail => 'البريد الإلكتروني (اختياري)';
+
+  @override
+  String get svSend => 'أرسل الطلب';
+
+  @override
+  String get svSending => 'جارٍ الإرسال…';
+
+  @override
+  String svUploading(String i, String n) {
+    return 'جارٍ رفع الصورة $i من $n…';
   }
 
   @override
-  String get lawDidWebSearch => 'بحثت في المصادر الرسمية';
+  String get svPrivacy => 'لا يرى طلبك وصورك إلا أنت وفريق عقارات.';
 
   @override
-  String lawDidWebFetch(String host) {
-    return 'قرأت $host';
+  String get svFixBelow => 'بعض البيانات تحتاج إلى مراجعة، وهي معلَّمة أدناه.';
+
+  @override
+  String get svErrCategory => 'اختر خدمة.';
+
+  @override
+  String get svErrCustom => 'اكتب اسم الخدمة بكلمات قليلة (من ٢ إلى ٨٠ حرفاً).';
+
+  @override
+  String get svErrDesc => 'صِف المشكلة في ١٠ أحرف على الأقل.';
+
+  @override
+  String get svErrPlace => 'اختر المدينة أو البلدة.';
+
+  @override
+  String get svErrHood => 'هذا الحي ليس في المدينة المختارة. اختره من جديد.';
+
+  @override
+  String get svErrAddress => 'اكتب الشارع والبناية (٣ أحرف على الأقل).';
+
+  @override
+  String get svErrPin => 'الدبوس خارج الأردن. حرّكه أو أزله.';
+
+  @override
+  String get svErrDate => 'اختر يوماً من اليوم وحتى ستة أشهر قادمة.';
+
+  @override
+  String get svErrPhotos => 'تعذّر إرفاق إحدى الصور. أزلها وأضفها من جديد.';
+
+  @override
+  String get svErrName => 'اكتب اسمك.';
+
+  @override
+  String get svErrPhone => 'اكتب رقم هاتف يمكننا الاتصال به، مثلاً 07 9123 4567.';
+
+  @override
+  String get svErrEmail => 'البريد الإلكتروني غير صحيح.';
+
+  @override
+  String get svErrTooMany => 'أرسلت ١٠ طلبات خلال يوم. انتظر قليلاً قبل إرسال طلب آخر.';
+
+  @override
+  String get svErrSignIn => 'سجّل الدخول لإرسال طلبك.';
+
+  @override
+  String get svErrPhotoType => 'يجب أن تكون الصور بصيغة JPEG أو PNG أو WebP أو HEIC.';
+
+  @override
+  String get svErrPhotoSize => 'حجم كل صورة حتى ٨ ميغابايت.';
+
+  @override
+  String get svErrPhotoCount => 'حتى ٦ صور.';
+
+  @override
+  String get svErrNetwork => 'انقطع الاتصال. اضغط «أرسل الطلب» مجدداً، ولن يُنشأ طلب ثانٍ.';
+
+  @override
+  String get svErrOther => 'تعذّر إرسال طلبك. حاول مجدداً.';
+
+  @override
+  String get svDoneTitle => 'وصلنا طلبك';
+
+  @override
+  String get svDoneBody => 'سيتصل بك فريقنا لترتيبه. لا يُحجز شيء قبل موافقتك.';
+
+  @override
+  String get svDoneRef => 'رقم طلبك';
+
+  @override
+  String get svDoneDup => 'كان هذا الطلب قد وصلنا من قبل، فلم يُرسل مرتين.';
+
+  @override
+  String get svSeeMine => 'اعرض طلباتي';
+
+  @override
+  String get svAnother => 'اطلب خدمة أخرى';
+
+  @override
+  String get svStatusPending => 'قيد الانتظار';
+
+  @override
+  String get svStatusUnderReview => 'قيد المراجعة';
+
+  @override
+  String get svStatusAccepted => 'مقبول';
+
+  @override
+  String get svStatusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get svStatusCompleted => 'مكتمل';
+
+  @override
+  String get svStatusRejected => 'مرفوض';
+
+  @override
+  String get svStatusCancelled => 'ملغى';
+
+  @override
+  String get svBodyPending => 'وصلنا طلبك، وسيطّلع عليه فريقنا قريباً.';
+
+  @override
+  String get svBodyUnderReview => 'يراجع فريقنا طلبك.';
+
+  @override
+  String get svBodyAccepted => 'قُبل طلبك، وسنتواصل معك لترتيبه.';
+
+  @override
+  String get svBodyInProgress => 'العمل جارٍ.';
+
+  @override
+  String get svBodyCompleted => 'انتهى العمل.';
+
+  @override
+  String get svBodyRejected => 'لا يمكننا تنفيذ هذا الطلب.';
+
+  @override
+  String get svBodyCancelled => 'ألغيت هذا الطلب.';
+
+  @override
+  String get svMineSub => 'يمكنك إلغاء الطلب حتى يبدأ العمل.';
+
+  @override
+  String get svMineEmpty => 'لم تطلب أي خدمة بعد.';
+
+  @override
+  String svSent(String date) {
+    return 'أُرسل $date';
   }
 
   @override
-  String get lawDidWebFetchSource => 'قرأت مصدراً';
-
-  @override
-  String get lawSummaryLibrary => 'المكتبة القانونية';
-
-  @override
-  String lawSummarySearches(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count عملية بحث',
-      few: '$count عمليات بحث',
-      two: 'بحثان',
-      one: 'بحث واحد',
-    );
-    return '$_temp0';
+  String svPreferred(String when) {
+    return 'الموعد المفضّل: $when';
   }
 
   @override
-  String lawSummarySources(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count مصدراً',
-      few: '$count مصادر',
-      two: 'مصدران',
-      one: 'مصدر واحد',
-    );
-    return '$_temp0';
+  String get svDetails => 'التفاصيل';
+
+  @override
+  String get svUpdates => 'التحديثات';
+
+  @override
+  String get svTeamNote => 'من فريق عقارات';
+
+  @override
+  String get svYourNote => 'سببك';
+
+  @override
+  String get svEventCreated => 'أُرسل الطلب';
+
+  @override
+  String get svEventNote => 'ملاحظة من الفريق';
+
+  @override
+  String get svCancel => 'ألغِ الطلب';
+
+  @override
+  String get svCancelAsk => 'إلغاء هذا الطلب؟';
+
+  @override
+  String get svCancelBody => 'يُبلَّغ الفريق فوراً. يمكنك إرسال طلب جديد في أي وقت.';
+
+  @override
+  String get svCancelReason => 'السبب (اختياري)';
+
+  @override
+  String get svCancelYes => 'نعم، ألغِه';
+
+  @override
+  String get svCancelNo => 'أبقِه';
+
+  @override
+  String get svCancelled => 'أُلغي الطلب.';
+
+  @override
+  String get svCancelFail => 'تعذّر الإلغاء. إن كان العمل قد بدأ، تواصل معنا.';
+
+  @override
+  String notifServiceStatus(String ref, String what, String status) {
+    return 'طلب الخدمة $ref ($what): $status.';
   }
 
   @override
-  String get lawSummaryDocuments => 'مستنداتك';
-
-  @override
-  String get lawSources => 'المصادر';
-
-  @override
-  String get lawBadgeInForce => 'تشريع موثّق · نافذ';
-
-  @override
-  String get lawBadgeAmended => 'تشريع موثّق · معدّل';
-
-  @override
-  String get lawBadgeRepealed => 'تشريع موثّق · ملغى';
-
-  @override
-  String get lawBadgeLaw => 'تشريع موثّق';
-
-  @override
-  String get lawBadgeJudgment => 'حكم قضائي موثّق';
-
-  @override
-  String get lawBadgeCommentary => 'شرح فقهي';
-
-  @override
-  String get lawBadgeOfficial => 'موقع رسمي';
-
-  @override
-  String get lawBadgeSecondary => 'مصدر ثانوي · غير ملزم';
-
-  @override
-  String get lawBadgeDocument => 'مستندك';
-
-  @override
-  String lawChecked(String date) {
-    return 'تم التحقق $date';
+  String notifServiceSaid(String note) {
+    return 'ملاحظة الفريق: $note';
   }
 
   @override
-  String get lawLicensed => 'قاعدة بيانات مرخّصة';
-
-  @override
-  String lawPage(int n) {
-    return 'صفحة $n';
+  String notifServiceNote(String ref, String what, String note) {
+    return 'ملاحظة من الفريق على طلب $ref ($what): $note';
   }
 
   @override
-  String get lawUnverifiedTitle => 'مراجع تعذّر التحقق منها';
-
-  @override
-  String get lawUnverifiedBody =>
-      'تعذّر ربط هذه المراجع الواردة في الإجابة بمصدر رسمي. اعتبرها غير مؤكدة وتحقق منها مع محامٍ.';
-
-  @override
-  String get lawUnverifiedMark => 'لم يُتحقق منه من مصدر رسمي';
-
-  @override
-  String get lawUrgent => 'عاجل.';
-
-  @override
-  String get lawImportant => 'مهم.';
-
-  @override
-  String get lawShareSummary => 'مشاركة الملخص';
-
-  @override
-  String get lawReport => 'الإبلاغ عن مشكلة';
-
-  @override
-  String get lawReported => 'تم الإبلاغ';
-
-  @override
-  String get lawFbTitle => 'ما المشكلة في هذه الإجابة؟';
-
-  @override
-  String get lawFbGood => 'كانت مفيدة';
-
-  @override
-  String get lawFbWrongLaw => 'قانون غير صحيح';
-
-  @override
-  String get lawFbWrongCitation => 'مادة أو مرجع غير صحيح';
-
-  @override
-  String get lawFbOutdated => 'معلومات قديمة';
-
-  @override
-  String get lawFbFabricated => 'تستند إلى مرجع غير موجود';
-
-  @override
-  String get lawFbMissing => 'أغفلت أمراً مهماً';
-
-  @override
-  String get lawFbUnclear => 'غير واضحة';
-
-  @override
-  String get lawFbOther => 'أمر آخر';
-
-  @override
-  String get lawFbPlaceholder => 'أضف تفاصيل (اختياري). يُرجى عدم ذكر معلومات شخصية.';
-
-  @override
-  String get lawFbReviewerNote =>
-      'بلاغ مراجِع: يُرفق السؤال والإجابة، مع إخفاء البيانات المعرِّفة، لمراجعة ما قبل الإطلاق.';
-
-  @override
-  String get lawFbSend => 'إرسال البلاغ';
-
-  @override
-  String get lawFbSent => 'شكراً لك. تم إرسال بلاغك.';
-
-  @override
-  String get lawFbFailed => 'تعذّر إرسال البلاغ. حاول مرة أخرى.';
-
-  @override
-  String get lawSummaryHeading => 'أكارات — اسأل محامي · ملخص البحث';
-
-  @override
-  String get lawSummaryQuestion => 'السؤال:';
-
-  @override
-  String get lawSummaryUnverified => 'غير متحقق منه:';
-
-  @override
-  String get lawBannerNotReady => 'خدمة «اسأل محامي» غير متاحة الآن. يُرجى المحاولة لاحقاً.';
-
-  @override
-  String get lawBannerSignIn => 'سجّل الدخول لتسأل. تبقى محادثاتك ومستنداتك خاصة بحسابك.';
-
-  @override
-  String get lawBannerReview => 'تخضع خدمة «اسأل محامي» لمراجعة محامين أردنيين مرخّصين قبل إتاحتها للجميع.';
-
-  @override
-  String get lawBannerReviewer =>
-      'صلاحية مراجِع. استخدم «الإبلاغ عن مشكلة» على أي إجابة لتسجيل ملاحظاتك لمراجعة ما قبل الإطلاق.';
-
-  @override
-  String get lawDocUploading => 'جارٍ الرفع…';
-
-  @override
-  String get lawDocScan => 'مسح ضوئي';
-
-  @override
-  String lawDocPages(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n صفحة',
-      few: '$n صفحات',
-      two: 'صفحتان',
-      one: 'صفحة واحدة',
-    );
-    return '$_temp0';
+  String notifServiceNew(String ref, String what) {
+    return 'طلب خدمة جديد $ref: $what.';
   }
 
   @override
-  String get lawDocPhoto => 'صورة';
+  String notifServiceCancelled(String ref) {
+    return 'ألغى العميل طلب الخدمة $ref.';
+  }
 
   @override
-  String get lawDocText => 'نص';
+  String get mapLocateMe => 'اذهب إلى موقعي';
 
   @override
-  String get lawDocRemove => 'إزالة';
+  String get mapLocateOff => 'شغّل خدمات الموقع لترى مكانك.';
 
   @override
-  String get lawDocFailed => 'تعذّرت الإضافة';
+  String get mapLocateDenied => 'لا يُسمح لـ Akarat.ai برؤية موقعك. اسمح بذلك من الإعدادات.';
 
   @override
-  String get lawDocErrTooBig => 'حجم الملف أكبر من 4 ميغابايت.';
+  String get mapLocateFailed => 'تعذّر تحديد موقعك. حاول مجدداً.';
 
   @override
-  String get lawDocErrUnsupported => 'ارفع ملف PDF أو Word (.docx) أو ملفاً نصياً أو صورة (JPG أو PNG أو WebP).';
+  String get mapLocateSettings => 'الإعدادات';
 
   @override
-  String get lawDocErrOldWord => 'لا يمكن قراءة ملفات Word القديمة (.doc). احفظه بصيغة .docx أو PDF ثم ارفعه.';
+  String get talkThinking => 'أفكّر…';
 
   @override
-  String get lawDocErrEncrypted => 'الملف محمي بكلمة مرور. احفظ نسخة غير محمية، أو اطبعه إلى PDF، ثم ارفعها.';
+  String get talkSpeaking => 'أتكلّم…';
 
   @override
-  String get lawDocErrActiveContent =>
-      'يحتوي الملف على برمجيات أو وحدات ماكرو أو ملفات مضمّنة، لذلك لا يمكن قبوله. احفظه كملف PDF عادي وحاول مرة أخرى.';
+  String get talkPaused => 'اضغط الدائرة لتتكلّم';
 
   @override
-  String get lawDocErrMacros => 'يحتوي ملف Word على وحدات ماكرو، لذلك لا يمكن قبوله. احفظه بصيغة PDF وحاول مرة أخرى.';
+  String get talkHintListening => 'اسأل عن العقارات في الأردن. أجيبك عندما تتوقف عن الكلام.';
 
   @override
-  String get lawDocErrDamaged => 'تعذّرت قراءة الملف. قد يكون تالفاً.';
+  String get talkHintThinking => 'أبحث في الإعلانات والمصادر.';
 
   @override
-  String get lawDocErrTooManyPages => 'المستند أطول من 30 صفحة. ارفع الصفحات المهمة فقط.';
+  String get talkHintSpeaking => 'اضغط الدائرة لتقاطعني.';
 
   @override
-  String get lawDocErrNotText => 'لا يبدو هذا الملف مستنداً.';
+  String get talkOrbSend => 'أرسل ما قلته';
 
   @override
-  String get lawDocErrNoText =>
-      'لا يحتوي ملف Word هذا على نص (قد يحتوي صوراً ممسوحة). ارفعه بصيغة PDF أو كصور بدلاً من ذلك.';
+  String get talkOrbInterrupt => 'قاطِع وتكلّم';
 
   @override
-  String get lawDocErrTooLong => 'المستند أطول من أن يُقرأ دفعة واحدة. ارفع الجزء المهم منه.';
+  String get talkOrbStart => 'ابدأ الكلام';
 
   @override
-  String get lawDocErrEmpty => 'الملف فارغ.';
+  String get talkLangAr => 'أتكلّم العربية';
 
   @override
-  String get lawDocErrTooMany => 'تتسع المحادثة لأربعة مستندات كحد أقصى. ابدأ محادثة جديدة للمزيد.';
+  String get talkLangEn => 'أتكلّم الإنجليزية';
 
   @override
-  String get lawDocErrFull => 'هذه المستندات معاً أطول من اللازم. أزل أحدها أو ابدأ محادثة جديدة.';
+  String get talkLangSwitch => 'بدّل اللغة التي تتكلّم بها';
 
   @override
-  String get lawDocErrRateLimited => 'ترفع الملفات بسرعة. انتظر قليلاً ثم حاول مرة أخرى.';
+  String get talkClose => 'إنهاء المحادثة الصوتية';
 
   @override
-  String get lawDocErrOffline => 'يبدو أنك غير متصل بالإنترنت.';
+  String get talkKept => 'كل ما يُقال هنا مكتوب أيضاً في المحادثة، مع الإعلانات.';
 
   @override
-  String get lawDocErrBusy => 'انتظر حتى ينتهي الرفع الحالي.';
+  String get talkNoVoice => 'لا يوجد في هذا الهاتف صوت لهذه اللغة، لذلك الجواب مكتوب هنا.';
 
   @override
-  String get lawDocErrOther => 'تعذّرت إضافة الملف. حاول مرة أخرى.';
+  String get talkSpeakFailed => 'تعذّرت قراءة الجواب بصوت. هو مكتوب هنا.';
 
   @override
-  String get lawLeak => 'لا أستطيع مشاركة طريقة إعداد هذه الخدمة. اسألني عن مسألتك القانونية.';
+  String get talkFailed => 'تعذّر الجواب الآن. اضغط الدائرة للمحاولة مرة ثانية.';
 
   @override
-  String get lawRefused =>
-      'لا أستطيع المساعدة في هذا الطلب. يمكنني شرح القانون الأردني ومساعدتك في التحضير للحديث مع محامٍ.';
+  String get talkOnScreen => 'النتائج موجودة في المحادثة.';
 
   @override
-  String get lawWithdrawn => 'سُحبت هذه الإجابة.';
-
-  @override
-  String get lawNoticePartial => 'نفد الوقت قبل أن أُكمل. اطلب مني المتابعة، أو حدّد سؤالك أكثر.';
-
-  @override
-  String get lawNoticeStopped => 'توقفت. أرسل رسالة أخرى للمتابعة.';
-
-  @override
-  String get lawNoticeUnbacked =>
-      'تذكر هذه الإجابة أنها راجعت مصادر، لكن لم يُجرَ أي بحث فعلي. اعتبر ما ورد فيها غير متحقَّق منه وراجعه مع محامٍ.';
-
-  @override
-  String get lawErrRateLimited => 'ترسل الرسائل بسرعة. انتظر بضع ثوانٍ ثم حاول مرة أخرى.';
-
-  @override
-  String get lawErrQuota => 'وصلت إلى حدّك اليومي في «اسأل محامي». يتجدد غداً.';
-
-  @override
-  String get lawErrQuotaTotal => 'أجابت خدمة «اسأل محامي» عن كل ما تستطيعه اليوم. ستعود غداً.';
-
-  @override
-  String get lawErrBusy => 'الخدمة مشغولة الآن. حاول بعد لحظات.';
-
-  @override
-  String get lawErrNotConfigured => 'خدمة «اسأل محامي» غير متاحة الآن.';
-
-  @override
-  String get lawErrTooLong => 'الرسالة طويلة جداً. اجعلها أقل من 4000 حرف.';
-
-  @override
-  String get lawErrOffline => 'يبدو أنك غير متصل بالإنترنت. تحقق من الاتصال وحاول مرة أخرى.';
-
-  @override
-  String get lawErrInterrupted => 'انقطعت الإجابة في الطريق. حاول مرة أخرى.';
-
-  @override
-  String get lawErrSignIn => 'انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.';
-
-  @override
-  String get lawErrNotOpen => 'خدمة «اسأل محامي» غير متاحة لحسابك بعد.';
-
-  @override
-  String get lawErrNotFound => 'لم تعد هذه المحادثة موجودة. ابدأ محادثة جديدة.';
-
-  @override
-  String get lawErrOther => 'حدث خطأ ما. حاول مرة أخرى.';
+  String get talkCardHint => 'اسأل بصوتك بالعربية أو الإنجليزية واسمع الجواب.';
 }

@@ -23,6 +23,9 @@ import '../../features/listings/presentation/listing_wizard_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/property_details/property_details_screen.dart';
+import '../../features/services/my_service_requests_screen.dart';
+import '../../features/services/service_request_screen.dart';
+import '../../features/services/services_screen.dart';
 import '../../features/settings/legal_screen.dart';
 import '../../shared/models/listing.dart';
 import '../../shared/services/preferences.dart';
@@ -114,8 +117,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.aiSearch,
                 builder: (context, state) => AiHubScreen(
-                  mode: state.uri.queryParameters['mode'],
-                  modeToken: state.uri.queryParameters['t'],
                   initialQuery: state.uri.queryParameters['q'],
                   focusToken: state.uri.queryParameters['focus'],
                   voiceToken: state.uri.queryParameters['voice'],
@@ -228,6 +229,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.inquiries,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => InquiriesScreen(initialTab: state.uri.queryParameters['tab']),
+      ),
+      GoRoute(
+        path: Routes.services,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const ServicesScreen(),
+      ),
+      GoRoute(
+        path: Routes.serviceRequest,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => ServiceRequestScreen(categoryId: state.uri.queryParameters['category']),
+      ),
+      GoRoute(
+        path: Routes.myServiceRequests,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const MyServiceRequestsScreen(),
       ),
       GoRoute(
         path: '/legal/:doc',

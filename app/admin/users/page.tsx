@@ -67,7 +67,7 @@ export default function UsersPage() {
 
   return (
     <>
-      <PageHeader title="Users" subtitle="Every account, how it signs in, what it has listed and when it was last seen on the website or the app." />
+      <PageHeader title="Users" subtitle="Every account, how it signs in and when it was last seen." />
 
       <Chips
         label="Role"

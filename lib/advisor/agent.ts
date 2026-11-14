@@ -91,7 +91,7 @@ export const NO_ANSWER_NOTE =
   "Your answer did not reach the user: text written before a tool call is not shown. " +
   "Write your complete answer now as your final message, using what your tools returned, and do not call any tool.";
 
-// Shared with Ask a Lawyer; re-exported because the advisor's tests import it from here.
+// Lives in lib/claude-shared.ts; re-exported because the advisor's tests import it from here.
 export { echoable };
 const errorCode = apiErrorCode;
 

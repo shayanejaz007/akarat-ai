@@ -16,7 +16,7 @@ Rect? shareOrigin(BuildContext button) {
 ///
 /// One round button does three jobs, as on the website: with nothing typed
 /// it listens (voice), with text it sends, and while an answer is being
-/// written it stops it. [onAttach] adds a paperclip (Ask a Lawyer). [above]
+/// written it stops it. [onAttach] adds a paperclip. [above]
 /// sits over the field: the search criteria, or the documents waiting to go
 /// with the next question.
 class AssistantComposer extends StatelessWidget {
@@ -269,7 +269,7 @@ class AssistantNotice extends StatelessWidget {
 enum NoticeTone { info, warning, danger }
 
 /// The reader's own message, with what went with it ([footer]: the
-/// documents sent to Ask a Lawyer).
+/// documents sent with it).
 class UserBubble extends StatelessWidget {
   const UserBubble({super.key, required this.text, this.footer});
   final String text;

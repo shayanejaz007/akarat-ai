@@ -3,6 +3,9 @@
          stated here, or every request fails on a store build. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Only for the "my location" button on a map. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Voice search: asked for only when the reader taps the microphone. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -74,6 +77,11 @@
         <!-- The device's speech recogniser, for voice search. -->
         <intent>
             <action android:name="android.speech.RecognitionService" />
+        </intent>
+        <!-- The device's text-to-speech engine, which reads the advisor's
+             answers aloud in a voice conversation. -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>

@@ -1,8 +1,8 @@
 /**
- * Pieces of a streamed Claude turn that the property advisor (lib/advisor)
- * and Ask a Lawyer (lib/legal) both need and that belong to neither: what to
- * send back after a mid-answer model switch, how an API failure reads to the
- * page, and which language a reply is in.
+ * Pieces of a streamed Claude turn kept apart from the property advisor
+ * (lib/advisor) so another assistant could reuse them: what to send back
+ * after a mid-answer model switch, how an API failure reads to the page, and
+ * which language a reply is in.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import type { BetaContentBlock, BetaContentBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages";

@@ -9,8 +9,8 @@ export type Notice = { tone: "info" | "good" | "warn" | "bad"; text: string };
 
 const FEATURES: { icon: IconName; title: string; body: string }[] = [
   { icon: "activity", title: "Live, as it happens", body: "Who is on the website, Android and iPhone right now." },
-  { icon: "shield", title: "Every review in one queue", body: "Daily rentals, reported listings and new accounts." },
-  { icon: "sparkles", title: "Both AI assistants, measured", body: "Use, cost and answer quality for Property AI and Ask a Lawyer." },
+  { icon: "shield", title: "Every queue in one place", body: "Daily rentals, service requests and reported listings." },
+  { icon: "sparkles", title: "Property AI, measured", body: "What people ask, what it costs, and what needs a look." },
 ];
 
 /**

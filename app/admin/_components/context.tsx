@@ -53,6 +53,21 @@ export const NAV: { title: string | null; items: NavItem[] }[] = [
       },
       { href: "/admin/bookings", label: "Bookings", icon: "calendar", keywords: "requests stays nights" },
       { href: "/admin/inquiries", label: "Inquiries", icon: "inbox", keywords: "messages leads contact", count: o => o?.inquiries.new },
+      { href: "/admin/locations", label: "Locations", icon: "map", keywords: "governorates cities towns neighbourhoods areas places" },
+    ],
+  },
+  {
+    title: "Services",
+    items: [
+      {
+        href: "/admin/services",
+        label: "Service requests",
+        icon: "wrench",
+        keywords: "plumbing electrical maintenance repairs requests SR",
+        count: o => o?.services?.byStatus.pending,
+        urgent: true,
+      },
+      { href: "/admin/service-categories", label: "Service categories", icon: "tag", keywords: "categories services icons" },
     ],
   },
   { title: "Community", items: [{ href: "/admin/users", label: "Users", icon: "users", keywords: "accounts people owners agents roles" }] },
@@ -61,11 +76,8 @@ export const NAV: { title: string | null; items: NavItem[] }[] = [
     items: [{ href: "/admin/reports", label: "Reports", icon: "flag", keywords: "reported scam take down", count: o => o?.openReports, urgent: true }],
   },
   {
-    title: "AI assistants",
-    items: [
-      { href: "/admin/property-ai", label: "Property AI", icon: "sparkles", keywords: "advisor claude cost questions" },
-      { href: "/admin/ask-a-lawyer", label: "Ask a Lawyer", icon: "scale", keywords: "legal library citations feedback" },
-    ],
+    title: "AI assistant",
+    items: [{ href: "/admin/property-ai", label: "Property AI", icon: "sparkles", keywords: "advisor claude cost questions" }],
   },
 ];
 

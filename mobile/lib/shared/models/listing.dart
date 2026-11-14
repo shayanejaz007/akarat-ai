@@ -331,7 +331,12 @@ class Listing {
     );
   }
 
-  Listing copyWith({ListingStatus? status}) => Listing(
+  /// This listing drawn at another point: for a map, never saved.
+  Listing at(double lat, double lng) => _copy(lat: lat, lng: lng);
+
+  Listing copyWith({ListingStatus? status}) => _copy(status: status);
+
+  Listing _copy({ListingStatus? status, double? lat, double? lng}) => Listing(
     id: id,
     ownerId: ownerId,
     status: status ?? this.status,
@@ -343,8 +348,8 @@ class Listing {
     createdAt: createdAt,
     cityId: cityId,
     neighborhoodId: neighborhoodId,
-    lat: lat,
-    lng: lng,
+    lat: lat ?? this.lat,
+    lng: lng ?? this.lng,
     bedrooms: bedrooms,
     bathrooms: bathrooms,
     areaSqm: areaSqm,

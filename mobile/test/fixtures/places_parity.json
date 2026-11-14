@@ -1,0 +1,1440 @@
+{
+ "counts": {
+  "governorates": 12,
+  "cities": 1182,
+  "hoods": 452
+ },
+ "search": [
+  {
+   "q": "abdoun",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "abdoun",
+     "label": "Abdoun",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "abdoun"
+    },
+    {
+     "kind": "city",
+     "id": "bir-abu-dannah",
+     "label": "Bir Abu Dannah",
+     "gov": "maan",
+     "city": "bir-abu-dannah",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "abdun-ash-shamal",
+     "label": "Abdun ash Shamal",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "abdun-ash-shamal"
+    }
+   ]
+  },
+  {
+   "q": "abdoon",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "abdoun",
+     "label": "Abdoun",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "abdoun"
+    },
+    {
+     "kind": "city",
+     "id": "bir-abu-dannah",
+     "label": "Bir Abu Dannah",
+     "gov": "maan",
+     "city": "bir-abu-dannah",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "abdun-ash-shamal",
+     "label": "Abdun ash Shamal",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "abdun-ash-shamal"
+    }
+   ]
+  },
+  {
+   "q": "عبدون",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "abdoun",
+     "label": "عبدون",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "abdoun"
+    },
+    {
+     "kind": "hood",
+     "id": "abdun-ash-shamal",
+     "label": "عبدون الشمالي",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "abdun-ash-shamal"
+    }
+   ]
+  },
+  {
+   "q": "swaifieh",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "sweifieh",
+     "label": "Sweifieh",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "sweifieh"
+    },
+    {
+     "kind": "city",
+     "id": "sufah",
+     "label": "Sufah",
+     "gov": "amman",
+     "city": "sufah",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "ghor-as-safi",
+     "label": "Ghor as Safi",
+     "gov": "karak",
+     "city": "ghor-as-safi",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "sweifieh",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "sweifieh",
+     "label": "Sweifieh",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "sweifieh"
+    },
+    {
+     "kind": "city",
+     "id": "sufah",
+     "label": "Sufah",
+     "gov": "amman",
+     "city": "sufah",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "ghor-as-safi",
+     "label": "Ghor as Safi",
+     "gov": "karak",
+     "city": "ghor-as-safi",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "الصويفية",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "sweifieh",
+     "label": "الصويفية",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "sweifieh"
+    }
+   ]
+  },
+  {
+   "q": "shmeisani",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "shmeisani",
+     "label": "Shmeisani",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "shmeisani"
+    },
+    {
+     "kind": "hood",
+     "id": "ash-shumaysani-al-gharbi",
+     "label": "Ash Shumaysani al Gharbi",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "ash-shumaysani-al-gharbi"
+    }
+   ]
+  },
+  {
+   "q": "jabal amman",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "jabalamman",
+     "label": "Jabal Amman",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "jabalamman"
+    },
+    {
+     "kind": "city",
+     "id": "ras-munif",
+     "label": "Ras Munif",
+     "gov": "ajloun",
+     "city": "ras-munif",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "um uthaina",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "umuthaina",
+     "label": "Um Uthaina",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "umuthaina"
+    }
+   ]
+  },
+  {
+   "q": "dabouq",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "dabouq",
+     "label": "Dabouq",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "dabouq"
+    }
+   ]
+  },
+  {
+   "q": "irbid",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "irbid",
+     "label": "Irbid",
+     "gov": "irbid",
+     "city": "irbid",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "irbid",
+     "label": "Irbid governorate",
+     "gov": "irbid",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "irbidcentre",
+     "label": "Irbid Centre",
+     "gov": "irbid",
+     "city": "irbid",
+     "hood": "irbidcentre"
+    }
+   ]
+  },
+  {
+   "q": "اربد",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "irbid",
+     "label": "إربد",
+     "gov": "irbid",
+     "city": "irbid",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "irbid",
+     "label": "محافظة إربد",
+     "gov": "irbid",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "irbidcentre",
+     "label": "وسط إربد",
+     "gov": "irbid",
+     "city": "irbid",
+     "hood": "irbidcentre"
+    }
+   ]
+  },
+  {
+   "q": "إربد",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "irbid",
+     "label": "إربد",
+     "gov": "irbid",
+     "city": "irbid",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "irbid",
+     "label": "محافظة إربد",
+     "gov": "irbid",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "irbidcentre",
+     "label": "وسط إربد",
+     "gov": "irbid",
+     "city": "irbid",
+     "hood": "irbidcentre"
+    }
+   ]
+  },
+  {
+   "q": "الزرقا",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "zarqa",
+     "label": "الزرقاء",
+     "gov": "zarqa",
+     "city": "zarqa",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "zarqa",
+     "label": "محافظة الزرقاء",
+     "gov": "zarqa",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "az-zarqa-al-jadidah",
+     "label": "الزرقاء الجديدة",
+     "gov": "zarqa",
+     "city": "zarqa",
+     "hood": "az-zarqa-al-jadidah"
+    },
+    {
+     "kind": "hood",
+     "id": "zarqacentre",
+     "label": "وسط الزرقاء",
+     "gov": "zarqa",
+     "city": "zarqa",
+     "hood": "zarqacentre"
+    }
+   ]
+  },
+  {
+   "q": "zarka",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "zarqa",
+     "label": "Zarqa",
+     "gov": "zarqa",
+     "city": "zarqa",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "zarqa",
+     "label": "Zarqa governorate",
+     "gov": "zarqa",
+     "city": null,
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "petra",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "wadimusa",
+     "label": "Wadi Musa",
+     "gov": "maan",
+     "city": "wadimusa",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "salt",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "salt",
+     "label": "Salt",
+     "gov": "balqa",
+     "city": "salt",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "as-sultani",
+     "label": "As Sultani",
+     "gov": "karak",
+     "city": "as-sultani",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "السلط",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "salt",
+     "label": "السلط",
+     "gov": "balqa",
+     "city": "salt",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "as-sultani",
+     "label": "السلطاني",
+     "gov": "karak",
+     "city": "as-sultani",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "iskan-as-sultah",
+     "label": "اسكان السلطة",
+     "gov": "balqa",
+     "city": "iskan-as-sultah",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "manshiyat-as-sultah",
+     "label": "منشية السلطة",
+     "gov": "mafraq",
+     "city": "manshiyat-as-sultah",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "iskan-sultat-al-miyah",
+     "label": "اسكان سلطة المياه",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "iskan-sultat-al-miyah"
+    }
+   ]
+  },
+  {
+   "q": "kufranja",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "kufrinjah",
+     "label": "Kufrinjah",
+     "gov": "ajloun",
+     "city": "kufrinjah",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "ajlun",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "ajloun",
+     "label": "Ajloun",
+     "gov": "ajloun",
+     "city": "ajloun",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "ajloun",
+     "label": "Ajloun governorate",
+     "gov": "ajloun",
+     "city": null,
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "aqaba",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "aqaba",
+     "label": "Aqaba",
+     "gov": "aqaba",
+     "city": "aqaba",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "aqaba",
+     "label": "Aqaba governorate",
+     "gov": "aqaba",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "aqabacentre",
+     "label": "Aqaba Town",
+     "gov": "aqaba",
+     "city": "aqaba",
+     "hood": "aqabacentre"
+    }
+   ]
+  },
+  {
+   "q": "العقبة",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "aqaba",
+     "label": "العقبة",
+     "gov": "aqaba",
+     "city": "aqaba",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "aqaba",
+     "label": "محافظة العقبة",
+     "gov": "aqaba",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "aqabacentre",
+     "label": "وسط العقبة",
+     "gov": "aqaba",
+     "city": "aqaba",
+     "hood": "aqabacentre"
+    }
+   ]
+  },
+  {
+   "q": "ramtha",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "ramtha",
+     "label": "Ramtha",
+     "gov": "irbid",
+     "city": "ramtha",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "salt",
+     "label": "Salt",
+     "gov": "balqa",
+     "city": "salt",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "as-saylah-irbid",
+     "label": "As Saylah (near Ramtha)",
+     "gov": "irbid",
+     "city": "as-saylah-irbid",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "الرمثا",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "ramtha",
+     "label": "الرمثا",
+     "gov": "irbid",
+     "city": "ramtha",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "as-saylah-irbid",
+     "label": "السيلة (قرب الرمثا)",
+     "gov": "irbid",
+     "city": "as-saylah-irbid",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "madaba",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "madaba",
+     "label": "Madaba",
+     "gov": "madaba",
+     "city": "madaba",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "madaba",
+     "label": "Madaba governorate",
+     "gov": "madaba",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "al-madabah",
+     "label": "Al Madabah",
+     "gov": "karak",
+     "city": "al-madabah",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "madabacentre",
+     "label": "Madaba Centre",
+     "gov": "madaba",
+     "city": "madaba",
+     "hood": "madabacentre"
+    },
+    {
+     "kind": "hood",
+     "id": "mukhayyam-madaba",
+     "label": "Mukhayyam Ma’daba",
+     "gov": "madaba",
+     "city": "madaba",
+     "hood": "mukhayyam-madaba"
+    }
+   ]
+  },
+  {
+   "q": "مادبا",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "madaba",
+     "label": "مأدبا",
+     "gov": "madaba",
+     "city": "madaba",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "madaba",
+     "label": "محافظة مادبا",
+     "gov": "madaba",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "madabacentre",
+     "label": "وسط مأدبا",
+     "gov": "madaba",
+     "city": "madaba",
+     "hood": "madabacentre"
+    },
+    {
+     "kind": "hood",
+     "id": "mukhayyam-madaba",
+     "label": "مخيم مأدبا",
+     "gov": "madaba",
+     "city": "madaba",
+     "hood": "mukhayyam-madaba"
+    }
+   ]
+  },
+  {
+   "q": "karak",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "karak",
+     "label": "Karak",
+     "gov": "karak",
+     "city": "karak",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "karak",
+     "label": "Karak governorate",
+     "gov": "karak",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "karakun",
+     "label": "Karakun",
+     "gov": "karak",
+     "city": "karakun",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "kurkumah",
+     "label": "Kurkumah",
+     "gov": "irbid",
+     "city": "kurkumah",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "sayl-al-karak",
+     "label": "Sayl al Karak",
+     "gov": "karak",
+     "city": "sayl-al-karak",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "الكرك",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "karak",
+     "label": "الكرك",
+     "gov": "karak",
+     "city": "karak",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "karak",
+     "label": "محافظة الكرك",
+     "gov": "karak",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "kurkumah",
+     "label": "كركمة",
+     "gov": "irbid",
+     "city": "kurkumah",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "karakun",
+     "label": "كركون",
+     "gov": "karak",
+     "city": "karakun",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "sayl-al-karak",
+     "label": "سيل الكرك",
+     "gov": "karak",
+     "city": "sayl-al-karak",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "mafraq",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "mafraq",
+     "label": "Mafraq",
+     "gov": "mafraq",
+     "city": "mafraq",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "mafraq",
+     "label": "Mafraq governorate",
+     "gov": "mafraq",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "iskan-al-mafraq",
+     "label": "Iskan al Mafraq",
+     "gov": "mafraq",
+     "city": "mafraq",
+     "hood": "iskan-al-mafraq"
+    }
+   ]
+  },
+  {
+   "q": "tafilah",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "tafilah",
+     "label": "Tafilah",
+     "gov": "tafilah",
+     "city": "tafilah",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "tafilah",
+     "label": "Tafilah governorate",
+     "gov": "tafilah",
+     "city": null,
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "الطفيلة",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "tafilah",
+     "label": "الطفيلة",
+     "gov": "tafilah",
+     "city": "tafilah",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "tafilah",
+     "label": "محافظة الطفيلة",
+     "gov": "tafilah",
+     "city": null,
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "ma'an",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "maan",
+     "label": "Ma’an",
+     "gov": "maan",
+     "city": "maan",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "maan",
+     "label": "Ma’an governorate",
+     "gov": "maan",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "al-maaniyah",
+     "label": "Al Ma’aniyah",
+     "gov": "mafraq",
+     "city": "mafraq",
+     "hood": "al-maaniyah"
+    },
+    {
+     "kind": "city",
+     "id": "amman",
+     "label": "Amman",
+     "gov": "amman",
+     "city": "amman",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "معان",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "maan",
+     "label": "معان",
+     "gov": "maan",
+     "city": "maan",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "maan",
+     "label": "محافظة معان",
+     "gov": "maan",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "al-maaniyah",
+     "label": "المعانية",
+     "gov": "mafraq",
+     "city": "mafraq",
+     "hood": "al-maaniyah"
+    }
+   ]
+  },
+  {
+   "q": "jerash",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "jerash",
+     "label": "Jerash",
+     "gov": "jerash",
+     "city": "jerash",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "jerash",
+     "label": "Jerash governorate",
+     "gov": "jerash",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "jarrish-ad-duraysat",
+     "label": "Jarrish ad Duraysat",
+     "gov": "balqa",
+     "city": "jarrish-ad-duraysat",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "iskan-jarash",
+     "label": "Iskan Jarash",
+     "gov": "jerash",
+     "city": "jerash",
+     "hood": "iskan-jarash"
+    }
+   ]
+  },
+  {
+   "q": "جرش",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "jerash",
+     "label": "جرش",
+     "gov": "jerash",
+     "city": "jerash",
+     "hood": null
+    },
+    {
+     "kind": "gov",
+     "id": "jerash",
+     "label": "محافظة جرش",
+     "gov": "jerash",
+     "city": null,
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "iskan-jarash",
+     "label": "اسكان جرش",
+     "gov": "jerash",
+     "city": "jerash",
+     "hood": "iskan-jarash"
+    }
+   ]
+  },
+  {
+   "q": "irbid governorate",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "gov",
+     "id": "irbid",
+     "label": "Irbid governorate",
+     "gov": "irbid",
+     "city": null,
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "محافظة إربد",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "gov",
+     "id": "irbid",
+     "label": "محافظة إربد",
+     "gov": "irbid",
+     "city": null,
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "khalda",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "khalda",
+     "label": "Khalda",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "khalda"
+    },
+    {
+     "kind": "city",
+     "id": "al-khalidiyah-karak",
+     "label": "Al Khalidiyah",
+     "gov": "karak",
+     "city": "al-khalidiyah-karak",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "ruwaysat-al-khalidi",
+     "label": "Ruwaysat al Khalidi",
+     "gov": "aqaba",
+     "city": "ruwaysat-al-khalidi",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "al-khalidiyah-amman",
+     "label": "Al Khalidiyah",
+     "gov": "amman",
+     "city": "al-khalidiyah-amman",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "al-khalidiyah",
+     "label": "Al Khalidiyah",
+     "gov": "mafraq",
+     "city": "al-khalidiyah",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "خلدا",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "khalda",
+     "label": "خلدا",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "khalda"
+    }
+   ]
+  },
+  {
+   "q": "tlaa al ali",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "tlaalali",
+     "label": "Tla’ Al Ali",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "tlaalali"
+    }
+   ]
+  },
+  {
+   "q": "تلاع العلي",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "tlaalali",
+     "label": "تلاع العلي",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "tlaalali"
+    },
+    {
+     "kind": "hood",
+     "id": "tila-al-ali-ash-sharqi",
+     "label": "تلاع العلي الشرقي",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "tila-al-ali-ash-sharqi"
+    },
+    {
+     "kind": "hood",
+     "id": "tila-al-ali-ash-shamali",
+     "label": "تلاع العلي الشمالي",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "tila-al-ali-ash-shamali"
+    }
+   ]
+  },
+  {
+   "q": "marj al hamam",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "hood",
+     "id": "marj",
+     "label": "Marj Al Hamam",
+     "gov": "amman",
+     "city": "amman",
+     "hood": "marj"
+    }
+   ]
+  },
+  {
+   "q": "sahab",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "sahab",
+     "label": "Sahab",
+     "gov": "amman",
+     "city": "sahab",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "ash-shabab",
+     "label": "Ash Shabab",
+     "gov": "ajloun",
+     "city": "ajloun",
+     "hood": "ash-shabab"
+    },
+    {
+     "kind": "city",
+     "id": "as-sahah",
+     "label": "As Sahah",
+     "gov": "mafraq",
+     "city": "as-sahah",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "ash-shawbak",
+     "label": "Ash Shawbak",
+     "gov": "maan",
+     "city": "ash-shawbak",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "al-shihabiyah",
+     "label": "Al Shihabiyah",
+     "gov": "karak",
+     "city": "al-shihabiyah",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "سحاب",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "sahab",
+     "label": "سحاب",
+     "gov": "amman",
+     "city": "sahab",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "deir alla",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "dayr-alla",
+     "label": "Dayr Alla",
+     "gov": "balqa",
+     "city": "dayr-alla",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "dar-al-basha",
+     "label": "Dar al Basha",
+     "gov": "irbid",
+     "city": "dar-al-basha",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "dayr-al-liyat",
+     "label": "Dayr al Liyat",
+     "gov": "jerash",
+     "city": "dayr-al-liyat",
+     "hood": null
+    },
+    {
+     "kind": "hood",
+     "id": "dayr-al-latin",
+     "label": "Dayr al Latin",
+     "gov": "ajloun",
+     "city": "ajloun",
+     "hood": "dayr-al-latin"
+    }
+   ]
+  },
+  {
+   "q": "fuheis",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "fuheis",
+     "label": "Fuheis",
+     "gov": "balqa",
+     "city": "fuheis",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "الفحيص",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "fuheis",
+     "label": "الفحيص",
+     "gov": "balqa",
+     "city": "fuheis",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "wadi musa",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "wadimusa",
+     "label": "Wadi Musa",
+     "gov": "maan",
+     "city": "wadimusa",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "azraq",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "azraq",
+     "label": "Azraq",
+     "gov": "zarqa",
+     "city": "azraq",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "muthallath-al-azraq",
+     "label": "Muthallath al Azraq",
+     "gov": "zarqa",
+     "city": "muthallath-al-azraq",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "al-azraq-ash-shamali",
+     "label": "Al Azraq ash Shamali",
+     "gov": "zarqa",
+     "city": "al-azraq-ash-shamali",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "الأزرق",
+   "lang": "ar",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "azraq",
+     "label": "الأزرق",
+     "gov": "zarqa",
+     "city": "azraq",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "al-azraq-ash-shamali",
+     "label": "الأزرق الشمالي",
+     "gov": "zarqa",
+     "city": "al-azraq-ash-shamali",
+     "hood": null
+    },
+    {
+     "kind": "city",
+     "id": "muthallath-al-azraq",
+     "label": "مثلث الأزرق",
+     "gov": "zarqa",
+     "city": "muthallath-al-azraq",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "ghor al safi",
+   "lang": "en",
+   "hits": [
+    {
+     "kind": "city",
+     "id": "ghor-as-safi",
+     "label": "Ghor as Safi",
+     "gov": "karak",
+     "city": "ghor-as-safi",
+     "hood": null
+    }
+   ]
+  },
+  {
+   "q": "zz",
+   "lang": "en",
+   "hits": []
+  },
+  {
+   "q": "qq",
+   "lang": "en",
+   "hits": []
+  },
+  {
+   "q": "",
+   "lang": "en",
+   "hits": []
+  }
+ ],
+ "labels": [
+  {
+   "city": "amman",
+   "hood": "abdoun",
+   "lang": "en",
+   "label": "Abdoun · Amman"
+  },
+  {
+   "city": "amman",
+   "hood": "abdoun",
+   "lang": "ar",
+   "label": "عبدون · عمان"
+  },
+  {
+   "city": "ramtha",
+   "hood": null,
+   "lang": "en",
+   "label": "Ramtha"
+  },
+  {
+   "city": "ramtha",
+   "hood": null,
+   "lang": "ar",
+   "label": "الرمثا"
+  },
+  {
+   "city": "irbid",
+   "hood": null,
+   "lang": "en",
+   "label": "Irbid"
+  },
+  {
+   "city": "irbid",
+   "hood": null,
+   "lang": "ar",
+   "label": "إربد"
+  },
+  {
+   "city": null,
+   "hood": null,
+   "lang": "en",
+   "label": ""
+  },
+  {
+   "city": null,
+   "hood": null,
+   "lang": "ar",
+   "label": ""
+  },
+  {
+   "city": "aqaba",
+   "hood": null,
+   "lang": "en",
+   "label": "Aqaba"
+  },
+  {
+   "city": "aqaba",
+   "hood": null,
+   "lang": "ar",
+   "label": "العقبة"
+  }
+ ]
+}

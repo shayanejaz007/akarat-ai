@@ -12,6 +12,7 @@ enum ListingSort { newest, priceAsc, priceDesc }
 class ListingFilters {
   const ListingFilters({
     this.deal,
+    this.governorateId,
     this.cityId,
     this.neighborhoodId,
     this.type,
@@ -26,6 +27,9 @@ class ListingFilters {
   });
 
   final DealType? deal;
+
+  /// A governorate on its own: every town in it (lib/shared/reference/places.dart).
+  final String? governorateId;
   final String? cityId;
   final String? neighborhoodId;
   final String? type;
@@ -44,7 +48,7 @@ class ListingFilters {
   /// How many refinements beyond buy/rent and sort are active, for the badge
   /// on the Filters button.
   int get activeCount => [
-    cityId != null,
+    governorateId != null || cityId != null,
     neighborhoodId != null,
     type != null,
     minBeds != null,
@@ -56,6 +60,7 @@ class ListingFilters {
 
   ListingFilters copyWith({
     DealType? deal,
+    String? governorateId,
     String? cityId,
     String? neighborhoodId,
     String? type,
@@ -79,6 +84,8 @@ class ListingFilters {
     final cityChanged = !clearCity && cityId != null && cityId != this.cityId;
     return ListingFilters(
       deal: clearDeal ? null : (deal ?? this.deal),
+      // A town chosen replaces a governorate on its own; clearing the city clears both.
+      governorateId: clearCity ? governorateId : (governorateId ?? (cityId != null ? null : this.governorateId)),
       cityId: clearCity ? null : (cityId ?? this.cityId),
       // An area belongs to one city; changing the city drops it.
       neighborhoodId: (clearNeighborhood || clearCity || cityChanged)
@@ -100,6 +107,7 @@ class ListingFilters {
   bool operator ==(Object other) =>
       other is ListingFilters &&
       other.deal == deal &&
+      other.governorateId == governorateId &&
       other.cityId == cityId &&
       other.neighborhoodId == neighborhoodId &&
       other.type == type &&
@@ -115,6 +123,7 @@ class ListingFilters {
   @override
   int get hashCode => Object.hash(
     deal,
+    governorateId,
     cityId,
     neighborhoodId,
     type,

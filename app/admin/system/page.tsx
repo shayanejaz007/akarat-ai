@@ -22,6 +22,7 @@ export default function SystemPage() {
   const { api, overview, overviewError, signOut, theme } = useAdmin();
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const [reports, setReports] = useState<State>("unknown");
+  const [places, setPlaces] = useState<State>("unknown");
 
   useEffect(() => {
     api<{ ok: boolean; expiresAt?: number }>("/api/admin/session")
@@ -30,24 +31,28 @@ export default function SystemPage() {
     api<{ notSetUp?: boolean }>("/api/admin/reports?status=open")
       .then(r => setReports(r.notSetUp ? "missing" : "ok"))
       .catch(() => setReports("unknown"));
+    api<{ rows: unknown[] }>("/api/admin/locations?level=gov")
+      .then(r => setPlaces(r.rows.length ? "ok" : "missing"))
+      .catch(e => setPlaces((e as { status?: number }).status === 501 ? "missing" : "unknown"));
   }, [api]);
 
   const known = !!overview;
   const has = (v: unknown): State => (known ? (v ? "ok" : "missing") : "unknown");
-  const measured = overview?.advisor ?? overview?.legal;
+  const measured = overview?.advisor;
   const checks: { name: string; file: string; what: string; state: State }[] = [
     { name: "Analytics and live activity", file: "0018_admin_analytics.sql", what: "Views, sessions and the overview", state: known ? "ok" : overviewError?.status === 501 ? "missing" : "unknown" },
     { name: "Listing reports", file: "0015_listing_reports.sql", what: "“Report this listing” in the app", state: reports },
     { name: "Daily rentals and bookings", file: "0019_daily_rentals.sql", what: "The review queue and booking requests", state: has(overview?.dailyRentals) },
     { name: "Property AI records", file: "0020_ai_advisor.sql", what: "The advisor's use, limits and flags", state: has(overview?.advisor) },
-    { name: "Ask a Lawyer", file: "0021_legal_ai.sql", what: "The legal library, answers and reports", state: has(overview?.legal) },
     { name: "Measured AI cost", file: "0022_ai_cost.sql", what: "What each answer cost, and which model gave it", state: measured ? has(measured.measured) : "unknown" },
+    { name: "Every place in Jordan", file: "0023_locations.sql", what: "12 governorates, their towns and neighbourhoods", state: places },
+    { name: "Services", file: "0024_services.sql", what: "Service categories and requests", state: has(overview?.services) },
   ];
   const left = expiresAt ? Math.max(0, expiresAt - Date.now()) : null;
 
   return (
     <>
-      <PageHeader title="System" subtitle="What is set up, how the assistants are configured, and this session." />
+      <PageHeader title="System" subtitle="What is set up, and this session." />
 
       <div className="adm-grid g-12">
         <Card className="span-7" title="Database features" caption="Each comes from a migration in supabase/migrations, run in Supabase → SQL Editor">
@@ -98,26 +103,14 @@ export default function SystemPage() {
             <p className="adm-cell-sub">Not recording: run <code>0020_ai_advisor.sql</code>.</p>
           )}
         </Card>
-        <Card title="Ask a Lawyer" icon="scale" caption="/api/legal/*">
-          {overview?.legal ? (
-            <KV
-              items={[
-                { k: "Default model", v: <code>{overview.legal.model}</code> },
-                {
-                  k: "Who can ask",
-                  v: overview.legal.access === "public" ? (
-                    <Badge tone="good" dot>Every signed-in account</Badge>
-                  ) : (
-                    <Badge tone="warn" dot>{full(overview.legal.reviewers)} reviewers (LEGAL_REVIEWERS)</Badge>
-                  ),
-                },
-                { k: "Each person", v: `${full(overview.legal.limits.perDay)} questions a day` },
-                { k: "Everyone together", v: `${full(overview.legal.limits.perDayTotal)} questions a day` },
-              ]}
-            />
-          ) : (
-            <p className="adm-cell-sub">Not recording: run <code>0021_legal_ai.sql</code>.</p>
-          )}
+        <Card title="Housekeeping" icon="clock" caption="GET /api/admin/maintenance, daily at 05:30 Amman (vercel.json)">
+          <KV
+            items={[
+              { k: "What it does", v: "Deletes what Ask a Lawyer left behind once it is past the time it was promised to be kept" },
+              { k: "Needs", v: <><code>CRON_SECRET</code> set in Vercel</> },
+            ]}
+          />
+          <p className="adm-hint">Ask a Lawyer has been taken off the site. Conversations it recorded are deleted 90 days after their last message, and uploaded documents 30 days after upload, as people were told.</p>
         </Card>
       </div>
 

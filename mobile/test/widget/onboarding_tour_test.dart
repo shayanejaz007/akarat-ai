@@ -87,12 +87,7 @@ Widget _homeWithTabs({required bool signedIn}) => Consumer(
     final t = ref.watch(tourTargetsProvider);
     return Scaffold(
       body: const HomeScreen(),
-      bottomNavigationBar: AkaratNavBar(
-        index: 0,
-        signedIn: signedIn,
-        onSelect: (_) {},
-        tabKeys: t.navTabs,
-      ),
+      bottomNavigationBar: AkaratNavBar(index: 0, signedIn: signedIn, onSelect: (_) {}, tabKeys: t.navTabs),
     );
   },
 );

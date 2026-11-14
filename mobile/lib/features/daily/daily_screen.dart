@@ -9,13 +9,13 @@ import '../../core/utils/formatters.dart';
 import '../../core/widgets/buttons.dart';
 import '../../core/widgets/layout.dart';
 import '../../core/widgets/listing_image.dart';
+import '../../core/widgets/place_picker.dart';
 import '../../core/widgets/skeleton.dart';
 import '../../core/widgets/state_views.dart';
 import '../../core/widgets/user_text.dart';
 import '../../shared/models/daily_models.dart';
 import '../../shared/models/listing.dart';
-import '../../shared/reference/market_data.dart';
-import '../../shared/widgets/pickers.dart';
+import '../../shared/reference/places_provider.dart';
 import 'daily_providers.dart';
 import 'month_calendar.dart';
 import 'stay_pick.dart';
@@ -57,19 +57,12 @@ class DailyScreen extends ConsumerWidget {
   }
 
   Future<void> _pickCity(BuildContext context, WidgetRef ref) async {
-    final l = context.l10n;
     final f = ref.read(dailyFiltersProvider);
-    final picked = await showChoiceSheet(
-      context: context,
-      title: l.dailyAllCities,
-      options: Market.cities,
-      selected: f.cityId,
-      anyLabel: l.dailyAllCities,
-    );
+    final picked = await showPlacePicker(context, current: f.place, anyLabel: context.l10n.placeAnywhere);
     if (picked == null) return;
     ref
         .read(dailyFiltersProvider.notifier)
-        .set(picked.isEmpty ? f.copyWith(clearCity: true) : f.copyWith(cityId: picked));
+        .set(picked.isEmpty ? f.copyWith(clearPlace: true) : f.copyWith(place: picked));
   }
 
   @override
@@ -84,7 +77,7 @@ class DailyScreen extends ConsumerWidget {
     final chipHeight = (38 * scaler.scale(1)).clamp(40.0, 60.0);
 
     final dates = f.dated ? Fmt.stay(f.checkIn!, f.checkOut!, lang: lang) : l.dailyAnyDates;
-    final city = Market.city(f.cityId)?.label(lang);
+    final city = f.place == null ? null : ref.watch(placesNowProvider).places.selLabel(f.place, lang);
 
     return Scaffold(
       body: RefreshIndicator.adaptive(

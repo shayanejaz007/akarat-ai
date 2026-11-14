@@ -19,9 +19,9 @@ export default function PropertyAiPage() {
   return (
     <>
       <PageHeader
-        eyebrow="AI assistants"
+        eyebrow="AI assistant"
         title="Property AI"
-        subtitle="The conversational property advisor on the website and in the app: how much it is used, what it costs, and what it flagged for a look."
+        subtitle="Use, cost and flagged answers for the property advisor."
       />
       {ai ? (
         <Advisor ai={ai} />

@@ -128,7 +128,13 @@ void main() {
     for (final lang in ['en', 'ar']) {
       testWidgets('data $lang', (t) async {
         final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
-        await render(t, 'home_$lang', withNav(const HomeScreen(), NavTab.home), overrides: await deps.overrides(), lang: lang);
+        await render(
+          t,
+          'home_$lang',
+          withNav(const HomeScreen(), NavTab.home),
+          overrides: await deps.overrides(),
+          lang: lang,
+        );
       });
     }
     testWidgets('scrolled', (t) async {
@@ -220,10 +226,20 @@ void main() {
     });
     testWidgets('loading', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(pending: true));
-      await render(t, 'explore_loading', withNav(const ExploreScreen(), NavTab.explore), overrides: await deps.overrides());
+      await render(
+        t,
+        'explore_loading',
+        withNav(const ExploreScreen(), NavTab.explore),
+        overrides: await deps.overrides(),
+      );
     });
     testWidgets('empty', (t) async {
-      await render(t, 'explore_empty', withNav(const ExploreScreen(), NavTab.explore), overrides: await TestDeps().overrides());
+      await render(
+        t,
+        'explore_empty',
+        withNav(const ExploreScreen(), NavTab.explore),
+        overrides: await TestDeps().overrides(),
+      );
     });
     testWidgets('list view', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
@@ -458,7 +474,12 @@ void main() {
 
   group('saved', () {
     testWidgets('empty guest', (t) async {
-      await render(t, 'saved_empty', withNav(const SavedScreen(), NavTab.saved), overrides: await TestDeps().overrides());
+      await render(
+        t,
+        'saved_empty',
+        withNav(const SavedScreen(), NavTab.saved),
+        overrides: await TestDeps().overrides(),
+      );
     });
     testWidgets('with items', (t) async {
       final deps = TestDeps(listings: FakeListingsRepository(rows: rows));
@@ -543,7 +564,12 @@ void main() {
 
   group('profile', () {
     testWidgets('guest en', (t) async {
-      await render(t, 'profile_guest', withNav(const ProfileScreen(), NavTab.profile), overrides: await TestDeps().overrides());
+      await render(
+        t,
+        'profile_guest',
+        withNav(const ProfileScreen(), NavTab.profile),
+        overrides: await TestDeps().overrides(),
+      );
     });
     testWidgets('signed in ar', (t) async {
       final deps = TestDeps(

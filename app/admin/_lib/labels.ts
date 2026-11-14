@@ -78,27 +78,41 @@ export const ADVISOR_FLAG: Record<string, string> = {
   unbacked_research_claim: "Said it searched when nothing was searched",
 };
 
-export const LEGAL_FLAG: Record<string, string> = {
-  prompt_leak: "Answer withdrawn: recited its instructions",
-  refusal: "Request declined by the model",
-  unverified_reference: "Answer named a reference no source supported",
-  library_unavailable: "Legal library could not be searched",
-  bad_tool_input: "Tool input refused",
-  unknown_tool: "Unknown tool called",
-  tool_failed: "A tool failed",
-  answer_retry: "Answer asked for again (none was visible)",
-  unbacked_research_claim: "Said it searched when nothing was searched",
+/* Service requests (0024_services.sql). The customer sees the same
+   statuses in their own words on the website and in the app. */
+export const SERVICE_STATUS: Record<string, Labelled> = {
+  pending: { label: "New", tone: "warn" },
+  under_review: { label: "Under review", tone: "info" },
+  accepted: { label: "Accepted", tone: "info" },
+  in_progress: { label: "In progress", tone: "gold" },
+  completed: { label: "Completed", tone: "good" },
+  rejected: { label: "Rejected", tone: "bad" },
+  cancelled: { label: "Cancelled by the customer", tone: "neutral" },
 };
 
-export const FEEDBACK: Record<string, Labelled> = {
-  good: { label: "Helpful", tone: "good" },
-  wrong_law: { label: "Wrong law", tone: "bad" },
-  wrong_citation: { label: "Wrong article or citation", tone: "bad" },
-  outdated: { label: "Out of date", tone: "warn" },
-  fabricated: { label: "Cites something that doesn't exist", tone: "bad" },
-  missing: { label: "Missed something important", tone: "warn" },
-  unclear: { label: "Unclear", tone: "warn" },
-  other: { label: "Something else", tone: "neutral" },
+/** Where a request can go next from each status. Completed, rejected and
+ *  cancelled are final; a mistake is fixed by reopening (back to review). */
+export const SERVICE_NEXT: Record<string, string[]> = {
+  pending: ["under_review", "accepted", "rejected"],
+  under_review: ["accepted", "rejected", "pending"],
+  accepted: ["in_progress", "rejected", "under_review"],
+  in_progress: ["completed", "accepted"],
+  completed: ["in_progress"],
+  rejected: ["under_review"],
+  cancelled: [],
+};
+
+export const URGENCY: Record<string, Labelled> = {
+  normal: { label: "Normal", tone: "neutral" },
+  urgent: { label: "Urgent", tone: "warn" },
+  emergency: { label: "Emergency", tone: "bad" },
+};
+
+export const TIME_WINDOW: Record<string, string> = {
+  morning: "Morning (8–12)",
+  afternoon: "Afternoon (12–5)",
+  evening: "Evening (5–9)",
+  any: "Any time",
 };
 
 export const labelOf = (map: Record<string, Labelled>, key: string): Labelled =>

@@ -4,6 +4,8 @@
 /// here is always a valid foreign key on `properties`.
 library;
 
+import 'places.dart';
+
 part 'market_data.g.dart';
 
 /// Something with an English and an Arabic name.
@@ -106,12 +108,15 @@ class Market {
       cityId == null ? const [] : neighborhoods.where((n) => n.city == cityId).toList();
 
   /// "Abdoun · Amman", or just the city, or empty when neither is known.
+  /// A listing in any of Jordan's towns (data/locations.js) is named too.
   static String placeLabel(String? cityId, String? hoodId, String lang) {
     final parts = <String>[
       if (neighborhood(hoodId) case final n?) n.label(lang),
       if (city(cityId) case final c?) c.label(lang),
     ];
-    return parts.join(' · ');
+    if (parts.isNotEmpty && (hoodId == null || neighborhood(hoodId) != null)) return parts.join(' · ');
+    final full = Places.bundled.placeLabel(cityId, hoodId, lang);
+    return full.isNotEmpty ? full : parts.join(' · ');
   }
 
   static T? _find<T extends Bilingual>(List<T> list, String? id) {

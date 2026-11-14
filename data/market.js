@@ -64,7 +64,7 @@ export const NEIGHBORHOODS = [
   { id: 'naour',       city: 'amman', en: 'Naour',             ar: 'ناعور',            lat: 31.869, lng: 35.822, alt: ['naor', 'na our'] },
   { id: 'marka',       city: 'amman', en: 'Marka',             ar: 'ماركا',            lat: 31.972, lng: 35.981, alt: ['marqa'] },
   { id: 'hashmi',      city: 'amman', en: 'Al Hashmi',         ar: 'الهاشمي',          lat: 31.968, lng: 35.945, alt: ['hashmi shamali', 'al hashimi'] },
-  { id: 'nazzal',      city: 'amman', en: 'Al Nazzal',         ar: 'النزهة',           lat: 31.930, lng: 35.925, alt: ['nazzal'] },
+  { id: 'nazzal',      city: 'amman', en: 'Al Nazzal',         ar: 'النزال',         lat: 31.930, lng: 35.925, alt: ['nazzal'] },
   { id: 'downtown',    city: 'amman', en: 'Downtown',          ar: 'وسط البلد',        lat: 31.951, lng: 35.935, alt: ['al balad', 'balad', 'city centre', 'city center'] },
   { id: 'jandaweel',   city: 'amman', en: 'Jandaweel',         ar: 'الجندويل',         lat: 31.941, lng: 35.849, alt: ['jandweel', 'jandawil'] },
   { id: 'khreibetsouq',city: 'amman', en: 'Khreibet Al Souq',  ar: 'خريبة السوق',      lat: 31.878, lng: 35.928, alt: ['khraibet al souq'] },

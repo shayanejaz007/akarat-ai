@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getListing, type Listing } from "../../../../lib/listing-server";
-import { CITIES, NEIGHBORHOODS, TYPES, AMENITIES } from "../../../../lib/reference";
+import { ALL_CITIES as CITIES, ALL_NEIGHBORHOODS as NEIGHBORHOODS, TYPES, AMENITIES } from "../../../../lib/reference";
 
 /**
  * Server-rendered listing page.

@@ -96,7 +96,7 @@ export default function DailyRentalsPage() {
     <>
       <PageHeader
         title="Daily rentals"
-        subtitle="A daily rental stays hidden until it is approved here. Approving makes it public everywhere with the verified badge, and the owner is told about every decision."
+        subtitle="Daily rentals stay hidden until approved here. The owner is told about every decision."
       />
 
       <Chips

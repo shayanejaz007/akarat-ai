@@ -52,8 +52,11 @@ Findings and what was done; the remaining items are at the end.
   reader. Injected text in listings, web pages and documents stays data:
   covered by the advisor's end-to-end run (an injected listing description
   never reaches the page) and the legal document tests.
-- **Browser.** `Permissions-Policy` allows the microphone for this site only
-  (voice dictation) and nothing else; geolocation and camera stay off.
+- **Browser.** `Permissions-Policy` allows the microphone (the voice
+  conversation and dictation) and geolocation (the "My location" buttons on
+  maps) for this site only; the camera stays off. A position is read only on
+  a press and is not stored or sent. Speech is recognised and read aloud by
+  the browser's or phone's own services; no audio reaches our server.
 
 **Still open.** Neither assistant has been run against the live model in
 this audit: there was no API key here. `scripts/model-benchmark.mts` and
@@ -219,7 +222,38 @@ against a stand-in API. `scripts/advisor-live-check.mts` runs the attacks
 against the real model: prompt extraction, owners' phone numbers, a role
 override, internal addresses, an invented listing URL and a forged history.
 
-## Ask a Lawyer
+## Services (13 November 2026)
+
+`supabase/migrations/0024_services.sql`, `app/api/admin/services`,
+`app/api/admin/service-categories`, `app/api/admin/locations`.
+
+- `service_requests` and `service_request_events` have row level security
+  on and **no policies**, and no grants to `anon` or `authenticated`: nothing
+  reaches them through the API. A customer only creates, lists and cancels
+  their own requests through `security definer` functions that read
+  `auth.uid()`; internal notes and the assignee never leave the panel.
+- `create_service_request()` validates every field again (the forms are a
+  courtesy), allows 10 requests an account a day, takes only photo paths in
+  the caller's own folder that exist in the bucket, and is idempotent on
+  `(user_id, client_token)`.
+- The `service-photos` bucket is private; the storage policies allow each
+  account to upload, read and delete only under its own id. Admins see photos
+  through signed links that expire in an hour.
+- The admin routes sit behind the panel session (`requireAdmin`) and use the
+  service role on the server only; `admin_service_update()` and
+  `admin_services_overview()` are granted to `service_role` alone.
+- Tested on a real Postgres (PGlite) in `tests/services/sql.test.mts`: one
+  customer can't read, cancel or attach another's request or photos, a
+  retry is not a duplicate, the rate limit holds, and the customer's view
+  never contains internal notes.
+
+## Ask a Lawyer (removed 13 November 2026)
+
+The feature has been removed from the website, the apps and the admin panel.
+What follows describes it as it was. Its stored data is still deleted on the
+schedule people were promised (`lib/legal-retention.ts`, DEPLOY.md, "Ask a
+Lawyer (removed)").
+
 
 Added 30 October 2026. `app/api/legal/*`, `lib/legal/`, `0021_legal_ai.sql`.
 People bring this feature their disputes, contracts and identity documents,

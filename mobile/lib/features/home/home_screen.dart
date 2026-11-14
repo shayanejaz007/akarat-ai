@@ -22,8 +22,8 @@ import '../../shared/services/supabase_providers.dart';
 import '../../shared/widgets/pickers.dart';
 import '../../shared/widgets/property_card.dart';
 import '../ai_search/presentation/ai_search_screen.dart' show AiMark;
-import '../lawyer/lawyer_view.dart' show LawMark;
 import '../property_details/property_details_screen.dart';
+import '../services/services_ui.dart' show ServiceIconTile;
 import '../tour/tour.dart';
 import '../tour/tour_store.dart';
 import 'home_providers.dart';
@@ -710,15 +710,14 @@ class _CityStrip extends StatelessWidget {
   }
 }
 
-/// The two assistants, side by side: Property AI and Ask a Lawyer, each a
-/// tap from Home.
+/// Property AI and Services, side by side, each a tap from Home.
 class _AskAi extends StatelessWidget {
   const _AskAi();
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    String link(String mode) => '${Routes.aiSearch}?mode=$mode&t=${DateTime.now().millisecondsSinceEpoch}';
+    String link() => '${Routes.aiSearch}?t=${DateTime.now().millisecondsSinceEpoch}';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
       child: IntrinsicHeight(
@@ -730,16 +729,16 @@ class _AskAi extends StatelessWidget {
                 mark: const AiMark(size: 36),
                 title: l.aiHubAdvisor,
                 body: l.homeAdvisorBody,
-                onTap: () => context.go(link('advisor')),
+                onTap: () => context.go(link()),
               ),
             ),
             const SizedBox(width: Space.sm),
             Expanded(
               child: _AskAiCard(
-                mark: const LawMark(size: 36),
-                title: l.aiHubLawyer,
-                body: l.homeLawyerBody,
-                onTap: () => context.go(link('lawyer')),
+                mark: const ServiceIconTile(icon: 'maintenance', size: 36),
+                title: l.homeServicesTitle,
+                body: l.homeServicesBody,
+                onTap: () => unawaited(context.push(Routes.services)),
               ),
             ),
           ],

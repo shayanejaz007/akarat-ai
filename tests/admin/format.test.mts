@@ -9,7 +9,6 @@ import {
   initials,
   jod,
   pct,
-  plainAnswer,
   plural,
   tick,
   titleOf,
@@ -115,9 +114,4 @@ test("humanize stored values", () => {
   assert.equal(humanize("apartment"), "Apartment");
   assert.equal(humanize("office_space"), "Office space");
   assert.equal(humanize(null), "—");
-});
-
-test("Ask a Lawyer's citation markers become [1,2] in plain text", () => {
-  assert.equal(plainAnswer("The rent law 1,2 says so."), "The rent law [1,2] says so.");
-  assert.equal(plainAnswer("Stray marker"), "Stray marker");
 });

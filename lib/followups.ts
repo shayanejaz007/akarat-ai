@@ -28,7 +28,6 @@ const SCHEMA = {
 
 const SCOPE = {
   property: "finding, comparing, renting, buying or investing in property in Jordan",
-  legal: "the person's legal question under Jordanian law",
 };
 
 const clean = (v: unknown) =>
@@ -40,7 +39,7 @@ export type Followups = { items: string[]; usage: UsageLike; model: string };
 
 export async function suggestFollowups(
   client: Anthropic,
-  o: { domain: "property" | "legal"; lang: "en" | "ar"; question: string; answer: string; timeoutMs?: number; model?: string }
+  o: { domain: "property"; lang: "en" | "ar"; question: string; answer: string; timeoutMs?: number; model?: string }
 ): Promise<Followups> {
   const model = o.model ?? FOLLOWUP_MODEL;
   const usage: UsageLike = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, searches: 0 };

@@ -7,12 +7,12 @@ import { PageLoading } from "./_components/AdminApp";
 import { BarList, ColumnChart, LineChart, Sparkline, StackedBar, type BarRow, type Segment } from "./_components/charts";
 import { useAdmin } from "./_components/context";
 import { Icon, type IconName } from "./_components/icons";
-import { Badge, ButtonLink, Card, Empty, Figure, LoadError, PageHeader, Segmented, StatTile, StatusBadge, cx } from "./_components/ui";
+import { ButtonLink, Card, Empty, Figure, LoadError, PageHeader, Segmented, StatTile, StatusBadge, cx } from "./_components/ui";
 import { useStored } from "./_lib/api";
-import { compact, full, plural, titleOf, usd } from "./_lib/format";
-import { LISTING_STATUS, labelOf, type Tone } from "./_lib/labels";
+import { ago, compact, full, plural, titleOf, usd } from "./_lib/format";
+import { LISTING_STATUS, SERVICE_STATUS, labelOf, type Tone } from "./_lib/labels";
 import { change, column, foldTail, lastN, trend } from "./_lib/stats";
-import type { AssistantUse, Day, Overview, Ranked } from "./_lib/types";
+import type { AssistantUse, Day, Overview, Ranked, ServicesOverview } from "./_lib/types";
 
 const RANGES = ["7", "14", "30"] as const;
 type Range = (typeof RANGES)[number];
@@ -150,22 +150,17 @@ function Dashboard({ o, range, setRange }: { o: Overview; range: Range; setRange
         </Card>
       </div>
 
-      <SectionBar title="AI assistants" caption="Today and the last 30 days" />
-      <div className="adm-grid g-2">
+      <SectionBar title="Services" caption="Requests for plumbing, repairs, cleaning and the rest" />
+      <ServicesCards s={o.services} />
+
+      <SectionBar title="AI assistant" caption="Today and the last 30 days" />
+      <div className="adm-grid g-1">
         <AssistantCard
           title="Property AI"
           icon="sparkles"
           href="/admin/property-ai"
           use={o.advisor}
           setup={<>Run <code>supabase/migrations/0020_ai_advisor.sql</code> to record the advisor&apos;s use.</>}
-        />
-        <AssistantCard
-          title="Ask a Lawyer"
-          icon="scale"
-          href="/admin/ask-a-lawyer"
-          use={o.legal}
-          badge={o.legal ? (o.legal.access === "public" ? <Badge tone="good" dot>Open to everyone</Badge> : <Badge tone="warn" dot>Reviewers only</Badge>) : null}
-          setup={<>Run <code>supabase/migrations/0021_legal_ai.sql</code> to record Ask a Lawyer&apos;s use.</>}
         />
       </div>
     </>
@@ -208,7 +203,8 @@ function LiveHero({ o }: { o: Overview }) {
           <div className="adm-hero-figures">
             <Figure label="Listing views" value={compact(o.views.today)} />
             <Figure label="Inquiries" value={compact(o.inquiries.today)} />
-            <Figure label="AI questions" value={compact((o.advisor?.today.turns ?? 0) + (o.legal?.today.turns ?? 0))} />
+            <Figure label="Service requests" value={compact(o.services?.today ?? 0)} />
+            <Figure label="AI questions" value={compact(o.advisor?.today.turns ?? 0)} />
           </div>
         </div>
       </div>
@@ -233,15 +229,16 @@ function LiveHero({ o }: { o: Overview }) {
 type Todo = { key: string; n: number; label: string; href: string; tone: Tone; icon: IconName };
 
 function Attention({ o }: { o: Overview }) {
-  const flagged = [...(o.advisor?.flags ?? []), ...(o.legal?.flags ?? [])].reduce((a, f) => a + f.count, 0);
+  const flagged = (o.advisor?.flags ?? []).reduce((a, f) => a + f.count, 0);
   const todos = (
     [
       { key: "reports", n: o.openReports, label: "Reported listings to decide on", href: "/admin/reports", tone: "bad", icon: "flag" },
       { key: "daily", n: o.dailyRentals?.review.pending ?? 0, label: "Daily rentals waiting for review", href: "/admin/daily-rentals", tone: "warn", icon: "bed" },
       { key: "changed", n: o.dailyRentals?.review.changed ?? 0, label: "Approved rentals edited since", href: "/admin/daily-rentals?review=changed", tone: "warn", icon: "bed" },
       { key: "pending", n: o.listings.byStatus.pending ?? 0, label: "Listings pending review", href: "/admin/listings?status=pending", tone: "warn", icon: "building" },
-      { key: "stale", n: o.legal?.library.stale ?? 0, label: "Legal sources due for re-checking", href: "/admin/ask-a-lawyer", tone: "warn", icon: "scale" },
-      { key: "flags", n: flagged, label: "AI answers flagged this week", href: o.advisor?.flags.length ? "/admin/property-ai" : "/admin/ask-a-lawyer", tone: "info", icon: "sparkles" },
+      { key: "urgent", n: o.services?.urgentOpen ?? 0, label: "Urgent service requests still open", href: "/admin/services?status=open&urgency=high", tone: "bad", icon: "wrench" },
+      { key: "services", n: o.services?.byStatus.pending ?? 0, label: "New service requests to look at", href: "/admin/services?status=pending", tone: "warn", icon: "wrench" },
+      { key: "flags", n: flagged, label: "AI answers flagged this week", href: "/admin/property-ai", tone: "info", icon: "sparkles" },
       { key: "inquiries", n: o.inquiries.new, label: "Inquiries still marked new", href: "/admin/inquiries?status=new", tone: "info", icon: "inbox" },
     ] satisfies Todo[]
   ).filter(t => t.n > 0);
@@ -350,6 +347,57 @@ const ranked = (rows: Ranked[]): BarRow[] =>
     href: `/admin/listings?q=${r.id}`,
     extra: r.status !== "active" ? <StatusBadge map={LISTING_STATUS} value={r.status} /> : undefined,
   }));
+
+function ServicesCards({ s }: { s: ServicesOverview | null }) {
+  if (!s) {
+    return (
+      <div className="adm-grid g-1">
+        <Card title="Service requests" icon="wrench">
+          <Empty small icon="wrench" title="Not set up yet" body={<>Run <code>supabase/migrations/0023_locations.sql</code>, then <code>0024_services.sql</code>, to take service requests.</>} />
+        </Card>
+      </div>
+    );
+  }
+  const open = s.byStatus.pending + s.byStatus.under_review + s.byStatus.accepted + s.byStatus.in_progress;
+  // Three hues and the muted grey, in the panel's fixed order: never a
+  // generated fourth colour, so similar statuses share one.
+  const statuses: Segment[] = [
+    { key: "completed", label: SERVICE_STATUS.completed.label, n: s.byStatus.completed, color: "var(--c1)" },
+    { key: "working", label: "Accepted or in progress", n: s.byStatus.accepted + s.byStatus.in_progress, color: "var(--c2)" },
+    { key: "waiting", label: "New or under review", n: s.byStatus.pending + s.byStatus.under_review, color: "var(--c3)" },
+    { key: "closed", label: "Rejected or cancelled", n: s.byStatus.rejected + s.byStatus.cancelled, color: "var(--c-muted)" },
+  ];
+  return (
+    <div className="adm-grid g-2">
+      <Card
+        title="Service requests"
+        icon="wrench"
+        caption={`${full(s.total)} in all · ${full(s.week)} this week`}
+        actions={<ButtonLink href="/admin/services?status=open" size="sm" variant="ghost" iconEnd="arrowRight">Open queue</ButtonLink>}
+      >
+        <div className="adm-figures">
+          <Figure label="Open" value={compact(open)} sub={`${full(s.byStatus.pending)} new`} />
+          <Figure label="Urgent, open" value={compact(s.urgentOpen)} sub="urgent or emergency" />
+          <Figure label="Oldest new one" value={s.oldestPending ? ago(s.oldestPending) : "—"} sub={s.oldestPending ? "still waiting" : "none waiting"} />
+        </div>
+        <div className="adm-sub-title">Every request by status</div>
+        <StackedBar segments={statuses} label="Service requests by status" />
+        <div className="adm-sub-title">Requests per day</div>
+        <ColumnChart data={s.daily} field="requests" name="Requests" label="Service requests per day" height={150} />
+      </Card>
+      <Card
+        title="Asked for most"
+        caption={`The last 30 days · ${full(s.categories)} categories on offer`}
+        actions={<ButtonLink href="/admin/service-categories" size="sm" variant="ghost" iconEnd="arrowRight">Categories</ButtonLink>}
+      >
+        <BarList
+          rows={s.byCategory.slice(0, 10).map(c => ({ key: c.id, label: c.en, n: c.n, href: `/admin/services?category=${c.id}` }))}
+          empty="No service requests in the last 30 days."
+        />
+      </Card>
+    </div>
+  );
+}
 
 function AssistantCard({ title, icon, href, use, setup, badge }: {
   title: string; icon: IconName; href: string; use: AssistantUse | null; setup: ReactNode; badge?: ReactNode;

@@ -15,12 +15,20 @@ class AdvisorApi {
   AdvisorApi(this._dio);
   final Dio _dio;
 
-  Stream<StreamEvent> ask({required String message, required String lang, String? transcript, CancelToken? cancel}) =>
-      postNdjson(_dio, '/api/ai/advisor', {
-        'message': message,
-        'lang': lang,
-        'transcript': ?transcript,
-      }, cancel: cancel);
+  /// With [voice] the message was spoken and the answer will be read aloud:
+  /// the advisor answers in a few short sentences, in the language spoken.
+  Stream<StreamEvent> ask({
+    required String message,
+    required String lang,
+    String? transcript,
+    bool voice = false,
+    CancelToken? cancel,
+  }) => postNdjson(_dio, '/api/ai/advisor', {
+    'message': message,
+    'lang': lang,
+    'transcript': ?transcript,
+    if (voice) 'voice': true,
+  }, cancel: cancel);
 }
 
 final advisorApiProvider = Provider<AdvisorApi>((ref) => AdvisorApi(ref.watch(apiClientProvider)));
@@ -44,9 +52,11 @@ class AdvisorController extends Notifier<AdvisorState> {
 
   void _touch() => state = state.copyWith();
 
-  Future<void> send(String text, {required String lang}) async {
+  /// Sends a message and resolves to the advisor's turn once it has ended
+  /// (answered, failed or stopped), or null when nothing was sent.
+  Future<AdvisorTurn?> send(String text, {required String lang, bool voice = false}) async {
     final message = text.trim();
-    if (message.isEmpty || state.busy) return;
+    if (message.isEmpty || state.busy) return null;
     final reply = AdvisorTurn.assistant();
     state = state.copyWith(turns: [...state.turns, AdvisorTurn.user(message), reply]);
     if (message.length > maxChars) {
@@ -54,12 +64,12 @@ class AdvisorController extends Notifier<AdvisorState> {
         ..status = TurnStatus.error
         ..error = 'too_long';
       _touch();
-      return;
+      return reply;
     }
     final cancel = _cancel = CancelToken();
     final events = ref
         .read(advisorApiProvider)
-        .ask(message: message, lang: lang, transcript: state.transcript, cancel: cancel);
+        .ask(message: message, lang: lang, transcript: state.transcript, voice: voice, cancel: cancel);
     try {
       await for (final e in events) {
         if (cancel.isCancelled) break;
@@ -74,6 +84,7 @@ class AdvisorController extends Notifier<AdvisorState> {
       }
       _touch();
     }
+    return reply;
   }
 
   void _apply(AdvisorTurn reply, StreamEvent e) {

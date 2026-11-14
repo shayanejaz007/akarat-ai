@@ -5,6 +5,25 @@ import type { ReactNode } from "react";
    control or text next to an icon says what it is. */
 
 const PATHS = {
+  plus: <path d="M12 5v14M5 12h14" />,
+  wrench: (
+    <>
+      <path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6a4 4 0 0 1-2.2-2.2Z" />
+      <path d="M14.7 6.3 17 4a4 4 0 0 1 3 3l-2.3 2.3" />
+    </>
+  ),
+  tag: (
+    <>
+      <path d="M3 11.6V4.5A1.5 1.5 0 0 1 4.5 3h7.1a1.5 1.5 0 0 1 1.06.44l7.9 7.9a1.5 1.5 0 0 1 0 2.12l-7.1 7.1a1.5 1.5 0 0 1-2.12 0l-7.9-7.9A1.5 1.5 0 0 1 3 11.6Z" />
+      <circle cx="8" cy="8" r="1.6" />
+    </>
+  ),
+  map: (
+    <>
+      <path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4Z" />
+      <path d="M9 4v14M15 6v14" />
+    </>
+  ),
   dashboard: (
     <>
       <rect x="3" y="3" width="7.5" height="9" rx="1.8" />

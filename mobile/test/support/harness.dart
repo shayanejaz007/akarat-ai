@@ -3,6 +3,7 @@ import 'package:akarat/app/theme/app_theme.dart';
 import 'package:akarat/core/widgets/map_layer.dart';
 import 'package:akarat/core/widgets/maps.dart';
 import 'package:akarat/features/ai_search/data/search_repository.dart';
+import 'package:akarat/features/ai_search/voice/speaker.dart';
 import 'package:akarat/features/ai_search/voice/speech_service.dart';
 import 'package:akarat/features/authentication/auth_service.dart';
 import 'package:akarat/shared/repositories/account_repositories.dart';
@@ -40,6 +41,7 @@ class TestDeps {
     FakeActivity? activity,
     FakeDailyRepository? daily,
     this.speech,
+    this.speaker,
   }) : daily = daily ?? FakeDailyRepository(),
        translation = translation ?? FakeTranslationRepository(),
        activity = activity ?? FakeActivity(),
@@ -61,6 +63,7 @@ class TestDeps {
   final FakeActivity activity;
   final FakeDailyRepository daily;
   final FakeSpeechService? speech;
+  final FakeSpeaker? speaker;
 
   static final client = SupabaseClient(
     'https://supabase.invalid',
@@ -110,6 +113,7 @@ class TestDeps {
       dailyRepositoryProvider.overrideWithValue(daily),
       if (search != null) searchRepositoryProvider.overrideWithValue(search!),
       speechServiceProvider.overrideWithValue(speech ?? FakeSpeechService()),
+      speakerProvider.overrideWithValue(speaker ?? FakeSpeaker()),
       // No tile requests in tests: maps draw their pins on a plain ground.
       // No network maps in tests, except a fake Google map when asked for.
       mapTilesProvider.overrideWithValue(googleMaps),

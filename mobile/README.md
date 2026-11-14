@@ -19,18 +19,21 @@ of accounts, one set of listings, one set of inquiries.
 
 Home with real recent (and, when an admin flags them, featured) listings ·
 Explore with server-side filters, sort and infinite scroll · the AI tab,
-with the website's two Claude assistants: **Property AI** (the advisor at
+with the website's Claude assistant, **Property AI** (the advisor at
 `/api/ai/advisor`: listing cards, comparisons, cited sources, follow-ups,
-removable search criteria, dictation) and **Ask a Lawyer** (`/api/legal/*`:
-document upload, history, cited and checked sources, unverified-reference
-marks, urgent notices, reports, research summary), plus the plain listings
+removable search criteria, and a voice conversation: speak, hear the answer
+read aloud, speak again), plus the plain listings
 search in English or Jordanian Arabic, using the website's own parser and
 ranker, the Vercel search route and the market index, with match
 explanations and honest portal links · listing details with gallery, video, privacy-respecting
 location, call / WhatsApp / in-app inquiry · saved properties and saved
 searches · email and Google sign-in, password reset · a 9-step listing flow
-with photo/video upload, map pin and drafts · owner dashboard and inquiries ·
-English and Arabic with full RTL · light and dark.
+with photo/video upload, a satellite map pin and drafts · owner dashboard
+and inquiries · Services (from Home and Profile): plumbing, AC, cleaning and
+the rest, a request with place, date, urgency and photos, and My service
+requests with each one's status and the team's notes · every governorate,
+town and neighbourhood in Jordan, searchable in either language, in every
+place picker and filter · English and Arabic with full RTL · light and dark.
 
 ## Setup
 
@@ -96,6 +99,7 @@ flutter test
 ```bash
 node tool/gen_reference.mjs          # data/market.js → lib/shared/reference/market_data.g.dart
 node tool/gen_parity_fixtures.mjs    # website JS → test/fixtures/*.json
+node tool/gen_places.mjs             # data/locations.js → places_data.g.dart + test/fixtures/places_parity.json
 python tool/gen_native_assets.py     # brand mark → launcher icons
 flutter test test/visual/launch_logo_test.dart --run-skipped && python tool/make_launch_images.py
                                      # the opening's logo → launch screen images

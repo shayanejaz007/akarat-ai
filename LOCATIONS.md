@@ -255,3 +255,54 @@ console. A key that looks wrong immediately after editing may just be early.
 
 Only the listing form loads Google at all. A visitor who never sells is never
 a cost.
+
+## The place list
+
+Every picker and filter (the listing form, Buy, Rent, Daily rentals, a
+service request, Explore and the wizard in the apps) offers the same places:
+the 12 governorates, then 1,182 cities, towns and villages, then 452
+neighbourhoods. Typing any level finds it in Arabic or English, with the
+usual spellings ("Sweifieh", "Swaifieh"; "الزرقاء", "الزرقا"), and choosing a
+neighbourhood fills in its town and governorate.
+
+- **Source.** The hand-checked places in `data/market.js` (the 22 cities and
+  52 neighbourhoods the AI search reads), plus GeoNames' Jordan gazetteer
+  (geonames.org, licensed CC BY 4.0: the credit is in the generated files and
+  on the panel's Locations page). Nothing was invented: a place is in the
+  list because GeoNames or the hand-checked set has it, with its own
+  coordinates. Same-named villages are told apart by the town nearest them.
+- **Files.** `data/locations.js` (built by `scripts/build-locations.mjs`,
+  with hand corrections in `data/locations-fixes.js`), the search in
+  `lib/places.js`, `supabase/migrations/0023_locations.sql` (made by
+  `scripts/gen-locations-db.mjs`), and the apps' copy
+  `mobile/lib/shared/reference/places_data.g.dart` (made by
+  `mobile/tool/gen_places.mjs`, which also writes the fixture that holds the
+  apps' search to the website's answers).
+- **Rebuilding.** Download `JO.zip` from download.geonames.org/export/dump and
+  `alternateNamesV2` for Jordan, then:
+
+  ```
+  node scripts/build-locations.mjs --main <JO.txt> --alt <alternate names for JO>
+  node scripts/gen-locations-db.mjs        # writes 0023_locations.sql
+  node scripts/gen-reference.mjs           # the server's typed copy
+  cd mobile && node tool/gen_places.mjs    # the apps' copy and the parity fixture
+  ```
+
+  and run 0023 again. A place an admin changed in the panel (`edited`) is
+  left exactly as they left it.
+- **Ids never change.** Listings and requests store a city id and a
+  neighbourhood id. A wrong place is switched off, never deleted, so what
+  already points at it still reads.
+
+## The map: satellite by default
+
+The pin pickers (a listing's location, a service request's) open on
+satellite imagery with street names over it, where a building is easiest to
+find, and switch to the street map with the Satellite/Map button. The choice
+is remembered on that device. Choosing a place moves the map there until a
+pin is dropped; a dropped pin shows its coordinates and, in words, the
+street address when the Geocoding API is enabled on the browser key (step 3:
+optional; it is billed per pin dropped, not while dragging) or otherwise the
+nearest known area. Without a Maps key the website keeps the place pickers
+and hides the map; the apps fall back to their key-free map, which has no
+satellite layer.

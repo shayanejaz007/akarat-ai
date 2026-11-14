@@ -65,3 +65,15 @@ test("the per-request context is small and dated in Amman", () => {
   assert.match(c, /Arabic/);
   assert.equal(ammanDate(new Date("2026-10-28T22:30:00Z")), "2026-10-29");
 });
+
+test("a voice turn asks for a short spoken reply in the speaker's language", () => {
+  const typed = turnContext({ today: "2026-10-29", uiLang: "en", signedIn: false });
+  const spoken = turnContext({ today: "2026-10-29", uiLang: "en", signedIn: false, voice: true });
+  assert.ok(!/read aloud/.test(typed));
+  assert.ok(spoken.startsWith(typed));
+  assert.match(spoken, /read aloud/);
+  assert.match(spoken, /Jordanian Arabic for Arabic, English for English/);
+  assert.match(spoken, /no lists, tables/);
+  // Nothing in it is secret, and it must not trip the leak screen if echoed.
+  assert.ok(!spoken.includes(CANARY));
+});

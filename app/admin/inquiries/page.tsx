@@ -51,7 +51,7 @@ export default function InquiriesPage() {
 
   return (
     <>
-      <PageHeader title="Inquiries" subtitle="Every message sent to a listing's owner from the website or the app, newest first." />
+      <PageHeader title="Inquiries" subtitle="Messages sent to owners, newest first." />
 
       <Chips
         label="Status"
@@ -149,12 +149,12 @@ export default function InquiriesPage() {
               <KV
                 items={[
                   { k: "Name", v: <>{open.name} {open.sender_id ? <Badge tone="info">Signed in</Badge> : <Badge>Guest</Badge>}</> },
-                  { k: "Email", v: open.email ? <a href={`mailto:${open.email}`}>{open.email}</a> : "—" },
+                  { k: "Email", v: open.email ? <a href={`mailto:${encodeURIComponent(open.email)}`}>{open.email}</a> : "—" },
                   { k: "Phone", v: open.phone ? <span dir="ltr">{open.phone}</span> : "—" },
                 ]}
               />
               <div className="adm-actions">
-                {open.email && <ButtonLink href={`mailto:${open.email}`} external icon="mail" size="sm">Email</ButtonLink>}
+                {open.email && <ButtonLink href={`mailto:${encodeURIComponent(open.email)}`} external icon="mail" size="sm">Email</ButtonLink>}
                 {open.phone && <ButtonLink href={`tel:${open.phone}`} external icon="phone" size="sm">Call</ButtonLink>}
                 {open.phone && <ButtonLink href={whatsapp(open.phone)} external icon="message" size="sm">WhatsApp</ButtonLink>}
               </div>

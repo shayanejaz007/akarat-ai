@@ -9,12 +9,12 @@
     "build": "next build",
     "start": "next start",
     "gen:locations": "node scripts/gen-locations-sql.mjs",
+    "gen:places": "node scripts/gen-locations-db.mjs",
     "backfill:translations": "node scripts/backfill-translations.mts",
     "test:admin": "node --test \"tests/admin/*.test.mts\"",
+    "test:places": "node --test \"tests/places/*.test.mts\"",
+    "test:services": "node --test \"tests/services/*.test.mts\"",
     "test:advisor": "node --test \"tests/advisor/*.test.mts\"",
-    "test:legal": "node --test \"tests/legal/*.test.mts\"",
-    "legal:ingest": "node scripts/legal-ingest.mts",
-    "legal:eval": "node scripts/legal-eval.mts",
     "model:benchmark": "node scripts/model-benchmark.mts"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.12",
     "@types/node": "^20.14.10",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

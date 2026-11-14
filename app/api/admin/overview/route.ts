@@ -1,8 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { fail, requireAdmin } from "@/lib/admin";
 import { LIMITS, MODEL, estimateCostUsd } from "@/lib/advisor/config";
-import { ACCESS, LIMITS as LEGAL_LIMITS, MODEL as LEGAL_MODEL, REVIEWERS } from "@/lib/legal/config";
-import { AAD, openText } from "@/lib/legal/crypto";
+import { maybeSweepLegalData } from "@/lib/legal-retention";
 
 /** GET /api/admin/overview — every figure on the panel's first screen, from
  *  admin_overview() (0018_admin_analytics.sql) in one round trip. */
@@ -58,72 +57,24 @@ function measured(r: { data: unknown; error: unknown }) {
   };
 }
 
-type LegalOverview = AiOverview & {
-  answers: { total: number; withCitations: number; withUnverified: number; cited: number; unverified: number };
-  library: {
-    sources: number; verified: number; judgments: number; legislation: number; commentary: number;
-    repealed: number; stale: number; oldestCheck: string | null; passages: number; embedded: number;
-  };
-  feedback: {
-    counts: { kind: string; count: number }[];
-    recent: { id: number; at: string; kind: string; reviewer: boolean; ref: number; note: string | null; snapshot: string | null }[];
-  };
-};
-
-/**
- * Ask a Lawyer: use and cost, how many answers carried a reference nothing
- * retrieved could support, how much of the library is verified and how
- * fresh, and the reports from the launch review. Report notes and reviewers'
- * snapshots are opened here, for the panel only; they are sealed everywhere
- * else.
- */
-function legal(raw: LegalOverview) {
-  const open = (sealed: string | null, aad: string) => (sealed ? openText(sealed, aad) : null);
-  return {
-    ...usage(raw, LEGAL_MODEL),
-    limits: LEGAL_LIMITS,
-    access: ACCESS,
-    reviewers: REVIEWERS.length,
-    answers: raw.answers,
-    library: raw.library,
-    feedback: {
-      counts: raw.feedback.counts,
-      recent: raw.feedback.recent.map(r => {
-        const snapshot = open(r.snapshot, AAD.snapshot(r.ref));
-        let parsed: { question: string; answer: string; sources: { kind: string; title: string; url: string; status: string | null }[]; unverified: string[] } | null = null;
-        try {
-          parsed = snapshot ? JSON.parse(snapshot) : null;
-        } catch {
-          parsed = null;
-        }
-        return {
-          id: r.id,
-          at: r.at,
-          kind: r.kind,
-          reviewer: r.reviewer,
-          note: r.note ? open(r.note, AAD.feedbackNote(r.ref)) ?? "(sealed with a key this server does not have)" : null,
-          snapshot: parsed,
-        };
-      }),
-    },
-  };
-}
-
 export async function GET(request: NextRequest) {
   const admin = await requireAdmin(request);
   if (admin instanceof NextResponse) return admin;
 
-  const [{ data, error }, daily, ai, law, aiCost, lawCost, ...deals] = await Promise.all([
+  // Ask a Lawyer is gone, but its expired data still has to be deleted on
+  // time (lib/legal-retention.ts); an admin opening the panel helps the cron.
+  void maybeSweepLegalData();
+
+  const [{ data, error }, daily, ai, aiCost, services, ...deals] = await Promise.all([
     admin.db.rpc("admin_overview"),
-    // Daily rentals (0019), the AI advisor (0020) and Ask a Lawyer (0021).
-    // Each is absent until its migration runs; the rest of the overview does
-    // not wait for any of them.
+    // Daily rentals (0019), the AI advisor (0020) and service requests
+    // (0024). Each is absent until its migration runs; the rest of the
+    // overview does not wait for any of them.
     admin.db.rpc("admin_daily_overview"),
     admin.db.rpc("admin_ai_overview"),
-    admin.db.rpc("admin_legal_overview"),
     // Measured cost and model mix (0022); absent before it runs.
     admin.db.rpc("ai_cost_summary", { p_table: "ai_usage_daily" }),
-    admin.db.rpc("ai_cost_summary", { p_table: "legal_usage_daily" }),
+    admin.db.rpc("admin_services_overview"),
     // Listings per deal, for the overview's listing mix. A count that cannot
     // be read (no "daily" deal before 0019) is null, not a failure.
     ...DEALS.map(deal => admin.db.from("properties").select("id", { count: "exact", head: true }).eq("deal", deal)),
@@ -139,6 +90,6 @@ export async function GET(request: NextRequest) {
     byDeal: Object.values(byDeal).every(n => n === null) ? null : byDeal,
     dailyRentals: daily.error ? null : daily.data,
     advisor: ai.error || !ai.data ? null : { ...advisor(ai.data as AiOverview), measured: measured(aiCost) },
-    legal: law.error || !law.data ? null : { ...legal(law.data as LegalOverview), measured: measured(lawCost) },
+    services: services.error || !services.data ? null : services.data,
   });
 }

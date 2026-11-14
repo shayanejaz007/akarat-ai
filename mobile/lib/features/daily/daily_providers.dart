@@ -4,22 +4,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../shared/models/daily_models.dart';
 import '../../shared/models/listing.dart';
+import '../../shared/reference/places.dart';
 import '../../shared/repositories/daily_repository.dart';
 import '../../shared/services/refresh.dart';
 import '../../shared/services/supabase_providers.dart';
 
 /// What the Daily tab is filtered by. Dates count only as a pair.
 class DailyFilters {
-  const DailyFilters({this.checkIn, this.checkOut, this.guests, this.cityId});
+  const DailyFilters({this.checkIn, this.checkOut, this.guests, this.place});
 
   final DateTime? checkIn;
   final DateTime? checkOut;
   final int? guests;
-  final String? cityId;
+
+  /// A governorate, town or neighbourhood. The server narrows by town; a
+  /// governorate or a neighbourhood is narrowed here, in [dailySearchProvider].
+  final PlaceSel? place;
+  String? get cityId => place?.city;
 
   bool get dated => checkIn != null && checkOut != null;
   int get nights => dated ? nightsBetween(checkIn!, checkOut!) : 0;
-  bool get any => dated || guests != null || cityId != null;
+  bool get any => dated || guests != null || place != null;
 
   DailyFilters copyWith({
     DateTime? checkIn,
@@ -27,13 +32,13 @@ class DailyFilters {
     bool clearDates = false,
     int? guests,
     bool clearGuests = false,
-    String? cityId,
-    bool clearCity = false,
+    PlaceSel? place,
+    bool clearPlace = false,
   }) => DailyFilters(
     checkIn: clearDates ? null : (checkIn ?? this.checkIn),
     checkOut: clearDates ? null : (checkOut ?? this.checkOut),
     guests: clearGuests ? null : (guests ?? this.guests),
-    cityId: clearCity ? null : (cityId ?? this.cityId),
+    place: clearPlace ? null : (place ?? this.place),
   );
 }
 
@@ -47,12 +52,18 @@ class DailyFiltersController extends Notifier<DailyFilters> {
 }
 
 /// Approved daily rentals for the current filters.
-final dailySearchProvider = FutureProvider.autoDispose<List<Listing>>((ref) {
+final dailySearchProvider = FutureProvider.autoDispose<List<Listing>>((ref) async {
   ref.watch(refreshTickProvider);
   final f = ref.watch(dailyFiltersProvider);
-  return ref
+  final rows = await ref
       .watch(dailyRepositoryProvider)
       .search(checkIn: f.checkIn, checkOut: f.checkOut, guests: f.guests, cityId: f.cityId);
+  final place = f.place;
+  if (place == null || place.city != null && place.hood == null) return rows;
+  return [
+    for (final r in rows)
+      if (Places.bundled.inArea(r.cityId, r.neighborhoodId, place)) r,
+  ];
 });
 
 /// The nights a listing's calendar greys out, for about a year ahead.

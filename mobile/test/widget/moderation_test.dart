@@ -208,6 +208,9 @@ void main() {
       final label = _en.profileHiddenAdvertisers(1);
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text(label), 300, scrollable: find.byType(Scrollable).first);
+      // Fully on screen, clear of the tab bar, before tapping it.
+      await tester.ensureVisible(find.text(label));
+      await tester.pumpAndSettle();
       await tester.tap(find.text(label));
       await tester.pumpAndSettle();
       await tester.tap(find.text(_en.showHiddenAction));

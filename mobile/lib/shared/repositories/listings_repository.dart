@@ -6,6 +6,7 @@ import '../../core/errors/app_failure.dart';
 import '../../core/utils/payload_codec.dart';
 import '../models/listing.dart';
 import '../models/listing_filters.dart';
+import '../reference/places.dart';
 import '../services/hidden_owners.dart';
 import '../services/supabase_providers.dart';
 
@@ -86,7 +87,12 @@ class ListingsRepository {
   PostgrestFilterBuilder<List<Map<String, dynamic>>> _matching(ListingFilters f) {
     final statuses = f.availableOnly ? ['active'] : ListingStatus.public.map((s) => s.name).toList();
     var q = _deal(_db.from('properties').select().inFilter('status', statuses), f.deal);
-    if (f.cityId case final c?) q = q.eq('city_id', c);
+    if (f.cityId case final c?) {
+      q = q.eq('city_id', c);
+    } else if (f.governorateId case final g?) {
+      // Every town in the governorate: listings store the town, not the governorate.
+      q = q.inFilter('city_id', [for (final c in Places.bundled.citiesOf(g)) c.id]);
+    }
     if (f.neighborhoodId case final n?) q = q.eq('neighborhood_id', n);
     if (f.type case final t?) q = q.eq('property_type', t);
     // "3 bedrooms" means three or more, as on the website.

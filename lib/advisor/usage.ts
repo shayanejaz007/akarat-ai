@@ -50,13 +50,10 @@ async function rpc(fn: string, args: Record<string, unknown>, timeoutMs: number)
 }
 
 /**
- * Which counters a turn is charged to. The advisor's are in 0020; Ask a
- * Lawyer keeps its own (0021) so neither product's allowance or figures
- * move with the other's traffic.
+ * Which counters a turn is charged to: the advisor's, in 0020.
  */
 export type Pool = { name: string; take: string; record: string };
 export const ADVISOR_POOL: Pool = { name: "advisor", take: "ai_usage_take", record: "ai_usage_record" };
-export const LEGAL_POOL: Pool = { name: "legal", take: "legal_usage_take", record: "legal_usage_record" };
 
 const local = new Map<string, number>();
 

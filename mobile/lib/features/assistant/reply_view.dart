@@ -140,7 +140,7 @@ bool isArabicText(String s) {
 /// Anything else stays plain text, as on the website. [unverified] are
 /// references the server could not match to a retrieved source; they are
 /// marked where they appear. With [sections], every `##` heading starts a
-/// section the reader can fold away (Ask a Lawyer's answers).
+/// section the reader can fold away.
 class ReplyView extends StatefulWidget {
   const ReplyView({
     super.key,

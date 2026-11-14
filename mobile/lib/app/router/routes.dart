@@ -13,11 +13,9 @@ class Routes {
   static const saved = '/saved';
   static const profile = '/profile';
 
-  /// The AI tab: Property AI (the advisor) and Ask a Lawyer, side by side.
-  /// `?mode=lawyer` opens Ask a Lawyer; `q`, `focus` and `voice` go to the
-  /// advisor.
+  /// The AI tab: Property AI (the advisor). `q`, `focus` and `voice` go to
+  /// the advisor.
   static const aiSearch = '/ai';
-  static const askLawyer = '$aiSearch?mode=lawyer';
 
   /// The listings search on its own, without the advisor: "Search for
   /// similar", a saved search, and the fallback when the advisor cannot
@@ -51,10 +49,27 @@ class Routes {
   static const bookings = '/bookings';
   static String bookingsFor(String tab) => '$bookings?tab=$tab';
   static const notifications = '/notifications';
+
+  /// Services (0024_services.sql): the categories, asking for one
+  /// (`?category=` opens it on that service), and My service requests.
+  static const services = '/services';
+  static const serviceRequest = '/services/request';
+  static String serviceRequestFor(String category) => '$serviceRequest?category=${Uri.encodeComponent(category)}';
+  static const myServiceRequests = '/services/mine';
   static String availability(String id) => '/listing/$id/availability';
 
   /// Screens that need a session. Browsing, searching and saving never do.
-  static const protectedPrefixes = ['/listing', '/dashboard', '/inquiries', '/account', '/bookings', '/notifications'];
+  static const protectedPrefixes = [
+    '/listing',
+    '/dashboard',
+    '/inquiries',
+    '/account',
+    '/bookings',
+    '/notifications',
+    // A request is sent from an account, and only its owner sees it.
+    serviceRequest,
+    myServiceRequests,
+  ];
 
   static bool isProtected(String path) => protectedPrefixes.any(path.startsWith);
 

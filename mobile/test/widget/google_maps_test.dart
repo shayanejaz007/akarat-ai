@@ -13,11 +13,12 @@ import '../support/fake_google_maps.dart';
 import '../support/fakes.dart';
 import '../support/harness.dart';
 
+// Both for sale: Explore shows one kind at a time.
 final _rows = [
   listing(),
   listing(
     id: '44444444-4444-4444-8444-444444444444',
-    deal: 'rent',
+    deal: 'sale',
     type: 'villa',
     hood: 'dabouq',
     price: 2400,
@@ -132,6 +133,19 @@ void main() {
     final pins = _rows.where((l) => l.hasCoordinates).toList();
     expect(groupPins(pins, 7), hasLength(1));
     expect(groupPins(pins, 15), hasLength(2));
+  });
+
+  test('listings on the very same spot are set apart, so each keeps a pin of its own', () {
+    final same = [
+      for (var i = 0; i < 10; i++) listing(id: '00000000-0000-4000-8000-00000000000$i', lat: 31.95, lng: 35.91),
+    ];
+    final spread = spreadPins(same);
+    expect(spread.first.lat, 31.95, reason: 'the first stays where it is');
+    expect({for (final l in spread) '${l.lat},${l.lng}'}, hasLength(10), reason: 'no two on one point');
+    expect([for (final l in spread) l.id], [for (final l in same) l.id], reason: 'the same listings, in order');
+    // Close up they part; from afar they are still one numbered circle.
+    expect(groupPins(spread, 19), hasLength(10));
+    expect(groupPins(spread, 12), hasLength(1));
   });
 
   group('Street View', () {

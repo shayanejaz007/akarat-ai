@@ -91,7 +91,7 @@ export function paging(url: URL, size = 50): { from: number; to: number; page: n
 /** For PostgREST `or=(…ilike…)` filters: drops the characters that would
  *  change the filter's meaning rather than the text searched for. */
 export function searchTerm(url: URL): string | null {
-  const q = (url.searchParams.get("q") ?? "").replace(/[,()*%\\]/g, " ").trim().slice(0, 80);
+  const q = (url.searchParams.get("q") ?? "").replace(/[,()*%\\"':]/g, " ").trim().slice(0, 80);
   return q || null;
 }
 

@@ -23,6 +23,7 @@ class Preferences {
   static const _homeCity = 'akarat.homeCity';
   static const _homeDeal = 'akarat.homeDeal';
   static const _mapLayer = 'akarat.mapLayer';
+  static const _pinLayer = 'akarat.pinLayer';
   static const _localFavorites = 'akarat.favorites.local';
   static const _listingDraft = 'akarat.listingDraft';
   static const _hiddenOwners = 'akarat.hiddenOwners';
@@ -94,6 +95,10 @@ class Preferences {
   /// The map or satellite view, remembered across maps and launches.
   String get mapLayer => _prefs.getString(_mapLayer) ?? 'map';
   Future<void> setMapLayer(String layer) => _prefs.setString(_mapLayer, layer);
+
+  /// The pin pickers' own layer: satellite unless the person switched.
+  String get pinLayer => _prefs.getString(_pinLayer) ?? 'satellite';
+  Future<void> setPinLayer(String layer) => _prefs.setString(_pinLayer, layer);
 
   /// Listing ids saved on this device: for guests, and as the fallback when
   /// the account cannot store favourites yet (migration 0014 not applied).

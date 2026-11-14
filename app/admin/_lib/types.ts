@@ -18,18 +18,19 @@ export type AssistantUse = {
   measured: Measured;
 };
 
-export type LegalFeedback = {
-  id: number;
-  at: string;
-  kind: string;
-  reviewer: boolean;
-  note: string | null;
-  snapshot: {
-    question: string;
-    answer: string;
-    sources: { kind: string; title: string; url: string; status: string | null }[];
-    unverified: string[];
-  } | null;
+export type ServiceStatus = "pending" | "under_review" | "accepted" | "in_progress" | "completed" | "rejected" | "cancelled";
+
+// admin_services_overview() (0024_services.sql).
+export type ServicesOverview = {
+  total: number;
+  byStatus: Record<ServiceStatus, number>;
+  today: number;
+  week: number;
+  urgentOpen: number;
+  oldestPending: string | null;
+  categories: number;
+  byCategory: { id: string; en: string; ar: string; n: number }[];
+  daily: { day: string; requests: number }[];
 };
 
 export type Overview = {
@@ -55,18 +56,8 @@ export type Overview = {
   } | null;
   // Null until 0020_ai_advisor.sql has been run. Costs are estimates in USD.
   advisor: (AssistantUse & { limits: { perDaySignedIn: number; perDayAnonymous: number; perDayTotal: number } }) | null;
-  // Null until 0021_legal_ai.sql has been run. Costs are estimates in USD.
-  legal: (AssistantUse & {
-    access: "public" | "reviewers";
-    reviewers: number;
-    limits: { perDay: number; perDayTotal: number };
-    answers: { total: number; withCitations: number; withUnverified: number; cited: number; unverified: number };
-    library: {
-      sources: number; verified: number; judgments: number; legislation: number; commentary: number;
-      repealed: number; stale: number; oldestCheck: string | null; passages: number; embedded: number;
-    };
-    feedback: { counts: { kind: string; count: number }[]; recent: LegalFeedback[] };
-  }) | null;
+  // Null until 0024_services.sql has been run.
+  services: ServicesOverview | null;
 };
 
 export type Person = { id: string; name: string | null; email: string | null; phone: string | null; verified: boolean; joined: string | null };
@@ -113,6 +104,41 @@ export type UserRow = {
   id: string; email: string | null; phone: string | null; name: string | null; role: string; verified: boolean;
   agency: string | null; providers: string[]; createdAt: string; lastSignIn: string | null; lastSeen: string | null;
   lastPlatform: string | null; listings: { total: number; active: number };
+};
+
+export type ServiceRow = {
+  id: string; ref: string; status: ServiceStatus; category_id: string; custom_service: string | null; description: string;
+  governorate_id: string; city_id: string; neighborhood_id: string | null; address: string;
+  preferred_date: string; preferred_window: string; urgency: "normal" | "urgent" | "emergency";
+  contact_name: string; contact_phone: string; contact_email: string | null;
+  lang: "ar" | "en"; platform: string | null; created_at: string; updated_at: string; status_at: string;
+  photoCount: number; assignee: { id: string; name: string | null } | null; signedIn: boolean;
+};
+
+export type ServiceEvent = {
+  id: number; at: string; kind: "created" | "status" | "note" | "assigned";
+  from_status: string | null; to_status: string | null; note: string | null; public: boolean; actor: string | null;
+};
+
+export type ServiceDetail = Omit<ServiceRow, "photoCount" | "assignee" | "signedIn"> & {
+  user_id: string; lat: number | null; lng: number | null; photos: string[]; cancel_reason: string | null; client_token: string;
+  assigned_to: string | null;
+  category: { id: string; name_en: string; name_ar: string; icon: string; custom: boolean } | null;
+  customer: Person | null;
+  assignee: (Partial<Person> & { id: string }) | null;
+  photoUrls: { path: string | null; url: string }[];
+  events: ServiceEvent[];
+};
+
+export type ServiceCategory = {
+  id: string; name_en: string; name_ar: string; examples_en: string; examples_ar: string; icon: string;
+  sort: number; active: boolean; custom: boolean; created_at: string; updated_at: string; requests: number;
+};
+
+export type PlaceRow = {
+  id: string; name_en: string; name_ar: string; lat: number | null; lng: number | null; aliases: string[] | null;
+  active: boolean; edited: boolean; updated_at: string | null; listings: number;
+  governorate_id?: string | null; city_id?: string; geonames_id?: number | null; sort?: number;
 };
 
 export type ReportRow = {

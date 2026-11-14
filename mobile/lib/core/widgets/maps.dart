@@ -13,6 +13,7 @@ import '../config/env.dart';
 import '../utils/formatters.dart';
 import '../utils/geo.dart';
 import 'google_map_views.dart';
+import 'locate.dart';
 
 /// Map widgets. With a Google Maps key built in, Google's native maps draw
 /// them (google_map_views.dart), with satellite imagery; without one, the
@@ -43,6 +44,28 @@ const _jordan = LatLng(31.25, 36.2);
 /// Pins closer than a pin's width on screen at [zoom], grouped. Greedy, in
 /// screen pixels (256-pixel tiles, as both map engines use): cheap enough to
 /// redo whenever the zoom settles.
+/// Listings on the very same spot (a building, or an area's centre) set
+/// around it, 30 m apart a ring at a time, so that zooming in always parts
+/// them and each keeps a pin of its own. Only where they are drawn moves.
+List<Listing> spreadPins(List<Listing> pins) {
+  final seen = <String, int>{};
+  return [
+    for (final l in pins)
+      () {
+        final key = '${l.lat!.toStringAsFixed(5)},${l.lng!.toStringAsFixed(5)}';
+        final k = seen[key] ?? 0;
+        seen[key] = k + 1;
+        if (k == 0) return l;
+        final ring = 1 + (k - 1) ~/ 8;
+        final angle = ((k - 1) % 8) * (math.pi / 4) + ring * 0.4;
+        final metres = 30.0 * ring;
+        final lat = l.lat! + metres * math.cos(angle) / 111320;
+        final lng = l.lng! + metres * math.sin(angle) / (111320 * math.cos(l.lat! * math.pi / 180));
+        return l.at(lat, lng);
+      }(),
+  ];
+}
+
 List<List<Listing>> groupPins(List<Listing> pins, double zoom) {
   const crs = Epsg3857();
   const reach = 46.0;
@@ -167,12 +190,13 @@ class _TileListingsMap extends ConsumerStatefulWidget {
 }
 
 class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
+  LatLng? _here;
   final _controller = MapController();
   bool _ready = false;
   String _fittedFor = '';
   double _zoom = 7;
 
-  List<Listing> get _pinned => widget.listings.where((l) => l.hasCoordinates).toList();
+  List<Listing> get _pinned => spreadPins(widget.listings.where((l) => l.hasCoordinates).toList());
 
   @override
   void didUpdateWidget(_TileListingsMap old) {
@@ -290,7 +314,24 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
             if (selected != null) _priceMarker(context, selected, selected: true, scaler: scaler),
           ],
         ),
+        if (_here case final h?)
+          MarkerLayer(
+            markers: [Marker(point: h, width: 20, height: 20, child: const HereDot())],
+          ),
         _attribution(context),
+        Align(
+          alignment: AlignmentDirectional.bottomEnd,
+          child: Padding(
+            padding: EdgeInsetsDirectional.only(end: locateInset, bottom: widget.bottomInset + locateInset),
+            child: LocateButton(
+              onFound: (at) {
+                final p = LatLng(at.lat, at.lng);
+                setState(() => _here = p);
+                _controller.move(p, 16);
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -531,15 +572,26 @@ class _TileLocationPreview extends ConsumerWidget {
 }
 
 /// Lets an owner drop a pin by tapping the map; tapping again moves it.
+///
+/// On Google's maps it opens on satellite imagery with street names, with a
+/// switch to the street map ([pinLayerProvider]); [centerZoom] is how close
+/// it looks at [center] (the chosen place) while no pin is placed.
 class PinPicker extends ConsumerWidget {
-  const PinPicker({super.key, required this.initial, required this.center, required this.onChanged});
+  const PinPicker({
+    super.key,
+    required this.initial,
+    required this.center,
+    required this.onChanged,
+    this.centerZoom = 12,
+  });
   final LatLngPoint? initial;
   final LatLngPoint center;
   final ValueChanged<LatLngPoint> onChanged;
+  final double centerZoom;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => useGoogleMaps(ref)
-      ? GooglePinPicker(initial: initial, center: center, onChanged: onChanged)
+      ? GooglePinPicker(initial: initial, center: center, onChanged: onChanged, centerZoom: centerZoom)
       : _TilePinPicker(initial: initial, center: center, onChanged: onChanged);
 }
 
@@ -555,6 +607,7 @@ class _TilePinPicker extends ConsumerStatefulWidget {
 
 class _TilePinPickerState extends ConsumerState<_TilePinPicker> {
   final _controller = MapController();
+  LatLng? _here;
   late LatLngPoint? _pin = widget.initial;
   bool _ready = false;
 
@@ -607,6 +660,23 @@ class _TilePinPickerState extends ConsumerState<_TilePinPicker> {
               ),
             ],
           ),
+        if (_here case final h?)
+          MarkerLayer(
+            markers: [Marker(point: h, width: 20, height: 20, child: const HereDot())],
+          ),
+        Align(
+          alignment: AlignmentDirectional.bottomEnd,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.only(end: 8, bottom: 28),
+            child: LocateButton(
+              onFound: (at) {
+                final p = LatLng(at.lat, at.lng);
+                setState(() => _here = p);
+                _controller.move(p, 17);
+              },
+            ),
+          ),
+        ),
         _attribution(context),
       ],
     );

@@ -103,12 +103,22 @@ class ProfileScreen extends ConsumerWidget {
                         onTap: () => context.push(Routes.inquiries),
                       ),
                       GroupedTile(
+                        icon: Icons.receipt_long_outlined,
+                        title: l.servicesMine,
+                        onTap: () => context.push(Routes.myServiceRequests),
+                      ),
+                      GroupedTile(
                         icon: Icons.bookmarks_outlined,
                         title: l.profileSavedSearches,
                         onTap: () =>
                             context.go('${Routes.saved}?tab=searches&t=${DateTime.now().millisecondsSinceEpoch}'),
                       ),
                     ],
+                    GroupedTile(
+                      icon: Icons.handyman_outlined,
+                      title: l.servicesTitle,
+                      onTap: () => context.push(Routes.services),
+                    ),
                     GroupedTile(
                       icon: Icons.add_home_outlined,
                       title: l.profileListProperty,

@@ -1,6 +1,6 @@
 /* Arabic permission prompts. Keep in step with Info.plist and en.lproj. */
-"NSCameraUsageDescription" = "يستخدم Akarat.ai الكاميرا فقط عندما تختار التقاط صورة: لعقار تعلن عنه، أو لمستند تريد أن يقرأه «اسأل محامي»، أو لصورتك الشخصية.";
-"NSLocationWhenInUseUsageDescription" = "لا يستخدم Akarat.ai موقعك. وإن عرض يومًا إظهار مكانك على الخريطة، فلن يُستخدم موقعك إلا لذلك.";
-"NSMicrophoneUsageDescription" = "يستخدم Akarat.ai الميكروفون فقط عندما تختار أن تبحث أو تسأل مساعديه الذكيين بصوتك، أو أن تصوّر فيديو لعقار تعلن عنه.";
-"NSSpeechRecognitionUsageDescription" = "يحوّل Akarat.ai ما تقوله إلى نص عندما تضغط على الميكروفون: بحث عن عقار، أو سؤال لمساعديه الذكيين. تتولّى خدمة الكلام من Apple التعرّف على كلامك.";
-"NSPhotoLibraryUsageDescription" = "يفتح Akarat.ai مكتبة الصور لتضيف صورًا ومقاطع فيديو إلى عقار تعلن عنه، أو لتختار صورتك الشخصية، أو لتعطي «اسأل محامي» صورة مستند.";
+"NSCameraUsageDescription" = "يستخدم Akarat.ai الكاميرا فقط عندما تختار التقاط صورة: لعقار تعلن عنه، أو لما تحتاج إصلاحه في طلب خدمة، أو لصورتك الشخصية.";
+"NSLocationWhenInUseUsageDescription" = "يقرأ Akarat.ai موقعك فقط عندما تضغط زر الموقع على الخريطة، ليُظهر مكانك. لا يُحفظ ولا يُشارَك.";
+"NSMicrophoneUsageDescription" = "يستخدم Akarat.ai الميكروفون فقط عندما تختار أن تبحث أو تسأل مساعده الذكي بصوتك، أو أن تصوّر فيديو لعقار تعلن عنه.";
+"NSSpeechRecognitionUsageDescription" = "يحوّل Akarat.ai ما تقوله إلى نص عندما تضغط على الميكروفون: بحث عن عقار، أو سؤال لمساعده الذكي. تتولّى خدمة الكلام من Apple التعرّف على كلامك.";
+"NSPhotoLibraryUsageDescription" = "يفتح Akarat.ai مكتبة الصور لتضيف صورًا ومقاطع فيديو إلى عقار تعلن عنه، أو لتضيف صورًا إلى طلب خدمة، أو لتختار صورتك الشخصية.";

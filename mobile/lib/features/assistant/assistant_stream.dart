@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 
 /// One event of an assistant's streamed answer.
 ///
-/// The website's two assistants (the AI advisor at `/api/ai/advisor` and Ask
-/// a Lawyer at `/api/legal/ask`) answer as NDJSON: one JSON object per line,
+/// The website's AI advisor (`/api/ai/advisor`) answers as NDJSON: one JSON
+/// object per line,
 /// each with a `t` naming what it is ("text", "cards", "source", "done"...).
 /// The app reads exactly what the website's page reads, so both show the same
 /// answer, the same sources and the same notices.

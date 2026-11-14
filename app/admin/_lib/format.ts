@@ -106,7 +106,3 @@ export function humanize(s: string | null | undefined): string {
   const t = (s ?? "").replace(/[_-]+/g, " ").trim();
   return t ? t[0].toUpperCase() + t.slice(1) : "—";
 }
-
-/** An answer from Ask a Lawyer as plain text: citation markers become [1,2]. */
-export const plainAnswer = (text: string): string =>
-  text.replace(/([^]*)/g, "[$1]").replace(/[-]/g, "");

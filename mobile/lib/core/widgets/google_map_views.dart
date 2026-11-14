@@ -12,9 +12,10 @@ import '../../app/theme/tokens.dart';
 import '../../shared/models/listing.dart';
 import '../utils/formatters.dart';
 import '../utils/geo.dart';
+import 'locate.dart';
 import 'map_layer.dart';
 import 'map_pin_images.dart';
-import 'maps.dart' show MapPins, groupPins, mapTilesProvider;
+import 'maps.dart' show MapPins, groupPins, mapTilesProvider, spreadPins;
 
 /// The maps drawn by Google's native SDK, used when a Maps key is built in
 /// (see [GoogleMapsSetup]): the same pins, clusters and behaviour as the
@@ -110,6 +111,8 @@ class GoogleListingsMap extends ConsumerStatefulWidget {
 }
 
 class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
+  // The phone's own position is shown once the person asked for it.
+  bool _here = false;
   GoogleMapController? _map;
   String _fittedFor = '';
 
@@ -124,7 +127,7 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
   final _icons = <String, PinImage>{};
   final _pending = <String>{};
 
-  List<Listing> get _pinned => widget.listings.where((l) => l.hasCoordinates).toList();
+  List<Listing> get _pinned => spreadPins(widget.listings.where((l) => l.hasCoordinates).toList());
 
   @override
   void didChangeDependencies() {
@@ -295,7 +298,28 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
     };
     _request(wanted);
 
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        _googleMap(context, layer, markers, pins),
+        PositionedDirectional(
+          end: locateInset,
+          bottom: widget.bottomInset + locateInset,
+          child: LocateButton(
+            onFound: (at) {
+              // Permission is granted by now: Google draws its own blue dot.
+              setState(() => _here = true);
+              _move(_map, CameraUpdate.newLatLngZoom(LatLng(at.lat, at.lng), 16), animate: true);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _googleMap(BuildContext context, MapLayer layer, Set<Marker> markers, List<Listing> pins) {
     return GoogleMap(
+      myLocationEnabled: _here,
       initialCameraPosition: const CameraPosition(target: _jordan, zoom: 7),
       onMapCreated: (map) {
         _map = map;
@@ -417,9 +441,19 @@ class _GoogleLocationPreviewState extends ConsumerState<GoogleLocationPreview> {
 /// The listing form's pin picker on Google: see `PinPicker`. The satellite
 /// view lets an owner find their own building.
 class GooglePinPicker extends ConsumerStatefulWidget {
-  const GooglePinPicker({super.key, required this.initial, required this.center, required this.onChanged});
+  const GooglePinPicker({
+    super.key,
+    required this.initial,
+    required this.center,
+    required this.onChanged,
+    this.centerZoom = 12,
+  });
   final LatLngPoint? initial;
   final LatLngPoint center;
+
+  /// How close to look at [center] while no pin is placed: a neighbourhood
+  /// closer than a city, a city closer than a governorate.
+  final double centerZoom;
   final ValueChanged<LatLngPoint> onChanged;
 
   @override
@@ -428,6 +462,7 @@ class GooglePinPicker extends ConsumerStatefulWidget {
 
 class _GooglePinPickerState extends ConsumerState<GooglePinPicker> {
   GoogleMapController? _map;
+  bool _here = false;
   late LatLngPoint? _pin = widget.initial;
   MapPinImages? _images;
   PinImage? _icon;
@@ -450,7 +485,11 @@ class _GooglePinPickerState extends ConsumerState<GooglePinPicker> {
     super.didUpdateWidget(old);
     if (widget.initial != old.initial) _pin = widget.initial;
     if (widget.center != old.center && widget.initial == null) {
-      _move(_map, CameraUpdate.newLatLngZoom(LatLng(widget.center.lat, widget.center.lng), 12), animate: true);
+      _move(
+        _map,
+        CameraUpdate.newLatLngZoom(LatLng(widget.center.lat, widget.center.lng), widget.centerZoom),
+        animate: true,
+      );
     }
   }
 
@@ -462,7 +501,7 @@ class _GooglePinPickerState extends ConsumerState<GooglePinPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final layer = ref.watch(mapLayerProvider);
+    final layer = ref.watch(pinLayerProvider);
     final start = _pin ?? widget.center;
     final pin = _pin;
     final icon = _icon;
@@ -470,7 +509,11 @@ class _GooglePinPickerState extends ConsumerState<GooglePinPicker> {
       fit: StackFit.expand,
       children: [
         GoogleMap(
-          initialCameraPosition: CameraPosition(target: LatLng(start.lat, start.lng), zoom: _pin == null ? 12 : 16),
+          myLocationEnabled: _here,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(start.lat, start.lng),
+            zoom: _pin == null ? widget.centerZoom : 17,
+          ),
           onMapCreated: (map) => _map = map,
           mapType: _type(layer),
           style: _style(context, layer),
@@ -496,7 +539,17 @@ class _GooglePinPickerState extends ConsumerState<GooglePinPicker> {
           mapToolbarEnabled: false,
           compassEnabled: false,
         ),
-        const PositionedDirectional(top: 8, end: 8, child: MapLayerButton()),
+        const PositionedDirectional(top: 8, end: 8, child: MapLayerButton(pin: true)),
+        PositionedDirectional(
+          end: 8,
+          bottom: 8,
+          child: LocateButton(
+            onFound: (at) {
+              setState(() => _here = true);
+              _move(_map, CameraUpdate.newLatLngZoom(LatLng(at.lat, at.lng), 17), animate: true);
+            },
+          ),
+        ),
       ],
     );
   }

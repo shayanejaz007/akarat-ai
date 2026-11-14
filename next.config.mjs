@@ -6,11 +6,12 @@ const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  // microphone=(self): voice input in the AI advisor and Ask a Lawyer uses
-  // the browser's speech recognition, which needs the microphone. An empty
-  // list, as this had, denies it to this site too and voice input fails with
-  // "not allowed". Other origins (embeds, iframes) still get nothing.
-  { key: 'Permissions-Policy', value: 'geolocation=(), microphone=(self), camera=(), interest-cohort=()' },
+  // microphone=(self): voice input in the AI advisor and a service request's
+  // description uses the browser's speech recognition, which needs the
+  // microphone. geolocation=(self): "Use my location" on a service request.
+  // An empty list denies a feature to this site too, and it fails with "not
+  // allowed". Other origins (embeds, iframes) still get nothing.
+  { key: 'Permissions-Policy', value: 'geolocation=(self), microphone=(self), camera=(), interest-cohort=()' },
   {
     key: 'Strict-Transport-Security',
     value: 'max-age=31536000; includeSubDomains'

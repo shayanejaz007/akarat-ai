@@ -128,7 +128,7 @@ export default function ListingsPage() {
     <>
       <PageHeader
         title="Listings"
-        subtitle="Every listing on Akarat.ai, whatever its status or owner. Open one to change its status, feature it or check its numbers."
+        subtitle="Every listing, whatever its status or owner."
       />
 
       <Chips

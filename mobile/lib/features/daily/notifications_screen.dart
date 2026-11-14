@@ -13,6 +13,7 @@ import '../../core/widgets/skeleton.dart';
 import '../../core/widgets/state_views.dart';
 import '../../shared/models/daily_models.dart';
 import '../../shared/repositories/daily_repository.dart';
+import '../services/services_ui.dart' show serviceStatusLabel;
 import 'daily_providers.dart';
 
 /// What happened to this person's requests and daily listings, newest
@@ -113,12 +114,27 @@ String notificationText(BuildContext context, AppNotification n) {
     'listing_rejected' => l.notifListingRejected(title) + reason,
     'listing_suspended' => l.notifListingSuspended(title) + reason,
     'listing_unapproved' => l.notifListingUnapproved(title) + reason,
+    // Service requests (0024): the status in the customer's words, and the
+    // team's note exactly as written.
+    'service_status' =>
+      l.notifServiceStatus(n.text('ref'), _serviceWhat(context, n), serviceStatusLabel(l, n.text('status'))) +
+          (note.isEmpty ? '' : ' ${l.notifServiceSaid(note)}'),
+    'service_note' => l.notifServiceNote(n.text('ref'), _serviceWhat(context, n), note),
+    'service_new' => l.notifServiceNew(n.text('ref'), _serviceWhat(context, n)),
+    'service_cancelled' => l.notifServiceCancelled(n.text('ref')),
     _ => title,
   };
 }
 
+String _serviceWhat(BuildContext context, AppNotification n) {
+  final ar = n.text('category_ar');
+  return context.lang == 'ar' && ar.isNotEmpty ? ar : n.text('category_en');
+}
+
 /// Where a notification leads: the requests it is about, or the listing.
 String notificationTarget(AppNotification n) {
+  // An admin's notices are handled in the admin panel; a customer's open My service requests.
+  if (n.kind.startsWith('service_')) return Routes.myServiceRequests;
   final forOwner = n.kind == 'booking_new' || (n.kind == 'booking_cancelled' && n.text('by') == 'renter');
   if (forOwner) return Routes.bookingsFor('requests');
   if (n.kind.startsWith('booking_')) return Routes.bookingsFor('mine');

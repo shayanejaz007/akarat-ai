@@ -10,7 +10,8 @@ final exploreFiltersProvider = NotifierProvider<ExploreFilters, ListingFilters>(
 class ExploreFilters extends Notifier<ListingFilters> {
   @override
   // Sale and rent together: the map shows both, told apart by colour.
-  ListingFilters build() => const ListingFilters();
+  // One kind at a time, never sale and rent mixed: for sale to start.
+  ListingFilters build() => const ListingFilters(deal: DealType.sale);
 
   void replace(ListingFilters next) {
     if (next != state) state = next;

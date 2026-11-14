@@ -167,7 +167,7 @@ export function portalFor(url: string): Portal | null {
 export const SITE_URL = (env("NEXT_PUBLIC_SITE_URL") || "https://akarat.ai").replace(/\/+$/, "");
 
 /* ── What a turn costs ───────────────────────────────────────────────────
-   Prices live in lib/ai-models.ts, shared with Ask a Lawyer. */
+   Prices live in lib/ai-models.ts. */
 export function estimateCostUsd(u: UsageLike, model = MODEL): number | null {
   return estimate(u, model);
 }

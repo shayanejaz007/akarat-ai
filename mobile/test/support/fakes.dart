@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:akarat/core/utils/payload_codec.dart';
 import 'package:akarat/features/ai_search/data/search_repository.dart';
+import 'package:akarat/features/ai_search/voice/speaker.dart';
 import 'package:akarat/features/ai_search/voice/speech_service.dart';
 import 'package:akarat/shared/models/account_models.dart';
 import 'package:akarat/shared/models/daily_models.dart';
@@ -515,6 +516,39 @@ class FakeInquiriesRepository extends Fake implements InquiriesRepository {
 
   @override
   Future<List<Inquiry>> sent() async => const [];
+}
+
+/// A voice that reads nothing aloud and remembers what it was given.
+class FakeSpeaker implements Speaker {
+  FakeSpeaker({this.result = SpeakResult.spoken});
+  SpeakResult result;
+  final said = <({String text, String lang})>[];
+
+  /// When set, reading lasts until it completes (to look at the screen
+  /// while the answer is being read).
+  Completer<void>? hold;
+  int stops = 0;
+
+  bool _reading = false;
+
+  @override
+  Future<SpeakResult> speak(String text, {required String lang}) async {
+    said.add((text: text, lang: lang));
+    final before = stops;
+    _reading = true;
+    if (hold != null) await hold!.future;
+    _reading = false;
+    return stops == before ? result : SpeakResult.stopped;
+  }
+
+  /// Silences what is being read; a no-op when nothing is.
+  @override
+  Future<void> stop() async {
+    if (!_reading) return;
+    stops++;
+    final h = hold;
+    if (h != null && !h.isCompleted) h.complete();
+  }
 }
 
 /// A speech recogniser the test speaks through.

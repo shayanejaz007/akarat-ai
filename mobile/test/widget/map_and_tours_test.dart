@@ -1,6 +1,8 @@
 import 'package:akarat/app/router/scaffold_with_nav.dart';
 import 'package:akarat/core/utils/bidi.dart';
+import 'package:akarat/core/utils/geo.dart';
 import 'package:akarat/core/widgets/coach_marks.dart';
+import 'package:akarat/core/widgets/locate.dart';
 import 'package:akarat/features/explore/explore_screen.dart';
 import 'package:akarat/features/home/home_screen.dart';
 import 'package:akarat/features/listings/presentation/listing_wizard_screen.dart';
@@ -40,30 +42,30 @@ void main() {
   });
 
   group('Explore map', () {
-    testWidgets('opens on the map, sale and rent pinned with their prices', (tester) async {
+    testWidgets('opens on homes for sale, and rentals are a view of their own, never mixed in', (tester) async {
       await pumpScreen(
         tester,
         const ExploreScreen(),
         overrides: await TestDeps(listings: FakeListingsRepository(rows: _rows)).overrides(),
       );
       await tester.pumpAndSettle();
+      expect(find.text('All'), findsNothing, reason: 'no view mixes sale with rent');
       expect(find.text('150K'), findsOneWidget, reason: 'the sale listing');
-      expect(find.text('2.4K'), findsOneWidget, reason: 'the rental');
-      expect(find.text('2 on the map'), findsOneWidget, reason: 'the listing without a location is not pinned');
-      expect(find.text('For sale'), findsWidgets);
-      expect(find.text('For rent'), findsWidgets);
+      expect(find.text('2.4K'), findsNothing, reason: 'the rental is not mixed in');
+      expect(find.text('1 on the map'), findsOneWidget, reason: 'the sale without a location is not pinned');
+
+      // Rent only.
+      await tester.tap(find.text('Rent'));
+      await tester.pumpAndSettle();
+      expect(find.text('150K'), findsNothing);
+      expect(find.text('2.4K'), findsOneWidget);
+      expect(find.text('1 on the map'), findsOneWidget);
 
       // A pin opens a preview; the preview leads to the listing.
       await tester.tap(find.text('2.4K'));
       await tester.pumpAndSettle();
       expect(find.text('Garden villa with a pool'), findsOneWidget);
       expect(find.text('2,400 JOD/mo'), findsOneWidget);
-
-      // Rent only.
-      await tester.tap(find.text('Rent'));
-      await tester.pumpAndSettle();
-      expect(find.text('150K'), findsNothing);
-      expect(find.text('1 on the map'), findsOneWidget);
     });
 
     testWidgets('cards under the map list every result, pinned ones first', (tester) async {
@@ -75,12 +77,15 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Bright corner apartment'), findsOneWidget, reason: 'the first card has a pin');
-      expect(find.text('Not on the map'), findsNothing);
-      final pages = find.byType(PageView);
-      for (var i = 0; i < 2; i++) {
-        await tester.drag(pages, const Offset(-320, 0));
-        await tester.pumpAndSettle();
-      }
+      // The card without a location comes after it (the next card peeks in at the edge).
+      expect(
+        tester.getTopLeft(find.text('Bright corner apartment')).dx,
+        lessThan(tester.getTopLeft(find.text('Flat with no pin')).dx),
+        reason: 'pinned ones first',
+      );
+      // Two homes for sale: the pinned one, then the one without a location.
+      await tester.drag(find.byType(PageView), const Offset(-320, 0));
+      await tester.pumpAndSettle();
       expect(find.text('Flat with no pin'), findsOneWidget);
       expect(find.text('Not on the map'), findsOneWidget, reason: 'said on a line of its own');
     });
@@ -94,8 +99,43 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('List'));
       await tester.pumpAndSettle();
-      expect(find.text('3 properties'), findsOneWidget);
+      expect(find.text('2 properties'), findsOneWidget, reason: 'the two for sale; the rental is in Rent');
       expect(find.text('Map'), findsOneWidget, reason: 'and back to the map');
+    });
+  });
+
+  group('My location', () {
+    testWidgets('the button moves the map to where the phone is and marks the spot', (tester) async {
+      await pumpScreen(
+        tester,
+        const ExploreScreen(),
+        overrides: [
+          ...await TestDeps(listings: FakeListingsRepository(rows: _rows)).overrides(),
+          locatorProvider.overrideWithValue(const _FakeLocator((at: LatLngPoint(31.95, 35.91), problem: null))),
+        ],
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(HereDot), findsNothing);
+      await tester.tap(find.byTooltip('Go to my location'));
+      await tester.pumpAndSettle();
+      expect(find.byType(HereDot), findsOneWidget);
+    });
+
+    testWidgets('a refusal is explained, with the way to Settings', (tester) async {
+      await pumpScreen(
+        tester,
+        const ExploreScreen(),
+        overrides: [
+          ...await TestDeps(listings: FakeListingsRepository(rows: _rows)).overrides(),
+          locatorProvider.overrideWithValue(const _FakeLocator((at: null, problem: LocateProblem.denied))),
+        ],
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Go to my location'));
+      await tester.pumpAndSettle();
+      expect(find.text('Akarat.ai isn’t allowed to see your location. Allow it in Settings.'), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.byType(HereDot), findsNothing);
     });
   });
 
@@ -162,12 +202,7 @@ void main() {
             final t = ref.watch(tourTargetsProvider);
             return Scaffold(
               body: const HomeScreen(),
-              bottomNavigationBar: AkaratNavBar(
-                index: 0,
-                signedIn: false,
-                onSelect: (_) {},
-                tabKeys: t.navTabs,
-              ),
+              bottomNavigationBar: AkaratNavBar(index: 0, signedIn: false, onSelect: (_) {}, tabKeys: t.navTabs),
             );
           },
         ),
@@ -202,4 +237,12 @@ void main() {
       expect(find.text('What are you listing?'), findsOneWidget, reason: 'the form, ready to fill in');
     });
   });
+}
+
+class _FakeLocator extends Locator {
+  const _FakeLocator(this.result);
+  final LocateResult result;
+
+  @override
+  Future<LocateResult> find() async => result;
 }

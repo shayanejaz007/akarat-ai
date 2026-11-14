@@ -19,12 +19,12 @@ import '../../core/widgets/motion.dart';
 import '../../shared/reference/market_data.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../ai_search/presentation/ai_search_screen.dart' show AiMark, VoiceOrbMini;
-import '../ai_search/voice/voice_search_sheet.dart';
 import '../assistant/composer.dart';
 import '../assistant/reply_view.dart';
 import '../favorites/favorites_controller.dart';
 import 'advisor_controller.dart';
 import 'advisor_models.dart';
+import 'voice_conversation.dart';
 
 /// Property AI: the website's AI advisor, in the app. A conversation about
 /// finding, comparing and investing in property in Jordan, answered with the
@@ -97,17 +97,12 @@ class _AdvisorViewState extends ConsumerState<AdvisorView> {
     super.dispose();
   }
 
-  /// Dictation: the whole text lands in the box, to be checked and sent.
+  /// The microphone opens a spoken conversation. Everything said in it is
+  /// in this chat when it closes.
   Future<void> _voice() async {
     _focus.unfocus();
-    final text = await showVoiceSearch(context, dictation: true);
-    if (!mounted || text == null) return;
-    if (text.isNotEmpty) {
-      final current = _input.text.trimRight();
-      _input.text = current.isEmpty ? text : '$current $text';
-      _input.selection = TextSelection.collapsed(offset: _input.text.length);
-    }
-    _focus.requestFocus();
+    await showVoiceConversation(context);
+    if (mounted) _toBottom(force: true);
   }
 
   Future<void> _send([String? text]) async {
@@ -235,7 +230,7 @@ class _Idle extends StatelessWidget {
                         children: [
                           Text(l.aiSpeakTitle, style: context.text.titleSmall),
                           const SizedBox(height: Space.hair),
-                          Text(l.voiceDictationHint, style: context.text.bodySmall),
+                          Text(l.talkCardHint, style: context.text.bodySmall),
                         ],
                       ),
                     ),

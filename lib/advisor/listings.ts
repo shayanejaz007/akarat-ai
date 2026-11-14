@@ -13,7 +13,7 @@
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { unpackPayload, type Payload } from "../listing-server.ts";
-import { AMENITIES, CITIES, NEIGHBORHOODS, TYPES } from "../reference.ts";
+import { ALL_CITIES, ALL_NEIGHBORHOODS, AMENITIES, CITIES, NEIGHBORHOODS, TYPES } from "../reference.ts";
 import { SITE_URL } from "./config.ts";
 
 export type Deal = "sale" | "rent" | "daily";
@@ -140,8 +140,10 @@ const nameOf = (list: { id: string; en: string; ar: string }[], id: string | nul
   const hit = id ? list.find(x => x.id === id) : undefined;
   return hit ? { en: hit.en, ar: hit.ar } : null;
 };
-export const cityName = (id: string | null) => nameOf(CITIES, id);
-export const areaName = (id: string | null) => nameOf(NEIGHBORHOODS, id);
+// Names come from every place, so a listing in any town reads properly;
+// what the advisor can search by stays the hand-checked set above.
+export const cityName = (id: string | null) => nameOf(ALL_CITIES, id);
+export const areaName = (id: string | null) => nameOf(ALL_NEIGHBORHOODS, id);
 export const typeName = (id: string | null) => nameOf(TYPES, id);
 export const amenityName = (id: string) => nameOf(AMENITIES, id);
 export const cityOfArea = (id: string) => NEIGHBORHOODS.find(n => n.id === id)?.city ?? null;

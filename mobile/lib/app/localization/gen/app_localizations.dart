@@ -479,7 +479,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourExploreBody.
   ///
   /// In en, this message translates to:
-  /// **'Explore shows every property on a map — green for sale, gold for rent — with filters and a list view.'**
+  /// **'Explore shows homes for sale or for rent on a map, with filters and a list view.'**
   String get tourExploreBody;
 
   /// No description provided for @tourAiTitle.
@@ -491,7 +491,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourAiBody.
   ///
   /// In en, this message translates to:
-  /// **'Ask Property AI about homes, areas and investments, or Ask a Lawyer about Jordanian law.'**
+  /// **'Ask Property AI about homes, areas and investments, in English or Arabic.'**
   String get tourAiBody;
 
   /// No description provided for @tourSavedTitle.
@@ -527,13 +527,13 @@ abstract class AppLocalizations {
   /// No description provided for @tourMapDealTitle.
   ///
   /// In en, this message translates to:
-  /// **'All, sale or rent'**
+  /// **'Sale or rent'**
   String get tourMapDealTitle;
 
   /// No description provided for @tourMapDealBody.
   ///
   /// In en, this message translates to:
-  /// **'Choose what the map shows.'**
+  /// **'Choose what the map shows: homes for sale or for rent, one at a time.'**
   String get tourMapDealBody;
 
   /// No description provided for @tourMapPinsTitle.
@@ -545,7 +545,7 @@ abstract class AppLocalizations {
   /// No description provided for @tourMapPinsBody.
   ///
   /// In en, this message translates to:
-  /// **'Each pin shows the price. Green is for sale, gold is for rent; a number groups pins that are close together, so tap it to zoom in. A shaded circle means the owner shared an approximate location. Tap a pin to preview the property.'**
+  /// **'Each pin shows the price. A number groups pins that are close together: tap it to zoom in. A shaded circle means the owner shared an approximate location. Tap a pin to preview the property.'**
   String get tourMapPinsBody;
 
   /// No description provided for @tourMapFiltersTitle.
@@ -691,12 +691,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Say what you’re looking for, like “three bedrooms in Abdoun under 150 thousand”.'**
   String get voiceHint;
-
-  /// No description provided for @voiceDictationHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Speak naturally. Your words go into the box when you pause, or tap Done.'**
-  String get voiceDictationHint;
 
   /// No description provided for @voiceReviewTitle.
   ///
@@ -875,7 +869,7 @@ abstract class AppLocalizations {
   /// No description provided for @authCheckEmailSignIn.
   ///
   /// In en, this message translates to:
-  /// **'I’ve confirmed — sign in'**
+  /// **'I’ve confirmed. Sign in'**
   String get authCheckEmailSignIn;
 
   /// No description provided for @authCheckEmailWrong.
@@ -1091,7 +1085,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeEmptyBody.
   ///
   /// In en, this message translates to:
-  /// **'No listings match here yet. Nothing is invented to fill the space — check back soon, or be the first to list.'**
+  /// **'No listings here yet. Check back soon, or be the first to list.'**
   String get homeEmptyBody;
 
   /// No description provided for @locationAllJordan.
@@ -1397,7 +1391,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiIdleBody.
   ///
   /// In en, this message translates to:
-  /// **'Write it the way you would say it out loud. We pick out whether you are buying or renting, where, your budget, bedrooms, bathrooms and features, recognise Jordanian place names in either language, and search straight away.'**
+  /// **'Write it the way you would say it, in English or Arabic: the area, your budget, the rooms.'**
   String get aiIdleBody;
 
   /// No description provided for @aiIdleBodyShort.
@@ -1535,7 +1529,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiResultsExternalNote.
   ///
   /// In en, this message translates to:
-  /// **'Found on other Jordanian portals and indexed by our crawler. Availability is not confirmed — open the source to check.'**
+  /// **'Found on other Jordanian portals. Availability is not confirmed: open the source to check.'**
   String get aiResultsExternalNote;
 
   /// No description provided for @aiMatch.
@@ -2069,7 +2063,7 @@ abstract class AppLocalizations {
   /// No description provided for @authSignUpBody.
   ///
   /// In en, this message translates to:
-  /// **'One account to list a property, track inquiries and save searches — on the app and the website.'**
+  /// **'One account to list a property, track inquiries and save searches, on the app and the website.'**
   String get authSignUpBody;
 
   /// No description provided for @fieldName.
@@ -2279,7 +2273,7 @@ abstract class AppLocalizations {
   /// No description provided for @authPhoneBody.
   ///
   /// In en, this message translates to:
-  /// **'Choose your country and enter your number. We’ll send you a code to sign in — no password needed.'**
+  /// **'Choose your country and enter your number. We’ll send you a code to sign in, no password needed.'**
   String get authPhoneBody;
 
   /// No description provided for @authPhoneSignUpTitle.
@@ -3317,7 +3311,7 @@ abstract class AppLocalizations {
   /// No description provided for @mediaHelp.
   ///
   /// In en, this message translates to:
-  /// **'Up to 8 files, including up to 2 video clips. Photos are resized before they upload. The first photo is the cover — drag to reorder.'**
+  /// **'Up to 8 files, including up to 2 video clips. The first photo is the cover: drag to reorder.'**
   String get mediaHelp;
 
   /// No description provided for @mediaCover.
@@ -3359,7 +3353,7 @@ abstract class AppLocalizations {
   /// No description provided for @mediaUploadFailed.
   ///
   /// In en, this message translates to:
-  /// **'A file didn\'t upload, so nothing was saved yet. Check your connection and try again — files that already uploaded won\'t be sent twice.'**
+  /// **'A file didn\'t upload, so nothing was saved yet. Check your connection and try again. Files that already uploaded won\'t be sent twice.'**
   String get mediaUploadFailed;
 
   /// No description provided for @mediaRemove.
@@ -3935,7 +3929,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyP2.
   ///
   /// In en, this message translates to:
-  /// **'We do not ask for national ID numbers, banking details or your physical location. We run no advertising, we do not sell your data, and we do not share it with ad brokers.'**
+  /// **'We do not ask for national ID numbers or banking details. Your location is read only when you tap the location button on a map, to move that map; it is not stored or sent to us. We run no advertising, we do not sell your data, and we do not share it with ad brokers.'**
   String get privacyP2;
 
   /// No description provided for @privacyH3.
@@ -4838,12 +4832,6 @@ abstract class AppLocalizations {
   /// **'Property AI'**
   String get aiHubAdvisor;
 
-  /// No description provided for @aiHubLawyer.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a Lawyer'**
-  String get aiHubLawyer;
-
   /// No description provided for @aiHubPlainSearch.
   ///
   /// In en, this message translates to:
@@ -4871,7 +4859,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiHubDictate.
   ///
   /// In en, this message translates to:
-  /// **'Speak instead of typing'**
+  /// **'Talk to Akarat AI'**
   String get aiHubDictate;
 
   /// No description provided for @homeAiTitle.
@@ -4885,12 +4873,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Find a home, compare areas, weigh up an investment.'**
   String get homeAdvisorBody;
-
-  /// No description provided for @homeLawyerBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Questions about property and tenancy law in Jordan.'**
-  String get homeLawyerBody;
 
   /// No description provided for @advKicker.
   ///
@@ -4907,7 +4889,7 @@ abstract class AppLocalizations {
   /// No description provided for @advIdleBody.
   ///
   /// In en, this message translates to:
-  /// **'Search, explore, and invest in Jordanian real estate with an intelligent local advisor.'**
+  /// **'Ask about homes, areas and investments in Jordan, in English or Arabic.'**
   String get advIdleBody;
 
   /// No description provided for @advPrompt1.
@@ -5444,839 +5426,947 @@ abstract class AppLocalizations {
   /// **'Search criteria'**
   String get advCriteria;
 
-  /// No description provided for @lawKicker.
+  /// No description provided for @placePickTitle.
   ///
   /// In en, this message translates to:
-  /// **'Akarat Legal AI · Jordanian law'**
-  String get lawKicker;
+  /// **'Choose the place'**
+  String get placePickTitle;
 
-  /// No description provided for @lawTitle.
+  /// No description provided for @placeSearchHint.
   ///
   /// In en, this message translates to:
-  /// **'Ask a Lawyer.'**
-  String get lawTitle;
+  /// **'City, town or neighbourhood'**
+  String get placeSearchHint;
 
-  /// No description provided for @lawSub.
+  /// No description provided for @placeNoMatch.
   ///
   /// In en, this message translates to:
-  /// **'Understand your rights with AI-powered guidance grounded in Jordanian law.'**
-  String get lawSub;
+  /// **'No place by that name. Try another spelling, or clear the search and choose from the list.'**
+  String get placeNoMatch;
 
-  /// No description provided for @lawName.
+  /// No description provided for @placeGovernorates.
   ///
   /// In en, this message translates to:
-  /// **'Akarat Legal AI'**
-  String get lawName;
+  /// **'Governorates'**
+  String get placeGovernorates;
 
-  /// No description provided for @lawPlaceholder.
+  /// No description provided for @placeAllOf.
   ///
   /// In en, this message translates to:
-  /// **'Describe your situation or ask a legal question…'**
-  String get lawPlaceholder;
+  /// **'All of {name}'**
+  String placeAllOf(String name);
 
-  /// No description provided for @lawPlaceholderMore.
+  /// No description provided for @placeAnywhere.
   ///
   /// In en, this message translates to:
-  /// **'Ask a follow-up…'**
-  String get lawPlaceholderMore;
+  /// **'Anywhere in Jordan'**
+  String get placeAnywhere;
 
-  /// No description provided for @lawInputLabel.
+  /// No description provided for @placeNear.
   ///
   /// In en, this message translates to:
-  /// **'Your legal question'**
-  String get lawInputLabel;
+  /// **'Near {place}'**
+  String placeNear(String place);
 
-  /// No description provided for @lawAttach.
+  /// No description provided for @placeField.
   ///
   /// In en, this message translates to:
-  /// **'Attach a document'**
-  String get lawAttach;
+  /// **'Place'**
+  String get placeField;
 
-  /// No description provided for @lawAttachPhotos.
+  /// No description provided for @servicesTitle.
   ///
   /// In en, this message translates to:
-  /// **'Photo of a page'**
-  String get lawAttachPhotos;
+  /// **'Services'**
+  String get servicesTitle;
 
-  /// No description provided for @lawAttachCamera.
+  /// No description provided for @servicesHeadline.
   ///
   /// In en, this message translates to:
-  /// **'Take a photo'**
-  String get lawAttachCamera;
+  /// **'Home services, requested in one place'**
+  String get servicesHeadline;
 
-  /// No description provided for @lawAttachFile.
+  /// No description provided for @servicesIntro.
   ///
   /// In en, this message translates to:
-  /// **'PDF, Word or text file'**
-  String get lawAttachFile;
+  /// **'Tell us what needs doing and where. Our team calls you to arrange it, and nothing is booked or priced until you agree.'**
+  String get servicesIntro;
 
-  /// No description provided for @lawDisclaimerShort.
+  /// No description provided for @servicesSearch.
   ///
   /// In en, this message translates to:
-  /// **'AI-generated legal information, not legal advice. Check it with a licensed Jordanian lawyer before you act.'**
-  String get lawDisclaimerShort;
+  /// **'Search services'**
+  String get servicesSearch;
 
-  /// No description provided for @lawFullNotice.
+  /// No description provided for @servicesRequest.
   ///
   /// In en, this message translates to:
-  /// **'Read the full notice'**
-  String get lawFullNotice;
+  /// **'Request a service'**
+  String get servicesRequest;
 
-  /// No description provided for @lawDisclaimer.
+  /// No description provided for @servicesMine.
   ///
   /// In en, this message translates to:
-  /// **'This information is AI-generated legal guidance for general informational purposes, not a substitute for professional legal advice. Jordanian laws and their interpretation may change. Consult a licensed Jordanian lawyer to verify the information and its applicability to your situation. Conduct your own research before making any legal decision.'**
-  String get lawDisclaimer;
+  /// **'My service requests'**
+  String get servicesMine;
 
-  /// No description provided for @lawPrompt1.
+  /// No description provided for @servicesNoMatch.
   ///
   /// In en, this message translates to:
-  /// **'My landlord wants to increase my rent. Is this legal in Jordan?'**
-  String get lawPrompt1;
+  /// **'No service matches “{q}”.'**
+  String servicesNoMatch(String q);
 
-  /// No description provided for @lawPrompt2.
+  /// No description provided for @servicesNoMatchBody.
   ///
   /// In en, this message translates to:
-  /// **'Can a foreigner purchase property in Amman?'**
-  String get lawPrompt2;
+  /// **'Choose Custom service and describe what you need in your own words.'**
+  String get servicesNoMatchBody;
 
-  /// No description provided for @lawPrompt3.
+  /// No description provided for @servicesCustomCta.
   ///
   /// In en, this message translates to:
-  /// **'Review this rental agreement and identify legal risks.'**
-  String get lawPrompt3;
+  /// **'Describe a custom service'**
+  String get servicesCustomCta;
 
-  /// No description provided for @lawPrompt4.
+  /// No description provided for @servicesNotReady.
   ///
   /// In en, this message translates to:
-  /// **'What happens if a seller refuses to transfer property ownership after payment?'**
-  String get lawPrompt4;
+  /// **'Services are not available yet. Please try again later.'**
+  String get servicesNotReady;
 
-  /// No description provided for @lawPrompt5.
+  /// No description provided for @servicesHow.
   ///
   /// In en, this message translates to:
-  /// **'شو حقوقي إذا صاحب البيت بده يطلعني قبل ما يخلص العقد؟'**
-  String get lawPrompt5;
+  /// **'How it works'**
+  String get servicesHow;
 
-  /// No description provided for @lawPrompt6.
+  /// No description provided for @servicesStep1.
   ///
   /// In en, this message translates to:
-  /// **'كيف بقدر أرفع دعوى على شخص ما رجّعلي مصاري؟'**
-  String get lawPrompt6;
+  /// **'Describe it'**
+  String get servicesStep1;
 
-  /// No description provided for @lawDocQuestion.
+  /// No description provided for @servicesStep1Body.
   ///
   /// In en, this message translates to:
-  /// **'Review this document and identify the legal risks.'**
-  String get lawDocQuestion;
+  /// **'Say what needs doing, where, and when suits you. Add photos if they help.'**
+  String get servicesStep1Body;
 
-  /// No description provided for @lawPickDoc.
+  /// No description provided for @servicesStep2.
   ///
   /// In en, this message translates to:
-  /// **'Choose the agreement to review. It will be read with your question.'**
-  String get lawPickDoc;
+  /// **'We review it'**
+  String get servicesStep2;
 
-  /// No description provided for @lawHistory.
+  /// No description provided for @servicesStep2Body.
   ///
   /// In en, this message translates to:
-  /// **'History'**
-  String get lawHistory;
+  /// **'Our team reads your request and contacts you to agree the details.'**
+  String get servicesStep2Body;
 
-  /// No description provided for @lawHistoryTitle.
+  /// No description provided for @servicesStep3.
   ///
   /// In en, this message translates to:
-  /// **'Your conversations'**
-  String get lawHistoryTitle;
+  /// **'Follow it'**
+  String get servicesStep3;
 
-  /// No description provided for @lawHistoryEmpty.
+  /// No description provided for @servicesStep3Body.
   ///
   /// In en, this message translates to:
-  /// **'Nothing here yet. Your conversations will appear here.'**
-  String get lawHistoryEmpty;
+  /// **'Every update shows in My service requests, and we notify you as it moves.'**
+  String get servicesStep3Body;
 
-  /// No description provided for @lawHistoryError.
+  /// No description provided for @homeServicesTitle.
   ///
   /// In en, this message translates to:
-  /// **'Your conversations couldn’t be loaded.'**
-  String get lawHistoryError;
+  /// **'Services'**
+  String get homeServicesTitle;
 
-  /// No description provided for @lawRetention.
+  /// No description provided for @homeServicesBody.
   ///
   /// In en, this message translates to:
-  /// **'Private to your account. Kept 90 days after your last message; documents 30 days. Delete them any time.'**
-  String get lawRetention;
+  /// **'Plumbing, AC, cleaning and more, arranged by our team.'**
+  String get homeServicesBody;
 
-  /// No description provided for @lawDeleteOne.
+  /// No description provided for @svFormTitle.
   ///
   /// In en, this message translates to:
-  /// **'Delete this conversation'**
-  String get lawDeleteOne;
+  /// **'What do you need?'**
+  String get svFormTitle;
 
-  /// No description provided for @lawDeleteAll.
+  /// No description provided for @svFormBody.
   ///
   /// In en, this message translates to:
-  /// **'Delete all my legal conversations'**
-  String get lawDeleteAll;
+  /// **'Fields marked * are required.'**
+  String get svFormBody;
 
-  /// No description provided for @lawConfirmAll.
+  /// No description provided for @svService.
   ///
   /// In en, this message translates to:
-  /// **'This deletes every legal conversation and document on your account. It can’t be undone.'**
-  String get lawConfirmAll;
+  /// **'Service *'**
+  String get svService;
 
-  /// No description provided for @lawDeleted.
+  /// No description provided for @svChooseService.
   ///
   /// In en, this message translates to:
-  /// **'Deleted.'**
-  String get lawDeleted;
+  /// **'Choose the service'**
+  String get svChooseService;
 
-  /// No description provided for @lawAllDeleted.
+  /// No description provided for @svCustom.
   ///
   /// In en, this message translates to:
-  /// **'All your legal conversations and documents were deleted.'**
-  String get lawAllDeleted;
+  /// **'What service do you need? *'**
+  String get svCustom;
 
-  /// No description provided for @lawThinking.
+  /// No description provided for @svCustomHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Solar panel cleaning'**
+  String get svCustomHint;
+
+  /// No description provided for @svDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the problem *'**
+  String get svDesc;
+
+  /// No description provided for @svDescHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What is wrong, since when, and anything we should know before visiting.'**
+  String get svDescHint;
+
+  /// No description provided for @svWhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Where *'**
+  String get svWhere;
+
+  /// No description provided for @svPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Area *'**
+  String get svPlace;
+
+  /// No description provided for @svAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Street, building and floor *'**
+  String get svAddress;
+
+  /// No description provided for @svAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Al-Kindi St, building 12, 3rd floor, flat 5'**
+  String get svAddressHint;
+
+  /// No description provided for @svPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin on the map (optional)'**
+  String get svPin;
+
+  /// No description provided for @svPinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the map or drag the pin onto the building.'**
+  String get svPinHint;
+
+  /// No description provided for @svPinNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No pin yet'**
+  String get svPinNone;
+
+  /// No description provided for @svPinRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove pin'**
+  String get svPinRemove;
+
+  /// No description provided for @svWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'When suits you *'**
+  String get svWhen;
+
+  /// No description provided for @svDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred day *'**
+  String get svDate;
+
+  /// No description provided for @svWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Time of day'**
+  String get svWindow;
+
+  /// No description provided for @svWindowAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get svWindowAny;
+
+  /// No description provided for @svWindowMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning (8–12)'**
+  String get svWindowMorning;
+
+  /// No description provided for @svWindowAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon (12–5)'**
+  String get svWindowAfternoon;
+
+  /// No description provided for @svWindowEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening (5–9)'**
+  String get svWindowEvening;
+
+  /// No description provided for @svUrgency.
+  ///
+  /// In en, this message translates to:
+  /// **'How urgent is it? *'**
+  String get svUrgency;
+
+  /// No description provided for @svUrgNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get svUrgNormal;
+
+  /// No description provided for @svUrgNormalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'In the next few days'**
+  String get svUrgNormalNote;
+
+  /// No description provided for @svUrgUrgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get svUrgUrgent;
+
+  /// No description provided for @svUrgUrgentNote.
+  ///
+  /// In en, this message translates to:
+  /// **'As soon as possible'**
+  String get svUrgUrgentNote;
+
+  /// No description provided for @svUrgEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency'**
+  String get svUrgEmergency;
+
+  /// No description provided for @svUrgEmergencyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaking, unsafe, or not working at all'**
+  String get svUrgEmergencyNote;
+
+  /// No description provided for @svEmergencyWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'If anyone is in danger, or you smell gas or see fire, call 911 first.'**
+  String get svEmergencyWarning;
+
+  /// No description provided for @svPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos (optional)'**
+  String get svPhotos;
+
+  /// No description provided for @svPhotosHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 6 photos. Only you and the Akarat.ai team can see them.'**
+  String get svPhotosHint;
+
+  /// No description provided for @svAddPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photos'**
+  String get svAddPhotos;
+
+  /// No description provided for @svRemovePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get svRemovePhoto;
+
+  /// No description provided for @svContact.
+  ///
+  /// In en, this message translates to:
+  /// **'How we reach you *'**
+  String get svContact;
+
+  /// No description provided for @svName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name *'**
+  String get svName;
+
+  /// No description provided for @svPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number *'**
+  String get svPhone;
+
+  /// No description provided for @svEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email (optional)'**
+  String get svEmail;
+
+  /// No description provided for @svSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get svSend;
+
+  /// No description provided for @svSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get svSending;
+
+  /// No description provided for @svUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading photo {i} of {n}…'**
+  String svUploading(String i, String n);
+
+  /// No description provided for @svPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request and photos are seen only by you and the Akarat.ai team.'**
+  String get svPrivacy;
+
+  /// No description provided for @svFixBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'Some details need a look. They are marked below.'**
+  String get svFixBelow;
+
+  /// No description provided for @svErrCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a service.'**
+  String get svErrCategory;
+
+  /// No description provided for @svErrCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the service in a few words (2 to 80 characters).'**
+  String get svErrCustom;
+
+  /// No description provided for @svErrDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the problem in at least 10 characters.'**
+  String get svErrDesc;
+
+  /// No description provided for @svErrPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the city or town.'**
+  String get svErrPlace;
+
+  /// No description provided for @svErrHood.
+  ///
+  /// In en, this message translates to:
+  /// **'That neighbourhood is not in the city chosen. Choose it again.'**
+  String get svErrHood;
+
+  /// No description provided for @svErrAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the street and building (at least 3 characters).'**
+  String get svErrAddress;
+
+  /// No description provided for @svErrPin.
+  ///
+  /// In en, this message translates to:
+  /// **'The pin is outside Jordan. Move it, or remove it.'**
+  String get svErrPin;
+
+  /// No description provided for @svErrDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a day from today up to six months ahead.'**
+  String get svErrDate;
+
+  /// No description provided for @svErrPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo could not be attached. Remove it and add it again.'**
+  String get svErrPhotos;
+
+  /// No description provided for @svErrName.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your name.'**
+  String get svErrName;
+
+  /// No description provided for @svErrPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a phone number we can call, for example 07 9123 4567.'**
+  String get svErrPhone;
+
+  /// No description provided for @svErrEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'That email address does not look right.'**
+  String get svErrEmail;
+
+  /// No description provided for @svErrTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'You have sent 10 requests in the last day. Please wait before sending another.'**
+  String get svErrTooMany;
+
+  /// No description provided for @svErrSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to send your request.'**
+  String get svErrSignIn;
+
+  /// No description provided for @svErrPhotoType.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos must be JPEG, PNG, WebP or HEIC.'**
+  String get svErrPhotoType;
+
+  /// No description provided for @svErrPhotoSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Each photo can be up to 8 MB.'**
+  String get svErrPhotoSize;
+
+  /// No description provided for @svErrPhotoCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 6 photos.'**
+  String get svErrPhotoCount;
+
+  /// No description provided for @svErrNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Your connection dropped. Press Send again: it will not create a second request.'**
+  String get svErrNetwork;
+
+  /// No description provided for @svErrOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request could not be sent. Please try again.'**
+  String get svErrOther;
+
+  /// No description provided for @svDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We have your request'**
+  String get svDoneTitle;
+
+  /// No description provided for @svDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Our team will call you to arrange it. Nothing is booked until you agree.'**
+  String get svDoneBody;
+
+  /// No description provided for @svDoneRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reference'**
+  String get svDoneRef;
+
+  /// No description provided for @svDoneDup.
+  ///
+  /// In en, this message translates to:
+  /// **'This request had already reached us, so it was not sent twice.'**
+  String get svDoneDup;
+
+  /// No description provided for @svSeeMine.
+  ///
+  /// In en, this message translates to:
+  /// **'See my requests'**
+  String get svSeeMine;
+
+  /// No description provided for @svAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Request another service'**
+  String get svAnother;
+
+  /// No description provided for @svStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get svStatusPending;
+
+  /// No description provided for @svStatusUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get svStatusUnderReview;
+
+  /// No description provided for @svStatusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get svStatusAccepted;
+
+  /// No description provided for @svStatusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get svStatusInProgress;
+
+  /// No description provided for @svStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get svStatusCompleted;
+
+  /// No description provided for @svStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get svStatusRejected;
+
+  /// No description provided for @svStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get svStatusCancelled;
+
+  /// No description provided for @svBodyPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Received. Our team will look at it soon.'**
+  String get svBodyPending;
+
+  /// No description provided for @svBodyUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Our team is reviewing your request.'**
+  String get svBodyUnderReview;
+
+  /// No description provided for @svBodyAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted. We will contact you to arrange it.'**
+  String get svBodyAccepted;
+
+  /// No description provided for @svBodyInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'The work is under way.'**
+  String get svBodyInProgress;
+
+  /// No description provided for @svBodyCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The work is done.'**
+  String get svBodyCompleted;
+
+  /// No description provided for @svBodyRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'We cannot take this request.'**
+  String get svBodyRejected;
+
+  /// No description provided for @svBodyCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'You cancelled this request.'**
+  String get svBodyCancelled;
+
+  /// No description provided for @svMineSub.
+  ///
+  /// In en, this message translates to:
+  /// **'You can cancel a request until work begins.'**
+  String get svMineSub;
+
+  /// No description provided for @svMineEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not requested a service yet.'**
+  String get svMineEmpty;
+
+  /// No description provided for @svSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent {date}'**
+  String svSent(String date);
+
+  /// No description provided for @svPreferred.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred: {when}'**
+  String svPreferred(String when);
+
+  /// No description provided for @svDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get svDetails;
+
+  /// No description provided for @svUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get svUpdates;
+
+  /// No description provided for @svTeamNote.
+  ///
+  /// In en, this message translates to:
+  /// **'From the Akarat.ai team'**
+  String get svTeamNote;
+
+  /// No description provided for @svYourNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reason'**
+  String get svYourNote;
+
+  /// No description provided for @svEventCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent'**
+  String get svEventCreated;
+
+  /// No description provided for @svEventNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A note from the team'**
+  String get svEventNote;
+
+  /// No description provided for @svCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel request'**
+  String get svCancel;
+
+  /// No description provided for @svCancelAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this request?'**
+  String get svCancelAsk;
+
+  /// No description provided for @svCancelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The team is told at once. You can send a new request at any time.'**
+  String get svCancelBody;
+
+  /// No description provided for @svCancelReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional)'**
+  String get svCancelReason;
+
+  /// No description provided for @svCancelYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, cancel it'**
+  String get svCancelYes;
+
+  /// No description provided for @svCancelNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get svCancelNo;
+
+  /// No description provided for @svCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled.'**
+  String get svCancelled;
+
+  /// No description provided for @svCancelFail.
+  ///
+  /// In en, this message translates to:
+  /// **'It could not be cancelled. If work has started, contact us.'**
+  String get svCancelFail;
+
+  /// No description provided for @notifServiceStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Service request {ref} ({what}): {status}.'**
+  String notifServiceStatus(String ref, String what, String status);
+
+  /// No description provided for @notifServiceSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'The team says: {note}'**
+  String notifServiceSaid(String note);
+
+  /// No description provided for @notifServiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A note from the team on {ref} ({what}): {note}'**
+  String notifServiceNote(String ref, String what, String note);
+
+  /// No description provided for @notifServiceNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New service request {ref}: {what}.'**
+  String notifServiceNew(String ref, String what);
+
+  /// No description provided for @notifServiceCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The customer cancelled service request {ref}.'**
+  String notifServiceCancelled(String ref);
+
+  /// No description provided for @mapLocateMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to my location'**
+  String get mapLocateMe;
+
+  /// No description provided for @mapLocateOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on location services to see where you are.'**
+  String get mapLocateOff;
+
+  /// No description provided for @mapLocateDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Akarat.ai isn’t allowed to see your location. Allow it in Settings.'**
+  String get mapLocateDenied;
+
+  /// No description provided for @mapLocateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location couldn’t be found. Try again.'**
+  String get mapLocateFailed;
+
+  /// No description provided for @mapLocateSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get mapLocateSettings;
+
+  /// No description provided for @talkThinking.
   ///
   /// In en, this message translates to:
   /// **'Thinking…'**
-  String get lawThinking;
+  String get talkThinking;
 
-  /// No description provided for @lawWriting.
+  /// No description provided for @talkSpeaking.
   ///
   /// In en, this message translates to:
-  /// **'Writing…'**
-  String get lawWriting;
+  /// **'Speaking…'**
+  String get talkSpeaking;
 
-  /// No description provided for @lawDoingDocuments.
+  /// No description provided for @talkPaused.
   ///
   /// In en, this message translates to:
-  /// **'Reading your documents…'**
-  String get lawDoingDocuments;
+  /// **'Tap the circle to speak'**
+  String get talkPaused;
 
-  /// No description provided for @lawDoingLibrary.
+  /// No description provided for @talkHintListening.
   ///
   /// In en, this message translates to:
-  /// **'Searching the legal library…'**
-  String get lawDoingLibrary;
+  /// **'Ask about property in Jordan. I answer when you pause.'**
+  String get talkHintListening;
 
-  /// No description provided for @lawDoingLookup.
+  /// No description provided for @talkHintThinking.
   ///
   /// In en, this message translates to:
-  /// **'Checking a citation…'**
-  String get lawDoingLookup;
+  /// **'Searching listings and sources.'**
+  String get talkHintThinking;
 
-  /// No description provided for @lawDoingWebSearch.
+  /// No description provided for @talkHintSpeaking.
   ///
   /// In en, this message translates to:
-  /// **'Searching official Jordanian sources…'**
-  String get lawDoingWebSearch;
+  /// **'Tap the circle to interrupt.'**
+  String get talkHintSpeaking;
 
-  /// No description provided for @lawDoingWebFetch.
+  /// No description provided for @talkOrbSend.
   ///
   /// In en, this message translates to:
-  /// **'Reading {host}…'**
-  String lawDoingWebFetch(String host);
+  /// **'Send what I said'**
+  String get talkOrbSend;
 
-  /// No description provided for @lawDoingWebFetchSource.
+  /// No description provided for @talkOrbInterrupt.
   ///
   /// In en, this message translates to:
-  /// **'Reading a source…'**
-  String get lawDoingWebFetchSource;
+  /// **'Interrupt and speak'**
+  String get talkOrbInterrupt;
 
-  /// No description provided for @lawDoingOther.
+  /// No description provided for @talkOrbStart.
   ///
   /// In en, this message translates to:
-  /// **'Working…'**
-  String get lawDoingOther;
+  /// **'Start speaking'**
+  String get talkOrbStart;
 
-  /// No description provided for @lawDidDocuments.
+  /// No description provided for @talkLangAr.
   ///
   /// In en, this message translates to:
-  /// **'Read your documents'**
-  String get lawDidDocuments;
+  /// **'I’m speaking Arabic'**
+  String get talkLangAr;
 
-  /// No description provided for @lawDidLibraryFor.
+  /// No description provided for @talkLangEn.
   ///
   /// In en, this message translates to:
-  /// **'Searched the legal library for “{q}”'**
-  String lawDidLibraryFor(String q);
+  /// **'I’m speaking English'**
+  String get talkLangEn;
 
-  /// No description provided for @lawDidLibrary.
+  /// No description provided for @talkLangSwitch.
   ///
   /// In en, this message translates to:
-  /// **'Searched the legal library'**
-  String get lawDidLibrary;
+  /// **'Switch the language you speak'**
+  String get talkLangSwitch;
 
-  /// No description provided for @lawDidLookupFor.
+  /// No description provided for @talkClose.
   ///
   /// In en, this message translates to:
-  /// **'Checked the citation “{q}”'**
-  String lawDidLookupFor(String q);
+  /// **'End voice conversation'**
+  String get talkClose;
 
-  /// No description provided for @lawDidLookup.
+  /// No description provided for @talkKept.
   ///
   /// In en, this message translates to:
-  /// **'Checked a citation'**
-  String get lawDidLookup;
+  /// **'Everything said here is also written in the chat, with the listings.'**
+  String get talkKept;
 
-  /// No description provided for @lawDidWebSearchFor.
+  /// No description provided for @talkNoVoice.
   ///
   /// In en, this message translates to:
-  /// **'Searched official sources for “{q}”'**
-  String lawDidWebSearchFor(String q);
+  /// **'This phone has no voice for this language, so the answer is written here instead.'**
+  String get talkNoVoice;
 
-  /// No description provided for @lawDidWebSearch.
+  /// No description provided for @talkSpeakFailed.
   ///
   /// In en, this message translates to:
-  /// **'Searched official sources'**
-  String get lawDidWebSearch;
+  /// **'The answer couldn’t be read aloud. It is written here.'**
+  String get talkSpeakFailed;
 
-  /// No description provided for @lawDidWebFetch.
+  /// No description provided for @talkFailed.
   ///
   /// In en, this message translates to:
-  /// **'Read {host}'**
-  String lawDidWebFetch(String host);
+  /// **'That couldn’t be answered just now. Tap the circle to try again.'**
+  String get talkFailed;
 
-  /// No description provided for @lawDidWebFetchSource.
+  /// No description provided for @talkOnScreen.
   ///
   /// In en, this message translates to:
-  /// **'Read a source'**
-  String get lawDidWebFetchSource;
+  /// **'The results are in the chat.'**
+  String get talkOnScreen;
 
-  /// No description provided for @lawSummaryLibrary.
+  /// No description provided for @talkCardHint.
   ///
   /// In en, this message translates to:
-  /// **'Legal library'**
-  String get lawSummaryLibrary;
-
-  /// No description provided for @lawSummarySearches.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 search} other{{count} searches}}'**
-  String lawSummarySearches(int count);
-
-  /// No description provided for @lawSummarySources.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 source read} other{{count} sources read}}'**
-  String lawSummarySources(int count);
-
-  /// No description provided for @lawSummaryDocuments.
-  ///
-  /// In en, this message translates to:
-  /// **'your documents'**
-  String get lawSummaryDocuments;
-
-  /// No description provided for @lawSources.
-  ///
-  /// In en, this message translates to:
-  /// **'Sources'**
-  String get lawSources;
-
-  /// No description provided for @lawBadgeInForce.
-  ///
-  /// In en, this message translates to:
-  /// **'Verified law · in force'**
-  String get lawBadgeInForce;
-
-  /// No description provided for @lawBadgeAmended.
-  ///
-  /// In en, this message translates to:
-  /// **'Verified law · amended'**
-  String get lawBadgeAmended;
-
-  /// No description provided for @lawBadgeRepealed.
-  ///
-  /// In en, this message translates to:
-  /// **'Verified law · repealed'**
-  String get lawBadgeRepealed;
-
-  /// No description provided for @lawBadgeLaw.
-  ///
-  /// In en, this message translates to:
-  /// **'Verified law'**
-  String get lawBadgeLaw;
-
-  /// No description provided for @lawBadgeJudgment.
-  ///
-  /// In en, this message translates to:
-  /// **'Verified judgment'**
-  String get lawBadgeJudgment;
-
-  /// No description provided for @lawBadgeCommentary.
-  ///
-  /// In en, this message translates to:
-  /// **'Commentary'**
-  String get lawBadgeCommentary;
-
-  /// No description provided for @lawBadgeOfficial.
-  ///
-  /// In en, this message translates to:
-  /// **'Official website'**
-  String get lawBadgeOfficial;
-
-  /// No description provided for @lawBadgeSecondary.
-  ///
-  /// In en, this message translates to:
-  /// **'Secondary source · not binding'**
-  String get lawBadgeSecondary;
-
-  /// No description provided for @lawBadgeDocument.
-  ///
-  /// In en, this message translates to:
-  /// **'Your document'**
-  String get lawBadgeDocument;
-
-  /// No description provided for @lawChecked.
-  ///
-  /// In en, this message translates to:
-  /// **'Checked {date}'**
-  String lawChecked(String date);
-
-  /// No description provided for @lawLicensed.
-  ///
-  /// In en, this message translates to:
-  /// **'Licensed database'**
-  String get lawLicensed;
-
-  /// No description provided for @lawPage.
-  ///
-  /// In en, this message translates to:
-  /// **'page {n}'**
-  String lawPage(int n);
-
-  /// No description provided for @lawUnverifiedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'References that couldn’t be verified'**
-  String get lawUnverifiedTitle;
-
-  /// No description provided for @lawUnverifiedBody.
-  ///
-  /// In en, this message translates to:
-  /// **'These references in the answer couldn’t be matched to an official source. Treat them as unconfirmed and check them with a lawyer.'**
-  String get lawUnverifiedBody;
-
-  /// No description provided for @lawUnverifiedMark.
-  ///
-  /// In en, this message translates to:
-  /// **'Not verified against an official source'**
-  String get lawUnverifiedMark;
-
-  /// No description provided for @lawUrgent.
-  ///
-  /// In en, this message translates to:
-  /// **'Urgent.'**
-  String get lawUrgent;
-
-  /// No description provided for @lawImportant.
-  ///
-  /// In en, this message translates to:
-  /// **'Important.'**
-  String get lawImportant;
-
-  /// No description provided for @lawShareSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Share summary'**
-  String get lawShareSummary;
-
-  /// No description provided for @lawReport.
-  ///
-  /// In en, this message translates to:
-  /// **'Report a problem'**
-  String get lawReport;
-
-  /// No description provided for @lawReported.
-  ///
-  /// In en, this message translates to:
-  /// **'Reported'**
-  String get lawReported;
-
-  /// No description provided for @lawFbTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'What was wrong with this answer?'**
-  String get lawFbTitle;
-
-  /// No description provided for @lawFbGood.
-  ///
-  /// In en, this message translates to:
-  /// **'It was helpful'**
-  String get lawFbGood;
-
-  /// No description provided for @lawFbWrongLaw.
-  ///
-  /// In en, this message translates to:
-  /// **'Wrong law'**
-  String get lawFbWrongLaw;
-
-  /// No description provided for @lawFbWrongCitation.
-  ///
-  /// In en, this message translates to:
-  /// **'Wrong article or citation'**
-  String get lawFbWrongCitation;
-
-  /// No description provided for @lawFbOutdated.
-  ///
-  /// In en, this message translates to:
-  /// **'Out of date'**
-  String get lawFbOutdated;
-
-  /// No description provided for @lawFbFabricated.
-  ///
-  /// In en, this message translates to:
-  /// **'Cites something that doesn’t exist'**
-  String get lawFbFabricated;
-
-  /// No description provided for @lawFbMissing.
-  ///
-  /// In en, this message translates to:
-  /// **'Missed something important'**
-  String get lawFbMissing;
-
-  /// No description provided for @lawFbUnclear.
-  ///
-  /// In en, this message translates to:
-  /// **'Unclear'**
-  String get lawFbUnclear;
-
-  /// No description provided for @lawFbOther.
-  ///
-  /// In en, this message translates to:
-  /// **'Something else'**
-  String get lawFbOther;
-
-  /// No description provided for @lawFbPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Add details (optional). Please leave out personal information.'**
-  String get lawFbPlaceholder;
-
-  /// No description provided for @lawFbReviewerNote.
-  ///
-  /// In en, this message translates to:
-  /// **'Reviewer report: the question and answer are attached, with identifiers masked, for the launch review.'**
-  String get lawFbReviewerNote;
-
-  /// No description provided for @lawFbSend.
-  ///
-  /// In en, this message translates to:
-  /// **'Send report'**
-  String get lawFbSend;
-
-  /// No description provided for @lawFbSent.
-  ///
-  /// In en, this message translates to:
-  /// **'Thank you. Your report was sent.'**
-  String get lawFbSent;
-
-  /// No description provided for @lawFbFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'The report couldn’t be sent. Try again.'**
-  String get lawFbFailed;
-
-  /// No description provided for @lawSummaryHeading.
-  ///
-  /// In en, this message translates to:
-  /// **'Akarat.ai — Ask a Lawyer · Research summary'**
-  String get lawSummaryHeading;
-
-  /// No description provided for @lawSummaryQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Question:'**
-  String get lawSummaryQuestion;
-
-  /// No description provided for @lawSummaryUnverified.
-  ///
-  /// In en, this message translates to:
-  /// **'Not verified:'**
-  String get lawSummaryUnverified;
-
-  /// No description provided for @lawBannerNotReady.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a Lawyer isn’t available right now. Please try again later.'**
-  String get lawBannerNotReady;
-
-  /// No description provided for @lawBannerSignIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign in to ask. Your conversations and documents stay private to your account.'**
-  String get lawBannerSignIn;
-
-  /// No description provided for @lawBannerReview.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a Lawyer is being reviewed by licensed Jordanian lawyers before it opens to everyone.'**
-  String get lawBannerReview;
-
-  /// No description provided for @lawBannerReviewer.
-  ///
-  /// In en, this message translates to:
-  /// **'Reviewer access. Use “Report a problem” on any answer to record findings for the launch review.'**
-  String get lawBannerReviewer;
-
-  /// No description provided for @lawDocUploading.
-  ///
-  /// In en, this message translates to:
-  /// **'Uploading…'**
-  String get lawDocUploading;
-
-  /// No description provided for @lawDocScan.
-  ///
-  /// In en, this message translates to:
-  /// **'scan'**
-  String get lawDocScan;
-
-  /// No description provided for @lawDocPages.
-  ///
-  /// In en, this message translates to:
-  /// **'{n, plural, =1{1 page} other{{n} pages}}'**
-  String lawDocPages(int n);
-
-  /// No description provided for @lawDocPhoto.
-  ///
-  /// In en, this message translates to:
-  /// **'photo'**
-  String get lawDocPhoto;
-
-  /// No description provided for @lawDocText.
-  ///
-  /// In en, this message translates to:
-  /// **'text'**
-  String get lawDocText;
-
-  /// No description provided for @lawDocRemove.
-  ///
-  /// In en, this message translates to:
-  /// **'Remove'**
-  String get lawDocRemove;
-
-  /// No description provided for @lawDocFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn’t add'**
-  String get lawDocFailed;
-
-  /// No description provided for @lawDocErrTooBig.
-  ///
-  /// In en, this message translates to:
-  /// **'That file is over 4 MB.'**
-  String get lawDocErrTooBig;
-
-  /// No description provided for @lawDocErrUnsupported.
-  ///
-  /// In en, this message translates to:
-  /// **'Upload a PDF, a Word file (.docx), a text file, or a photo (JPG, PNG or WebP).'**
-  String get lawDocErrUnsupported;
-
-  /// No description provided for @lawDocErrOldWord.
-  ///
-  /// In en, this message translates to:
-  /// **'Older Word files (.doc) can’t be read. Save it as .docx or PDF and upload that.'**
-  String get lawDocErrOldWord;
-
-  /// No description provided for @lawDocErrEncrypted.
-  ///
-  /// In en, this message translates to:
-  /// **'That file is password-protected. Save an unprotected copy, or print it to PDF, and upload that.'**
-  String get lawDocErrEncrypted;
-
-  /// No description provided for @lawDocErrActiveContent.
-  ///
-  /// In en, this message translates to:
-  /// **'That file contains scripts, macros or embedded files, so it can’t be accepted. Save it as a plain PDF and try again.'**
-  String get lawDocErrActiveContent;
-
-  /// No description provided for @lawDocErrMacros.
-  ///
-  /// In en, this message translates to:
-  /// **'That Word file contains macros, so it can’t be accepted. Save it as a PDF and try again.'**
-  String get lawDocErrMacros;
-
-  /// No description provided for @lawDocErrDamaged.
-  ///
-  /// In en, this message translates to:
-  /// **'That file couldn’t be read. It may be damaged.'**
-  String get lawDocErrDamaged;
-
-  /// No description provided for @lawDocErrTooManyPages.
-  ///
-  /// In en, this message translates to:
-  /// **'That document has more than 30 pages. Upload just the pages that matter.'**
-  String get lawDocErrTooManyPages;
-
-  /// No description provided for @lawDocErrNotText.
-  ///
-  /// In en, this message translates to:
-  /// **'That file doesn’t look like a document.'**
-  String get lawDocErrNotText;
-
-  /// No description provided for @lawDocErrNoText.
-  ///
-  /// In en, this message translates to:
-  /// **'That Word file has no text in it (it may hold scanned images). Upload it as a PDF or as photos instead.'**
-  String get lawDocErrNoText;
-
-  /// No description provided for @lawDocErrTooLong.
-  ///
-  /// In en, this message translates to:
-  /// **'That document is too long to read in one go. Upload the part that matters.'**
-  String get lawDocErrTooLong;
-
-  /// No description provided for @lawDocErrEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'That file is empty.'**
-  String get lawDocErrEmpty;
-
-  /// No description provided for @lawDocErrTooMany.
-  ///
-  /// In en, this message translates to:
-  /// **'A conversation can hold up to 4 documents. Start a new conversation for more.'**
-  String get lawDocErrTooMany;
-
-  /// No description provided for @lawDocErrFull.
-  ///
-  /// In en, this message translates to:
-  /// **'These documents together are too long. Remove one, or start a new conversation.'**
-  String get lawDocErrFull;
-
-  /// No description provided for @lawDocErrRateLimited.
-  ///
-  /// In en, this message translates to:
-  /// **'You’re uploading quickly. Wait a moment and try again.'**
-  String get lawDocErrRateLimited;
-
-  /// No description provided for @lawDocErrOffline.
-  ///
-  /// In en, this message translates to:
-  /// **'You seem to be offline.'**
-  String get lawDocErrOffline;
-
-  /// No description provided for @lawDocErrBusy.
-  ///
-  /// In en, this message translates to:
-  /// **'Wait for the current upload to finish.'**
-  String get lawDocErrBusy;
-
-  /// No description provided for @lawDocErrOther.
-  ///
-  /// In en, this message translates to:
-  /// **'That file couldn’t be added. Try again.'**
-  String get lawDocErrOther;
-
-  /// No description provided for @lawLeak.
-  ///
-  /// In en, this message translates to:
-  /// **'I can’t share how this service is set up. Ask me about your legal question.'**
-  String get lawLeak;
-
-  /// No description provided for @lawRefused.
-  ///
-  /// In en, this message translates to:
-  /// **'I can’t help with that request. I can explain Jordanian law and help you prepare to speak with a lawyer.'**
-  String get lawRefused;
-
-  /// No description provided for @lawWithdrawn.
-  ///
-  /// In en, this message translates to:
-  /// **'This answer was withdrawn.'**
-  String get lawWithdrawn;
-
-  /// No description provided for @lawNoticePartial.
-  ///
-  /// In en, this message translates to:
-  /// **'I ran out of time before finishing. Ask me to continue, or narrow the question.'**
-  String get lawNoticePartial;
-
-  /// No description provided for @lawNoticeStopped.
-  ///
-  /// In en, this message translates to:
-  /// **'Stopped. Send another message to carry on.'**
-  String get lawNoticeStopped;
-
-  /// No description provided for @lawNoticeUnbacked.
-  ///
-  /// In en, this message translates to:
-  /// **'This answer says it checked sources, but no search or lookup was run for it. Treat its statements as unverified and check them with a lawyer.'**
-  String get lawNoticeUnbacked;
-
-  /// No description provided for @lawErrRateLimited.
-  ///
-  /// In en, this message translates to:
-  /// **'You’re sending messages quickly. Wait a few seconds and try again.'**
-  String get lawErrRateLimited;
-
-  /// No description provided for @lawErrQuota.
-  ///
-  /// In en, this message translates to:
-  /// **'You’ve reached today’s limit for Ask a Lawyer. It resets tomorrow.'**
-  String get lawErrQuota;
-
-  /// No description provided for @lawErrQuotaTotal.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a Lawyer has answered all it can for today. It will be back tomorrow.'**
-  String get lawErrQuotaTotal;
-
-  /// No description provided for @lawErrBusy.
-  ///
-  /// In en, this message translates to:
-  /// **'The service is busy right now. Try again in a moment.'**
-  String get lawErrBusy;
-
-  /// No description provided for @lawErrNotConfigured.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a Lawyer isn’t available right now.'**
-  String get lawErrNotConfigured;
-
-  /// No description provided for @lawErrTooLong.
-  ///
-  /// In en, this message translates to:
-  /// **'That message is too long. Keep it under 4,000 characters.'**
-  String get lawErrTooLong;
-
-  /// No description provided for @lawErrOffline.
-  ///
-  /// In en, this message translates to:
-  /// **'You seem to be offline. Check your connection and try again.'**
-  String get lawErrOffline;
-
-  /// No description provided for @lawErrInterrupted.
-  ///
-  /// In en, this message translates to:
-  /// **'The answer was cut off on its way here. Try again.'**
-  String get lawErrInterrupted;
-
-  /// No description provided for @lawErrSignIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Your session has ended. Sign in again to continue.'**
-  String get lawErrSignIn;
-
-  /// No description provided for @lawErrNotOpen.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a Lawyer isn’t open to your account yet.'**
-  String get lawErrNotOpen;
-
-  /// No description provided for @lawErrNotFound.
-  ///
-  /// In en, this message translates to:
-  /// **'That conversation no longer exists. Start a new one.'**
-  String get lawErrNotFound;
-
-  /// No description provided for @lawErrOther.
-  ///
-  /// In en, this message translates to:
-  /// **'Something went wrong. Try again.'**
-  String get lawErrOther;
+  /// **'Ask out loud in Arabic or English and hear the answer.'**
+  String get talkCardHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -3,9 +3,11 @@ import 'package:material_ui/material_ui.dart';
 import '../../app/localization/l10n.dart';
 import '../../app/theme/tokens.dart';
 import '../../core/utils/input_formatters.dart';
+import '../../core/widgets/place_picker.dart';
 import '../../core/widgets/state_views.dart';
 import '../../shared/models/listing_filters.dart';
 import '../../shared/reference/market_data.dart';
+import '../../shared/reference/places.dart';
 import '../../shared/widgets/pickers.dart';
 
 /// Edits a copy of the filters and returns it on "Show results".
@@ -75,7 +77,6 @@ class _FiltersSheetState extends State<_FiltersSheet> {
     final l = context.l10n;
     final lang = context.lang;
     final c = context.colors;
-    final hoods = Market.neighborhoodsOf(_f.cityId);
 
     return DraggableScrollableSheet(
       expand: false,
@@ -98,39 +99,21 @@ class _FiltersSheetState extends State<_FiltersSheet> {
               // Room above the first field for its floating label.
               padding: const EdgeInsets.fromLTRB(Space.gutter, Space.sm, Space.gutter, Space.lg),
               children: [
-                _PickerField(
+                // Any governorate, town or neighbourhood, by search or by level.
+                PlaceField(
                   label: l.filterCity,
-                  value: Market.city(_f.cityId)?.label(lang) ?? l.filterAnyCity,
-                  onTap: () async {
-                    final id = await showChoiceSheet(
-                      context: context,
-                      title: l.filterCity,
-                      options: Market.cities,
-                      selected: _f.cityId,
-                      anyLabel: l.filterAnyCity,
-                    );
-                    if (id == null) return;
-                    setState(() => _f = _f.copyWith(cityId: id.isEmpty ? null : id, clearCity: id.isEmpty));
-                  },
-                ),
-                if (hoods.isNotEmpty) ...[
-                  const SizedBox(height: Space.sm),
-                  _PickerField(
-                    label: l.filterArea,
-                    value: Market.neighborhood(_f.neighborhoodId)?.label(lang) ?? l.filterAnyArea,
-                    onTap: () async {
-                      final id = await showChoiceSheet(
-                        context: context,
-                        title: l.filterArea,
-                        options: hoods,
-                        selected: _f.neighborhoodId,
-                        anyLabel: l.filterAnyArea,
-                      );
-                      if (id == null) return;
-                      setState(() => _f = _f.copyWith(neighborhoodId: id.isEmpty ? null : id, clearNeighborhood: true));
-                    },
+                  anyLabel: l.placeAnywhere,
+                  value: _f.governorateId == null && _f.cityId == null
+                      ? null
+                      : PlaceSel(governorateId: _f.governorateId, cityId: _f.cityId, neighborhoodId: _f.neighborhoodId),
+                  onChanged: (p) => setState(
+                    () => _f = p == null
+                        ? _f.copyWith(clearCity: true, clearNeighborhood: true)
+                        : p.city == null
+                        ? _f.copyWith(governorateId: p.gov, clearCity: true, clearNeighborhood: true)
+                        : _f.copyWith(cityId: p.city, neighborhoodId: p.hood, clearNeighborhood: true),
                   ),
-                ],
+                ),
                 const SizedBox(height: Space.lg),
                 Text(l.filterType, style: context.text.titleSmall),
                 const SizedBox(height: Space.xs),
@@ -204,25 +187,6 @@ class _FiltersSheetState extends State<_FiltersSheet> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PickerField extends StatelessWidget {
-  const _PickerField({required this.label, required this.value, required this.onTap});
-  final String label;
-  final String value;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: Radii.field,
-      child: InputDecorator(
-        decoration: InputDecoration(labelText: label, suffixIcon: const Icon(Icons.expand_more_rounded)),
-        child: Text(value, style: context.text.bodyLarge),
       ),
     );
   }

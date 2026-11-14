@@ -21,6 +21,7 @@ import '../../core/widgets/user_text.dart';
 import '../../shared/models/listing.dart';
 import '../../shared/models/listing_filters.dart';
 import '../../shared/reference/market_data.dart';
+import '../../shared/reference/places.dart';
 import '../../shared/widgets/property_card.dart';
 import '../property_details/property_details_screen.dart';
 import '../tour/tour.dart';
@@ -129,7 +130,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       deal: switch (q['deal']) {
         'rent' => DealType.rent,
         'sale' => DealType.sale,
-        _ => null,
+        _ => ref.read(exploreFiltersProvider).deal ?? DealType.sale,
       },
       cityId: city ?? hood?.city,
       neighborhoodId: hood?.id,
@@ -148,8 +149,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   }
 
   void _setDeal(DealType? d) {
-    final f = ref.read(exploreFiltersProvider);
-    ref.read(exploreFiltersProvider.notifier).replace(d == null ? f.copyWith(clearDeal: true) : f.copyWith(deal: d));
+    if (d == null) return;
+    ref.read(exploreFiltersProvider.notifier).replace(ref.read(exploreFiltersProvider).copyWith(deal: d));
   }
 
   Future<void> _openFilters() async {
@@ -238,8 +239,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       });
     }
     final selected = rows.where((x) => x.id == _selected?.id).firstOrNull;
-    final hasSale = pinned.any((x) => !x.isRent);
-    final hasRent = pinned.any((x) => x.isRent);
     final cardHeight = 120 * MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 1.3);
 
     return Scaffold(
@@ -295,7 +294,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                             value: filters.deal,
                             onChanged: _setDeal,
                             segments: [
-                              PillSegment(value: null, label: l.mapAll),
                               PillSegment(value: DealType.sale, label: l.dealSale),
                               PillSegment(value: DealType.rent, label: l.dealRent),
                             ],
@@ -320,34 +318,18 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     ),
                   ],
                 ),
-                if (filters.cityId != null || filters.type != null) ...[
+                if (filters.cityId != null || filters.governorateId != null || filters.type != null) ...[
                   const SizedBox(height: Space.xs),
                   _FilterLine(filters: filters, onFilters: _openFilters, padding: EdgeInsets.zero, setOnly: true),
                 ],
                 const SizedBox(height: Space.xs),
+                // How many are on the map. One kind is shown at a time, so the
+                // pins need no colour key.
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Wraps rather than overflows at large text sizes.
-                    Flexible(
-                      child: _Floating(
-                        key: targets.mapLegend,
-                        radius: Radii.card,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: Space.sm, vertical: 6),
-                          child: Wrap(
-                            spacing: Space.sm,
-                            runSpacing: 4,
-                            children: [
-                              if (hasSale || !hasRent) _LegendDot(colour: MapPins.sale, label: l.badgeForSale),
-                              if (hasRent || !hasSale) _LegendDot(colour: MapPins.rent, label: l.badgeForRent),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: Space.xs),
                     _Floating(
+                      key: targets.mapLegend,
                       radius: Radii.chip,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: Space.sm, vertical: 6),
@@ -770,7 +752,6 @@ class _ExploreHeader extends StatelessWidget implements PreferredSizeWidget {
                 value: filters.deal,
                 onChanged: onDeal,
                 segments: [
-                  PillSegment(value: null, label: l.mapAll),
                   PillSegment(value: DealType.sale, label: l.dealSale),
                   PillSegment(value: DealType.rent, label: l.dealRent),
                 ],
@@ -838,11 +819,13 @@ class _FilterLine extends StatelessWidget {
             const SizedBox(width: Space.xs),
             _BarChip(icon: Icons.swap_vert_rounded, label: sortLabel, onTap: onSort!),
           ],
-          if (filters.cityId != null) ...[
+          if (filters.cityId != null || filters.governorateId != null) ...[
             if (!setOnly) const SizedBox(width: Space.xs),
             _BarChip(
               icon: Icons.place_outlined,
-              label: Market.placeLabel(filters.cityId, filters.neighborhoodId, lang),
+              label: filters.cityId != null
+                  ? Market.placeLabel(filters.cityId, filters.neighborhoodId, lang)
+                  : Places.bundled.govLabel(filters.governorateId, lang),
               highlighted: true,
               onTap: onFilters,
             ),

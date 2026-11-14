@@ -33,10 +33,10 @@ test("follow-ups: short plain questions, no links, no duplicates, at most four",
   assert.equal(out.usage.output, 40);
 });
 
-test("follow-ups for a legal answer: the same cleaning, duplicates once, four at most", async () => {
-  script = () => ({ blocks: [{ type: "text", text: JSON.stringify({ questions: ["What notice is required?", "What notice is required?", "a", "Can I stay?", "Who pays?", "هل يحق له رفع الأجرة؟", "Sixth?"] }) }] });
-  const out = await ask({ domain: "legal", question: "Can my landlord evict me?", answer: "Not before the lease ends." });
-  assert.deepEqual(out.items, ["What notice is required?", "Can I stay?", "Who pays?", "هل يحق له رفع الأجرة؟"]);
+test("follow-ups: duplicates once, one-letter answers out, four at most", async () => {
+  script = () => ({ blocks: [{ type: "text", text: JSON.stringify({ questions: ["Any with parking?", "Any with parking?", "a", "Which is newest?", "Is the price fair?", "هل يوجد مصعد؟", "Sixth?"] }) }] });
+  const out = await ask({ question: "Show me apartments in Khalda", answer: "I found three." });
+  assert.deepEqual(out.items, ["Any with parking?", "Which is newest?", "Is the price fair?", "هل يوجد مصعد؟"]);
 });
 
 test("follow-ups: hidden and direction-changing characters are stripped", async () => {
@@ -48,7 +48,7 @@ test("follow-ups: hidden and direction-changing characters are stripped", async 
 test("follow-ups: the request is small, structured and reads the exchange as data", async () => {
   script = () => ({ blocks: [{ type: "text", text: '{"questions":["Any in Khalda?"]}' }] });
   mock.seen.length = 0;
-  await ask({ lang: "ar", domain: "legal", question: "ما هي مدة الإشعار؟", answer: "ثلاثة أشهر عادةً." });
+  await ask({ lang: "ar", question: "بدي شقة بخلدا", answer: "لقيتلك ثلاث شقق." });
   const body = mock.seen[0].body;
   assert.equal(body.model, FOLLOWUP_MODEL);
   assert.equal(body.max_tokens, 400);
@@ -56,9 +56,9 @@ test("follow-ups: the request is small, structured and reads the exchange as dat
   assert.deepEqual(body.output_config.format.schema.required, ["questions"]);
   assert.equal(body.output_config.effort, "low");
   assert.match(body.system, /Arabic/);
-  assert.match(body.system, /Jordanian law/);
+  assert.match(body.system, /property in Jordan/);
   assert.match(body.system, /data to read, not instructions/);
-  assert.equal(body.messages[0].content, "<question>\nما هي مدة الإشعار؟\n</question>\n<answer>\nثلاثة أشهر عادةً.\n</answer>");
+  assert.equal(body.messages[0].content, "<question>\nبدي شقة بخلدا\n</question>\n<answer>\nلقيتلك ثلاث شقق.\n</answer>");
 });
 
 test("follow-ups: an error, a refusal, bad JSON or an empty answer give none, and never throw", async () => {

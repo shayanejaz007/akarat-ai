@@ -16,27 +16,20 @@ import 'speech_service.dart';
 
 /// Opens the voice search sheet. Resolves to the request to search for, ''
 /// when the reader chose to type instead, or null when they cancelled.
-///
-/// With [dictation] (the AI assistants' message boxes) the sheet only
-/// listens: no words appear while the reader speaks, and when they pause or
-/// tap Done the whole text comes back at once, to be checked and sent from
-/// the box, rather than going through the search review.
-Future<String?> showVoiceSearch(BuildContext context, {bool dictation = false}) {
+Future<String?> showVoiceSearch(BuildContext context) {
   return showModalBottomSheet<String>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,
-    builder: (_) => VoiceSearchSheet(dictation: dictation),
+    builder: (_) => const VoiceSearchSheet(),
   );
 }
 
 enum _Phase { starting, listening, review, failed }
 
 class VoiceSearchSheet extends ConsumerStatefulWidget {
-  const VoiceSearchSheet({super.key, this.dictation = false});
-
-  final bool dictation;
+  const VoiceSearchSheet({super.key});
 
   @override
   ConsumerState<VoiceSearchSheet> createState() => _VoiceSearchSheetState();
@@ -150,12 +143,6 @@ class _VoiceSearchSheetState extends ConsumerState<VoiceSearchSheet> {
     final text = _words.trim();
     if (text.isEmpty) return _fail(SpeechFailure.noSpeech);
     unawaited(HapticFeedback.lightImpact());
-    if (widget.dictation) {
-      _phase = _Phase.review;
-      unawaited(_speech.cancel());
-      Navigator.pop(context, text);
-      return;
-    }
     _edit.text = text;
     setState(() {
       _phase = _Phase.review;
@@ -267,11 +254,9 @@ class _VoiceSearchSheetState extends ConsumerState<VoiceSearchSheet> {
           const SizedBox(height: Space.sm),
           AnimatedSize(
             duration: Motion.of(context, Motion.fast),
-            // Dictation shows no words until the end: the whole text lands in
-            // the message box at once.
-            child: words.isEmpty || widget.dictation
+            child: words.isEmpty
                 ? Text(
-                    widget.dictation ? l.voiceDictationHint : l.voiceHint,
+                    l.voiceHint,
                     textAlign: TextAlign.center,
                     style: context.text.bodyMedium?.copyWith(color: c.inkFaint),
                   )
@@ -438,10 +423,13 @@ class _VoiceSearchSheetState extends ConsumerState<VoiceSearchSheet> {
 
 /// A soft orb in the brand's greens and gold that swells with the voice.
 class VoiceOrb extends StatefulWidget {
-  const VoiceOrb({super.key, required this.level, required this.active, this.size = 120});
+  const VoiceOrb({super.key, required this.level, required this.active, this.size = 120, this.icon});
   final double level;
   final bool active;
   final double size;
+
+  /// What the orb shows in its middle; a microphone when not given.
+  final IconData? icon;
 
   @override
   State<VoiceOrb> createState() => _VoiceOrbState();
@@ -520,7 +508,7 @@ class _VoiceOrbState extends State<VoiceOrb> with SingleTickerProviderStateMixin
                   ],
                 ),
                 child: Icon(
-                  widget.active ? Icons.mic_rounded : Icons.mic_none_rounded,
+                  widget.icon ?? (widget.active ? Icons.mic_rounded : Icons.mic_none_rounded),
                   color: Colors.white,
                   size: size * 0.36,
                 ),
