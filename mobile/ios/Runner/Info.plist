@@ -37,6 +37,8 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>Akarat.ai uses the camera only when you choose to take a photo: of a property you are listing, of something you need fixed in a service request, or for your profile picture.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Akarat.ai uses your location only while you are using the app, when you tap the location button on a map, to show where you are. It never tracks you in the background, and your location is not stored or shared.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Akarat.ai reads your location only when you tap the location button on a map, to show where you are. It is not stored or shared.</string>
 	<key>NSMicrophoneUsageDescription</key>

@@ -3072,7 +3072,11 @@
           <sc-for list="{{ rows }}" as="row" hint-placeholder-count="1">
             <div data-anim="row" data-row="true" style="display: grid; grid-template-columns: minmax(0,2.2fr) 1fr 1fr minmax(0,1.8fr); align-items: center; padding: 16px 22px; font-size: 13.5px; font-weight: 300; transition: background 200ms;" style-hover="background: var(--field);">
               <div style="display: flex; align-items: center; gap: 13px; min-width: 0;">
-                <span style="width: 48px; height: 36px; border-radius: 8px; background-color: var(--placeholder); background-image: repeating-linear-gradient(135deg, rgba(var(--ink-rgb),0.06) 0 6px, rgba(var(--ink-rgb),0.02) 6px 12px); flex: none; display: block;"></span>
+                <span style="position: relative; width: 48px; height: 36px; border-radius: 8px; overflow: hidden; background-color: var(--placeholder); background-image: repeating-linear-gradient(135deg, rgba(var(--ink-rgb),0.06) 0 6px, rgba(var(--ink-rgb),0.02) 6px 12px); flex: none; display: block;">
+                  <sc-if value="{{ row.hasCover }}" hint-placeholder-val="{{ false }}">
+                    <img ref="{{ row.coverRef }}" alt="" loading="lazy" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: {{ row.coverFilter }};" />
+                  </sc-if>
+                </span>
                 <div style="min-width: 0;">
                   <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;">{{ row.title }}</div>
                   <div style="font-size: 11px; color: rgba(var(--ink-rgb),0.64); font-family: ui-monospace, monospace; margin-top: 3px;">{{ row.id }}</div>
@@ -10651,6 +10655,13 @@ class Component extends DCLogic {
         return {
           title: (ar && p.title_ar) ? p.title_ar : p.title_en,
           id: p.id.slice(0, 8),
+          // The listing's cover, as on its card: the first photo, not a video.
+          hasCover: !!firstStill(p.payload && p.payload.images),
+          coverRef: el => {
+            const u = firstStill(p.payload && p.payload.images);
+            if (el && u && el.getAttribute('src') !== u) el.src = u;
+          },
+          coverFilter: CLOSED.includes(p.status) ? 'grayscale(1)' : 'none',
           place: this.placeOfIds(p.city_id, p.neighborhood_id),
           price: this.priceText(p),
           isDaily: daily,

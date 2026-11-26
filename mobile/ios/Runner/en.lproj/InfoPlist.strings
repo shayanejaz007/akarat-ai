@@ -1,5 +1,6 @@
 /* English permission prompts. Keep in step with Info.plist and ar.lproj. */
 "NSCameraUsageDescription" = "Akarat.ai uses the camera only when you choose to take a photo: of a property you are listing, of something you need fixed in a service request, or for your profile picture.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Akarat.ai uses your location only while you are using the app, when you tap the location button on a map, to show where you are. It never tracks you in the background, and your location is not stored or shared.";
 "NSLocationWhenInUseUsageDescription" = "Akarat.ai reads your location only when you tap the location button on a map, to show where you are. It is not stored or shared.";
 "NSMicrophoneUsageDescription" = "Akarat.ai uses the microphone only when you choose to speak a search or a question to its AI assistant, or to film a video of a property you are listing.";
 "NSSpeechRecognitionUsageDescription" = "Akarat.ai turns what you say into text when you tap the microphone: a property search, or a question for its AI assistant. Recognition is done by Apple's speech service.";
