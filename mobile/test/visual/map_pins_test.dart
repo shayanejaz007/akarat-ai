@@ -37,8 +37,6 @@ void main() {
           'rent': await images.price('2.4K', background: MapPins.rent, foreground: MapPins.rentText, selected: false),
           'chosen': await images.price('1.25M', background: MapPins.sale, foreground: MapPins.saleText, selected: true),
           'sold': await images.price('98K', background: MapPins.closed, foreground: Colors.white, selected: false),
-          'dot': await images.dot(MapPins.sale),
-          'dot_rent': await images.dot(MapPins.rent),
           'place': await images.place(MapPins.sale),
         };
         Directory('test/visual/goldens/pins').createSync(recursive: true);

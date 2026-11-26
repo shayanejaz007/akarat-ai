@@ -6,7 +6,7 @@ import { useAdmin } from "../_components/context";
 import { useFeedback } from "../_components/feedback";
 import { Icon } from "../_components/icons";
 import {
-  Badge, Button, Callout, Card, Chips, Empty, LoadError, Menu, MenuItem, PageHeader, Pager, SkeletonRows, StatusBadge, TableScroll,
+  Badge, Button, Callout, Card, Chips, Empty, LoadError, Menu, MenuItem, PageHeader, Pager, SkeletonRows, StatusBadge, TableScroll, Thumb,
 } from "../_components/ui";
 import { qs, useList, useQuery } from "../_lib/api";
 import { ago, titleOf, when } from "../_lib/format";
@@ -123,8 +123,13 @@ export default function ReportsPage() {
                           {overdue && <Badge tone="bad" icon="clock">Over a day old</Badge>}
                         </td>
                         <td>
-                          <Link className="adm-row-title" href={`/admin/listings?q=${r.property_id}`}>{titleOf(r.properties)}</Link>
-                          {r.properties && <div><StatusBadge map={LISTING_STATUS} value={r.properties.status} /></div>}
+                          <div className="adm-cell-main">
+                            <Thumb src={r.properties?.cover} />
+                            <div className="adm-cell-text">
+                              <Link className="adm-row-title" href={`/admin/listings?q=${r.property_id}`}>{titleOf(r.properties)}</Link>
+                              {r.properties && <div><StatusBadge map={LISTING_STATUS} value={r.properties.status} /></div>}
+                            </div>
+                          </div>
                         </td>
                         <td>
                           <Badge tone={r.reason === "scam" ? "bad" : r.reason === "offensive" ? "warn" : "neutral"}>

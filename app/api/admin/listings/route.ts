@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { fail, isUuid, paging, requireAdmin, searchTerm } from "@/lib/admin";
-import { unpackPayload } from "@/lib/listing-server";
+import { mediaOf, unpackPayload } from "@/lib/listing-server";
 import { scoreAll } from "@/lib/listing-quality";
 import { scoreListing } from "@/lib/listing-score.js";
 
@@ -82,7 +82,8 @@ export async function GET(request: NextRequest) {
         current: live.score,
         scoredAt: r.quality_scored_at ?? null,
       },
-      cover: p.images?.find(m => m.type !== "video")?.url ?? null,
+      cover: mediaOf(payload_gz as string | null).find(m => !m.video)?.url ?? null,
+      photos: mediaOf(payload_gz as string | null),
       media: p.images?.length ?? 0,
       phone: p.contact?.phone ?? null,
       views7d: Number(s?.views_7d ?? 0),

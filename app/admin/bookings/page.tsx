@@ -6,7 +6,7 @@ import { useAdmin } from "../_components/context";
 import { Icon } from "../_components/icons";
 import {
   Card, Chips, Drawer, Empty, Figure, KV, LoadError, PageHeader, Pager, PersonBlock, SearchInput, Section, SkeletonRows,
-  StatTile, StatusBadge, TableScroll, Toolbar,
+  StatTile, StatusBadge, TableScroll, Thumb, Toolbar,
 } from "../_components/ui";
 import { qs, useList, useQuery, useSearchText } from "../_lib/api";
 import { ago, compact, dayLabel, dayLong, full, humanize, jod, plural, titleOf, when } from "../_lib/format";
@@ -94,10 +94,15 @@ export default function BookingsPage() {
                 {rows.map(b => (
                   <tr key={b.id} className="is-clickable" onClick={() => setOpen(b)}>
                     <td>
-                      <button type="button" className="adm-row-title" onClick={e => { e.stopPropagation(); setOpen(b); }}>
-                        {b.properties ? titleOf(b.properties) : "Deleted listing"}
-                      </button>
-                      <div className="adm-cell-sub">{b.properties?.city_id ? humanize(b.properties.city_id) : ""}</div>
+                      <div className="adm-cell-main">
+                        <Thumb src={b.properties?.cover} />
+                        <div className="adm-cell-text">
+                          <button type="button" className="adm-row-title" onClick={e => { e.stopPropagation(); setOpen(b); }}>
+                            {b.properties ? titleOf(b.properties) : "Deleted listing"}
+                          </button>
+                          <div className="adm-cell-sub">{b.properties?.city_id ? humanize(b.properties.city_id) : ""}</div>
+                        </div>
+                      </div>
                     </td>
                     <td><PersonBlock p={b.renter} fallback={b.renter_name} /></td>
                     <td className="adm-nowrap">

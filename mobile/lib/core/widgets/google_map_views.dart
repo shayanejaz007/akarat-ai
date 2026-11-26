@@ -13,7 +13,7 @@ import '../utils/geo.dart';
 import 'locate.dart';
 import 'map_layer.dart';
 import 'map_pin_images.dart';
-import 'maps.dart' show MapPins, mapTilesProvider, showsPrices, spreadPins;
+import 'maps.dart' show MapPins, mapTilesProvider, spreadPins;
 
 /// The maps drawn by Google's native SDK, used when a Maps key is built in
 /// (see [GoogleMapsSetup]): the same pins, clusters and behaviour as the
@@ -207,10 +207,9 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
     final images = _images!;
     final pins = _pinned;
     final selected = pins.where((l) => l.id == widget.selected?.id).firstOrNull;
-    // The selected pin is drawn on top, always with its price. Every other
-    // listing keeps a pin of its own: a dot zoomed out, its price close up.
+    // The selected pin is drawn on top. Every other listing keeps a price pin
+    // of its own at every zoom.
     final others = pins.where((l) => l.id != selected?.id);
-    final prices = showsPrices(_drawnAt);
 
     final wanted = <String, Future<PinImage> Function()>{};
     String priceKey(Listing l, {required bool chosen}) {
@@ -220,28 +219,6 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
       final key = 'p|$label|${bg.toARGB32()}|$chosen';
       wanted[key] = () => images.price(label, background: bg, foreground: fg, selected: chosen);
       return key;
-    }
-
-    String dotKey(Listing l) {
-      final bg = _colour(l);
-      final key = 'd|${bg.toARGB32()}';
-      wanted[key] = () => images.dot(bg);
-      return key;
-    }
-
-    Marker? dot(Listing l) {
-      final img = _icons[dotKey(l)];
-      if (img == null) return null;
-      return Marker(
-        markerId: MarkerId(l.id),
-        position: LatLng(l.lat!, l.lng!),
-        icon: img.icon,
-        anchor: img.anchor,
-        consumeTapEvents: true,
-        zIndexInt: 1,
-        infoWindow: InfoWindow(title: '${l.priceText(widget.lang)}, ${l.title(widget.lang)}'),
-        onTap: () => widget.onSelect(l),
-      );
     }
 
     Marker? price(Listing l, {required bool chosen}) {
@@ -261,8 +238,7 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
     }
 
     final markers = <Marker>{
-      for (final l in others)
-        if (prices) ?price(l, chosen: false) else ?dot(l),
+      for (final l in others) ?price(l, chosen: false),
       if (selected != null) ?price(selected, chosen: true),
     };
     _request(wanted);

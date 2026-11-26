@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { withCover } from "@/lib/listing-server";
 import { fail, isUuid, paging, requireAdmin } from "@/lib/admin";
 
 /**
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
 
   let query = admin.db
     .from("listing_reports")
-    .select("id,property_id,reporter_id,reason,details,status,created_at,properties(title_en,title_ar,status,owner_id)", {
+    .select("id,property_id,reporter_id,reason,details,status,created_at,properties(title_en,title_ar,status,owner_id,payload_gz)", {
       count: "exact",
     });
   const status = url.searchParams.get("status");
@@ -37,7 +38,8 @@ export async function GET(request: NextRequest) {
     if (missing(error.code)) return NextResponse.json({ reports: [], total: 0, pageSize: PAGE, notSetUp: true });
     return fail(error.message);
   }
-  return NextResponse.json({ reports: data ?? [], total: count ?? 0, pageSize: PAGE });
+  const reports = ((data ?? []) as unknown as Record<string, unknown>[]).map(withCover);
+  return NextResponse.json({ reports, total: count ?? 0, pageSize: PAGE });
 }
 
 export async function PATCH(request: NextRequest) {

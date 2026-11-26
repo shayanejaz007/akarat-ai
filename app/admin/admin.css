@@ -1316,3 +1316,11 @@ body:has(#adm-root[data-adm-theme="dark"]) { background: #0F0F0C; }
 .adm-score-part-n small { color: var(--ink-3); font-weight: 400; }
 .adm-score-tips { margin-top: 14px; }
 .adm-score-tips ul { margin: 6px 0 0; padding-inline-start: 18px; font-size: 13px; line-height: 1.6; }
+
+/* ── A listing's photos in its panel ── */
+.adm-photo-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+.adm-photo { position: relative; display: block; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; background: var(--surface-3); }
+.adm-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.adm-photo:hover { outline: 2px solid var(--accent); outline-offset: 1px; }
+.adm-photo-video { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); }
+.adm-photo-tag { position: absolute; left: 4px; bottom: 4px; padding: 1px 6px; border-radius: 999px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10.5px; font-weight: 600; }

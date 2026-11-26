@@ -3604,9 +3604,6 @@ const EX_PIN = {
 // the app (mobile/lib/shared/repositories/media_repository.dart).
 const MAX_LISTING_FILES = 30;
 
-// Zoomed out, each listing is a dot; from this zoom on, each shows its price.
-const EX_PRICE_ZOOM = 12;
-
 // The marketplace's order: the most complete listings first (the quality
 // score, migration 0025), the newest among equals. A listing not scored yet
 // goes after the scored ones.
@@ -3635,15 +3632,6 @@ function exPinSvg(label, kind, big) {
     + `<path d="M${w / 2 - 6} ${h - 1.2} L${w / 2} ${h + 6} L${w / 2 + 6} ${h - 1.2} Z" fill="${c.bg}"/>`
     + `<text x="${w / 2}" y="${h / 2 + fs * 0.36}" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-size="${fs}" font-weight="600" fill="${c.fg}">${label}</text></svg>`;
   return { svg, w, h: h + 7, ax: w / 2, ay: h + 6 };
-}
-// One listing on a zoomed-out map: a dot in its deal's colour, ringed in
-// white. Every listing keeps a pin of its own at every zoom.
-function exDotSvg(kind) {
-  const c = EX_PIN[kind] || EX_PIN.sale;
-  const d = 18;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}" viewBox="0 0 ${d} ${d}">`
-    + `<circle cx="${d / 2}" cy="${d / 2}" r="${d / 2 - 1.5}" fill="${c.bg}" stroke="#FFFFFF" stroke-width="2.5"/></svg>`;
-  return { svg, w: d, h: d, ax: d / 2, ay: d / 2 };
 }
 const EX_TEXT = {
   en: {
@@ -9409,7 +9397,6 @@ class Component extends DCLogic {
         layer(name) { map.setMapTypeId(name === 'satellite' ? 'hybrid' : 'roadmap'); },
         resize() { g.event.trigger(map, 'resize'); },
         onZoom(fn) { map.addListener('zoom_changed', fn); map.addListener('projection_changed', fn); },
-        zoom() { return map.getZoom() || 7; },
         onTap(fn) { map.addListener('click', fn); },
         destroy() { pins.forEach(m => m.setMap(null)); g.event.clearInstanceListeners(map); }
       };
@@ -9449,7 +9436,6 @@ class Component extends DCLogic {
       layer() {},
       resize() { map.invalidateSize(); },
       onZoom(fn) { map.on('zoomend', fn); },
-      zoom() { return map.getZoom(); },
       onTap(fn) { map.on('click', fn); },
       destroy() { map.remove(); }
     };
@@ -9485,15 +9471,10 @@ class Component extends DCLogic {
     if (fit && pts.length) x.fit(pts);
     const sel = this.state.exSel;
     const hover = this._exHover;
-    // Every listing keeps a pin of its own, never merged into a numbered
-    // circle: a dot when zoomed out, its price close up. The one hovered in
-    // the list and the one chosen always show their price.
-    const prices = (x.zoom ? x.zoom() : EX_PRICE_ZOOM) >= EX_PRICE_ZOOM;
+    // Every listing keeps a price pin of its own at every zoom, never merged
+    // into a numbered circle. Zoomed out, pins in a busy area overlap until
+    // the map is zoomed in.
     const titleOf = p => (this.state.lang === 'ar' ? p.row.title_ar : p.row.title_en) || p.row.title_en || p.row.title_ar || '';
-    const dotOf = p => {
-      const closed = CLOSED.includes(p.row.status);
-      x.pin({ lat: p.lat, lng: p.lng }, exDotSvg(closed ? 'closed' : kind), 1, titleOf(p), () => this.exSelect(p.row.id, 'map'));
-    };
     const pinOf = (p, state) => {
       const closed = CLOSED.includes(p.row.status);
       const label = p.row.price_on_request ? (this.state.lang === 'ar' ? 'عند الطلب' : 'On request') : exShort(p.row.price_jod);
@@ -9502,9 +9483,7 @@ class Component extends DCLogic {
     };
     for (const p of pts) {
       if (p.row.id === sel) continue;
-      if (p.row.id === hover) pinOf(p, 'hover');
-      else if (prices) pinOf(p, 'pin');
-      else dotOf(p);
+      pinOf(p, p.row.id === hover ? 'hover' : 'pin');
     }
     const chosen = pts.find(p => p.row.id === sel);
     if (chosen) pinOf(chosen, 'selected');

@@ -70,13 +70,9 @@ List<Listing> spreadPins(List<Listing> pins) {
   ];
 }
 
-/// Every listing keeps a pin of its own at every zoom; nothing is merged into
-/// a numbered circle. Zoomed out, each is a small dot in its deal's colour so
-/// a city's worth of them stays readable; from [pricePinZoom] each shows its
-/// price. The chosen one always shows its price.
-const pricePinZoom = 12.0;
-
-bool showsPrices(double zoom) => zoom >= pricePinZoom;
+/// Every listing keeps a price pin of its own at every zoom; nothing is
+/// merged into a numbered circle. Zoomed out, pins in a busy area overlap
+/// until the map is zoomed in.
 
 Widget _tiles(BuildContext context, WidgetRef ref) {
   if (!ref.watch(mapTilesProvider)) return const SizedBox.shrink();
@@ -244,9 +240,8 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
     final c = context.colors;
     final pins = _pinned;
     final selected = pins.where((l) => l.id == widget.selected?.id).firstOrNull;
-    // The selected pin is drawn last, on top, always with its price.
+    // The selected pin is drawn last, on top.
     final others = pins.where((l) => l.id != selected?.id);
-    final prices = showsPrices(_zoom);
     final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.2);
     return FlutterMap(
       mapController: _controller,
@@ -287,8 +282,7 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
         ),
         MarkerLayer(
           markers: [
-            for (final l in others)
-              prices ? _priceMarker(context, l, selected: false, scaler: scaler) : _dotMarker(context, l),
+            for (final l in others) _priceMarker(context, l, selected: false, scaler: scaler),
             if (selected != null) _priceMarker(context, selected, selected: true, scaler: scaler),
           ],
         ),
@@ -315,39 +309,6 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
   }
 
   Color _colour(Listing l) => MapPins.of(l);
-
-  /// One listing, zoomed out: a dot in its deal's colour, ringed in white,
-  /// with room around it for a finger.
-  Marker _dotMarker(BuildContext context, Listing l) {
-    return Marker(
-      point: LatLng(l.lat!, l.lng!),
-      width: 30,
-      height: 30,
-      child: Semantics(
-        button: true,
-        label: '${l.priceText(widget.lang)}, ${l.title(widget.lang)}',
-        excludeSemantics: true,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => widget.onSelect(l),
-          child: Center(
-            child: Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                color: _colour(l),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2.5),
-                boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 3, offset: const Offset(0, 1)),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Marker _priceMarker(BuildContext context, Listing l, {required bool selected, required TextScaler scaler}) {
     // Short on the map: the currency is the same on every pin.

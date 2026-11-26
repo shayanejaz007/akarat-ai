@@ -354,7 +354,23 @@ function ListingDetail({ r, busy, onStatus, onFeature, onVerify }: {
   return (
     <>
       <div className="adm-detail-hero">
-        <Thumb src={r.cover} size="lg" />
+        {r.cover ? (
+          <a href={r.cover} target="_blank" rel="noreferrer" title="Open the cover photo full size">
+            <Thumb src={r.cover} size="lg" />
+          </a>
+        ) : (
+          <Thumb src={null} size="lg" />
+        )}
+        {(r.photos?.length ?? 0) > 1 && (
+          <div className="adm-photo-strip" aria-label="All photos and videos">
+            {r.photos!.map((m, i) => (
+              <a key={m.url} href={m.url} target="_blank" rel="noreferrer" className="adm-photo" title={m.video ? `Video ${i + 1}` : i === 0 ? "Cover photo" : `Photo ${i + 1}`}>
+                {m.video ? <span className="adm-photo-video"><Icon name="play" size={16} /></span> : <img src={m.url} alt="" loading="lazy" decoding="async" />}
+                {i === 0 && !m.video && <span className="adm-photo-tag">Cover</span>}
+              </a>
+            ))}
+          </div>
+        )}
         <div className="adm-detail-hero-text">
           {r.title_ar && r.title_ar !== r.title_en && <p className="adm-ar" dir="rtl" lang="ar">{r.title_ar}</p>}
           <div className="adm-price">

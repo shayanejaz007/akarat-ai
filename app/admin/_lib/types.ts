@@ -68,6 +68,8 @@ export type ListingRow = {
   title_en: string; title_ar: string | null; views: number; saves: number; inquiries_count: number;
   featured: boolean; verified: boolean; owner_id: string; created_at: string; updated_at: string | null;
   cover: string | null; media: number; phone: string | null;
+  /** Every photo and video, cover first. */
+  photos?: { url: string; video: boolean }[];
   views7d: number; views30d: number; lastInquiry: string | null;
   owner: { id: string; full_name: string | null; phone: string | null; role: string | null; verified: boolean } | null;
   price_on_request?: boolean;
@@ -96,14 +98,14 @@ export type BookingRow = {
   id: string; property_id: string; renter_name: string; check_in: string; check_out: string; nights: number; guests: number;
   message: string | null; nightly_price: number; total_price: number; status: string; owner_phone: string | null;
   response_note: string | null; closed_reason: string | null; cancelled_by: string | null; responded_at: string | null; created_at: string;
-  properties: { title_en: string; title_ar: string | null; city_id: string | null; status: string; daily_review: string | null } | null;
+  properties: { title_en: string; title_ar: string | null; city_id: string | null; status: string; daily_review: string | null; cover?: string | null } | null;
   owner: Person | null; renter: Person | null;
 };
 
 export type InquiryRow = {
   id: string; property_id: string; sender_id: string | null; name: string; email: string | null; phone: string | null;
   message: string; status: string; created_at: string;
-  properties: { title_en: string; title_ar: string | null; status: string } | null;
+  properties: { title_en: string; title_ar: string | null; status: string; cover?: string | null } | null;
   owner: { full_name: string | null; phone: string | null } | null;
 };
 
@@ -150,5 +152,5 @@ export type PlaceRow = {
 
 export type ReportRow = {
   id: string; property_id: string; reason: string; details: string | null; status: string; created_at: string;
-  properties: { title_en: string; title_ar: string | null; status: string } | null;
+  properties: { title_en: string; title_ar: string | null; status: string; cover?: string | null } | null;
 };

@@ -76,30 +76,6 @@ class MapPinImages {
     });
   }
 
-  /// One listing on a zoomed-out map: a dot in its deal's colour, ringed in
-  /// white.
-  Future<PinImage> dot(Color background) {
-    final key = 'd|${background.toARGB32()}';
-    return _cache[key] ??= _draw(() {
-      const diameter = 16.0;
-      const size = Size.square(diameter + 2 * _margin);
-      return (
-        size,
-        (Canvas c) {
-          final centre = Offset(size.width / 2, size.height / 2);
-          final circle = RRect.fromRectAndRadius(
-            Rect.fromCircle(center: centre, radius: diameter / 2),
-            const Radius.circular(diameter / 2),
-          );
-          _shadow(c, circle, 0.3, 3);
-          c.drawCircle(centre, diameter / 2, Paint()..color = Colors.white);
-          c.drawCircle(centre, diameter / 2 - 2.5, Paint()..color = background);
-        },
-        const Offset(0.5, 0.5),
-      );
-    });
-  }
-
   /// The single location pin of a listing's own map and the pin picker.
   Future<PinImage> place(Color colour) {
     final key = 'l|${colour.toARGB32()}';

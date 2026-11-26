@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { withCover } from "@/lib/listing-server";
 import { fail, isUuid, paging, people, requireAdmin, searchTerm } from "@/lib/admin";
 
 /**
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
     .select(
       "id,property_id,owner_id,renter_id,renter_name,check_in,check_out,nights,guests,message,nightly_price,total_price," +
         "status,owner_phone,response_note,closed_reason,cancelled_by,responded_at,created_at," +
-        "properties(title_en,title_ar,city_id,status,daily_review)",
+        "properties(title_en,title_ar,city_id,status,daily_review,payload_gz)",
       { count: "exact" },
     );
   const status = url.searchParams.get("status");
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
   const rows = (data ?? []) as unknown as Record<string, unknown>[];
   const who = await people(admin.db, rows.flatMap(r => [r.owner_id as string, r.renter_id as string]));
   const bookings = rows.map(r => ({
-    ...r,
+    ...withCover(r),
     owner: who.get(r.owner_id as string) ?? null,
     renter: who.get(r.renter_id as string) ?? null,
   }));

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { withCover } from "@/lib/listing-server";
 import { fail, isUuid, paging, requireAdmin, searchTerm } from "@/lib/admin";
 
 /**
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
 
   let query = admin.db
     .from("inquiries")
-    .select("id,property_id,sender_id,owner_id,name,email,phone,message,status,created_at,properties(title_en,title_ar,status)", {
+    .select("id,property_id,sender_id,owner_id,name,email,phone,message,status,created_at,properties(title_en,title_ar,status,payload_gz)", {
       count: "exact",
     });
   const status = url.searchParams.get("status");
@@ -43,7 +44,7 @@ export async function GET(request: NextRequest) {
   const ownerBy = new Map((people ?? []).map(p => [p.id, p]));
 
   return NextResponse.json({
-    inquiries: rows.map(r => ({ ...r, owner: ownerBy.get(r.owner_id) ?? null })),
+    inquiries: rows.map(r => ({ ...withCover(r), owner: ownerBy.get(r.owner_id) ?? null })),
     total: count ?? rows.length,
     pageSize: PAGE,
   });

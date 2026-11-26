@@ -70,6 +70,27 @@ export function unpackPayload(packed: string | null): Payload {
   }
 }
 
+const isVideo = (m: Media) => m.type === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(m.url || "");
+
+/** A listing's photos and videos, cover first, as stored. For the admin panel. */
+export function mediaOf(packed: string | null): { url: string; video: boolean }[] {
+  const images = unpackPayload(packed).images ?? [];
+  return images.filter(m => m && m.url).map(m => ({ url: m.url, video: isVideo(m) }));
+}
+
+/** The first photo (not a video): what the site shows as the cover. */
+export function coverOf(packed: string | null): string | null {
+  return mediaOf(packed).find(m => !m.video)?.url ?? null;
+}
+
+/** A joined `properties(…, payload_gz)` turned into `properties(…, cover)`. */
+export function withCover<T extends Record<string, unknown>>(row: T): T {
+  const p = row.properties as Record<string, unknown> | null | undefined;
+  if (!p) return row;
+  const { payload_gz, ...rest } = p;
+  return { ...row, properties: { ...rest, cover: coverOf((payload_gz as string | null) ?? null) } };
+}
+
 /**
  * Throws on a transport failure rather than returning null.
  *

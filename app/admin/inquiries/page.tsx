@@ -7,7 +7,7 @@ import { useFeedback } from "../_components/feedback";
 import { Icon } from "../_components/icons";
 import {
   Avatar, Badge, ButtonLink, Card, Chips, Drawer, Empty, KV, LoadError, PageHeader, Pager, SearchInput, Section, Segmented,
-  SkeletonRows, StatusBadge, TableScroll, Toolbar, cx,
+  SkeletonRows, StatusBadge, TableScroll, Thumb, Toolbar, cx,
 } from "../_components/ui";
 import { qs, useList, useQuery, useSearchText } from "../_lib/api";
 import { ago, titleOf, when, whatsapp } from "../_lib/format";
@@ -108,8 +108,13 @@ export default function InquiriesPage() {
                       <div className="adm-clamp" dir="auto">{r.message}</div>
                     </td>
                     <td>
-                      <div className="adm-cell-strong adm-ellipsis">{titleOf(r.properties)}</div>
-                      {r.properties && r.properties.status !== "active" && <StatusBadge map={LISTING_STATUS} value={r.properties.status} />}
+                      <div className="adm-cell-main">
+                        <Thumb src={r.properties?.cover} />
+                        <div className="adm-cell-text">
+                          <div className="adm-cell-strong adm-ellipsis">{titleOf(r.properties)}</div>
+                          {r.properties && r.properties.status !== "active" && <StatusBadge map={LISTING_STATUS} value={r.properties.status} />}
+                        </div>
+                      </div>
                     </td>
                     <td className="adm-nowrap" title={when(r.created_at)}>{ago(r.created_at)}</td>
                     <td><StatusBadge map={INQUIRY_STATUS} value={r.status} /></td>
