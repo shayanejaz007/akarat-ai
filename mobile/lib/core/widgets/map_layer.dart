@@ -110,7 +110,7 @@ class MapLayerButton extends ConsumerWidget {
         onTap: () => unawaited(flip()),
       );
     }
-    const ink = Color(0xFF16201D);
+    const ink = Color(0xFF1C1C1E);
     return Semantics(
       button: true,
       toggled: satellite,

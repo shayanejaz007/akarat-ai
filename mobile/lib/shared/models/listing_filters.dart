@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'listing.dart';
 
-enum ListingSort { newest, priceAsc, priceDesc }
+/// [best]: the most complete listings first (the quality score, 0025).
+enum ListingSort { best, newest, priceAsc, priceDesc }
 
 /// The Explore screen's filters. Every one maps to an indexed column, so the
 /// database does the filtering and only one page of rows ever travels.
@@ -23,7 +24,7 @@ class ListingFilters {
     this.minArea,
     this.maxArea,
     this.availableOnly = false,
-    this.sort = ListingSort.newest,
+    this.sort = ListingSort.best,
   });
 
   final DealType? deal;

@@ -478,9 +478,9 @@ async function compare(input: unknown, env: ToolEnv): Promise<ToolOutcome> {
       const l = rows.find(x => x.id === r.id);
       if (!l) return fail(`Listing ${r.id} is no longer published.`);
       columns.push({ key: `akarat:${l.id}`, title: lang === "ar" ? l.titleAr : l.titleEn, source: "Akarat.ai" });
-      cells.price.push(l.price);
+      cells.price.push(l.priceOnRequest ? null : l.price);
       cells.basis.push(l.deal === "rent" ? "month" : l.deal === "daily" ? "night" : "total");
-      cells.per_sqm.push(l.size && l.deal === "sale" ? Math.round(l.price / l.size) : null);
+      cells.per_sqm.push(l.size && l.deal === "sale" && !l.priceOnRequest ? Math.round(l.price / l.size) : null);
       cells.beds.push(l.beds);
       cells.baths.push(l.baths);
       cells.size.push(l.size);

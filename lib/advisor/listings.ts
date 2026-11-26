@@ -35,6 +35,8 @@ type Row = {
   city_id: string | null;
   neighborhood_id: string | null;
   price_jod: number;
+  /** 0025: the owner publishes no price; price_jod is 0. */
+  price_on_request?: boolean | null;
   bedrooms: number | null;
   bathrooms: number | null;
   area_sqm: number | null;
@@ -59,7 +61,9 @@ export type Listing = {
   type: string;
   cityId: string | null;
   areaId: string | null;
+  /** 0 when the price is on request. */
   price: number;
+  priceOnRequest: boolean;
   beds: number | null;
   baths: number | null;
   size: number | null;
@@ -116,7 +120,8 @@ function toListing(r: Row, now: number): Listing {
     type: r.property_type,
     cityId: r.city_id,
     areaId: r.neighborhood_id,
-    price: Number(r.price_jod) || 0,
+    price: r.price_on_request ? 0 : Number(r.price_jod) || 0,
+    priceOnRequest: !!r.price_on_request && r.deal !== "daily",
     beds: num(r.bedrooms),
     baths: num(r.bathrooms),
     size: num(r.area_sqm),
@@ -193,7 +198,7 @@ export function supabaseListings(sb: SupabaseClient, now = () => Date.now()): Li
       req = q.deal === "any" ? req.in("deal", ["sale", "rent"]) : req.eq("deal", q.deal);
       if (q.types.length) req = req.in("property_type", q.types);
       if (q.cityId) req = req.eq("city_id", q.cityId);
-      if (q.priceMax != null) req = req.lte("price_jod", q.priceMax);
+      if (q.priceMax != null) req = req.lte("price_jod", q.priceMax).gt("price_jod", 0);
       if (q.priceMin != null) req = req.gte("price_jod", q.priceMin);
       if (q.bedsMin != null) req = req.gte("bedrooms", q.bedsMin);
       const { data, error } = await req.order("created_at", { ascending: false }).limit(limit);
@@ -219,7 +224,9 @@ export function supabaseListings(sb: SupabaseClient, now = () => Date.now()): Li
       return (data as Row[]).map(r => toListing(r, t));
     },
     async prices(q) {
-      let req = sb.from("properties").select("price_jod,area_sqm").eq("status", "active").eq("deal", q.deal);
+      // A price on request is stored as 0: it is not a price, so it never
+      // reaches the statistics.
+      let req = sb.from("properties").select("price_jod,area_sqm").eq("status", "active").eq("deal", q.deal).gt("price_jod", 0);
       if (q.type) req = req.eq("property_type", q.type);
       if (q.areaId) req = req.eq("neighborhood_id", q.areaId);
       else if (q.cityId) req = req.eq("city_id", q.cityId);
@@ -268,8 +275,12 @@ export function differences(l: Listing, c: Criteria): string[] {
   } else if (!c.areaIds.length && c.cityId && l.cityId !== c.cityId) {
     out.push(`in ${cityName(l.cityId)?.en ?? "another city"}, not ${cityName(c.cityId)?.en ?? c.cityId}`);
   }
-  if (c.budgetMax != null && l.price > c.budgetMax) out.push(`${pct(l.price, c.budgetMax)}% over the maximum budget`);
-  if (c.budgetMin != null && l.price < c.budgetMin) out.push(`${-pct(l.price, c.budgetMin)}% below the minimum budget`);
+  if ((c.budgetMax != null || c.budgetMin != null) && l.priceOnRequest) {
+    out.push("price on request, so the budget cannot be checked");
+  } else {
+    if (c.budgetMax != null && l.price > c.budgetMax) out.push(`${pct(l.price, c.budgetMax)}% over the maximum budget`);
+    if (c.budgetMin != null && l.price < c.budgetMin) out.push(`${-pct(l.price, c.budgetMin)}% below the minimum budget`);
+  }
   if (c.bedsMin != null) {
     if (l.beds == null) out.push("bedrooms not stated");
     else if (l.beds < c.bedsMin) out.push(`${l.beds} bedrooms, not ${c.bedsMin}+`);
@@ -294,7 +305,7 @@ function quality(l: Listing, c: Criteria): number {
   if (l.verified) s += 3;
   s += l.listedDays <= 7 ? 3 : l.listedDays <= 30 ? 2 : l.listedDays <= 90 ? 1 : 0;
   if (l.photos > 0) s += 1;
-  if (c.budgetMax != null && l.price <= c.budgetMax) s += 1;
+  if (c.budgetMax != null && !l.priceOnRequest && l.price <= c.budgetMax) s += 1;
   return s;
 }
 
@@ -308,8 +319,9 @@ export function rank(rows: Listing[], c: Criteria): { exact: Listing[]; near: Ma
   }
   const by: Record<Criteria["sort"], (a: Listing, b: Listing) => number> = {
     best_match: (a, b) => quality(b, c) - quality(a, c) || a.listedDays - b.listedDays,
-    price_low: (a, b) => a.price - b.price,
-    price_high: (a, b) => b.price - a.price,
+    // Listings without a published price go after those with one.
+    price_low: (a, b) => Number(a.priceOnRequest) - Number(b.priceOnRequest) || a.price - b.price,
+    price_high: (a, b) => Number(a.priceOnRequest) - Number(b.priceOnRequest) || b.price - a.price,
     newest: (a, b) => a.listedDays - b.listedDays,
     largest: (a, b) => (b.size ?? 0) - (a.size ?? 0),
   };
@@ -345,7 +357,8 @@ export function forModel(l: Listing) {
     title_en: l.titleEn.slice(0, 160),
     title_ar: l.titleAr.slice(0, 160),
     deal: l.deal,
-    price_jod: l.price,
+    price_jod: l.priceOnRequest ? null : l.price,
+    price_on_request: l.priceOnRequest,
     price_basis: l.deal === "rent" ? "per month" : l.deal === "daily" ? "per night" : "total",
     type: l.type,
     location_en: loc.en,
@@ -356,7 +369,7 @@ export function forModel(l: Listing) {
     bathrooms: l.baths,
     size_sqm: l.size,
     land_sqm: l.land,
-    price_per_sqm: l.size && l.deal === "sale" ? Math.round(l.price / l.size) : null,
+    price_per_sqm: l.size && l.deal === "sale" && !l.priceOnRequest ? Math.round(l.price / l.size) : null,
     amenities: l.amenities,
     verified_by_akarat: l.verified,
     photos: l.photos,
@@ -386,7 +399,8 @@ export type AkaratCard = {
   title: { en: string; ar: string };
   deal: Deal;
   type: string;
-  price: number;
+  /** null when the owner gives the price on request. */
+  price: number | null;
   basis: "total" | "month" | "night";
   beds: number | null;
   baths: number | null;
@@ -409,7 +423,7 @@ export function akaratCard(l: Listing, why: string, lang: Lang): AkaratCard {
     title: { en: l.titleEn, ar: l.titleAr },
     deal: l.deal,
     type: l.type,
-    price: l.price,
+    price: l.priceOnRequest ? null : l.price,
     basis: l.deal === "rent" ? "month" : l.deal === "daily" ? "night" : "total",
     beds: l.beds,
     baths: l.baths,

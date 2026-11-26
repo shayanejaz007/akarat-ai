@@ -80,7 +80,13 @@ class ListingsRepository {
   static PostgrestFilterBuilder<List<Map<String, dynamic>>> _deal(
     PostgrestFilterBuilder<List<Map<String, dynamic>>> q,
     DealType? deal,
-  ) => deal == null ? q.inFilter('deal', const ['sale', 'rent']) : q.eq('deal', deal.name);
+  ) => switch (deal) {
+    null => q.inFilter('deal', const ['sale', 'rent']),
+    // Only approved stays: an owner would otherwise see their own one still
+    // waiting for review among everyone else's.
+    DealType.daily => q.eq('deal', 'daily').eq('daily_review', 'approved'),
+    _ => q.eq('deal', deal.name),
+  };
 
   /// One page of the public marketplace, filtered and ordered by Postgres.
   /// Public rows matching [f], before ordering and paging.
@@ -99,34 +105,63 @@ class ListingsRepository {
     if (f.minBeds case final b?) q = q.gte('bedrooms', b);
     if (f.minBaths case final b?) q = q.gte('bathrooms', b);
     if (f.minPrice case final p?) q = q.gte('price_jod', _clamp(p));
-    if (f.maxPrice case final p?) q = q.lte('price_jod', _clamp(p));
+    // A price on request is stored as 0: it is not "under" any price.
+    if (f.maxPrice case final p?) q = q.lte('price_jod', _clamp(p)).gt('price_jod', 0);
     if (f.minArea case final a?) q = q.gte('area_sqm', _clamp(a));
     if (f.maxArea case final a?) q = q.lte('area_sqm', _clamp(a));
     return _visible(q);
   }
 
-  /// Every row matching [f], newest first, for the map view: pins for those
-  /// with a publishable point, cards for all. One request instead of paging,
-  /// capped well above today's inventory.
+  /// Every row matching [f], in its sort order, for the map view: pins for
+  /// those with a publishable point, cards for all. One request instead of
+  /// paging, capped well above today's inventory.
   Future<List<Listing>> mapListings(ListingFilters f, {int limit = 500}) async {
     try {
-      final rows = await _matching(f).order('created_at', ascending: false).limit(limit);
-      return _rows(rows);
+      try {
+        return _rows(await _ordered(f, scored: true).limit(limit));
+      } on PostgrestException catch (e) {
+        if (!_noScoreYet(e)) rethrow;
+        return _rows(await _ordered(f, scored: false).limit(limit));
+      }
     } on Object catch (e) {
       throw AppFailure.from(e);
     }
   }
 
+  /// Before migration 0025 the score and price-on-request columns do not
+  /// exist: order without them rather than fail.
+  static bool _noScoreYet(PostgrestException e) =>
+      e.code == '42703' || e.message.contains('quality_score') || e.message.contains('price_on_request');
+
+  /// [f] in its sort order. "Best first" is the quality score (0025), newest
+  /// among equals; a price sort puts listings priced on request last.
+  PostgrestTransformBuilder<List<Map<String, dynamic>>> _ordered(ListingFilters f, {required bool scored}) {
+    final q = _matching(f);
+    return switch (f.sort) {
+      ListingSort.best when scored =>
+        q.order('quality_score', ascending: false, nullsFirst: false).order('created_at', ascending: false),
+      ListingSort.best || ListingSort.newest => q.order('created_at', ascending: false),
+      ListingSort.priceAsc =>
+        (scored ? q.order('price_on_request', ascending: true) : q)
+            .order('price_jod', ascending: true)
+            .order('created_at', ascending: false),
+      ListingSort.priceDesc =>
+        (scored ? q.order('price_on_request', ascending: true) : q)
+            .order('price_jod', ascending: false)
+            .order('created_at', ascending: false),
+    };
+  }
+
   Future<ListingPage> browse(ListingFilters f, {int page = 0}) async {
     try {
-      final q = _matching(f);
-      final ordered = switch (f.sort) {
-        ListingSort.newest => q.order('created_at', ascending: false),
-        ListingSort.priceAsc => q.order('price_jod', ascending: true).order('created_at', ascending: false),
-        ListingSort.priceDesc => q.order('price_jod', ascending: false).order('created_at', ascending: false),
-      };
       final from = page * pageSize;
-      final res = await ordered.range(from, from + pageSize - 1).count(CountOption.exact);
+      PostgrestResponse<List<Map<String, dynamic>>> res;
+      try {
+        res = await _ordered(f, scored: true).range(from, from + pageSize - 1).count(CountOption.exact);
+      } on PostgrestException catch (e) {
+        if (!_noScoreYet(e)) rethrow;
+        res = await _ordered(f, scored: false).range(from, from + pageSize - 1).count(CountOption.exact);
+      }
       return ListingPage(items: _rows(res.data), total: res.count, page: page);
     } on Object catch (e) {
       throw AppFailure.from(e);

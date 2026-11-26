@@ -76,27 +76,24 @@ class MapPinImages {
     });
   }
 
-  /// A numbered bubble for pins too close to tell apart; [ring] marks a
-  /// bubble that mixes sale and rent.
-  Future<PinImage> cluster(int count, {required Color background, required Color foreground, Color? ring}) {
-    final key = 'c|$count|${background.toARGB32()}|${foreground.toARGB32()}|${ring?.toARGB32()}';
+  /// One listing on a zoomed-out map: a dot in its deal's colour, ringed in
+  /// white.
+  Future<PinImage> dot(Color background) {
+    final key = 'd|${background.toARGB32()}';
     return _cache[key] ??= _draw(() {
-      final diameter = (36 + math.min(count, 40) * 0.5) * textScale;
-      final size = Size.square(diameter + 2 * _margin);
+      const diameter = 16.0;
+      const size = Size.square(diameter + 2 * _margin);
       return (
         size,
         (Canvas c) {
           final centre = Offset(size.width / 2, size.height / 2);
           final circle = RRect.fromRectAndRadius(
             Rect.fromCircle(center: centre, radius: diameter / 2),
-            Radius.circular(diameter / 2),
+            const Radius.circular(diameter / 2),
           );
-          _shadow(c, circle, 0.25, 3);
-          c.drawCircle(centre, diameter / 2, Paint()..color = ring ?? Colors.white);
-          c.drawCircle(centre, diameter / 2 - (ring == null ? 2 : 3), Paint()..color = background);
-          final text = _text('$count', foreground, 15);
-          text.paint(c, centre - Offset(text.width / 2, text.height / 2));
-          text.dispose();
+          _shadow(c, circle, 0.3, 3);
+          c.drawCircle(centre, diameter / 2, Paint()..color = Colors.white);
+          c.drawCircle(centre, diameter / 2 - 2.5, Paint()..color = background);
         },
         const Offset(0.5, 0.5),
       );

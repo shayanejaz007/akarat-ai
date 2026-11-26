@@ -15,6 +15,7 @@
     "test:places": "node --test \"tests/places/*.test.mts\"",
     "test:services": "node --test \"tests/services/*.test.mts\"",
     "test:advisor": "node --test \"tests/advisor/*.test.mts\"",
+    "test:quality": "node --test \"tests/quality/*.test.mts\"",
     "model:benchmark": "node scripts/model-benchmark.mts"
   },
   "dependencies": {

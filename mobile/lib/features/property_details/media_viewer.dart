@@ -178,7 +178,7 @@ class _MediaViewerState extends State<MediaViewer> {
                         child: IconButton(
                           tooltip: l.actionClose,
                           onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF16201D)),
+                          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF1C1C1E)),
                         ),
                       ),
                       Expanded(
@@ -290,7 +290,7 @@ class _Tile extends StatelessWidget {
             borderRadius: BorderRadius.circular(Radii.md - 6),
             child: item.isVideo
                 ? const ColoredBox(
-                    color: Color(0xFF101614),
+                    color: Color(0xFF111112),
                     child: Center(child: Icon(Icons.play_arrow_rounded, color: Colors.white, size: 30)),
                   )
                 : ListingImage(url: item.url, decodeWidth: _MediaViewerState._tileWidth),

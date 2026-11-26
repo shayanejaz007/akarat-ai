@@ -41,7 +41,7 @@ class FavoriteButton extends ConsumerWidget {
         saved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
         key: ValueKey(saved),
         size: size,
-        color: onImage ? const Color(0xFF16201D) : c.ink,
+        color: onImage ? const Color(0xFF1C1C1E) : c.ink,
       ),
     );
     return Semantics(
@@ -132,7 +132,7 @@ class ListingBadge extends StatelessWidget {
     return ListingBadge(
       label: l.isDaily ? t.badgeDaily : (l.isRent ? t.badgeForRent : t.badgeForSale),
       background: Colors.white.withValues(alpha: 0.94),
-      foreground: const Color(0xFF123C34),
+      foreground: const Color(0xFF2A2A2C),
     );
   }
 }
@@ -222,8 +222,7 @@ class PropertyCard extends StatelessWidget {
         child: Semantics(
           container: true,
           button: true,
-          label:
-              '${listing.title(lang)}, ${Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily)}, $place',
+          label: '${listing.title(lang)}, ${listing.priceText(lang)}, $place',
           child: Pressable(
             onTap: onTap,
             borderRadius: BorderRadius.circular(Radii.xl),
@@ -333,7 +332,7 @@ class PropertyCard extends StatelessWidget {
                                 fit: BoxFit.scaleDown,
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: Text(
-                                  Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
+                                  listing.priceText(lang),
                                   style: context.type.price.copyWith(
                                     color: listing.isClosed ? c.inkMuted : c.ink,
                                     decoration: listing.isClosed ? TextDecoration.lineThrough : null,
@@ -366,7 +365,7 @@ class _DealTag extends StatelessWidget {
     final c = context.colors;
     final t = context.l10n;
     final rent = listing.isRent;
-    final colour = rent ? const Color(0xFFD9B25E) : c.emerald;
+    final colour = rent ? const Color(0xFFE0AE45) : (listing.isDaily ? c.emerald : c.forest);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(color: c.surfaceMuted, borderRadius: BorderRadius.circular(14)),
@@ -428,7 +427,7 @@ class PropertyCardCompact extends StatelessWidget {
     final t = context.l10n;
     final place = listing.place(lang);
     final type = Market.type(listing.propertyType);
-    final price = Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily);
+    final price = listing.priceText(lang);
     final image = ListingImage(
       url: listing.coverUrl,
       greyscale: listing.isClosed,
@@ -579,10 +578,7 @@ class PropertyRow extends StatelessWidget {
                         style: context.text.titleSmall,
                       ),
                       const SizedBox(height: Space.hair),
-                      Text(
-                        Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
-                        style: context.type.priceSmall,
-                      ),
+                      Text(listing.priceText(lang), style: context.type.priceSmall),
                       if (listing.place(lang).isNotEmpty)
                         Text(
                           listing.place(lang),

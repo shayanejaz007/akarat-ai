@@ -49,6 +49,7 @@ class ListingDraft {
     this.cityId = 'amman',
     this.neighborhoodId,
     this.price = '',
+    this.priceOnRequest = false,
     this.bedrooms = '',
     this.bathrooms = '',
     this.areaSqm = '',
@@ -76,6 +77,9 @@ class ListingDraft {
 
   // Numbers stay text while editing, as on the website, and are parsed once.
   final String price;
+
+  /// No published price (sale and monthly rent only).
+  final bool priceOnRequest;
   final String bedrooms;
   final String bathrooms;
   final String areaSqm;
@@ -115,6 +119,7 @@ class ListingDraft {
     String? neighborhoodId,
     bool clearNeighborhood = false,
     String? price,
+    bool? priceOnRequest,
     String? bedrooms,
     String? bathrooms,
     String? areaSqm,
@@ -140,6 +145,7 @@ class ListingDraft {
     cityId: cityId ?? this.cityId,
     neighborhoodId: clearNeighborhood ? null : (neighborhoodId ?? this.neighborhoodId),
     price: price ?? this.price,
+    priceOnRequest: priceOnRequest ?? this.priceOnRequest,
     bedrooms: bedrooms ?? this.bedrooms,
     bathrooms: bathrooms ?? this.bathrooms,
     areaSqm: areaSqm ?? this.areaSqm,
@@ -166,7 +172,8 @@ class ListingDraft {
     propertyType: l.propertyType,
     cityId: l.cityId ?? 'amman',
     neighborhoodId: l.neighborhoodId,
-    price: '${l.priceJod}',
+    price: l.priceOnRequest ? '' : '${l.priceJod}',
+    priceOnRequest: l.priceOnRequest,
     bedrooms: l.bedrooms?.toString() ?? '',
     bathrooms: l.bathrooms?.toString() ?? '',
     areaSqm: l.areaSqm?.toString() ?? '',
@@ -194,6 +201,7 @@ class ListingDraft {
     'cityId': cityId,
     'neighborhoodId': neighborhoodId,
     'price': price,
+    'priceOnRequest': priceOnRequest,
     'bedrooms': bedrooms,
     'bathrooms': bathrooms,
     'areaSqm': areaSqm,
@@ -225,6 +233,7 @@ class ListingDraft {
       cityId: j['cityId'] as String?,
       neighborhoodId: j['neighborhoodId'] as String?,
       price: s('price'),
+      priceOnRequest: j['priceOnRequest'] == true,
       bedrooms: s('bedrooms'),
       bathrooms: s('bathrooms'),
       areaSqm: s('areaSqm'),
@@ -248,4 +257,12 @@ class ListingDraft {
 
   /// Anything typed at all — decides whether leaving needs a confirmation.
   bool get isDirty => toJson().toString() != const ListingDraft().toJson().toString();
+}
+
+extension DraftPrice on ListingDraft {
+  /// Price on request applies: chosen, and the deal is not a daily rental.
+  bool get hidesPrice => priceOnRequest && deal != DealType.daily;
+
+  /// A price is given, or none is needed.
+  bool get priceOk => hidesPrice || (ListingDraft.number(price) ?? 0) > 0;
 }

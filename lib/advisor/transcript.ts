@@ -20,7 +20,7 @@ import { INPUT } from "./config.ts";
 import type { Card } from "./tools.ts";
 
 export type ShownListing =
-  | { k: "a"; id: string; title: string; price: number; basis: string; where: string }
+  | { k: "a"; id: string; title: string; price: number | null; basis: string; where: string }
   | {
       k: "e";
       url: string;

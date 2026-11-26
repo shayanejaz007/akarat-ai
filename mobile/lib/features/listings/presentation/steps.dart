@@ -42,7 +42,7 @@ String? stepProblem(BuildContext context, WidgetRef ref, String? editId, int ste
       final max = DateTime.now().year + 5;
       if (year != null && (year < 1900 || year > max)) return l.validationYear(max);
     case 4:
-      if ((ListingDraft.number(d.price) ?? 0) <= 0) return l.listingMissingPrice;
+      if (!d.priceOk) return l.listingMissingPrice;
       if (d.deal == DealType.daily) {
         final guests = ListingDraft.number(d.maxGuests) ?? 0;
         if (guests < 1 || guests > 50) return l.listingMissingGuests;
@@ -75,6 +75,7 @@ class DraftTextField extends StatefulWidget {
     this.prefixIcon,
     this.suffixText,
     this.onBlur,
+    this.enabled = true,
   });
 
   final String value;
@@ -92,6 +93,7 @@ class DraftTextField extends StatefulWidget {
 
   /// Called when the field loses focus, e.g. to translate what was typed.
   final VoidCallback? onBlur;
+  final bool enabled;
 
   @override
   State<DraftTextField> createState() => _DraftTextFieldState();
@@ -129,6 +131,7 @@ class _DraftTextFieldState extends State<DraftTextField> {
     return TextField(
       controller: _c,
       focusNode: _focus,
+      enabled: widget.enabled,
       onChanged: widget.onChanged,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
@@ -583,12 +586,15 @@ class PriceStep extends ConsumerWidget {
     final l = context.l10n;
     final d = ref.read(listingWizardProvider(editId)).draft;
     final deal = ref.watch(listingWizardProvider(editId).select((s) => s.draft.deal));
+    final onRequest = ref.watch(listingWizardProvider(editId).select((s) => s.draft.hidesPrice));
     final ctrl = ref.read(listingWizardProvider(editId).notifier);
     final c = context.colors;
     return Column(
       children: [
         DraftTextField(
-          value: d.price,
+          key: ValueKey('price-$onRequest'),
+          enabled: !onRequest,
+          value: onRequest ? '' : d.price,
           label: switch (deal) {
             DealType.rent => l.fieldPriceRent,
             DealType.daily => l.fieldPriceNight,
@@ -598,6 +604,15 @@ class PriceStep extends ConsumerWidget {
           prefixIcon: Icons.payments_outlined,
           onChanged: (v) => ctrl.update((x) => x.copyWith(price: v)),
         ),
+        // A daily rental is booked at its nightly price: it always shows one.
+        if (deal != DealType.daily)
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            value: onRequest,
+            onChanged: (v) => ctrl.update((x) => x.copyWith(priceOnRequest: v, price: v ? '' : x.price)),
+            title: Text(l.fieldPriceOnRequest),
+            subtitle: Text(l.fieldPriceOnRequestHelp),
+          ),
         const SizedBox(height: Space.lg),
         if (deal == DealType.daily) ...[
           // Who it sleeps and the shortest stay; the number stays private.
@@ -819,7 +834,9 @@ class PreviewStep extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      price == null
+                      d.hidesPrice
+                          ? priceOnRequestText(lang)
+                          : price == null
                           ? '—'
                           : Fmt.price(
                               price,

@@ -228,7 +228,7 @@ class _VoiceConversationState extends ConsumerState<VoiceConversation> {
         backgroundColor: _ground,
         body: DecoratedBox(
           decoration: const BoxDecoration(
-            gradient: RadialGradient(center: Alignment(0, -0.35), radius: 1.1, colors: [Color(0xFF1F2E25), _ground]),
+            gradient: RadialGradient(center: Alignment(0, -0.35), radius: 1.1, colors: [Color(0xFF2A2418), _ground]),
           ),
           child: SafeArea(
             child: Padding(

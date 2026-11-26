@@ -14,6 +14,7 @@ class SearchItem {
     this.city,
     this.hood,
     this.price,
+    this.priceOnRequest = false,
     this.priceHigh,
     this.beds,
     this.baths,
@@ -39,6 +40,9 @@ class SearchItem {
   final String? city;
   final String? hood;
   final int? price;
+
+  /// An Akarat.ai listing whose owner gives the price on request.
+  final bool priceOnRequest;
 
   /// External groups only: the dearest of the duplicate listings.
   final int? priceHigh;
@@ -86,7 +90,8 @@ class SearchItem {
     type: row.propertyType,
     city: row.cityId,
     hood: row.neighborhoodId,
-    price: row.priceJod,
+    price: row.priceOnRequest ? null : row.priceJod,
+    priceOnRequest: row.priceOnRequest,
     beds: row.bedrooms,
     baths: row.bathrooms,
     area: row.areaSqm,

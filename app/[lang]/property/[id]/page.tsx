@@ -49,6 +49,7 @@ function placeOf(row: Listing, lang: Lang) {
 }
 
 function priceOf(row: Listing, lang: Lang) {
+  if (row.price_on_request && row.deal !== "daily") return lang === "ar" ? "السعر عند الطلب" : "Price on request";
   const n = new Intl.NumberFormat(lang === "ar" ? "ar-JO" : "en-JO").format(row.price_jod);
   const jod = lang === "ar" ? "دينار" : "JOD";
   if (row.deal === "rent") return `${n} ${jod}${lang === "ar" ? " / شهرياً" : " / month"}`;
@@ -194,8 +195,8 @@ export default async function PropertyPage(
     image: media.filter((m) => m.type !== "video").map((m) => m.url),
     offers: {
       "@type": "Offer",
-      price: row.price_jod,
-      priceCurrency: "JOD",
+      // No price is published for a listing priced on request: none is given.
+      ...(row.price_on_request ? {} : { price: row.price_jod, priceCurrency: "JOD" }),
       availability: "https://schema.org/InStock",
       businessFunction:
         row.deal === "rent" || row.deal === "daily"

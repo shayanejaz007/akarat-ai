@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/errors/app_failure.dart';
 import '../../../core/utils/geo.dart';
 import '../../../shared/models/listing.dart';
+import '../../../shared/repositories/listing_score.dart';
 import '../../../shared/repositories/listings_repository.dart';
 import '../../../shared/repositories/media_repository.dart';
 import '../../../shared/repositories/translation_repository.dart';
@@ -289,7 +290,7 @@ class ListingWizardController extends Notifier<WizardState> {
     final d = state.draft;
     return [
       if (d.titleEn.trim().isEmpty && d.titleAr.trim().isEmpty) DraftProblem.title,
-      if ((ListingDraft.number(d.price) ?? 0) <= 0) DraftProblem.price,
+      if (!d.priceOk) DraftProblem.price,
       if (d.cityId == null || d.cityId!.isEmpty) DraftProblem.city,
       if (d.deal == DealType.daily && !_guestsValid(d)) DraftProblem.guests,
     ];
@@ -355,7 +356,10 @@ class ListingWizardController extends Notifier<WizardState> {
         'property_type': d.propertyType,
         'city_id': d.cityId,
         'neighborhood_id': d.neighborhoodId,
-        'price_jod': ListingDraft.number(d.price),
+        'price_jod': d.hidesPrice ? 0 : ListingDraft.number(d.price),
+        // Named only when it is, or was, on, so saving still works on a
+        // database that has not run 0025.
+        if (d.hidesPrice || (state.original?.priceOnRequest ?? false)) 'price_on_request': d.hidesPrice,
         'bedrooms': ListingDraft.number(d.bedrooms),
         'bathrooms': ListingDraft.number(d.bathrooms),
         'area_sqm': ListingDraft.number(d.areaSqm),
@@ -412,6 +416,9 @@ class ListingWizardController extends Notifier<WizardState> {
 
       // 5. Files dropped during the edit.
       await media.remove(state.removedPaths);
+
+      // Ranked within seconds rather than at the nightly run.
+      unawaited(ref.read(listingScoreProvider).score(saved.id));
 
       if (state.original == null) await ref.read(preferencesProvider).setListingDraft(null);
       ref.read(refreshTickProvider.notifier).bump();

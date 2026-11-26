@@ -17,7 +17,7 @@ final mediaRepositoryProvider = Provider<MediaRepository>((ref) => MediaReposito
 class MediaLimits {
   const MediaLimits._();
   static const bucket = 'listing-photos';
-  static const maxFiles = 8;
+  static const maxFiles = 30;
   static const maxVideos = 2;
   static const maxImageBytes = 6 * 1024 * 1024;
   static const maxVideoBytes = 50 * 1024 * 1024;

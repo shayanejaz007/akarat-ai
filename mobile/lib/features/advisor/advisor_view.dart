@@ -16,6 +16,7 @@ import '../../core/widgets/buttons.dart';
 import '../../core/widgets/layout.dart';
 import '../../core/widgets/listing_image.dart';
 import '../../core/widgets/motion.dart';
+import '../../shared/models/listing.dart' show priceOnRequestText;
 import '../../shared/reference/market_data.dart';
 import '../../shared/services/supabase_providers.dart';
 import '../ai_search/presentation/ai_search_screen.dart' show AiMark, VoiceOrbMini;
@@ -656,7 +657,9 @@ class _AkaratCardView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    Fmt.price(card.price, lang: lang, rent: card.basis == 'month', night: card.basis == 'night'),
+                    card.price == null
+                        ? priceOnRequestText(lang)
+                        : Fmt.price(card.price, lang: lang, rent: card.basis == 'month', night: card.basis == 'night'),
                     style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: Space.hair),

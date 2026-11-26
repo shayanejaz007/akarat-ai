@@ -771,9 +771,9 @@
   "listingTranslatedEn": "English filled in automatically. Check it before publishing.",
   "mediaAddPhotos": "Add photos",
   "mediaAddVideo": "Add video",
-  "mediaHelp": "Up to 8 files, including up to 2 video clips. The first photo is the cover: drag to reorder.",
+  "mediaHelp": "Up to 30 photos and videos, including up to 2 video clips. The first photo is the cover: drag to reorder.",
   "mediaCover": "Cover",
-  "mediaTooMany": "Eight files is the maximum.",
+  "mediaTooMany": "30 files is the maximum.",
   "mediaTooManyVideos": "Two video clips is the maximum.",
   "mediaTooLarge": "{name} is larger than {size} MB.",
   "@mediaTooLarge": {
@@ -1734,5 +1734,9 @@
   "talkFailed": "That couldn’t be answered just now. Tap the circle to try again.",
   "talkOnScreen": "The results are in the chat.",
   "talkCardHint": "Ask out loud in Arabic or English and hear the answer.",
-  "servicesAll": "All services"
+  "servicesAll": "All services",
+  "fieldPriceOnRequest": "Price on request",
+  "fieldPriceOnRequestHelp": "No price is published; people call you to ask. Listings with a price usually rank higher.",
+  "sortBest": "Best first",
+  "dealDaily": "Daily"
 }

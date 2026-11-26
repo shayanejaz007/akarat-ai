@@ -3311,7 +3311,7 @@ abstract class AppLocalizations {
   /// No description provided for @mediaHelp.
   ///
   /// In en, this message translates to:
-  /// **'Up to 8 files, including up to 2 video clips. The first photo is the cover: drag to reorder.'**
+  /// **'Up to 30 photos and videos, including up to 2 video clips. The first photo is the cover: drag to reorder.'**
   String get mediaHelp;
 
   /// No description provided for @mediaCover.
@@ -3323,7 +3323,7 @@ abstract class AppLocalizations {
   /// No description provided for @mediaTooMany.
   ///
   /// In en, this message translates to:
-  /// **'Eight files is the maximum.'**
+  /// **'30 files is the maximum.'**
   String get mediaTooMany;
 
   /// No description provided for @mediaTooManyVideos.
@@ -6367,6 +6367,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All services'**
   String get servicesAll;
+
+  /// No description provided for @fieldPriceOnRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Price on request'**
+  String get fieldPriceOnRequest;
+
+  /// No description provided for @fieldPriceOnRequestHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'No price is published; people call you to ask. Listings with a price usually rank higher.'**
+  String get fieldPriceOnRequestHelp;
+
+  /// No description provided for @sortBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best first'**
+  String get sortBest;
+
+  /// No description provided for @dealDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get dealDaily;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

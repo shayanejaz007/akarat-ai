@@ -1,3 +1,4 @@
+import '../../core/utils/formatters.dart';
 import '../../core/utils/payload_codec.dart';
 import '../reference/market_data.dart';
 
@@ -178,6 +179,8 @@ class Listing {
     required this.priceJod,
     required this.titleEn,
     required this.createdAt,
+    this.priceOnRequest = false,
+    this.qualityScore,
     this.titleAr,
     this.cityId,
     this.neighborhoodId,
@@ -214,6 +217,14 @@ class Listing {
   final double? lat;
   final double? lng;
   final int priceJod;
+
+  /// The owner publishes no price (migration 0025); [priceJod] is then 0.
+  /// Never true for a daily rental, which is booked at its nightly price.
+  final bool priceOnRequest;
+
+  /// How complete the listing is, 0–100 (lib/listing-score.js on the
+  /// website's server). Null until it has been scored.
+  final int? qualityScore;
   final int? bedrooms;
   final int? bathrooms;
   final int? areaSqm;
@@ -309,6 +320,8 @@ class Listing {
       lat: _double(row['lat']),
       lng: _double(row['lng']),
       priceJod: _int(row['price_jod']) ?? 0,
+      priceOnRequest: row['price_on_request'] == true && row['deal'] != 'daily',
+      qualityScore: _int(row['quality_score']),
       bedrooms: _int(row['bedrooms']),
       bathrooms: _int(row['bathrooms']),
       areaSqm: _int(row['area_sqm']),
@@ -343,6 +356,8 @@ class Listing {
     deal: deal,
     propertyType: propertyType,
     priceJod: priceJod,
+    priceOnRequest: priceOnRequest,
+    qualityScore: qualityScore,
     titleEn: titleEn,
     titleAr: titleAr,
     createdAt: createdAt,
@@ -368,3 +383,17 @@ class Listing {
     dailyReviewNote: dailyReviewNote,
   );
 }
+
+/// A listing's price as people read it: "Price on request" when the owner
+/// chose not to publish one, otherwise the figure with its period.
+extension ListingPrice on Listing {
+  String priceText(String lang) =>
+      priceOnRequest ? priceOnRequestText(lang) : Fmt.price(priceJod, lang: lang, rent: isRent, night: isDaily);
+
+  /// For a map pin: short, and still says there is no published price.
+  String pinPrice(String lang) => priceOnRequest
+      ? (lang == 'ar' ? 'عند الطلب' : 'On request')
+      : Fmt.compactPrice(priceJod, lang: lang, currency: false);
+}
+
+String priceOnRequestText(String lang) => lang == 'ar' ? 'السعر عند الطلب' : 'Price on request';

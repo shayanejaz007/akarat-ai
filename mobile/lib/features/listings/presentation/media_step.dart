@@ -182,7 +182,7 @@ class _Thumb extends StatelessWidget {
     final Widget image;
     if (media.isVideo) {
       image = Container(
-        color: const Color(0xFF101614),
+        color: const Color(0xFF111112),
         child: const Center(child: Icon(Icons.play_circle_outline_rounded, color: Colors.white, size: 36)),
       );
     } else if (media.stored != null) {

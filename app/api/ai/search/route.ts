@@ -216,11 +216,14 @@ export async function POST(request: NextRequest) {
     : internalQuery.in("deal", ["sale", "rent"]);
   if (constraints.city) internalQuery = internalQuery.eq("city_id", constraints.city);
   if (constraints.type) internalQuery = internalQuery.eq("property_type", constraints.type);
-  if (constraints.budgetMax) internalQuery = internalQuery.lte("price_jod", Math.round(constraints.budgetMax * 1.15));
+  // A price on request is stored as 0; it is not "within budget".
+  if (constraints.budgetMax) internalQuery = internalQuery.lte("price_jod", Math.round(constraints.budgetMax * 1.15)).gt("price_jod", 0);
   if (constraints.budgetMin) internalQuery = internalQuery.gte("price_jod", constraints.budgetMin);
   if (constraints.beds != null) internalQuery = internalQuery.gte("bedrooms", constraints.beds - 1);
 
-  const { data: internal, error: internalError } = await internalQuery.limit(60);
+  // All that match: the ranker below orders them, so a cap here would drop
+  // matches at random rather than the weakest.
+  const { data: internal, error: internalError } = await internalQuery.limit(1000);
   if (internalError) {
     return NextResponse.json({ error: "Search is unavailable right now." }, { status: 503 });
   }

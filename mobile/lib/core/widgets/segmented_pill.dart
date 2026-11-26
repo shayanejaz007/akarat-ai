@@ -67,7 +67,7 @@ class SegmentedPill<T> extends StatelessWidget {
     final thumb = onDark
         ? Colors.white
         : (darkTheme ? Color.alphaBlend(Colors.white.withValues(alpha: 0.2), c.surface) : c.surface);
-    final selectedFg = onDark ? const Color(0xFF123C34) : c.ink;
+    final selectedFg = onDark ? const Color(0xFF2A2A2C) : c.ink;
     final idleFg = onDark ? Colors.white.withValues(alpha: 0.92) : c.inkMuted;
     final duration = Motion.of(context, Motion.normal);
     final h = math.max(height, 34 * scaler.scale(1));

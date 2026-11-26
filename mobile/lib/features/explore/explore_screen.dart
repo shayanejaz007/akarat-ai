@@ -6,7 +6,6 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app/localization/l10n.dart';
 import '../../app/theme/tokens.dart';
-import '../../core/utils/formatters.dart';
 import '../../core/widgets/google_map_views.dart' show useGoogleMaps;
 import '../../core/widgets/layout.dart';
 import '../../core/widgets/listing_image.dart';
@@ -130,6 +129,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       deal: switch (q['deal']) {
         'rent' => DealType.rent,
         'sale' => DealType.sale,
+        'daily' => DealType.daily,
         _ => ref.read(exploreFiltersProvider).deal ?? DealType.sale,
       },
       cityId: city ?? hood?.city,
@@ -173,6 +173,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               child: Text(l.exploreSort, style: context.text.titleMedium),
             ),
             for (final (s, label) in [
+              (ListingSort.best, l.sortBest),
               (ListingSort.newest, l.sortNewest),
               (ListingSort.priceAsc, l.sortPriceLow),
               (ListingSort.priceDesc, l.sortPriceHigh),
@@ -296,6 +297,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                             segments: [
                               PillSegment(value: DealType.sale, label: l.dealSale),
                               PillSegment(value: DealType.rent, label: l.dealRent),
+                              PillSegment(value: DealType.daily, label: l.dealDaily),
                             ],
                           ),
                         ),
@@ -587,7 +589,7 @@ class _ViewToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     // Brand forest in both themes, like the other floating action.
-    const bg = Color(0xFF123C34);
+    const bg = Color(0xFF2A2A2C);
     return Material(
       color: bg,
       elevation: 4,
@@ -666,7 +668,7 @@ class _MapCard extends StatelessWidget {
                           label: listing.isDaily ? l.badgeDaily : (listing.isRent ? l.badgeForRent : l.badgeForSale),
                         ),
                         Text(
-                          Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
+                          listing.priceText(lang),
                           maxLines: 1,
                           style: context.type.priceSmall.copyWith(
                             decoration: listing.isClosed ? TextDecoration.lineThrough : null,
@@ -754,6 +756,7 @@ class _ExploreHeader extends StatelessWidget implements PreferredSizeWidget {
                 segments: [
                   PillSegment(value: DealType.sale, label: l.dealSale),
                   PillSegment(value: DealType.rent, label: l.dealRent),
+                  PillSegment(value: DealType.daily, label: l.dealDaily),
                 ],
               ),
             ),
@@ -799,6 +802,7 @@ class _FilterLine extends StatelessWidget {
     final l = context.l10n;
     final lang = context.lang;
     final sortLabel = switch (filters.sort) {
+      ListingSort.best => l.sortBest,
       ListingSort.newest => l.sortNewest,
       ListingSort.priceAsc => l.sortPriceLow,
       ListingSort.priceDesc => l.sortPriceHigh,

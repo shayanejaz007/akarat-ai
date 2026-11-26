@@ -13,6 +13,7 @@ import { qs, useList, useQuery, useSearchText } from "../_lib/api";
 import { ago, compact, full, humanize, jod, titleOf, when, whatsapp } from "../_lib/format";
 import { DEAL, LISTING_STATUS, ROLES, labelOf } from "../_lib/labels";
 import type { ListingRow } from "../_lib/types";
+import { QUALITY_PARTS } from "@/lib/listing-score.js";
 
 /* Every listing on Akarat.ai, whatever its status or owner
    (GET/PATCH/DELETE /api/admin/listings). */
@@ -21,6 +22,8 @@ const DEFAULTS = { q: "", status: "", sort: "created", page: "0", owner: "" };
 const STATUSES = ["active", "pending", "draft", "paused", "sold", "rented", "rejected", "archived"];
 const SORTS = [
   { value: "created", label: "Newest first" },
+  { value: "score", label: "Best score" },
+  { value: "score-asc", label: "Lowest score" },
   { value: "views", label: "Most viewed" },
   { value: "inquiries", label: "Most inquired" },
   { value: "saves", label: "Most saved" },
@@ -30,6 +33,25 @@ const SORTS = [
 const isUuid = (v: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
 const publicUrl = (id: string) => `/en/property/${id}`;
 const per = (deal: string) => (deal === "rent" ? "/ month" : deal === "daily" ? "/ night" : "");
+// The listing quality score's parts, in plain words.
+const PART_LABEL: Record<string, string> = {
+  photos: "Photos", video: "Video", description: "Description", languages: "English and Arabic",
+  facts: "Property facts", location: "Location", price: "Published price", amenities: "Amenities", contact: "Phone number",
+};
+const PART_TIP: Record<string, string> = {
+  photos: "Add more photos: ten or more earns full marks.",
+  video: "Add a short video walk-through.",
+  description: "Write a fuller description: 400 characters or more.",
+  languages: "Give the title and description in both English and Arabic.",
+  facts: "Fill in the rooms, area and year built.",
+  location: "Choose the neighbourhood and place a pin on the map.",
+  price: "Publish a price instead of \u201cprice on request\u201d.",
+  amenities: "Tick at least three amenities.",
+  contact: "Add a phone number.",
+};
+const scoreTone = (n: number | null) => (n == null ? "neutral" : n >= 80 ? "good" : n >= 60 ? "gold" : n >= 40 ? "warn" : "bad");
+const shownPrice = (r: ListingRow) => (r.price_on_request ? "On request" : jod(r.price_jod));
+
 const place = (r: { city_id: string | null; neighborhood_id?: string | null }) =>
   [r.city_id, r.neighborhood_id].filter(Boolean).map(humanize).join(" · ");
 
@@ -43,7 +65,10 @@ export default function ListingsPage() {
     api,
     "/api/admin/listings",
     "listings",
-    qs({ q: query.q, status: query.status, sort: query.sort, owner: query.owner, page }),
+    qs({
+      q: query.q, status: query.status, owner: query.owner, page,
+      sort: query.sort.replace(/-asc$/, ""), dir: query.sort.endsWith("-asc") ? "asc" : "",
+    }),
   );
   const [openId, setOpenId] = useState<string | null>(null);
   const [snapshot, setSnapshot] = useState<ListingRow | null>(null);
@@ -94,6 +119,25 @@ export default function ListingsPage() {
   const verify = (r: ListingRow, verified: boolean) =>
     patch(r, { verified }, verified ? "Marked as verified" : "Verified badge removed", { verified: r.verified });
 
+  async function rescore() {
+    const ok = await confirm({
+      title: "Re-score every listing?",
+      body: "Every listing's quality score is worked out again from what is stored now. Use this after the scoring rules change; saves are scored automatically.",
+      confirm: "Re-score all",
+    });
+    if (!ok) return;
+    setBusy("rescore");
+    try {
+      const res = await api<{ scored: number }>("/api/admin/listings", { method: "POST", body: { action: "rescore" } });
+      toast({ tone: "good", title: "Scores updated", body: `${full(res.scored)} listings scored.` });
+      await list.reload();
+    } catch (e) {
+      toast({ tone: "bad", title: "Couldn't re-score", body: (e as Error).message });
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function remove(r: ListingRow) {
     const ok = await confirm({
       title: "Delete this listing for good?",
@@ -128,7 +172,12 @@ export default function ListingsPage() {
     <>
       <PageHeader
         title="Listings"
-        subtitle="Every listing, whatever its status or owner."
+        subtitle="Every listing, whatever its status or owner. The score is how complete a listing is; the best scores are shown first on the site."
+        actions={
+          <Button icon="refresh" onClick={() => void rescore()} disabled={busy === "rescore"}>
+            {busy === "rescore" ? "Scoring\u2026" : "Re-score all"}
+          </Button>
+        }
       />
 
       <Chips
@@ -155,7 +204,7 @@ export default function ListingsPage() {
 
       <Card flush>
         {!rows ? (
-          <SkeletonRows cols={6} />
+          <SkeletonRows cols={7} />
         ) : rows.length === 0 ? (
           <Empty
             icon="building"
@@ -170,6 +219,7 @@ export default function ListingsPage() {
                   <th scope="col">Listing</th>
                   <th scope="col">Owner</th>
                   <th scope="col">Status</th>
+                  <th scope="col" className="num">Score</th>
                   <th scope="col" className="num">Price</th>
                   <th scope="col" className="num">Views <span className="adm-th-sub">7 days</span></th>
                   <th scope="col" className="num">Inquiries</th>
@@ -206,8 +256,11 @@ export default function ListingsPage() {
                       </div>
                     </td>
                     <td className="num">
-                      <div className="adm-cell-strong">{jod(r.price_jod)}</div>
-                      <div className="adm-cell-sub">{per(r.deal)}</div>
+                      <ScoreCell q={r.quality} />
+                    </td>
+                    <td className="num">
+                      <div className="adm-cell-strong">{shownPrice(r)}</div>
+                      <div className="adm-cell-sub">{r.price_on_request ? "" : per(r.deal)}</div>
                     </td>
                     <td className="num">
                       <div className="adm-cell-strong">{full(r.views7d)}</div>
@@ -305,7 +358,7 @@ function ListingDetail({ r, busy, onStatus, onFeature, onVerify }: {
         <div className="adm-detail-hero-text">
           {r.title_ar && r.title_ar !== r.title_en && <p className="adm-ar" dir="rtl" lang="ar">{r.title_ar}</p>}
           <div className="adm-price">
-            {jod(r.price_jod)} <small>{per(r.deal)}</small>
+            {shownPrice(r)} <small>{r.price_on_request ? "" : per(r.deal)}</small>
           </div>
           <div className="adm-badges">
             <StatusBadge map={LISTING_STATUS} value={r.status} />
@@ -321,6 +374,13 @@ function ListingDetail({ r, busy, onStatus, onFeature, onVerify }: {
         <Figure label="Inquiries" value={compact(r.inquiries_count)} sub={r.lastInquiry ? `last ${ago(r.lastInquiry)}` : "none yet"} />
         <Figure label="Saves" value={compact(r.saves)} sub="people saved it" />
       </div>
+
+      <Section
+        title="Listing score"
+        aside={<span className="adm-cell-sub">{r.quality.scoredAt ? `Scored ${ago(r.quality.scoredAt)}` : "Not scored yet"}</span>}
+      >
+        <ScoreDetail q={r.quality} />
+      </Section>
 
       <Section title="Manage">
         <div className="adm-field-row">
@@ -378,6 +438,57 @@ function ListingDetail({ r, busy, onStatus, onFeature, onVerify }: {
           ]}
         />
       </Section>
+    </>
+  );
+}
+
+/** The score in a table cell: the number in its band's colour, and a bar. */
+function ScoreCell({ q }: { q: ListingRow["quality"] }) {
+  const n = q.score ?? null;
+  return (
+    <div className="adm-score-cell" title={n == null ? "Not scored yet" : `${n} out of 100`}>
+      <span className={`adm-score-n is-${scoreTone(n)}`}>{n == null ? "\u2014" : n}</span>
+      <span className="adm-score-track" aria-hidden="true">
+        <span className={`is-${scoreTone(n)}`} style={{ width: `${n ?? 0}%` }} />
+      </span>
+    </div>
+  );
+}
+
+/** Each part of the score with its points, and what would raise it. */
+function ScoreDetail({ q }: { q: ListingRow["quality"] }) {
+  const parts = Object.entries(QUALITY_PARTS) as [string, number][];
+  const n = q.score ?? q.current;
+  return (
+    <>
+      <div className="adm-score-head">
+        <span className={`adm-score-big is-${scoreTone(n)}`}>{n}</span>
+        <span className="adm-cell-sub">
+          out of 100{q.score == null ? ". Worked out now; it is stored at the next save or the nightly run." : ""}
+        </span>
+      </div>
+      <ul className="adm-score-parts">
+        {parts.map(([k, max]) => {
+          const got = Number(q.parts?.[k] ?? 0);
+          return (
+            <li key={k}>
+              <span className="adm-score-part-label">{PART_LABEL[k] ?? humanize(k)}</span>
+              <span className="adm-score-track" aria-hidden="true">
+                <span className={got >= max ? "is-good" : got > 0 ? "is-gold" : "is-bad"} style={{ width: `${(got / max) * 100}%` }} />
+              </span>
+              <span className="adm-score-part-n">{got}<small>/{max}</small></span>
+            </li>
+          );
+        })}
+      </ul>
+      {q.missing.length > 0 && (
+        <div className="adm-score-tips">
+          <p className="adm-hint">To raise it, the owner can:</p>
+          <ul>
+            {q.missing.slice(0, 4).map(k => <li key={k}>{PART_TIP[k] ?? humanize(k)}</li>)}
+          </ul>
+        </div>
+      )}
     </>
   );
 }

@@ -171,7 +171,12 @@ re-running a migration you have already applied is safe.
 0022_ai_cost.sql            ← what each AI answer cost, and which model and effort answered
 0023_locations.sql          ← every governorate, town and neighbourhood (GeoNames, CC BY 4.0)
 0024_services.sql           ← Services: categories, requests, their history, the photo bucket
+0025_listing_quality.sql    ← "price on request", and the listing quality score the marketplace sorts by
 ```
+
+**Run 0025 before deploying this version.** Until it runs the site and the
+apps still work (they list newest first and cannot save "price on request"),
+but nothing is ranked by score.
 
 0024 needs 0019 (notifications) and 0023 (governorates). Run **0023, then
 0024**, before deploying the website or releasing the apps that use them.
@@ -459,6 +464,29 @@ team answers from the admin panel (Service requests).
   price, technician or date is shown unless an admin writes it in a note.
 - **Tests:** `npm run test:services` (the SQL, on a real Postgres in
   memory), `npm run test:places`, and in `mobile/`, `flutter test`.
+
+### Listing score and price on request
+Every listing gets a quality score from 0 to 100 (`lib/listing-score.js`):
+photos (ten or more for full marks), a video, the description, both
+languages, the facts for its type, the place and pin, a published price,
+amenities and a phone number. Buy, Rent, Daily rentals and Explore show the
+best first, on the website and in the apps; "Newest" and the price sorts are
+one tap away.
+
+- **Who scores.** The website's server, with the service-role key: the
+  website and the apps call `/api/listings/score` after each save, and the
+  nightly maintenance run scores anything missed. Owners cannot set a score
+  (0025 keeps the column as it was, like `verified`), and scoring does not
+  change a listing's "last edited" time.
+- **The admin panel.** Listings shows each score, sorts by it, and the
+  listing drawer breaks it down with what would raise it. "Re-score all"
+  redoes every listing after the weights in `lib/listing-score.js` change.
+- **Price on request.** A sale or a monthly rental may hide its price; the
+  listing then says "Price on request" everywhere, including the AI advisor.
+  It is stored as 0 with `price_on_request` set, so a price filter or a
+  budget leaves it out and a price sort puts it last. A daily rental always
+  has a nightly price.
+- **Tests:** `npm run test:quality`.
 
 ### Every place in Jordan
 `data/locations.js` lists the 12 governorates, 1,182 cities, towns and

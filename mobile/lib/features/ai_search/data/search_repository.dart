@@ -192,10 +192,10 @@ class SearchRepository {
     if (c.type != null && p.propertyType != c.type) return false;
     if (c.city != null && p.cityId != c.city) return false;
     if (c.budgetMax case final max? when max != 0) {
-      if (p.priceJod > max * 1.15) return false;
+      if (p.priceOnRequest || p.priceJod > max * 1.15) return false;
     }
     if (c.budgetMin case final min? when min != 0) {
-      if (p.priceJod < min) return false;
+      if (p.priceOnRequest || p.priceJod < min) return false;
     }
     if (c.beds case final b?) {
       if ((p.bedrooms ?? 0) < b - 1) return false;

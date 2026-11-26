@@ -70,6 +70,13 @@ export type ListingRow = {
   cover: string | null; media: number; phone: string | null;
   views7d: number; views30d: number; lastInquiry: string | null;
   owner: { id: string; full_name: string | null; phone: string | null; role: string | null; verified: boolean } | null;
+  price_on_request?: boolean;
+  /** The listing quality score (lib/listing-score.js): what is stored, what
+   *  each part earned, and what would raise it. */
+  quality: {
+    score: number | null; current: number; scoredAt: string | null;
+    parts: Record<string, number>; missing: string[];
+  };
 };
 
 export type Review = "pending" | "approved" | "rejected" | "suspended";

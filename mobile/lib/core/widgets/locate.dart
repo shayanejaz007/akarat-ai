@@ -85,7 +85,7 @@ class _LocateButtonState extends ConsumerState<LocateButton> {
 
   @override
   Widget build(BuildContext context) {
-    const ink = Color(0xFF16201D);
+    const ink = Color(0xFF1C1C1E);
     return Semantics(
       button: true,
       label: context.l10n.mapLocateMe,

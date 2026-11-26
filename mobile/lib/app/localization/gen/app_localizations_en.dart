@@ -1764,13 +1764,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mediaHelp =>
-      'Up to 8 files, including up to 2 video clips. The first photo is the cover: drag to reorder.';
+      'Up to 30 photos and videos, including up to 2 video clips. The first photo is the cover: drag to reorder.';
 
   @override
   String get mediaCover => 'Cover';
 
   @override
-  String get mediaTooMany => 'Eight files is the maximum.';
+  String get mediaTooMany => '30 files is the maximum.';
 
   @override
   String get mediaTooManyVideos => 'Two video clips is the maximum.';
@@ -3454,4 +3454,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get servicesAll => 'All services';
+
+  @override
+  String get fieldPriceOnRequest => 'Price on request';
+
+  @override
+  String get fieldPriceOnRequestHelp =>
+      'No price is published; people call you to ask. Listings with a price usually rank higher.';
+
+  @override
+  String get sortBest => 'Best first';
+
+  @override
+  String get dealDaily => 'Daily';
 }

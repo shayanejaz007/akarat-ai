@@ -348,7 +348,7 @@ class _DetailsState extends ConsumerState<_Details> {
                         _SoftBadge(dot: c.red, label: l.status == ListingStatus.rented ? t.badgeRented : t.badgeSold)
                       else
                         _SoftBadge(
-                          dot: l.isRent ? const Color(0xFFD9B25E) : c.emerald,
+                          dot: l.isRent ? const Color(0xFFE0AE45) : (l.isDaily ? c.emerald : c.forest),
                           label: l.isDaily ? t.badgeDaily : (l.isRent ? t.badgeForRent : t.badgeForSale),
                         ),
                     ],
@@ -370,7 +370,7 @@ class _DetailsState extends ConsumerState<_Details> {
                   if (!hasBar) ...[
                     const SizedBox(height: Space.md),
                     Text(
-                      Fmt.price(l.priceJod, lang: lang, rent: l.isRent, night: l.isDaily),
+                      l.priceText(lang),
                       style: context.type.priceLarge.copyWith(
                         color: l.isClosed ? c.inkMuted : c.ink,
                         decoration: l.isClosed ? TextDecoration.lineThrough : null,
@@ -534,7 +534,7 @@ class _BarAction extends StatelessWidget {
         tooltip: tooltip,
         onPressed: onTap,
         // Arrow glyphs mirror themselves in Arabic.
-        icon: Icon(icon, color: overImage ? const Color(0xFF16201D) : c.ink, size: 22),
+        icon: Icon(icon, color: overImage ? const Color(0xFF1C1C1E) : c.ink, size: 22),
       ),
     );
   }
@@ -778,7 +778,7 @@ class _GalleryPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const ink = Color(0xFF16201D);
+    const ink = Color(0xFF1C1C1E);
     return Semantics(
       button: true,
       label: semanticLabel,
@@ -812,7 +812,7 @@ class _VideoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF101614),
+      color: const Color(0xFF111112),
       alignment: Alignment.center,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1131,10 +1131,7 @@ class _StickyBar extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    Fmt.price(listing.priceJod, lang: lang, rent: listing.isRent, night: listing.isDaily),
-                    style: context.type.priceLarge,
-                  ),
+                  child: Text(listing.priceText(lang), style: context.type.priceLarge),
                 ),
               ),
             ),

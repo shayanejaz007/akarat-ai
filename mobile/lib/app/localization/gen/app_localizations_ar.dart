@@ -1765,13 +1765,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mediaAddVideo => 'أضف فيديو';
 
   @override
-  String get mediaHelp => 'حتى ٨ ملفات، منها مقطعا فيديو كحد أقصى. الصورة الأولى هي الغلاف: اسحب لإعادة الترتيب.';
+  String get mediaHelp =>
+      'حتى ٣٠ صورة ومقطع فيديو، منها مقطعا فيديو كحد أقصى. الصورة الأولى هي الغلاف: اسحب لإعادة الترتيب.';
 
   @override
   String get mediaCover => 'الغلاف';
 
   @override
-  String get mediaTooMany => 'الحد الأقصى ثمانية ملفات.';
+  String get mediaTooMany => 'الحد الأقصى ٣٠ ملفاً.';
 
   @override
   String get mediaTooManyVideos => 'مقطعا فيديو كحد أقصى.';
@@ -3480,4 +3481,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get servicesAll => 'كل الخدمات';
+
+  @override
+  String get fieldPriceOnRequest => 'السعر عند الطلب';
+
+  @override
+  String get fieldPriceOnRequestHelp =>
+      'لا يُنشر سعر؛ يتصل بك المهتمون لمعرفته. الإعلانات بسعر منشور تظهر أولاً عادةً.';
+
+  @override
+  String get sortBest => 'الأفضل أولاً';
+
+  @override
+  String get dealDaily => 'يومي';
 }

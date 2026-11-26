@@ -19,6 +19,7 @@ import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/skeleton.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../core/widgets/user_text.dart';
+import '../../../shared/models/listing.dart' show priceOnRequestText;
 import '../../../shared/models/search_constraints.dart';
 import '../../../shared/reference/market_data.dart';
 import '../../../shared/repositories/account_repositories.dart';
@@ -334,12 +335,12 @@ class AiMark extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF3DB394), Color(0xFF123C34)],
+          colors: [Color(0xFFE8BC5E), Color(0xFF8A5D17)],
         ),
         boxShadow: [
-          BoxShadow(color: const Color(0xFF3DB394).withValues(alpha: 0.35), blurRadius: size * 0.45),
+          BoxShadow(color: const Color(0xFFE8BC5E).withValues(alpha: 0.35), blurRadius: size * 0.45),
           BoxShadow(
-            color: const Color(0xFFD9B25E).withValues(alpha: 0.2),
+            color: const Color(0xFFE0AE45).withValues(alpha: 0.2),
             blurRadius: size * 0.6,
             offset: Offset(0, size * 0.1),
           ),
@@ -363,7 +364,7 @@ class VoiceOrbMini extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: RadialGradient(
           center: Alignment(-0.3, -0.35),
-          colors: [Color(0xFF3DB394), Color(0xFF16836D), Color(0xFF123C34)],
+          colors: [Color(0xFFF3D489), Color(0xFFC38B2A), Color(0xFF7A5214)],
           stops: [0, 0.55, 1],
         ),
       ),
@@ -1220,7 +1221,9 @@ class _ResultCardState extends State<_ResultCard> {
                         ),
                         const SizedBox(height: Space.hair),
                         Text(
-                          Fmt.price(item.price, lang: lang, rent: item.deal == 'rent'),
+                          item.price == null && !item.isExternal
+                              ? priceOnRequestText(lang)
+                              : Fmt.price(item.price, lang: lang, rent: item.deal == 'rent'),
                           style: context.type.priceSmall,
                         ),
                         if (place.isNotEmpty)

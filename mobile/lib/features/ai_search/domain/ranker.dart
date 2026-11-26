@@ -34,9 +34,10 @@ class Ranker {
       got += w * frac;
     }
 
+    // Price on request: the budget cannot be checked, so it earns nothing.
     final price = item.price ?? 0;
     if (c.budgetMax case final max? when max != 0) {
-      final over = price / max;
+      final over = item.priceOnRequest ? double.infinity : price / max;
       add(
         'budget',
         over <= 1
@@ -136,7 +137,9 @@ class Ranker {
     final out = <MatchReason>[];
     final price = item.price ?? 0;
 
-    if (c.budgetMax case final max? when max != 0) {
+    if (c.budgetMax case final max? when max != 0 && item.priceOnRequest) {
+      out.add(MatchReason.warn(ar ? 'السعر عند الطلب: اسأل المالك' : 'Price on request: ask the owner'));
+    } else if (c.budgetMax case final max? when max != 0) {
       if (price <= max) {
         out.add(
           MatchReason.good(

@@ -53,7 +53,7 @@ void main() {
     Future<List<Override>> overrides() =>
         TestDeps(listings: FakeListingsRepository(rows: _rows)).overrides(googleMaps: true);
 
-    testWidgets('Explore draws Google\'s map: nearby pins merge, part on zooming in, and a tap selects one', (
+    testWidgets('Explore draws Google\'s map: every listing its own pin at any zoom, and a tap selects one', (
       tester,
     ) async {
       await pumpScreen(tester, const ExploreScreen(), overrides: await overrides());
@@ -62,16 +62,21 @@ void main() {
       expect(find.byKey(const ValueKey('fake-google-map')), findsOneWidget);
       expect(find.text('© OpenStreetMap'), findsNothing, reason: "Google's map, not the key-free one");
 
-      // At the country view, the two Amman listings are one bubble.
-      expect(google.markers.keys.single.value, startsWith('cluster:'));
+      // At the country view the two Amman listings are two dots, never one
+      // numbered circle; the one without a location is not on the map.
+      final ids = [_rows[0].id, _rows[1].id];
+      expect(google.markers.keys.map((m) => m.value), unorderedEquals(ids));
+      final dot = google.markers[MarkerId(_rows[0].id)]!.icon;
+      expect(google.markers[MarkerId(_rows[0].id)]!.anchor, const Offset(0.5, 0.5), reason: 'a dot, centred');
       expect(google.circles, hasLength(1), reason: 'the approximate location is a shaded circle');
 
-      // Zoomed in, each shows its own price pin; the one without a location
-      // is not on the map.
+      // Zoomed in, the same two listings, now each with its price.
       google.zoomTo(15);
       await tester.pump();
       await _drawPins(tester);
-      expect(google.markers.keys.map((m) => m.value), unorderedEquals([_rows[0].id, _rows[1].id]));
+      expect(google.markers.keys.map((m) => m.value), unorderedEquals(ids));
+      expect(google.markers[MarkerId(_rows[0].id)]!.icon, isNot(same(dot)), reason: 'a price pin now');
+      expect(google.markers[MarkerId(_rows[0].id)]!.anchor.dy, greaterThan(0.8), reason: "the price pin's tip");
 
       google.tapMarker(_rows[1].id);
       await tester.pump();
@@ -102,8 +107,9 @@ void main() {
       expect(chosen.size.height, greaterThan(short.size.height), reason: 'the chosen pin is larger');
       expect(short.anchor.dx, 0.5);
       expect(short.anchor.dy, inExclusiveRange(0.8, 1.0), reason: "the pointer's tip, above the shadow margin");
-      final bubble = await images.cluster(12, background: MapPins.sale, foreground: Colors.white);
-      expect(bubble.anchor, const Offset(0.5, 0.5));
+      final dot = await images.dot(MapPins.sale);
+      expect(dot.anchor, const Offset(0.5, 0.5), reason: 'a dot is centred on its point');
+      expect(dot.size.width, lessThan(short.size.width), reason: 'smaller than a price pin');
       expect(
         identical(
           images.price('95K', background: MapPins.sale, foreground: Colors.white, selected: false),
@@ -129,10 +135,11 @@ void main() {
     });
   });
 
-  test('nearby pins group at a distance and part close up', () {
-    final pins = _rows.where((l) => l.hasCoordinates).toList();
-    expect(groupPins(pins, 7), hasLength(1));
-    expect(groupPins(pins, 15), hasLength(2));
+  test('zoomed out every listing is a dot of its own; close up each shows its price', () {
+    expect(showsPrices(7), isFalse);
+    expect(showsPrices(11.9), isFalse);
+    expect(showsPrices(pricePinZoom), isTrue);
+    expect(showsPrices(16), isTrue);
   });
 
   test('listings on the very same spot are set apart, so each keeps a pin of its own', () {
@@ -143,9 +150,6 @@ void main() {
     expect(spread.first.lat, 31.95, reason: 'the first stays where it is');
     expect({for (final l in spread) '${l.lat},${l.lng}'}, hasLength(10), reason: 'no two on one point');
     expect([for (final l in spread) l.id], [for (final l in same) l.id], reason: 'the same listings, in order');
-    // Close up they part; from afar they are still one numbered circle.
-    expect(groupPins(spread, 19), hasLength(10));
-    expect(groupPins(spread, 12), hasLength(1));
   });
 
   group('Street View', () {

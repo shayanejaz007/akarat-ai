@@ -7,15 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../app/localization/l10n.dart';
 import '../../app/theme/tokens.dart';
 import '../../shared/models/listing.dart';
-import '../utils/formatters.dart';
 import '../utils/geo.dart';
 import 'locate.dart';
 import 'map_layer.dart';
 import 'map_pin_images.dart';
-import 'maps.dart' show MapPins, groupPins, mapTilesProvider, spreadPins;
+import 'maps.dart' show MapPins, mapTilesProvider, showsPrices, spreadPins;
 
 /// The maps drawn by Google's native SDK, used when a Maps key is built in
 /// (see [GoogleMapsSetup]): the same pins, clusters and behaviour as the
@@ -119,9 +117,9 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
   /// The camera's zoom, followed while it moves.
   double _zoom = 7;
 
-  /// The zoom the pins were grouped for: regrouped when the camera settles,
-  /// not on every frame of a pinch.
-  double _groupedAt = 7;
+  /// The zoom the pins were drawn for: redrawn when the camera settles, not
+  /// on every frame of a pinch.
+  double _drawnAt = 7;
 
   MapPinImages? _images;
   final _icons = <String, PinImage>{};
@@ -182,28 +180,7 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
     );
   }
 
-  void _zoomInto(List<Listing> members) {
-    final b = _bounds(members);
-    // Points too close to part on screen: step in around their centre.
-    if (b.northeast.latitude - b.southwest.latitude < 0.0005 &&
-        b.northeast.longitude - b.southwest.longitude < 0.0005) {
-      _move(
-        _map,
-        CameraUpdate.newLatLngZoom(
-          LatLng(
-            (b.northeast.latitude + b.southwest.latitude) / 2,
-            (b.northeast.longitude + b.southwest.longitude) / 2,
-          ),
-          math.min(_zoom + 3, 18),
-        ),
-        animate: true,
-      );
-      return;
-    }
-    _move(_map, CameraUpdate.newLatLngBounds(b, 64), animate: true);
-  }
-
-  Color _colour(Listing l) => l.isClosed ? MapPins.closed : (l.isRent ? MapPins.rent : MapPins.sale);
+  Color _colour(Listing l) => MapPins.of(l);
 
   /// Draws any pins not drawn yet, then shows them.
   void _request(Map<String, Future<PinImage> Function()> wanted) {
@@ -226,35 +203,45 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final layer = ref.watch(mapLayerProvider);
     final images = _images!;
     final pins = _pinned;
     final selected = pins.where((l) => l.id == widget.selected?.id).firstOrNull;
-    // The selected pin always stands alone, drawn on top.
-    final groups = groupPins(pins.where((l) => l.id != selected?.id).toList(), _groupedAt);
+    // The selected pin is drawn on top, always with its price. Every other
+    // listing keeps a pin of its own: a dot zoomed out, its price close up.
+    final others = pins.where((l) => l.id != selected?.id);
+    final prices = showsPrices(_drawnAt);
 
     final wanted = <String, Future<PinImage> Function()>{};
     String priceKey(Listing l, {required bool chosen}) {
-      final label = Fmt.compactPrice(l.priceJod, lang: widget.lang, currency: false);
+      final label = l.pinPrice(widget.lang);
       final bg = _colour(l);
-      final fg = l.isClosed ? Colors.white : (l.isRent ? MapPins.rentText : MapPins.saleText);
+      final fg = MapPins.textOf(l);
       final key = 'p|$label|${bg.toARGB32()}|$chosen';
       wanted[key] = () => images.price(label, background: bg, foreground: fg, selected: chosen);
       return key;
     }
 
-    String clusterKey(List<Listing> members) {
-      final allRent = members.every((l) => l.isRent);
-      final mixed = !allRent && members.any((l) => l.isRent);
-      final key = 'c|${members.length}|$allRent|$mixed';
-      wanted[key] = () => images.cluster(
-        members.length,
-        background: allRent ? MapPins.rent : MapPins.sale,
-        foreground: allRent ? MapPins.rentText : MapPins.saleText,
-        ring: mixed ? MapPins.rent : null,
-      );
+    String dotKey(Listing l) {
+      final bg = _colour(l);
+      final key = 'd|${bg.toARGB32()}';
+      wanted[key] = () => images.dot(bg);
       return key;
+    }
+
+    Marker? dot(Listing l) {
+      final img = _icons[dotKey(l)];
+      if (img == null) return null;
+      return Marker(
+        markerId: MarkerId(l.id),
+        position: LatLng(l.lat!, l.lng!),
+        icon: img.icon,
+        anchor: img.anchor,
+        consumeTapEvents: true,
+        zIndexInt: 1,
+        infoWindow: InfoWindow(title: '${l.priceText(widget.lang)}, ${l.title(widget.lang)}'),
+        onTap: () => widget.onSelect(l),
+      );
     }
 
     Marker? price(Listing l, {required bool chosen}) {
@@ -268,32 +255,14 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
         consumeTapEvents: true,
         zIndexInt: chosen ? 2 : 1,
         // Read out by screen readers; never shown, as taps are taken here.
-        infoWindow: InfoWindow(
-          title:
-              '${Fmt.price(l.priceJod, lang: widget.lang, rent: l.isRent, night: l.isDaily)}, ${l.title(widget.lang)}',
-        ),
+        infoWindow: InfoWindow(title: '${l.priceText(widget.lang)}, ${l.title(widget.lang)}'),
         onTap: () => widget.onSelect(l),
       );
     }
 
     final markers = <Marker>{
-      for (final g in groups)
-        if (g.length == 1)
-          ?price(g.single, chosen: false)
-        else if (_icons[clusterKey(g)] case final img?)
-          Marker(
-            markerId: MarkerId('cluster:${g.map((l) => l.id).join(',')}'),
-            position: LatLng(
-              g.map((l) => l.lat!).reduce((a, b) => a + b) / g.length,
-              g.map((l) => l.lng!).reduce((a, b) => a + b) / g.length,
-            ),
-            icon: img.icon,
-            anchor: img.anchor,
-            consumeTapEvents: true,
-            zIndexInt: 1,
-            infoWindow: InfoWindow(title: l10n.mapCluster(g.length)),
-            onTap: () => _zoomInto(g),
-          ),
+      for (final l in others)
+        if (prices) ?price(l, chosen: false) else ?dot(l),
       if (selected != null) ?price(selected, chosen: true),
     };
     _request(wanted);
@@ -345,7 +314,7 @@ class _GoogleListingsMapState extends ConsumerState<GoogleListingsMap> {
       },
       onCameraMove: (camera) => _zoom = camera.zoom,
       onCameraIdle: () {
-        if ((_zoom - _groupedAt).abs() > 0.05) setState(() => _groupedAt = _zoom);
+        if ((_zoom - _drawnAt).abs() > 0.05) setState(() => _drawnAt = _zoom);
       },
       onTap: (_) => widget.onSelect(null),
       minMaxZoomPreference: const MinMaxZoomPreference(5, 19),

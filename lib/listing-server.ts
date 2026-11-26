@@ -34,6 +34,8 @@ export type Listing = {
   city_id: string | null;
   neighborhood_id: string | null;
   price_jod: number;
+  /** 0025: no price published; price_jod is 0. Absent before 0025 runs. */
+  price_on_request?: boolean | null;
   bedrooms: number | null;
   bathrooms: number | null;
   area_sqm: number | null;

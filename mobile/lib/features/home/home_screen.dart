@@ -626,9 +626,9 @@ class _CityStrip extends StatelessWidget {
 
   // The brand's forest in every theme: these tiles carry white type, and the
   // dark theme's forest token is a light mint meant for text, not fills.
-  static const _deep = Color(0xFF123C34);
-  static const _deeper = Color(0xFF0B231F);
-  static const _gold = Color(0xFFD9B25E);
+  static const _deep = Color(0xFF2A2A2C);
+  static const _deeper = Color(0xFF121213);
+  static const _gold = Color(0xFFE0AE45);
 
   @override
   Widget build(BuildContext context) {

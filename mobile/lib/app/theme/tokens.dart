@@ -5,15 +5,19 @@ export 'typography.dart';
 /// Design tokens. Screens read these instead of writing raw values, so the
 /// whole app can be re-tuned from one file. See DESIGN_SYSTEM.md.
 ///
-/// Palette: a deep forest green and a refined emerald for action, warm ivory
-/// and white surfaces, sand and the brand mark's gold as quiet accents, and
-/// Jordan's flag red kept for the few things that should stop the eye — a
-/// saved heart, a SOLD sticker, a destructive action.
+/// Palette: the Akarat logo's own colours. Its charcoal towers are the
+/// primary colour (headers, the selected tab, the main buttons) and its gold
+/// is the accent (links, focus, highlights, the active state), on white and
+/// warm-grey surfaces. Jordan's flag red stays for the few things that should
+/// stop the eye — a saved heart, a SOLD sticker, a destructive action — and a
+/// calm green only for success, where a colour has to mean "done".
 ///
-/// Dark is matte black: neutral, untinted blacks a step apart (the page is
-/// the brand's matte #0B0B0B, from the splash kit), separated by hairlines
-/// rather than shadows, soft off-white text, and the same green and gold as
-/// accents.
+/// The token names are older than the palette: [forest] is the logo's
+/// charcoal and [emerald] its gold, deepened to read as text on white.
+///
+/// Dark is matte black (the brand's #0B0B0B from the splash kit), separated
+/// by hairlines rather than shadows, with the logo's bright gold as both the
+/// primary and the accent, as on the splash screen.
 @immutable
 class AkaratColors extends ThemeExtension<AkaratColors> {
   const AkaratColors({
@@ -38,10 +42,12 @@ class AkaratColors extends ThemeExtension<AkaratColors> {
     required this.shadow,
   });
 
-  /// Deep forest. Primary brand colour, headers, the selected tab.
+  /// The logo's charcoal (light) or bright gold (dark). Primary brand colour:
+  /// headers, the selected tab, the main buttons.
   final Color forest;
 
-  /// Refined emerald. Calls to action and positive states.
+  /// The logo's gold, deep enough to read as text on white (5.7:1). Links,
+  /// focus, highlights and the active state.
   final Color emerald;
   final Color background;
   final Color surface;
@@ -66,32 +72,31 @@ class AkaratColors extends ThemeExtension<AkaratColors> {
   final Color shadow;
 
   static const light = AkaratColors(
-    forest: Color(0xFF123C34),
-    emerald: Color(0xFF16836D),
-    // Clean white pages with soft grey fills, in the manner of the
-    // reference design; the warmth stays in the forest and gold.
+    forest: Color(0xFF2A2A2C),
+    emerald: Color(0xFF8A5D17),
+    // White pages with warm grey fills; the warmth is in the gold.
     background: Color(0xFFFFFFFF),
     surface: Color(0xFFFFFFFF),
-    surfaceMuted: Color(0xFFF4F5F3),
+    surfaceMuted: Color(0xFFF5F3EF),
     surfaceRaised: Color(0xFFFFFFFF),
-    ink: Color(0xFF192421),
-    inkMuted: Color(0xFF5F6C67),
-    inkFaint: Color(0xFF9AA49F),
-    border: Color(0xFFE9EAE6),
-    sand: Color(0xFFDDD0B8),
-    gold: Color(0xFFB0832B),
+    ink: Color(0xFF1C1C1E),
+    inkMuted: Color(0xFF66645E),
+    inkFaint: Color(0xFF9D9A92),
+    border: Color(0xFFE9E6E0),
+    sand: Color(0xFFE7D7B5),
+    gold: Color(0xFFC38B2A),
     red: Color(0xFFCE1126),
-    success: Color(0xFF16836D),
+    success: Color(0xFF2E7A4E),
     warning: Color(0xFFA9661B),
     danger: Color(0xFFB3261E),
     onForest: Color(0xFFFFFFFF),
-    scrim: Color(0x99101A17),
-    shadow: Color(0x1A0E2420),
+    scrim: Color(0x99141414),
+    shadow: Color(0x1A1C1C1E),
   );
 
   static const dark = AkaratColors(
-    forest: Color(0xFF8FD3BF),
-    emerald: Color(0xFF3DB394),
+    forest: Color(0xFFE0AE45),
+    emerald: Color(0xFFE8BC5E),
     background: Color(0xFF0B0B0B),
     surface: Color(0xFF141414),
     surfaceMuted: Color(0xFF1C1C1C),
@@ -101,12 +106,12 @@ class AkaratColors extends ThemeExtension<AkaratColors> {
     inkFaint: Color(0xFF6B6B6B),
     border: Color(0xFF262626),
     sand: Color(0xFF332E26),
-    gold: Color(0xFFD9B25E),
+    gold: Color(0xFFE0AE45),
     red: Color(0xFFFF5A6A),
-    success: Color(0xFF3DB394),
+    success: Color(0xFF5CC48A),
     warning: Color(0xFFE0A050),
     danger: Color(0xFFFF8A80),
-    onForest: Color(0xFF07211B),
+    onForest: Color(0xFF1A1206),
     scrim: Color(0xB3000000),
     shadow: Color(0x66000000),
   );

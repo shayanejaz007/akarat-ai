@@ -549,8 +549,8 @@ class _GuestCard extends StatelessWidget {
 
   // The brand's forest in both themes; the dark theme's forest token is a
   // light mint meant for text.
-  static const _deep = Color(0xFF123C34);
-  static const _deeper = Color(0xFF0B231F);
+  static const _deep = Color(0xFF2A2A2C);
+  static const _deeper = Color(0xFF121213);
 
   @override
   Widget build(BuildContext context) {
@@ -623,7 +623,7 @@ class _Avatar extends ConsumerWidget {
             children: [
               CircleAvatar(
                 radius: 28,
-                backgroundColor: const Color(0xFF123C34),
+                backgroundColor: const Color(0xFF2A2A2C),
                 foregroundImage: photo == null ? null : MemoryImage(photo),
                 child: initials == null
                     ? const Icon(Icons.person_rounded, color: Colors.white)

@@ -43,7 +43,7 @@ class _SquareIconButtonState extends State<SquareIconButton> {
     final c = context.colors;
     final (bg, fg, shadow) = switch (widget.style) {
       SquareStyle.soft => (c.surfaceMuted, c.ink, false),
-      SquareStyle.onImage => (Colors.white, const Color(0xFF16201D), true),
+      SquareStyle.onImage => (Colors.white, const Color(0xFF1C1C1E), true),
       SquareStyle.primary => (c.forest, c.onForest, false),
     };
     final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
@@ -129,7 +129,7 @@ class InfoPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const ink = Color(0xFF16201D);
+    const ink = Color(0xFF1C1C1E);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: dense ? 8 : 10, vertical: dense ? 4 : 6),
       decoration: const BoxDecoration(

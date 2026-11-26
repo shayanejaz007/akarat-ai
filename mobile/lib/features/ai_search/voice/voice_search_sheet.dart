@@ -491,17 +491,17 @@ class _VoiceOrbState extends State<VoiceOrb> with SingleTickerProviderStateMixin
                   gradient: const RadialGradient(
                     center: Alignment(-0.3, -0.35),
                     radius: 0.95,
-                    colors: [Color(0xFF3DB394), Color(0xFF16836D), Color(0xFF123C34)],
+                    colors: [Color(0xFFF3D489), Color(0xFFC38B2A), Color(0xFF7A5214)],
                     stops: [0, 0.55, 1],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF3DB394).withValues(alpha: glow),
+                      color: const Color(0xFFE8BC5E).withValues(alpha: glow),
                       blurRadius: size * (0.25 + widget.level * 0.35),
                       spreadRadius: size * 0.04 * widget.level,
                     ),
                     BoxShadow(
-                      color: const Color(0xFFD9B25E).withValues(alpha: glow * 0.45),
+                      color: const Color(0xFFE0AE45).withValues(alpha: glow * 0.45),
                       blurRadius: size * 0.6,
                       offset: Offset(0, size * 0.08),
                     ),

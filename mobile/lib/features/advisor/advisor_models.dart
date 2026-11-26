@@ -52,7 +52,7 @@ class AkaratAdvisorCard extends AdvisorCard {
       titleAr: str(bi(j['title'])['ar']),
       deal: str(j['deal']),
       type: str(j['type']),
-      price: numOrNull(j['price']) ?? 0,
+      price: numOrNull(j['price']),
       basis: str(j['basis'], 'total'),
       beds: numOrNull(j['beds']),
       baths: numOrNull(j['baths']),
@@ -73,7 +73,9 @@ class AkaratAdvisorCard extends AdvisorCard {
   final String titleAr;
   final String deal;
   final String type;
-  final num price;
+
+  /// Null when the owner gives the price on request.
+  final num? price;
   final String basis;
   final num? beds;
   final num? baths;

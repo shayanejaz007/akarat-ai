@@ -6,11 +6,9 @@ import 'package:latlong2/latlong.dart' show LatLng;
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app/localization/l10n.dart';
 import '../../app/theme/tokens.dart';
 import '../../shared/models/listing.dart';
 import '../config/env.dart';
-import '../utils/formatters.dart';
 import '../utils/geo.dart';
 import 'google_map_views.dart';
 import 'locate.dart';
@@ -32,10 +30,16 @@ final mapTilesProvider = Provider<bool>((ref) => true);
 /// on light and dark maps.
 class MapPins {
   const MapPins._();
-  static const sale = Color(0xFF123C34);
+  static const sale = Color(0xFF2A2A2C);
   static const saleText = Colors.white;
-  static const rent = Color(0xFFD9B25E);
+  static const rent = Color(0xFFE0AE45);
   static const rentText = Color(0xFF2A1E05);
+  static const daily = Color(0xFF8A5D17);
+  static const dailyText = Colors.white;
+
+  static Color of(Listing l) => l.isClosed ? closed : (l.isDaily ? daily : (l.isRent ? rent : sale));
+  static Color textOf(Listing l) =>
+      l.isClosed ? Colors.white : (l.isDaily ? dailyText : (l.isRent ? rentText : saleText));
   static const closed = Color(0xFF8E9893);
 }
 
@@ -66,21 +70,13 @@ List<Listing> spreadPins(List<Listing> pins) {
   ];
 }
 
-List<List<Listing>> groupPins(List<Listing> pins, double zoom) {
-  const crs = Epsg3857();
-  const reach = 46.0;
-  final groups = <({Offset at, List<Listing> members})>[];
-  for (final l in pins) {
-    final at = crs.latLngToOffset(LatLng(l.lat!, l.lng!), zoom);
-    final i = groups.indexWhere((g) => (g.at - at).distance < reach);
-    if (i < 0) {
-      groups.add((at: at, members: [l]));
-    } else {
-      groups[i].members.add(l);
-    }
-  }
-  return [for (final g in groups) g.members];
-}
+/// Every listing keeps a pin of its own at every zoom; nothing is merged into
+/// a numbered circle. Zoomed out, each is a small dot in its deal's colour so
+/// a city's worth of them stays readable; from [pricePinZoom] each shows its
+/// price. The chosen one always shows its price.
+const pricePinZoom = 12.0;
+
+bool showsPrices(double zoom) => zoom >= pricePinZoom;
 
 Widget _tiles(BuildContext context, WidgetRef ref) {
   if (!ref.watch(mapTilesProvider)) return const SizedBox.shrink();
@@ -243,30 +239,14 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
     }
   }
 
-  void _zoomInto(List<Listing> members) {
-    final bounds = LatLngBounds.fromPoints([for (final l in members) LatLng(l.lat!, l.lng!)]);
-    final camera = _controller.camera;
-    // Points too close to part on screen: step in around their centre.
-    if (bounds.north - bounds.south < 0.0005 && bounds.east - bounds.west < 0.0005) {
-      _controller.move(bounds.center, math.min(camera.zoom + 3, 18));
-      return;
-    }
-    _controller.fitCamera(
-      CameraFit.bounds(
-        bounds: bounds,
-        padding: EdgeInsets.fromLTRB(64, widget.topInset + 48, 64, widget.bottomInset + 48),
-        maxZoom: 17,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
     final pins = _pinned;
     final selected = pins.where((l) => l.id == widget.selected?.id).firstOrNull;
-    // The selected pin always stands alone, drawn last, on top.
-    final groups = groupPins(pins.where((l) => l.id != selected?.id).toList(), _zoom);
+    // The selected pin is drawn last, on top, always with its price.
+    final others = pins.where((l) => l.id != selected?.id);
+    final prices = showsPrices(_zoom);
     final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.2);
     return FlutterMap(
       mapController: _controller,
@@ -284,7 +264,7 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
         onTap: (_, _) => widget.onSelect(null),
         onPositionChanged: (camera, _) {
           if ((camera.zoom - _zoom).abs() < 0.05) return;
-          // Regroup after the frame: this can fire while the map lays out.
+          // Redraw after the frame: this can fire while the map lays out.
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) setState(() => _zoom = camera.zoom);
           });
@@ -307,10 +287,8 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
         ),
         MarkerLayer(
           markers: [
-            for (final g in groups)
-              g.length == 1
-                  ? _priceMarker(context, g.single, selected: false, scaler: scaler)
-                  : _clusterMarker(context, g, scaler: scaler),
+            for (final l in others)
+              prices ? _priceMarker(context, l, selected: false, scaler: scaler) : _dotMarker(context, l),
             if (selected != null) _priceMarker(context, selected, selected: true, scaler: scaler),
           ],
         ),
@@ -336,42 +314,34 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
     );
   }
 
-  Color _colour(Listing l) => l.isClosed ? MapPins.closed : (l.isRent ? MapPins.rent : MapPins.sale);
+  Color _colour(Listing l) => MapPins.of(l);
 
-  /// A bubble for several pins: forest when all are for sale, gold when all
-  /// are for rent, forest ringed in gold when both.
-  Marker _clusterMarker(BuildContext context, List<Listing> members, {required TextScaler scaler}) {
-    final allRent = members.every((l) => l.isRent);
-    final mixed = !allRent && members.any((l) => l.isRent);
-    final bg = allRent ? MapPins.rent : MapPins.sale;
-    final fg = allRent ? MapPins.rentText : MapPins.saleText;
-    final size = (36 + math.min(members.length, 40) * 0.5) * scaler.scale(1).clamp(1.0, 1.2);
-    final lat = members.map((l) => l.lat!).reduce((a, b) => a + b) / members.length;
-    final lng = members.map((l) => l.lng!).reduce((a, b) => a + b) / members.length;
+  /// One listing, zoomed out: a dot in its deal's colour, ringed in white,
+  /// with room around it for a finger.
+  Marker _dotMarker(BuildContext context, Listing l) {
     return Marker(
-      point: LatLng(lat, lng),
-      width: size,
-      height: size,
+      point: LatLng(l.lat!, l.lng!),
+      width: 30,
+      height: 30,
       child: Semantics(
         button: true,
-        label: context.l10n.mapCluster(members.length),
+        label: '${l.priceText(widget.lang)}, ${l.title(widget.lang)}',
         excludeSemantics: true,
         child: GestureDetector(
-          onTap: () => _zoomInto(members),
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: bg,
-              shape: BoxShape.circle,
-              border: Border.all(color: mixed ? MapPins.rent : Colors.white, width: mixed ? 3 : 2),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 3, offset: const Offset(0, 2)),
-              ],
-            ),
-            child: Text(
-              '${members.length}',
-              textScaler: scaler,
-              style: context.text.labelLarge?.copyWith(color: fg, fontWeight: FontWeight.w700),
+          behavior: HitTestBehavior.opaque,
+          onTap: () => widget.onSelect(l),
+          child: Center(
+            child: Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                color: _colour(l),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2.5),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 3, offset: const Offset(0, 1)),
+                ],
+              ),
             ),
           ),
         ),
@@ -381,7 +351,7 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
 
   Marker _priceMarker(BuildContext context, Listing l, {required bool selected, required TextScaler scaler}) {
     // Short on the map: the currency is the same on every pin.
-    final label = Fmt.compactPrice(l.priceJod, lang: widget.lang, currency: false);
+    final label = l.pinPrice(widget.lang);
     final style = context.text.labelMedium!.copyWith(fontWeight: FontWeight.w700, fontSize: selected ? 14 : 13);
     final painter = TextPainter(
       text: TextSpan(text: label, style: style),
@@ -394,7 +364,7 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
     final width = painter.width.ceilToDouble() + (selected ? 34 : 30);
     final height = (selected ? 34.0 : 30.0) * scaler.scale(1).clamp(1.0, 1.2) + 7;
     final bg = _colour(l);
-    final fg = l.isClosed ? Colors.white : (l.isRent ? MapPins.rentText : MapPins.saleText);
+    final fg = MapPins.textOf(l);
     return Marker(
       point: LatLng(l.lat!, l.lng!),
       width: math.max(width, 44),
@@ -404,7 +374,7 @@ class _TileListingsMapState extends ConsumerState<_TileListingsMap> {
       child: Semantics(
         button: true,
         selected: selected,
-        label: '${Fmt.price(l.priceJod, lang: widget.lang, rent: l.isRent, night: l.isDaily)}, ${l.title(widget.lang)}',
+        label: '${l.priceText(widget.lang)}, ${l.title(widget.lang)}',
         excludeSemantics: true,
         child: GestureDetector(
           onTap: () => widget.onSelect(l),

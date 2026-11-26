@@ -1,12 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { fail, isUuid, paging, requireAdmin, searchTerm } from "@/lib/admin";
 import { unpackPayload } from "@/lib/listing-server";
+import { scoreAll } from "@/lib/listing-quality";
+import { scoreListing } from "@/lib/listing-score.js";
 
 /**
  * /api/admin/listings — every listing, whatever its status or owner.
  *
- *   GET    ?q=&status=&owner=&sort=created|views|inquiries|saves|price&page=
+ *   GET    ?q=&status=&owner=&sort=score|created|views|inquiries|saves|price&page=
  *   PATCH  { id, status?, featured?, verified? }
+ *   POST   { action: "rescore" }   re-scores every listing (lib/listing-score.js)
  *   DELETE ?id=
  */
 
@@ -15,6 +18,7 @@ export const dynamic = "force-dynamic";
 
 const STATUSES = ["draft", "pending", "active", "rejected", "paused", "sold", "rented", "archived"];
 const SORTS: Record<string, string> = {
+  score: "quality_score",
   created: "created_at",
   views: "views",
   inquiries: "inquiries_count",
@@ -33,7 +37,8 @@ export async function GET(request: NextRequest) {
     .from("properties")
     .select(
       "id,status,deal,property_type,city_id,neighborhood_id,price_jod,bedrooms,bathrooms,area_sqm," +
-        "title_en,title_ar,views,saves,inquiries_count,featured,verified,owner_id,created_at,updated_at,payload_gz",
+        "title_en,title_ar,views,saves,inquiries_count,featured,verified,owner_id,created_at,updated_at,payload_gz," +
+        "land_sqm,year_built,lat,lng,price_on_request,quality_score,quality_parts,quality_scored_at",
       { count: "exact" },
     );
   const status = url.searchParams.get("status");
@@ -43,7 +48,9 @@ export async function GET(request: NextRequest) {
   const q = searchTerm(url);
   if (q) query = isUuid(q) ? query.eq("id", q) : query.or(`title_en.ilike.*${q}*,title_ar.ilike.*${q}*`);
   const sort = SORTS[url.searchParams.get("sort") ?? ""] ?? "created_at";
-  query = query.order(sort, { ascending: false }).order("created_at", { ascending: false }).range(from, to);
+  // Unscored listings sort after scored ones, in either direction.
+  query = query.order(sort, { ascending: url.searchParams.get("dir") === "asc", nullsFirst: false })
+    .order("created_at", { ascending: false }).range(from, to);
 
   const { data, error, count } = await query;
   if (error) return fail(error.message);
@@ -63,8 +70,18 @@ export async function GET(request: NextRequest) {
   const listings = rows.map(({ payload_gz, ...r }) => {
     const p = unpackPayload(payload_gz as string | null);
     const s = statBy.get(r.id) as Record<string, unknown> | undefined;
+    // What is still missing is worked out here from the same rules, so the
+    // panel can say what would raise the score even before it is stored.
+    const live = scoreListing(r, p);
     return {
       ...r,
+      quality: {
+        score: r.quality_score ?? null,
+        parts: r.quality_parts ?? live.parts,
+        missing: live.missing,
+        current: live.score,
+        scoredAt: r.quality_scored_at ?? null,
+      },
       cover: p.images?.find(m => m.type !== "video")?.url ?? null,
       media: p.images?.length ?? 0,
       phone: p.contact?.phone ?? null,
@@ -96,6 +113,15 @@ export async function PATCH(request: NextRequest) {
   const { error } = await admin.db.from("properties").update(changes).eq("id", b.id);
   if (error) return fail(error.message);
   return NextResponse.json({ ok: true });
+}
+
+export async function POST(request: NextRequest) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
+  const b = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+  if (b.action !== "rescore") return fail("Unknown action", 400);
+  const scored = await scoreAll(admin.db);
+  return NextResponse.json({ ok: true, scored });
 }
 
 export async function DELETE(request: NextRequest) {

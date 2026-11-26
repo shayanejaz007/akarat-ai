@@ -1,12 +1,14 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { sweepLegalData } from "@/lib/legal-retention";
+import { scoreStale, serviceClient } from "@/lib/listing-quality";
 
 /**
  * GET /api/admin/maintenance — housekeeping that has to happen whether or
- * not anyone opens the site: today, deleting Ask a Lawyer's expired
- * conversations and documents now that the feature is gone
- * (lib/legal-retention.ts).
+ * not anyone opens the site: deleting Ask a Lawyer's expired conversations
+ * and documents now that the feature is gone (lib/legal-retention.ts), and
+ * scoring any listing that was saved without being scored
+ * (lib/listing-quality.ts).
  *
  * Run daily by Vercel Cron (vercel.json), which sends
  * `Authorization: Bearer $CRON_SECRET` when CRON_SECRET is set. Anyone else
@@ -31,5 +33,15 @@ export async function GET(request: NextRequest) {
     legalFilesRemoved += n;
     if (n < 200) break;
   }
-  return NextResponse.json({ ok: true, legalFilesRemoved });
+  // Listings the save-time call missed: never scored, or edited since.
+  let listingsScored = 0;
+  const db = serviceClient();
+  if (db) {
+    for (let pass = 0; pass < 5; pass++) {
+      const n = await scoreStale(db, 200).catch(() => 0);
+      listingsScored += n;
+      if (n < 200) break;
+    }
+  }
+  return NextResponse.json({ ok: true, legalFilesRemoved, listingsScored });
 }
